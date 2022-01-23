@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "projects": {
+    "doji-frontend": "apps/doji-frontend",
+    "doji-frontend-e2e": "apps/doji-frontend-e2e"
+  }
+}
