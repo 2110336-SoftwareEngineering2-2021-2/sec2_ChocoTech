@@ -29,7 +29,8 @@
     "serve": {
       "executor": "@nrwl/node:execute",
       "options": {
-        "buildTarget": "doji-backend:build"
+        "buildTarget": "doji-backend:build",
+        "port": 8080
       }
     },
     "lint": {

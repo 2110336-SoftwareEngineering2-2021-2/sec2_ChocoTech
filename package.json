@@ -4,6 +4,9 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
+    "dev:frontend": "nx run doji-frontend:serve",
+    "dev:backend": "nx run doji-backend:serve",
+    "dev:all": "nx run-many --parallel --target=serve --all  ",
     "build": "nx build",
     "test": "nx test"
   },
