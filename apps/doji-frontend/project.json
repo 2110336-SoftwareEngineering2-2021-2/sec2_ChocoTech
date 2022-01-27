@@ -12,7 +12,9 @@
         "outputPath": "dist/apps/doji-frontend"
       },
       "configurations": {
-        "production": {}
+        "production": {
+          "generatePackageJson": true
+        }
       }
     },
     "serve": {
@@ -49,6 +51,17 @@
       "options": {
         "lintFilePatterns": ["apps/doji-frontend/**/*.{ts,tsx,js,jsx}"]
       }
+    },
+    "dockerbuild": {
+      "executor": "@nrwl/workspace:run-commands",
+      "outputs": [],
+      "options": {
+        "commands": [
+          "nx run doji-frontend:build",
+          "docker build -f ./apps/doji-frontend/Dockerfile -t doji-frontend ."
+        ]
+      },
+      "parallel": false
     }
   },
   "tags": []
