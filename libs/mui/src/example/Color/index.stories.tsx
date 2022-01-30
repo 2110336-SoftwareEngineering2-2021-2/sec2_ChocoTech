@@ -1,5 +1,5 @@
 import { Stack, Typography } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material'
 import { Meta, Story } from '@storybook/react'
 
 import Color, { ColorProps } from '.'

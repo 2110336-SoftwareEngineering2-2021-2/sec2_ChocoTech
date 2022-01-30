@@ -5,6 +5,7 @@
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
@@ -15,7 +16,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@sec2-choco-tech/mui": ["libs/mui/src/index.ts"]
+      "@types/*": ["types/*"],
+      "@frontend/*": ["apps/doji-frontend/src/*"],
+      "@backend/*": ["apps/doji-backend/src/*"],
+      "@libs/mui": ["libs/mui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

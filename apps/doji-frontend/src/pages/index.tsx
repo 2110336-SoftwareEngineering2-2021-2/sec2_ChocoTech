@@ -1,8 +1,7 @@
-import styled from '@emotion/styled'
+import { styled } from '@mui/material'
 
-const StyledPage = styled.div`
-  .page {
-  }
+const StyledPage = styled('div')`
+  color: ${({ theme }) => theme.palette.primary.darker};
 `
 
 export function Index() {

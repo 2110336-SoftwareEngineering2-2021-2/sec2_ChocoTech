@@ -1,44 +1,4 @@
-import { PaletteColorOptions, PaletteOptions } from '@mui/material/styles'
-
-declare module '@mui/material/styles' {
-  interface PaletteOptions {
-    ink: PaletteColorOptions
-    sky: PaletteColorOptions
-    green: PaletteColorOptions
-    red: PaletteColorOptions
-    blue: PaletteColorOptions
-    yellow: PaletteColorOptions
-    white: string
-  }
-  interface SimplePaletteColorOptions {
-    lightest?: string
-    lighter?: string
-    light?: string
-    main: string
-    dark?: string
-    darker?: string
-    darkest?: string
-    contrastText?: string
-  }
-  interface PaletteColor {
-    lightest?: string
-    lighter?: string
-    light: string
-    main: string
-    dark: string
-    darker?: string
-    darkest?: string
-    contrastText: string
-  }
-  interface Pallete {
-    ink: PaletteColorOptions
-    sky: PaletteColorOptions
-    green: PaletteColorOptions
-    red: PaletteColorOptions
-    blue: PaletteColorOptions
-    yellow: PaletteColorOptions
-  }
-}
+import { PaletteOptions } from '@mui/material'
 
 const paletteOptions: PaletteOptions = {
   white: '#FFFFFF',

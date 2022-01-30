@@ -6,10 +6,7 @@
     "module": "commonjs",
     "types": ["node"],
     "emitDecoratorMetadata": true,
-    "target": "es2015",
-    "paths": {
-      "@app/*": ["./src/*"]
-    }
+    "target": "es2015"
   },
   "exclude": ["**/*.spec.ts", "**/*.test.ts"],
   "include": ["**/*.ts"]

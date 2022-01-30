@@ -1,0 +1,39 @@
+import { PaletteColorOptions } from '@mui/material'
+
+export interface CustomPaletteOptions {
+  ink: PaletteColorOptions
+  sky: PaletteColorOptions
+  green: PaletteColorOptions
+  red: PaletteColorOptions
+  blue: PaletteColorOptions
+  yellow: PaletteColorOptions
+  white: string
+}
+export interface CustomSimplePaletteColorOptions {
+  lightest?: string
+  lighter?: string
+  light?: string
+  main: string
+  dark?: string
+  darker?: string
+  darkest?: string
+  contrastText?: string
+}
+export interface CustomPaletteColor {
+  lightest?: string
+  lighter?: string
+  light: string
+  main: string
+  dark: string
+  darker?: string
+  darkest?: string
+  contrastText: string
+}
+export interface CustomPallete {
+  ink: PaletteColorOptions
+  sky: PaletteColorOptions
+  green: PaletteColorOptions
+  red: PaletteColorOptions
+  blue: PaletteColorOptions
+  yellow: PaletteColorOptions
+}

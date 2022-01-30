@@ -4,10 +4,7 @@
     "baseUrl": ".",
     "outDir": "../../dist/out-tsc",
     "module": "commonjs",
-    "types": ["jest", "node"],
-    "paths": {
-      "@app/*": ["./src/*"]
-    }
+    "types": ["jest", "node"]
   },
   "include": ["**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"]
 }

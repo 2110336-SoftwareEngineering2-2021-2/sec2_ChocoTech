@@ -1,4 +1,4 @@
-import { styled, useTheme } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material'
 import { get } from 'lodash'
 
 // import styled from '../../lib/styled/styled'
