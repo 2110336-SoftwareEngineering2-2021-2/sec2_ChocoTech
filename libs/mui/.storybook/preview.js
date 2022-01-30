@@ -1,17 +1,10 @@
-import { ThemeProvider, useTheme } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material'
 
-import theme from '../src/config/theme'
-
-const Component = () => {
-  const t = useTheme()
-  console.log('XXX', t)
-  return <>wow</>
-}
+import { theme } from '../src/config/theme'
 
 const ThemeDecorator = (Story) => {
   return (
     <ThemeProvider theme={theme}>
-      <Component />
       <Story />
     </ThemeProvider>
   )

@@ -13,8 +13,6 @@ const colors: string[] = ['primary', 'ink', 'sky', 'green', 'red', 'blue', 'yell
 const type: string[] = ['lightest', 'lighter', 'light', 'main', 'dark', 'darker', 'darkest']
 
 const Template: Story<ColorProps> = () => {
-  const theme = useTheme()
-  console.log('T', theme)
   return (
     <Stack direction="row" spacing={5}>
       {colors.map((color) => (
