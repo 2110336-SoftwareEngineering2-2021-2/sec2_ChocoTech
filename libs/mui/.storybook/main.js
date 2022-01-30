@@ -23,4 +23,8 @@ module.exports = {
 
     return config
   },
+
+  features: {
+    emotionAlias: false,
+  }
 }
