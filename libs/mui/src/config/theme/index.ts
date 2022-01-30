@@ -1,4 +1,4 @@
-import { ThemeOptions, createTheme } from '@mui/material'
+import { ThemeOptions, createTheme } from '@mui/material/styles'
 
 import paletteOptions from './palette'
 
