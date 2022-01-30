@@ -10,7 +10,8 @@
         "outputPath": "dist/apps/doji-backend",
         "main": "apps/doji-backend/src/main.ts",
         "tsConfig": "apps/doji-backend/tsconfig.app.json",
-        "assets": ["apps/doji-backend/src/assets"]
+        "assets": ["apps/doji-backend/src/assets"],
+        "generatePackageJson": true
       },
       "configurations": {
         "production": {
@@ -29,8 +30,7 @@
     "serve": {
       "executor": "@nrwl/node:execute",
       "options": {
-        "buildTarget": "doji-backend:build",
-        "port": 8080
+        "buildTarget": "doji-backend:build"
       }
     },
     "lint": {
@@ -46,6 +46,17 @@
       "options": {
         "jestConfig": "apps/doji-backend/jest.config.js",
         "passWithNoTests": true
+      }
+    },
+    "dockerbuild": {
+      "executor": "@nrwl/workspace:run-commands",
+      "outputs": [],
+      "options": {
+        "commands": [
+          "nx run doji-backend:build",
+          "docker build -f ./apps/doji-backend/Dockerfile -t doji-backend ."
+        ],
+        "parallel": false
       }
     }
   },
