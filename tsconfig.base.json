@@ -14,7 +14,9 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@sec2-choco-tech/mui": ["libs/mui/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
