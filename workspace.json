@@ -3,6 +3,7 @@
   "projects": {
     "doji-backend": "apps/doji-backend",
     "doji-frontend": "apps/doji-frontend",
-    "doji-frontend-e2e": "apps/doji-frontend-e2e"
+    "doji-frontend-e2e": "apps/doji-frontend-e2e",
+    "mui": "libs/mui"
   }
 }

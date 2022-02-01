@@ -5,6 +5,7 @@
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
@@ -14,7 +15,12 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@types/*": ["types/*"],
+      "@frontend/*": ["apps/doji-frontend/src/*"],
+      "@backend/*": ["apps/doji-backend/src/*"],
+      "@libs/mui": ["libs/mui/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
