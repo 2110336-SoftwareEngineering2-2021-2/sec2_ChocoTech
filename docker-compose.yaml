@@ -4,6 +4,7 @@ services:
   database:
     restart: unless-stopped
     image: postgres:14.1
+    container_name: postgres
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -12,5 +13,6 @@ services:
       - '5432:5432'
   redis:
     image: redis:6.2
+    container_name: redis
     ports:
       - '6379:6379'
