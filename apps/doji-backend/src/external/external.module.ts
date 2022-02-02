@@ -5,13 +5,13 @@ import { environment } from 'src/environments/environment'
 @Module({
     providers: [
         {
-            provide: Redis,
+            provide: "Redis",
             useValue: new Redis({
                 host: environment.redis.host,
                 db: environment.redis.db,
             })
         }
     ],
-    exports: [Redis]
+    exports: ['Redis']
 })
 export class ExternalModule {}
