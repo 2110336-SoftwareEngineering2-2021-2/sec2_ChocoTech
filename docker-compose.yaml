@@ -9,11 +9,11 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
-    volumes:
-      - postgres-choco-data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
-
-volumes:
-  postgres-data:
-    name: postgres-choco-data
+  redis:
+    image: redis:6.2
+    container_name: redis
+    container_name: redis
+    ports:
+      - '6379:6379'
