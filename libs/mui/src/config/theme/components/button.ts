@@ -18,7 +18,7 @@ export function overrideButton(theme: Theme): Components['MuiButton'] {
     styleOverrides: {
       root: {
         borderRadius: 48,
-        padding: theme.spacing(1, 2),
+        padding: theme.spacing(1, 3),
         transition: theme.transitions.create(['background-color', 'box-shadow', 'color']),
       },
     },
