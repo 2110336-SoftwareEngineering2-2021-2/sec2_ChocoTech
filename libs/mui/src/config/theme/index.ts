@@ -5,6 +5,9 @@ import paletteOptions from './palette'
 
 const themeOptions: ThemeOptions = {
   palette: paletteOptions,
+  typography: {
+    fontFamily: ['Inter', 'sans-serif'].join(','),
+  },
 }
 
 function buildTheme(): Theme {

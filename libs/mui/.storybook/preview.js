@@ -11,3 +11,7 @@ const ThemeDecorator = (Story) => {
 }
 
 export const decorators = [ThemeDecorator]
+
+export const parameters = {
+  controls: { expanded: true },
+}
