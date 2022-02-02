@@ -5,5 +5,9 @@ export const environment = {
     password: 'postgres',
     dbName: 'postgres',
     host: 'localhost'
+  },
+  redis: {
+    host: 'localhost',
+    db: 0,
   }
 }
