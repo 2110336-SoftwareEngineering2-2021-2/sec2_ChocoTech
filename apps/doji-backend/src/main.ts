@@ -4,7 +4,7 @@
  */
 import { INestApplication, Logger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
-import { DocumentBuilder, SwaggerModule} from '@nestjs/swagger'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
 import { AppModule } from './app/app.module'
 
@@ -20,10 +20,10 @@ async function bootstrap() {
 
 function setupSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
-                  .setTitle('Doji Backend API')
-                  .setVersion('0.0.1')
-                  .addBearerAuth({type: 'http'})
-                  .build();
+    .setTitle('Doji Backend API')
+    .setVersion('0.0.1')
+    .addBearerAuth({ type: 'http' })
+    .build()
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('/swagger', app, document)
 }

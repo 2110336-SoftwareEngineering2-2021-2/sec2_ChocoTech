@@ -9,12 +9,8 @@ import { ExternalModule } from 'src/external/external.module'
 import { AuthController } from './auth.controller'
 
 @Module({
-  imports: [
-    MikroOrmModule.forFeature([User]),
-    PassportModule,
-    ExternalModule,
-  ],
+  imports: [MikroOrmModule.forFeature([User]), PassportModule, ExternalModule],
   controllers: [AuthController],
-  providers: [ AuthService, BearerStrategy],
+  providers: [AuthService, BearerStrategy],
 })
 export class AuthModule {}

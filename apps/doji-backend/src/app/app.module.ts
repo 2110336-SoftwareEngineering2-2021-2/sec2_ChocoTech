@@ -1,10 +1,10 @@
+import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Module } from '@nestjs/common'
-import {MikroOrmModule} from '@mikro-orm/nestjs'
+import { AuthModule } from 'src/auth/auth.module'
+import { environment } from 'src/environments/environment'
 
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { environment } from 'src/environments/environment'
-import { AuthModule } from 'src/auth/auth.module'
 
 @Module({
   imports: [

@@ -4,10 +4,10 @@ export const environment = {
     user: 'postgres',
     password: 'postgres',
     dbName: 'postgres',
-    host: 'localhost'
+    host: 'localhost',
   },
   redis: {
     host: 'localhost',
     db: 0,
-  }
+  },
 }
