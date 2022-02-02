@@ -25,5 +25,3 @@ import { AuthModule } from 'src/auth/auth.module'
   providers: [AppService],
 })
 export class AppModule {}
-
-console.log("CD: ", __dirname)
