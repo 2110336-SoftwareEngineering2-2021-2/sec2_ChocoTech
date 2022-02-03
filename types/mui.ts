@@ -37,3 +37,13 @@ export interface CustomPallete {
   blue: PaletteColorOptions
   yellow: PaletteColorOptions
 }
+
+export interface CustomTypographyPropsVariantOverrides {
+  title1: true
+  title2: true
+  title3: true
+  large: true
+  regular: true
+  small: true
+  tiny: true
+}

@@ -15,8 +15,4 @@ const Color = styled('div', { shouldForwardProp })<ColorProps>`
   background-color: ${({ color, theme }) => get(theme.palette, color, 'transparent')};
 `
 
-export default function ({ color }: ColorProps) {
-  const theme = useTheme()
-  console.log('INNER', theme)
-  return <Color color={color} />
-}
+export default Color
