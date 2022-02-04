@@ -62,6 +62,7 @@ Avatar.args = {
     src: 'https://mui.com/static/images/avatar/1.jpg',
     alt: 'Robert William',
     children: 'TY',
+    status: 'online',
   },
 }
 
@@ -70,5 +71,6 @@ Icon.args = {
   avatar: {
     sx: { bgcolor: 'primary.main' },
     children: <FiGitlab />,
+    status: 'offline',
   },
 }

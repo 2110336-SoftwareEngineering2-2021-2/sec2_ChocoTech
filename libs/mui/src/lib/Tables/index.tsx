@@ -8,16 +8,25 @@ import {
   Stack,
   Switch,
   Typography,
+  useTheme,
 } from '@mui/material'
 import Link, { LinkProps } from 'next/link'
 
 import { useCallback } from 'react'
+
+import { StyledBadge } from './styled'
 
 export enum TablesActionType {
   Link = 'link',
   Button = 'button',
   Switch = 'switch',
   None = 'none',
+}
+
+export enum TablesAvatarStatus {
+  None = 'none',
+  Online = 'online',
+  Offline = 'offline',
 }
 
 export type TableActionProps =
@@ -39,7 +48,9 @@ export interface TablesProps {
   content: string
   caption?: string
   action?: TableActionProps
-  avatar?: MuiAvatarProps
+  avatar?: MuiAvatarProps & {
+    status?: TablesAvatarStatus
+  }
 }
 
 const Tables: React.FC<TablesProps> = ({
@@ -48,10 +59,7 @@ const Tables: React.FC<TablesProps> = ({
   action = { type: 'none' },
   avatar: avartarProps,
 }) => {
-  console.log('TABLES', avartarProps)
-
   const renderAction = useCallback(() => {
-    console.log('RENDER', avartarProps)
     if (action.type === TablesActionType.Button) {
       const { type, ...props } = action
       return <Button variant="contained" color="primary" size="small" {...props} />
@@ -80,9 +88,19 @@ const Tables: React.FC<TablesProps> = ({
       sx={{ minHeight: 64 }}
     >
       <Stack direction="row" gap={1.5} justifyContent="space-between" alignItems="center">
-        {avartarProps && (
-          <Avatar {...avartarProps} sx={{ ...avartarProps.sx, width: 40, height: 40 }} />
-        )}
+        {avartarProps &&
+          (avartarProps.status !== TablesAvatarStatus.None ? (
+            <StyledBadge
+              overlap="circular"
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              variant="dot"
+              status={avartarProps.status}
+            >
+              <Avatar {...avartarProps} sx={{ ...avartarProps.sx, width: 40, height: 40 }} />
+            </StyledBadge>
+          ) : (
+            <Avatar {...avartarProps} sx={{ ...avartarProps.sx, width: 40, height: 40 }} />
+          ))}
         <Stack direction="column" spacing={0.5}>
           <Typography variant="regular" fontWeight={400} color="ink.darkest">
             {content}
