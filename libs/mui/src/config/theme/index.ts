@@ -7,6 +7,10 @@ const themeOptions: ThemeOptions = {
   palette: paletteOptions,
   typography: {
     fontFamily: ['Inter', 'sans-serif'].join(','),
+    fontSize: 14,
+  },
+  shape: {
+    borderRadius: 8,
   },
 }
 
