@@ -4,7 +4,7 @@ import Button, { ButtonProps } from '.'
 
 export default {
   component: Button,
-  title: 'Button',
+  title: 'example/Button',
   argTypes: {
     children: {
       defaultValue: 'Hello World',

@@ -6,7 +6,7 @@ import Color, { ColorProps } from '.'
 
 export default {
   component: Color,
-  title: 'Color',
+  title: 'example/Color',
 } as Meta<ColorProps>
 
 const colors: string[] = ['primary', 'ink', 'sky', 'green', 'red', 'blue', 'yellow']
