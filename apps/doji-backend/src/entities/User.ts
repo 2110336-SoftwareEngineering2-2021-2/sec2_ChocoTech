@@ -12,14 +12,14 @@ export class User {
   display_name: string
 
   @Property()
-  coin_balance: number
+  coin_balance: number = 0
 
   @Property()
-  online_status: boolean
+  online_status: boolean = false
 
   @Property()
   email: string
 
   @Property()
-  registeration_date: Date
+  registeration_date: Date = new Date();
 }

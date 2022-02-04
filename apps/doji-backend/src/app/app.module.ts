@@ -1,6 +1,7 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Module } from '@nestjs/common'
 import { AuthModule } from 'src/auth/auth.module'
+import { RegisterModule } from 'src/register/register.module'
 import { environment } from 'src/environments/environment'
 
 import { AppController } from './app.controller'
@@ -20,6 +21,7 @@ import { AppService } from './app.service'
       strict: true,
     }),
     AuthModule,
+    RegisterModule
   ],
   controllers: [AppController],
   providers: [AppService],
