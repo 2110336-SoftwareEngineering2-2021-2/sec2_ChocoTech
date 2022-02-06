@@ -3,12 +3,15 @@ import { Body, Controller, ForbiddenException, Get, Post, UseGuards } from '@nes
 import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
 import { AuthService, UserReference } from 'src/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from 'src/auth/user-auth.guard'
+import { IsString } from 'class-validator'
 
 class PasswordLoginBody {
   @ApiProperty()
+  @IsString()
   username: string
 
   @ApiProperty()
+  @IsString()
   password: string
 }
 
