@@ -23,15 +23,18 @@ import { AppService } from './app.service'
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService,
-  {
-    provide: APP_PIPE,
-    useFactory: () => new ValidationPipe({
-      enableDebugMessages: true,
-      forbidNonWhitelisted: true,
-      whitelist: true,
-      transform: true,
-    })
-  }],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE,
+      useFactory: () =>
+        new ValidationPipe({
+          enableDebugMessages: true,
+          forbidNonWhitelisted: true,
+          whitelist: true,
+          transform: true,
+        }),
+    },
+  ],
 })
 export class AppModule {}
