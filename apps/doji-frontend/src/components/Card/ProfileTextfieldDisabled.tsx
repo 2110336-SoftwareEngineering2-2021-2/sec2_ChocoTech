@@ -7,6 +7,8 @@ function profileTextfieldDisabled(props) {
       <TextField
         id="filled-hidden-label-read-only-input"
         variant="standard"
+        fullWidth
+        inputProps={{ style: { textAlign: 'right' } }}
         defaultValue={props.defaultValue}
         disabled
         InputProps={{
