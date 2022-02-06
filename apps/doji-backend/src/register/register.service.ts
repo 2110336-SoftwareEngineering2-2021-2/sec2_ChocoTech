@@ -9,12 +9,14 @@ export class RegisterService {
     constructor(@InjectRepository(User) private readonly userRepo: EntityRepository<User>,){
 
     }
+    // create user service
     async creat(user: User): Promise<User>{
         const creatUser = this.userRepo.create(user);
-        await this.userRepo.persist(creatUser);
+        this.userRepo.persistAndFlush(creatUser);
         return creatUser;
     }
-    view(usn : string):Promise<User>{
-        return this.userRepo.findOne({username: usn })
+    //check for user service
+    check(usn : string,em : string):Promise<User>{
+        return this.userRepo.findOne({$or:[{username:usn},{email:em}]});
     }
 }
