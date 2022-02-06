@@ -395,3 +395,14 @@ summary svg {
   display: flex;
   flex-direction: column;
 }
+.profileLayout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+.profileFormHeader {
+  margin-top: 32px;
+  margin-bottom: 12px;
+  background-color: red;
+}
