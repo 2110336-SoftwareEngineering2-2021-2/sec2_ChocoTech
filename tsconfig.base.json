@@ -16,7 +16,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@types/*": ["types/*"],
+      "@typing/*": ["types/*"],
       "@frontend/*": ["apps/doji-frontend/src/*"],
       "@backend/*": ["apps/doji-backend/src/*"],
       "@libs/mui": ["libs/mui/src/index.ts"]
