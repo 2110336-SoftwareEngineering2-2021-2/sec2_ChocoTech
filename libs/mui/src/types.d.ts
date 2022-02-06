@@ -4,7 +4,7 @@ import {
   CustomPaletteOptions,
   CustomSimplePaletteColorOptions,
   CustomTypographyPropsVariantOverrides,
-} from '@types/mui'
+} from '@typing/mui'
 
 /* eslint-disable */
 declare module '@mui/material/styles' {
