@@ -1,5 +1,5 @@
 import isPropValid from '@emotion/is-prop-valid'
-import { styled, useTheme } from '@mui/material'
+import { styled } from '@mui/material'
 import { get } from 'lodash'
 
 const shouldForwardProp = (props: string) => isPropValid(props) && props !== 'color'

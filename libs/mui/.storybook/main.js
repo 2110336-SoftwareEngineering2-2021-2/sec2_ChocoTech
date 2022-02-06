@@ -7,8 +7,8 @@ module.exports = {
 
   stories: [
     ...rootMain.stories,
-    // '../src/lib/**/*.stories.mdx',
-    // '../src/lib/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/lib/**/*.stories.mdx',
+    '../src/lib/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/example/**/*.stories.mdx',
     '../src/example/**/*.stories.@(js|jsx|ts|tsx)',
   ],
@@ -26,5 +26,5 @@ module.exports = {
 
   features: {
     emotionAlias: false,
-  }
+  },
 }

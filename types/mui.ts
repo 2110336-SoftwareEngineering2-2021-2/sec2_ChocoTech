@@ -29,13 +29,13 @@ export interface CustomPaletteColor {
   darkest?: string
   contrastText: string
 }
-export interface CustomPallete {
-  ink: PaletteColorOptions
-  sky: PaletteColorOptions
-  green: PaletteColorOptions
-  red: PaletteColorOptions
-  blue: PaletteColorOptions
-  yellow: PaletteColorOptions
+export interface CustomPalette {
+  ink: CustomSimplePaletteColorOptions
+  sky: CustomSimplePaletteColorOptions
+  green: CustomSimplePaletteColorOptions
+  red: CustomSimplePaletteColorOptions
+  blue: CustomSimplePaletteColorOptions
+  yellow: CustomSimplePaletteColorOptions
 }
 
 export interface CustomTypographyPropsVariantOverrides {

@@ -6,7 +6,7 @@ import Typography, { TypographyProps } from '.'
 
 export default {
   component: Typography,
-  title: 'Typography',
+  title: 'example/Typography',
 } as Meta<TypographyProps>
 
 const variants = [
