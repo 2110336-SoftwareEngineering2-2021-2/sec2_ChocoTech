@@ -13,7 +13,7 @@ export function overrideTypography(theme: Theme): Components['MuiTypography'] {
       },
       {
         props: { variant: 'title3' },
-        style: { fontSize: '24px', lineHeight: '32px', fontFamily: 'Inter' },
+        style: { fontSize: '24px', lineHeight: '28px', fontFamily: 'Inter' },
       },
       {
         props: { variant: 'large' },
