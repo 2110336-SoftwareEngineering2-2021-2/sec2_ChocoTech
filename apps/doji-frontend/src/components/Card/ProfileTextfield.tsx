@@ -8,7 +8,6 @@ function profileTextfield(props) {
         id="filled-hidden-label-normal"
         variant="standard"
         defaultValue={props.defaultValue}
-        style={{ color: 'green' }}
         InputProps={{
           disableUnderline: true,
           startAdornment: (
