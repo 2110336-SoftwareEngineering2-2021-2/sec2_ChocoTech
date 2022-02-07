@@ -5,7 +5,7 @@ import { FiSearch, FiX } from 'react-icons/fi'
 
 export type SearchBarProps = TextFieldProps
 
-export interface SearchBarRef extends Partial<HTMLInputElement> {
+export interface SearchBarRef extends HTMLInputElement {
   clear: () => void
 }
 
@@ -20,9 +20,8 @@ export const SearchBar = forwardRef<SearchBarRef, SearchBarProps>((props, ref) =
   }
 
   useImperativeHandle(ref, () => ({
-    value: inputRef?.current?.value,
     clear: handleClearText,
-    ...inputRef.current,
+    ...(inputRef.current as HTMLInputElement),
   }))
 
   return (
