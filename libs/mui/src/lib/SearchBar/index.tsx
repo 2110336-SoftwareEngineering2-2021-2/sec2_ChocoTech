@@ -1,4 +1,4 @@
-import { InputAdornment, TextField, TextFieldProps, useTheme } from '@mui/material'
+import { Button, InputAdornment, Stack, TextField, TextFieldProps, useTheme } from '@mui/material'
 
 import { forwardRef, useImperativeHandle, useRef } from 'react'
 import { FiSearch, FiX } from 'react-icons/fi'
@@ -26,22 +26,27 @@ export const SearchBar = forwardRef<SearchBarRef, SearchBarProps>((props, ref) =
   }))
 
   return (
-    <TextField
-      inputRef={inputRef}
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <FiSearch color={theme.palette.grey[500]} />
-          </InputAdornment>
-        ),
-        endAdornment: (
-          <InputAdornment position="start" onClick={handleClearText}>
-            <FiX color={theme.palette.grey[500]} style={{ cursor: 'pointer' }} />
-          </InputAdornment>
-        ),
-      }}
-      {...props}
-    />
+    <Stack direction="row" spacing={1} justifyContent="space-between">
+      <TextField
+        inputRef={inputRef}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <FiSearch color={theme.palette.grey[500]} />
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="start" onClick={handleClearText}>
+              <FiX color={theme.palette.grey[500]} style={{ cursor: 'pointer' }} />
+            </InputAdornment>
+          ),
+        }}
+        {...props}
+      />
+      <Button variant="text" color="inherit">
+        Cancel
+      </Button>
+    </Stack>
   )
 })
 
