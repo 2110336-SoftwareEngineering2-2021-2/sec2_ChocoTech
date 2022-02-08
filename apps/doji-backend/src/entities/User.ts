@@ -9,17 +9,17 @@ export class User {
   passwordHash: string
 
   @Property()
-  display_name: string
+  displayName: string
 
   @Property()
-  coin_balance: number = 0
+  coinBalance: number = 0
 
   @Property()
-  online_status: boolean = false
+  onlineStatus: boolean = false
 
   @Property()
   email: string
 
   @Property()
-  registeration_date: Date = new Date();
+  registerationDate: Date = new Date()
 }
