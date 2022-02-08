@@ -8,9 +8,10 @@ import { RegisterService } from './register.service'
 export class RegisterController {
   constructor(private readonly registerService: RegisterService) {}
   @Post()
-  async creat(
+  async create(
     @Body() dto: Omit<User, 'id' | 'coinBalance' | 'onlineStatus' | 'registerationDate'>,
   ) {
-    return this.registerService.register(dto)
+    await this.registerService.register(dto)
+    return;
   }
 }
