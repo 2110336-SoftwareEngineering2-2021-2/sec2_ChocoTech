@@ -1,4 +1,5 @@
 import { Box, Button, Container, Stack, Typography } from '@mui/material'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export function Index() {
@@ -11,7 +12,7 @@ export function Index() {
             ji
           </Typography>
         </Typography>
-        <Box component="img" alt="" src="/static/AL.png" />
+        <Image src="/static/AL.png" alt="Picture of the author" width={327} height={327}></Image>
         <Typography variant="title3" fontWeight={700} pt={[2, 4]} lineHeight="32px">
           Your{' '}
           <Typography variant="title3" component="span" color="primary" lineHeight="32px">
