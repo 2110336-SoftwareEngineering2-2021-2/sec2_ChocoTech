@@ -1,57 +1,55 @@
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
-import { AppBar, Button, IconButton, TextField, Toolbar } from '@mui/material'
-import { Typography } from '@mui/material'
-import MobileStepper from '@mui/material/MobileStepper'
-import { useTheme } from '@mui/material/styles'
+import { AppBar, Button, IconButton, TextField, Toolbar, Typography } from '@mui/material'
+import { Formik } from 'formik'
+import * as yup from 'yup'
 
 import React from 'react'
 
+import InputField from '../components/Register/inputField'
+import MultiStepForm, { FormStep } from '../components/Register/multiStepForm'
+
+const validationSchema = yup.object({
+  username: yup.string().required('Username is required'),
+})
+
 function Register() {
-  const theme = useTheme()
-  const [activeStep, setActiveStep] = React.useState(0)
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1)
-  }
   return (
-    <div>
-      <div>
-        <AppBar position="static">
-          <Toolbar variant="dense">
-            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-              <ArrowBackIosNewIcon />
-            </IconButton>
-            <Typography variant="h6" color="inherit" component="div">
-              Choose Username
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <Typography></Typography>
-      </div>
-      <div>
-        <Typography>Choose a username for your new account.</Typography>
-        <Typography>You cannot change your username later.</Typography>
-      </div>
-      <div>
-        <TextField required id="outlined-required" label="Username" />
-      </div>
-
-      <div>
-        <Button onClick={handleNext} disabled={activeStep === 3}>
-          {activeStep >= 2 ? 'Proceed' : 'Next'}
-        </Button>
-        <MobileStepper
-          variant="dots"
-          steps={3}
-          position="static"
-          activeStep={activeStep}
-          sx={{ maxWidth: 400, flexGrow: 1 }}
-          backButton={''}
-          nextButton={''}
-        />
-      </div>
+    <div className="Register">
+      <header className="Register-header">
+        <MultiStepForm
+          initialValues={{
+            username: '',
+            email: '',
+            password: '',
+          }}
+          onSubmit={(values) => {
+            alert(JSON.stringify(values, null, 2))
+          }}
+        >
+          <FormStep
+            stepName="Username"
+            onSubmit={() => console.log('Step 1')}
+            validationSchema={validationSchema}
+          >
+            <InputField name="username" label="Username" />
+          </FormStep>
+          <FormStep
+            stepName="Email"
+            onSubmit={() => console.log('Step 2')}
+            validationSchema={validationSchema}
+          >
+            <InputField name="email" label="Email" />
+          </FormStep>
+          <FormStep
+            stepName="Password"
+            onSubmit={() => console.log('Step 3')}
+            validationSchema={validationSchema}
+          >
+            <InputField name="password" label="Password" />
+          </FormStep>
+        </MultiStepForm>
+      </header>
     </div>
   )
 }
-
 export default Register
