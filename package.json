@@ -16,7 +16,8 @@
     "test": "nx test",
     "graph": "nx dep-graph",
     "migrate-db": "nx run doji-backend:migrate-db",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "format:all": "prettier --write ."
   },
   "private": true,
   "dependencies": {
