@@ -7,4 +7,19 @@ export class User {
 
   @Property()
   passwordHash: string
+
+  @Property()
+  displayName: string
+
+  @Property()
+  coinBalance: number = 0
+
+  @Property()
+  onlineStatus: boolean = false
+
+  @Property()
+  email: string
+
+  @Property()
+  registerationDate: Date = new Date()
 }
