@@ -1,5 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Post } from '@nestjs/common'
-import bcrypt from 'bcrypt'
+import { Body, Controller, Post } from '@nestjs/common'
 import { User } from 'src/entities/User'
 
 import { RegisterService } from './register.service'
@@ -12,6 +11,6 @@ export class RegisterController {
     @Body() dto: Omit<User, 'id' | 'coinBalance' | 'onlineStatus' | 'registerationDate'>,
   ) {
     await this.registerService.register(dto)
-    return;
+    return
   }
 }
