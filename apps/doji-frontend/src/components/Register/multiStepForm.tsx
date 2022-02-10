@@ -63,12 +63,13 @@ const MultiStepForm = ({ children, initialValues, onSubmit }: Props) => {
                 )}
 
                 <Typography variant="h5" flexGrow={1} textAlign="center">
-                  Choose Username
+                  {step.props.header}
                 </Typography>
               </Toolbar>
             </AppBar>
-            <Typography marginLeft={2}>Choose a username for your new account.</Typography>
-            <Typography marginLeft={2}>You cannot change your username later.</Typography>
+            <Typography marginLeft={2}>
+              {step.props.body1} <br /> {step.props.body2}
+            </Typography>
             {step}
             <FormNavigation
               isLastStep={isLastStep}

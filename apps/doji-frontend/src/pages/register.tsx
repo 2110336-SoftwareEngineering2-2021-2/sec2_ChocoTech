@@ -8,8 +8,22 @@ import React from 'react'
 import InputField from '../components/Register/inputField'
 import MultiStepForm, { FormStep } from '../components/Register/multiStepForm'
 
-const validationSchema = yup.object({
-  username: yup.string().required('Username is required'),
+const usernameValidation = yup.object({
+  username: yup.string().required('Please Enter a username'),
+})
+
+const emailValidation = yup.object({
+  email: yup.string().email().required('Please Enter your Email'),
+})
+
+const passwordValidation = yup.object({
+  password: yup
+    .string()
+    .required('Please Enter your password')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])(?=.{8,})/,
+      'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character',
+    ),
 })
 
 function Register() {
@@ -29,21 +43,29 @@ function Register() {
           <FormStep
             stepName="Username"
             onSubmit={() => console.log('Step 1')}
-            validationSchema={validationSchema}
+            validationSchema={usernameValidation}
+            header="Choose Username"
+            body1="Choose a username for your new account. "
+            body2="You cannot change your username later."
           >
             <InputField name="username" label="Username" />
           </FormStep>
           <FormStep
             stepName="Email"
             onSubmit={() => console.log('Step 2')}
-            validationSchema={validationSchema}
+            validationSchema={emailValidation}
+            header="Choose an email"
+            body1="Choose an email for your new account."
+            body2="You can always change your email later."
           >
             <InputField name="email" label="Email" />
           </FormStep>
           <FormStep
             stepName="Password"
             onSubmit={() => console.log('Step 3')}
-            validationSchema={validationSchema}
+            validationSchema={passwordValidation}
+            header="Setup a new password"
+            body1="Choosea secure password"
           >
             <InputField name="password" label="Password" />
           </FormStep>
