@@ -1,4 +1,4 @@
-import { Button, MobileStepper } from '@mui/material'
+import { Button } from '@mui/material'
 import { FormikValues } from 'formik'
 
 import React from 'react'
@@ -18,11 +18,6 @@ const FormNavigation = (props: Props) => {
         justifyContent: 'space-between',
       }}
     >
-      {/* {props.hasPrevious && (
-        <Button variant="contained" type="button" onClick={props.onBackClick}>
-          Back
-        </Button>
-      )} */}
       <Button fullWidth type="submit" color="primary" variant="contained">
         {props.isLastStep ? 'Proceed' : 'Next'}
       </Button>

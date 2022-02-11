@@ -1,10 +1,10 @@
-import FormNavigation from '@frontend/components/Register/formNavigation'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import { AppBar, Button, IconButton, MobileStepper, Toolbar, Typography } from '@mui/material'
 import { Form, Formik, FormikConfig, FormikHelpers, FormikValues } from 'formik'
-import { NextServer } from 'next/dist/server/next'
 
 import React, { ReactElement, useState } from 'react'
+
+import FormNavigation from './formNavigation'
 
 interface Props extends FormikConfig<FormikValues> {
   children: React.ReactNode
@@ -27,7 +27,6 @@ const MultiStepForm = ({ children, initialValues, onSubmit }: Props) => {
   }
 
   const previous = (values: FormikValues) => {
-    console.log(values)
     setSnapshot(values)
     setStepNumber(stepNumber - 1)
   }
@@ -62,12 +61,12 @@ const MultiStepForm = ({ children, initialValues, onSubmit }: Props) => {
                   </IconButton>
                 )}
 
-                <Typography variant="h5" flexGrow={1} textAlign="center">
+                <Typography variant="h6" flexGrow={1} textAlign="center">
                   {step.props.header}
                 </Typography>
               </Toolbar>
             </AppBar>
-            <Typography marginLeft={2}>
+            <Typography margin={2}>
               {step.props.body1} <br /> {step.props.body2}
             </Typography>
             {step}

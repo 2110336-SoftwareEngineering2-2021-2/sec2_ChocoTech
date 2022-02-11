@@ -12,8 +12,8 @@ const InputField = ({ label, ...props }: Props) => {
   return (
     <TextField
       fullWidth
-      label={label}
-      margin="dense"
+      placeholder={label}
+      sx={{ paddingX: 2, paddingY: 1 }}
       {...field}
       {...props}
       error={meta.touched && Boolean(meta.error)}
