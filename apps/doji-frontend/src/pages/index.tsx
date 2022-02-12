@@ -1,11 +1,15 @@
-import { Box, Button, Container, Stack, Typography } from '@mui/material'
+import { Button, Container, Stack, Typography, styled } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
 
+const StyledContainer = styled(Container)({
+  minHeight: '100%',
+})
+
 export function Index() {
   return (
-    <Container maxWidth="sm">
-      <Stack direction="column" justifyContent="space-between" alignItems="center" mt={4}>
+    <StyledContainer maxWidth="sm">
+      <Stack direction="column" justifyContent="space-between" alignItems="center" pt={4}>
         <Typography variant="title3" fontWeight={700} p={[2, 4]} align="center">
           Do
           <Typography variant="title3" component="span" color="primary">
@@ -39,7 +43,7 @@ export function Index() {
           </Link>
         </Typography>
       </Stack>
-    </Container>
+    </StyledContainer>
   )
 }
 
