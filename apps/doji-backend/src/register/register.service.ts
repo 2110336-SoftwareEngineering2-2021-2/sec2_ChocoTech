@@ -3,20 +3,12 @@ import { InjectRepository } from '@mikro-orm/nestjs'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import bcrypt from 'bcrypt'
 import { User } from 'src/entities/User'
+import { UserRegistrationRequest } from 'src/register/register.dto'
 
 @Injectable()
 export class RegisterService {
   constructor(@InjectRepository(User) private readonly userRepo: EntityRepository<User>) {}
-  async register(dto: Omit<User, 'id' | 'coinBalance' | 'onlineStatus' | 'registerationDate'>) {
-    if (
-      dto.username === undefined ||
-      dto.email === undefined ||
-      dto.displayName === undefined ||
-      dto.passwordHash === undefined
-    ) {
-      //check for validation of input data
-      throw new HttpException('Incorrect data', HttpStatus.BAD_REQUEST)
-    }
+  async register(dto: UserRegistrationRequest) {
     //check for uniqueness of username and email
     if (await this.isUniqueAccount(dto)) {
       //create new user and hash password
@@ -24,8 +16,8 @@ export class RegisterService {
       newUser.username = dto.username
       newUser.email = dto.email
       newUser.displayName = dto.displayName
-      newUser.passwordHash = await bcrypt.hash(dto.passwordHash, 10)
-      await this.create(newUser) //add to database
+      newUser.passwordHash = await bcrypt.hash(dto.password, 10)
+      await this.create(newUser)//add to database
     }
     return
   }
@@ -37,7 +29,7 @@ export class RegisterService {
   }
   //check for user service
   async isUniqueAccount(
-    dto: Omit<User, 'id' | 'coinBalance' | 'onlineStatus' | 'registerationDate'>,
+    dto: UserRegistrationRequest,
   ): Promise<boolean> {
     const response = await this.userRepo.findOne({
       $or: [{ username: dto.username }, { email: dto.email }],
