@@ -29,11 +29,11 @@ export class RegisterService {
     }
     return
   }
-  // create user service
+  //create user service
   async create(user: User): Promise<User> {
-    const creatUser = await this.userRepo.create(user)
-    await this.userRepo.persistAndFlush(creatUser)
-    return creatUser
+    const createUser = await this.userRepo.create(user)
+    await this.userRepo.persistAndFlush(createUser)
+    return createUser
   }
   //check for user service
   async isUniqueAccount(
@@ -42,15 +42,16 @@ export class RegisterService {
     const response = await this.userRepo.findOne({
       $or: [{ username: dto.username }, { email: dto.email }],
     })
-    if (response != undefined) {
-      if (dto.username === response.username) {
-        throw new HttpException('this username is already used', HttpStatus.BAD_REQUEST)
-      } else if (dto.email === response.email) {
-        throw new HttpException('this email is already used', HttpStatus.BAD_REQUEST)
-      } else {
-        throw new HttpException('unknown error occur', HttpStatus.BAD_REQUEST)
-      }
+
+    //user not found
+    if (!response) return true
+
+    if (dto.username === response.username) {
+      throw new HttpException('this username is already used', HttpStatus.BAD_REQUEST)
+    } else if (dto.email === response.email) {
+      throw new HttpException('this email is already used', HttpStatus.BAD_REQUEST)
     }
+
     return true
   }
 }
