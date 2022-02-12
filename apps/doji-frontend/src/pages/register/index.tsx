@@ -3,8 +3,8 @@ import * as yup from 'yup'
 
 import React from 'react'
 
-import InputField from '../components/Register/inputField'
-import MultiStepForm, { FormStep } from '../components/Register/multiStepForm'
+import InputField from '../../components/Register/inputField'
+import MultiStepForm, { FormStep } from '../../components/Register/multiStepForm'
 
 const usernameValidation = yup.object({
   username: yup.string().required('Please Enter a username'),
