@@ -1,7 +1,7 @@
 #!/bin/sh
 
-node dist/apps/doji-backend/main.js &
+NODE_ENV=production node dist/apps/doji-backend/main.js &
 cd dist/apps/doji-frontend/
-../../../node_modules/.bin/next start &
+../../../node_modules/.bin/next start -p 3000 &
 echo "Started Doji Backend and Frontend"
 cd /
