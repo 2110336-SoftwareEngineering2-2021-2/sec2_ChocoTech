@@ -48,6 +48,12 @@ function generateRandomUserToken(): Promise<UserToken> {
 
 const TOKEN_EXPIRE_DURATION_SECONDS = 60 * 60 * 24 * 30
 
+export class InvalidToken extends Error {
+  constructor() {
+    super('Invalid Token')
+  }
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -57,12 +63,19 @@ export class AuthService {
 
   async retriveUserFromToken(token: UserToken): Promise<UserReference> {
     const key = userTokenToRedisKey(token)
-    const ref_str = await this.redis.get(key)
+    try {
+      const ref_str = await this.redis.get(key)
+      const user = deserializeUserReference(ref_str, this.userRepo)
 
-    //Extends expiration time
-    await this.redis.expire(key, TOKEN_EXPIRE_DURATION_SECONDS)
+      await user.getUser()
 
-    return deserializeUserReference(ref_str, this.userRepo)
+      //Extends expiration time
+      await this.redis.expire(key, TOKEN_EXPIRE_DURATION_SECONDS)
+
+      return user
+    } catch (e) {
+      throw new InvalidToken()
+    }
   }
 
   async issueTokenForUser(user: User): Promise<UserToken> {
