@@ -11,6 +11,8 @@ import { environment } from '../environments/environment'
         host: environment.redis.host,
         db: environment.redis.db,
         port: environment.redis.port,
+        username: environment.redis.username,
+        password: environment.redis.password,
       }),
     },
   ],
