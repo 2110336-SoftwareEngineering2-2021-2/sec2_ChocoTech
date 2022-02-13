@@ -1,5 +1,5 @@
-import { AppBar, Grid, Icon, IconButton, Toolbar, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { AppBar, Grid,IconButton, Toolbar, Typography } from "@mui/material";
+import {IoIosArrowBack} from 'react-icons/io';
 export function DojiAppBar(){
     return(
         <AppBar position="static" className="appBar"sx = {{
@@ -11,6 +11,7 @@ export function DojiAppBar(){
                     <Grid container spacing={0} sx={{ flexGrow: 1, alignItems : "center"}} >
                         <Grid xs={1} item>
                         <IconButton edge = "start" aria-label="menu">
+                            <IoIosArrowBack></IoIosArrowBack>
                         </IconButton>
                         </Grid>
                         <Grid xs={11} textAlign = "center" item>
