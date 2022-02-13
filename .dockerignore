@@ -1,0 +1,12 @@
+dist
+Dockerfile
+.git
+.vscode
+.husky
+.dockerignore
+.prettierignore
+.prettierrc
+.eslintrc.json
+.eslintignore
+.editorconfig
+node_modules
