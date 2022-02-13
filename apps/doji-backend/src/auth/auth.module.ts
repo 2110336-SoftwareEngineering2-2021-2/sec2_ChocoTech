@@ -12,5 +12,6 @@ import { AuthController } from './auth.controller'
   imports: [MikroOrmModule.forFeature([User]), PassportModule, ExternalModule],
   controllers: [AuthController],
   providers: [AuthService, BearerStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}
