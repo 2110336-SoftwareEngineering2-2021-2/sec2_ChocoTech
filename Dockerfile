@@ -3,9 +3,10 @@ WORKDIR /build
 # Prepare for installing dependencies
 # Utilise Docker cache to save re-installing dependencies if unchanged
 COPY package.json yarn.lock ./
-COPY . .
 # Install dependencies
 RUN yarn --frozen-lockfile
+# Copy the rest files
+COPY . .
 # Build storybook
 RUN yarn build:storybook
 # Build all application
