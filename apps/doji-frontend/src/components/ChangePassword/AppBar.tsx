@@ -1,5 +1,4 @@
 import { AppBar, Grid, Icon, IconButton, Toolbar, Typography } from "@mui/material";
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { Box } from "@mui/system";
 export function DojiAppBar(){
     return(
@@ -12,7 +11,6 @@ export function DojiAppBar(){
                     <Grid container spacing={0} sx={{ flexGrow: 1, alignItems : "center"}} >
                         <Grid xs={1} item>
                         <IconButton edge = "start" aria-label="menu">
-                            <ArrowBackIosNewIcon style = {{color : "black"}}></ArrowBackIosNewIcon>
                         </IconButton>
                         </Grid>
                         <Grid xs={11} textAlign = "center" item>
