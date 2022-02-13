@@ -10,6 +10,7 @@ import { environment } from '../environments/environment'
       useValue: new Redis({
         host: environment.redis.host,
         db: environment.redis.db,
+        port: environment.redis.port,
       }),
     },
   ],
