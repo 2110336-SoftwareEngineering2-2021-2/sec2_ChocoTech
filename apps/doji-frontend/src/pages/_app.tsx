@@ -2,6 +2,8 @@ import { theme } from '@libs/mui'
 import { Container, ThemeProvider, styled } from '@mui/material'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
+import Index from '.'
+import ChangePassword from './ChangePassword'
 
 import { Toaster } from 'react-hot-toast'
 
