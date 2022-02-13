@@ -1,15 +1,17 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Module, ValidationPipe } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
 import { APP_PIPE } from '@nestjs/core'
-import { AuthModule } from 'src/auth/auth.module'
-import { environment } from 'src/environments/environment'
-import { RegisterModule } from 'src/register/register.module'
 
+import { AuthModule } from '../auth/auth.module'
+import { environment } from '../environments/environment'
+import { RegisterModule } from '../register/register.module'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MikroOrmModule.forRoot({
       autoLoadEntities: true,
       type: 'postgresql',

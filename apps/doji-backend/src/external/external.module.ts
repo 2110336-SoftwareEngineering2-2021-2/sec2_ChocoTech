@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import Redis from 'ioredis'
-import { environment } from 'src/environments/environment'
+
+import { environment } from '../environments/environment'
 
 @Module({
   providers: [

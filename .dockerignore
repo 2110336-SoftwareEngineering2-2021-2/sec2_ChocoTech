@@ -1,4 +1,4 @@
-dist
+# dist
 Dockerfile
 .git
 .vscode
@@ -9,4 +9,6 @@ Dockerfile
 .eslintrc.json
 .eslintignore
 .editorconfig
-node_modules
+# node_modules
+.env
+.env.*

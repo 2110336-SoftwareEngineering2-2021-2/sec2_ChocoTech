@@ -11,8 +11,17 @@ services:
       - POSTGRES_DB=postgres
     ports:
       - '5432:5432'
+    networks:
+      - private
   redis:
     image: redis:6.2
     container_name: redis
     ports:
       - '6379:6379'
+    networks:
+      - private
+
+networks:
+  private:
+    external: true
+    name: private
