@@ -51,7 +51,7 @@ COPY --from=script /build/node_modules ./node_modules
 
 COPY start_production.sh .
 RUN chmod +x start_production.sh
-RUN echo 'nginx -g "daemon off;"' >> start_production.sh
+RUN echo '\nnginx -g "daemon off;\n"' >> start_production.sh
 
 # Expose nginx port
 EXPOSE 80
