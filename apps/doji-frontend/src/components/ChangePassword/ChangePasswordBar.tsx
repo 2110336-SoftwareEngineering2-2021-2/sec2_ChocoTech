@@ -1,8 +1,13 @@
-import { AppBar, Grid,IconButton, Toolbar, Typography } from "@mui/material";
+import { AppBar, Grid,IconButton, Toolbar, Typography,styled } from "@mui/material";
 import {IoIosArrowBack} from 'react-icons/io';
-export function DojiAppBar(){
+const StyledAppBar = styled('div')({
+    boxShadow: 'none',
+    backgroundColor : 'white',
+    color : 'black'
+});
+export function ChangePasswordBar(){
     return(
-        <AppBar position="static" className="appBar"sx = {{
+        <StyledAppBar sx = {{
             backgroundColor : "white",
             boxShadow : "none",
             color : "black",
@@ -19,7 +24,7 @@ export function DojiAppBar(){
                         </Grid>
                     </Grid>
                 </Toolbar>
-            </AppBar>
+            </StyledAppBar>
     )
 }
-export default DojiAppBar
+export default ChangePasswordBar
