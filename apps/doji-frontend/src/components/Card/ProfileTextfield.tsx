@@ -8,7 +8,7 @@ function profileTextfield(props) {
         id="full-width-filled-hidden-label-normal"
         variant="standard"
         fullWidth
-        inputProps={{ style: { textAlign: 'right' } }}
+        inputProps={{ style: { textAlign: 'right', padding: '0px' } }}
         defaultValue={props.defaultValue}
         InputProps={{
           disableUnderline: true,

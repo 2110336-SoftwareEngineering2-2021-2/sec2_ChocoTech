@@ -12,7 +12,7 @@ const ProfileContainer = styled(Stack)`
 const ProfileTextForm = styled(Container)`
   display: flex;
   flex-direction: column;
-  background-color: ${({ theme }) => theme.palette.sky.lightest};
+  background-color: ${({ theme }) => theme.palette.white};
   width: 100%;
   padding: 0;
 `
@@ -23,7 +23,7 @@ export function Index() {
   return (
     <Container maxWidth="sm">
       <TopNav icon="back" />
-      <ProfileContainer>
+      <ProfileContainer gap={4} justifyContent="center">
         <Avatar alt="Ree" src="/static/images/avatar/1.jpg" sx={{ width: 48, height: 48 }} />
         <Button variant="contained">Edit Profile</Button>
         <ProfileTextForm>
