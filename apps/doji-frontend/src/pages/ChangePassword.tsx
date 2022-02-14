@@ -1,7 +1,6 @@
 import DojiAppBar from "@frontend/components/ChangePassword/AppBar";
-import { Alert, Button, Container, Snackbar, TextField, Typography } from "@mui/material";
+import { Alert, Button, Container, Snackbar, TextField, Typography,styled } from "@mui/material";
 import React, { useEffect } from "react";
-
 
 export function ChangePassword(){
     const [valid,setValid] = React.useState(false);
@@ -51,9 +50,14 @@ export function ChangePassword(){
     }
     return(
         <div><DojiAppBar></DojiAppBar>
-        <Container>
+        <Container fixed sx = {{
+            width : {
+                xs:'100%',
+                md:'40%'
+            }}
+        }>
             <Typography variant="small" fontWeight={400}> Choose a secure password </Typography>
-            <Container sx={{mt:3}}>
+            <Container sx={{mt:3,}} fixed>
             <TextField type = "password" sx={{width : "100%", mb:2}} onChange = {e => updateOldPassword(e)} label="Current password..."></TextField>
             <TextField type = "password" sx={{width : "100%", mb:2}} onChange = {e => updateNewPassword(e)} label="New password..."></TextField>
             <TextField type = "password" sx={{width : "100%", mb:3}} onChange = {e => updatePasswordConfirmation(e)} label="Confirm new password..."></TextField>
