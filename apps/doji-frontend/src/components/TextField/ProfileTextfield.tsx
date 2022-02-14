@@ -2,6 +2,7 @@ import { InputAdornment, TextField, TextFieldProps } from '@mui/material'
 
 type ProfileTextFieldProps = TextFieldProps & {
   adornment: string
+  readOnly: boolean
 }
 function ProfileTextfield(props: ProfileTextFieldProps) {
   return (
@@ -12,6 +13,7 @@ function ProfileTextfield(props: ProfileTextFieldProps) {
       defaultValue={props.defaultValue}
       InputProps={{
         disableUnderline: true,
+        readOnly: props.readOnly,
         startAdornment: (
           <InputAdornment position="start" disablePointerEvents>
             <div style={{ color: 'black' }}>{props.adornment}</div>
