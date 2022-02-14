@@ -16,6 +16,7 @@ function BottomNav() {
       onChange={(event, newValue) => {
         setValue(newValue)
       }}
+      sx={{ mt: 'auto' }}
     >
       <BottomNavigationAction label="Feed" icon={<HomeOutlinedIcon />} />
       <BottomNavigationAction label="Search" icon={<SearchOutlinedIcon />} />
