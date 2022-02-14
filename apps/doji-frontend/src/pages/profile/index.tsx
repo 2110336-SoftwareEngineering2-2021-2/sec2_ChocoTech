@@ -29,8 +29,8 @@ const StyleProfileTextField = styled(ProfileTextfield)`
   border-color: ${({ theme }) => theme.palette.sky.lighter};
 `
 const StyleAvatar = styled(Avatar)`
-  width: 64px;
-  height: 64px;
+  width: ${({ theme }) => theme.spacing(8)};
+  height: ${({ theme }) => theme.spacing(8)};
   margin-top: ${({ theme }) => theme.spacing(3)};
 `
 const StyleCircleAdd = styled(AddCircleTwoToneIcon)`
@@ -42,21 +42,16 @@ const StyleCircleAdd = styled(AddCircleTwoToneIcon)`
   color: ${({ theme }) => theme.palette.primary.light};
   stroke-width: 1.5px;
 `
-const StyleTest = styled(Stack)`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-`
 export function Index() {
   const [isEditProfile, setEditProfile] = useState(false)
   return (
     <>
       <TopNav icon="back" />
       <ProfileContainer spacing={4} alignItems="center">
-        <StyleTest>
+        <Stack display="flex" flexDirection="row" alignItems="flex-end">
           <StyleAvatar alt="Ree" src="/static/images/avatar/1.jpg" />
           <StyleCircleAdd />
-        </StyleTest>
+        </Stack>
         {!isEditProfile && (
           <Button
             variant="contained"

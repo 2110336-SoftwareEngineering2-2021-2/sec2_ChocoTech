@@ -1,8 +1,8 @@
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
-import { Box, Typography, styled } from '@mui/material'
+import { Box, Stack, Typography, styled } from '@mui/material'
 
-const NavLayout = styled(Box)`
+const NavLayout = styled(Stack)`
   display: flex;
   flex-direction: row;
   align-items: center;
