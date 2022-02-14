@@ -1,7 +1,9 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs'
-import { Module } from '@nestjs/common'
+import { Module, ValidationPipe } from '@nestjs/common'
+import { APP_PIPE } from '@nestjs/core'
 import { AuthModule } from 'src/auth/auth.module'
 import { environment } from 'src/environments/environment'
+import { RegisterModule } from 'src/register/register.module'
 
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -20,8 +22,21 @@ import { AppService } from './app.service'
       strict: true,
     }),
     AuthModule,
+    RegisterModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE,
+      useFactory: () =>
+        new ValidationPipe({
+          enableDebugMessages: true,
+          forbidNonWhitelisted: true,
+          whitelist: true,
+          transform: true,
+        }),
+    },
+  ],
 })
 export class AppModule {}

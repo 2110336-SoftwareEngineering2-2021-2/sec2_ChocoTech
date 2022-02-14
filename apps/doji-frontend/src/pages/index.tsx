@@ -1,45 +1,65 @@
-import BottomNav from '@frontend/components/Card/BottomNav'
-import ProfileTextfield from '@frontend/components/Card/ProfileTextfield'
-import ProfileTextfieldDisabled from '@frontend/components/Card/ProfileTextfieldDisabled'
-import TopNav from '@frontend/components/Card/TopNav'
-import { Avatar, Button, Container, Stack, Typography, styled } from '@mui/material'
+import { Button, Container, Link as MuiLink, Stack, Typography, styled } from '@mui/material'
+import Image from 'next/image'
+import Link from 'next/link'
 
-/* eslint-disable */
-
-const ProfileContainer = styled(Stack)`
-  background-color: ${({ theme }) => theme.palette.sky.lightest};
-`
-const ProfileTextForm = styled(Container)`
+const StyledContainer = styled(Container)`
   display: flex;
-  flex-direction: column;
-  background-color: ${({ theme }) => theme.palette.sky.lightest};
-  width: 100%;
-  padding: 0;
-`
-const ProfileFormHeader = styled(Typography)`
-  color: #6c7072;
+  flex-grow: 1;
+  min-height: 600px;
+  margin-top: ${({ theme }) => theme.spacing(4)};
 `
 export function Index() {
   return (
-    <Container maxWidth="sm">
-      <TopNav icon="back" />
-      <ProfileContainer>
-        <Avatar alt="Ree" src="/static/images/avatar/1.jpg" sx={{ width: 48, height: 48 }} />
-        <Button variant="contained">Edit Profile</Button>
-        <ProfileTextForm>
-          <ProfileTextfieldDisabled Adornment="Username" defaultValue="@uttanon246" />
-          <ProfileTextfield Adornment="Display" defaultValue="Uttanon246" />
-          <ProfileTextfield Adornment="First name" defaultValue="Uttanon" />
-          <ProfileTextfield Adornment="Last name" defaultValue="Ausungnoen" />
-          <ProfileTextfield Adornment="Location" defaultValue="Thailand" />
-        </ProfileTextForm>
-        <ProfileFormHeader>ACCOUNT INFORMATION</ProfileFormHeader>
-        <ProfileTextForm>
-          <ProfileTextfield Adornment="Email" defaultValue="uttanon.aug@gmail.com" />
-        </ProfileTextForm>
-      </ProfileContainer>
-      <BottomNav />
-    </Container>
+    <StyledContainer maxWidth="sm">
+      <Stack
+        sx={{ minHeight: '100%' }}
+        direction="column"
+        justifyContent="space-between"
+        alignItems="center"
+        flexGrow={1}
+      >
+        <Typography variant="title3" fontWeight={700} p={[2, 4]} align="center">
+          Do
+          <Typography variant="title3" component="span" color="primary">
+            ji
+          </Typography>
+        </Typography>
+        <Image src="/static/AL.png" alt="Picture of the author" width={327} height={327}></Image>
+        <Stack direction="column">
+          <Typography
+            align="center"
+            variant="title3"
+            fontWeight={700}
+            pt={[2, 4]}
+            lineHeight="32px"
+          >
+            Your{' '}
+            <Typography variant="title3" component="span" color="primary" lineHeight="32px">
+              Crypto
+            </Typography>
+          </Typography>
+          <Typography variant="title3" fontWeight={700} pb={[2, 11]} lineHeight="32px">
+            Trading{' '}
+            <Typography variant="title3" component="span" color="primary" lineHeight="32px">
+              Assistant
+            </Typography>
+          </Typography>
+        </Stack>
+        <Stack direction="column" spacing={2} mb={5}>
+          <Link href="/register" passHref>
+            <Button>Create Account</Button>
+          </Link>
+          <Typography variant="regular">
+            Have an account?{' '}
+            <Link href="/login" passHref>
+              <MuiLink variant="regular" color="primary">
+                Log in
+              </MuiLink>
+            </Link>
+          </Typography>
+        </Stack>
+      </Stack>
+    </StyledContainer>
   )
 }
 

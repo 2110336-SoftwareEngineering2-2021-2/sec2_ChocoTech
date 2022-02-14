@@ -1,14 +1,17 @@
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Body, Controller, ForbiddenException, Get, Post, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
+import { IsString } from 'class-validator'
 import { AuthService, UserReference } from 'src/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from 'src/auth/user-auth.guard'
 
 class PasswordLoginBody {
   @ApiProperty()
+  @IsString()
   username: string
 
   @ApiProperty()
+  @IsString()
   password: string
 }
 
