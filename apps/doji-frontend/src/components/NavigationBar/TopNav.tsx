@@ -7,7 +7,7 @@ const NavLayout = styled(Box)`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin: 0px 18px;
+  margin: ${({ theme }) => theme.spacing(2)};
 `
 function TopNav(props) {
   return (
