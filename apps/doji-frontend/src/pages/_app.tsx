@@ -14,7 +14,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
         <title>Welcome to doji-frontend!</title>
       </Head>
       <main className="app">
-        <ChangePassword></ChangePassword>
+      <Component {...pageProps} />
       </main>
     </ThemeProvider>
   )

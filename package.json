@@ -45,13 +45,15 @@
     "passport-http-bearer": "^1.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-hook-form": "^7.27.0",
     "react-icons": "^4.3.1",
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "0.13.7",
     "rxjs": "^7.0.0",
     "serialize-error": "^9.0.0",
     "swagger-ui-express": "^4.3.0",
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "7.12.13",
