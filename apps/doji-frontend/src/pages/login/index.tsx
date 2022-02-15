@@ -10,19 +10,23 @@ export function Login() {
   const [wrongPassword, setWrongPassword] = useState(false)
 
   const submitLoginRequest = async () => {
-    fetch('/api/auth/password', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password }),
-    }).then((response) => {
-      if (response.status === 200) {
-        window.location.replace('./home')
-      }
-      setWrongPassword(true)
-      return
-    })
+    // need to connect the api
+    // .
+    // fetch('/api/auth/password', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({ username, password }),
+    // }).then((response) => {
+    //   if (response.status === 200) {
+    //     window.location.replace('./home')
+    //     do something with token
+    //   }
+    // setWrongPassword(true)
+    // console.log('wrong p')
+    //   return
+    // })
   }
 
   return (
@@ -33,9 +37,9 @@ export function Login() {
         {!wrongPassword && (
           <TextField
             fullWidth
-            type="email"
+            type="username"
             size="medium"
-            label="Email"
+            label="Username"
             value={username}
             onChange={(e) => {
               setUsername(e.target.value)
@@ -46,9 +50,9 @@ export function Login() {
           <TextField
             error
             fullWidth
-            type="email"
+            type="username"
             size="medium"
-            label="Email"
+            label="Username"
             value={username}
             onChange={(e) => {
               setUsername(e.target.value)
@@ -71,7 +75,7 @@ export function Login() {
         {wrongPassword && (
           <TextField
             error
-            helperText="Incorrect Email or Password."
+            helperText="Incorrect Username or Password."
             fullWidth
             type="password"
             size="medium"
