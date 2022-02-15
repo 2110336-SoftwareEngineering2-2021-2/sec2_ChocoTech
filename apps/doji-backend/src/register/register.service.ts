@@ -16,10 +16,10 @@ export class RegisterService {
     newUser.displayName = dto.displayName
     newUser.passwordHash = await bcrypt.hash(dto.password, 10)
     try {
-      await this.userRepo.persistAndFlush(newUser)//add to database
+      await this.userRepo.persistAndFlush(newUser) //add to database
     } catch (e) {
       if (e instanceof UniqueConstraintViolationException) {
-        throw new UnprocessableEntityException("User with this username or email already exist.")
+        throw new UnprocessableEntityException('User with this username or email already exist.')
       } else {
         throw e
       }

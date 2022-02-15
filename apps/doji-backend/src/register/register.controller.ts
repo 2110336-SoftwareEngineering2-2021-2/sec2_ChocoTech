@@ -8,9 +8,7 @@ import { RegisterService } from './register.service'
 export class RegisterController {
   constructor(private readonly registerService: RegisterService) {}
   @Post()
-  async create(
-    @Body() dto: UserRegistrationRequest,
-  ) {
+  async create(@Body() dto: UserRegistrationRequest) {
     await this.registerService.register(dto)
     return
   }
