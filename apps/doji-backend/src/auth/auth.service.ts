@@ -11,6 +11,8 @@ export type UserToken = string
 export interface UserReference {
   username: string
   getUser(): Promise<User>
+  // isLoggedIn: boolean
+  // exists: boolean
 }
 
 interface RawUserReference {
@@ -34,6 +36,8 @@ function deserializeUserReference(
   return {
     username: obj.username,
     getUser: () => userRepo.findOneOrFail({ username: obj.username }),
+    // isLoggedIn: true,
+    // exists: true,
   }
 }
 
@@ -69,6 +73,8 @@ export class AuthService {
     const ref: UserReference = {
       username: user.username,
       getUser: () => Promise.resolve(user),
+      // isLoggedIn: true,
+      // exists: true,
     }
     const token = await generateRandomUserToken()
     const key = userTokenToRedisKey(token)
@@ -86,4 +92,16 @@ export class AuthService {
       return null
     }
   }
+  //   authorise(username: string, password: string): UserReference {
+  //     return {
+  //       username: string
+  //   getUser(): Promise<User>
+  //         isLoggedIn: true,
+  //         exists: true
+  //     };
+  // }
+
+  // getUsernameIPkey(username: string, ip: string): string {
+  //   return `${username}_${ip}`
+  // }
 }
