@@ -1,6 +1,6 @@
+import { User } from '@backend/entities/User'
+import { UserRegistrationRequest } from '@backend/register/register.dto'
 import { Body, Controller, Post } from '@nestjs/common'
-import { User } from 'src/entities/User'
-import { UserRegistrationRequest } from 'src/register/register.dto'
 
 import { RegisterService } from './register.service'
 
@@ -8,9 +8,7 @@ import { RegisterService } from './register.service'
 export class RegisterController {
   constructor(private readonly registerService: RegisterService) {}
   @Post()
-  async create(
-    @Body() dto: UserRegistrationRequest,
-  ) {
+  async create(@Body() dto: UserRegistrationRequest) {
     await this.registerService.register(dto)
     return
   }

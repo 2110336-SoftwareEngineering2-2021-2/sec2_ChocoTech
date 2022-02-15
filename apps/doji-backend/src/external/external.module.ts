@@ -1,6 +1,6 @@
+import { environment } from '@backend/environments/environment'
 import { Logger, Module } from '@nestjs/common'
 import Redis from 'ioredis'
-import { environment } from 'src/environments/environment'
 
 export function newRedisClient() {
   const redis = new Redis({

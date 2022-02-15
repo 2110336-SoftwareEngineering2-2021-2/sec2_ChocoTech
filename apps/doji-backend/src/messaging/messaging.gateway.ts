@@ -1,3 +1,10 @@
+import { AuthService } from '@backend/auth/auth.service'
+import {
+  AuthHandshake,
+  ListenOnlineStatusRequest,
+  OnlineStatusEvent,
+} from '@backend/messaging/messaging.dto'
+import { MessagingService } from '@backend/messaging/messaging.service'
 import {
   ArgumentsHost,
   Catch,
@@ -22,13 +29,6 @@ import { ClassConstructor, plainToClass, plainToInstance } from 'class-transform
 import { Validator, ValidatorOptions } from 'class-validator'
 import { Redis } from 'ioredis'
 import { Server, Socket } from 'socket.io'
-import { AuthService } from 'src/auth/auth.service'
-import {
-  AuthHandshake,
-  ListenOnlineStatusRequest,
-  OnlineStatusEvent,
-} from 'src/messaging/messaging.dto'
-import { MessagingService } from 'src/messaging/messaging.service'
 
 const ONLINE_STATUS_CHANGE_EVENT = 'online-status-change'
 

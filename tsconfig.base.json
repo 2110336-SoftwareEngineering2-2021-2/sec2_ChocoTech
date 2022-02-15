@@ -16,10 +16,11 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@typing/*": ["types/*"],
-      "@frontend/*": ["apps/doji-frontend/src/*"],
       "@backend/*": ["apps/doji-backend/src/*"],
-      "@libs/mui": ["libs/mui/src/index.ts"]
+      "@frontend/*": ["apps/doji-frontend/src/*"],
+      "@libs/mui": ["libs/mui/src/index.ts"],
+      "@sec2-choco-tech/api": ["libs/api/src/index.ts"],
+      "@typing/*": ["types/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]
