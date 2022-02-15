@@ -36,6 +36,7 @@ export interface CustomPalette {
   red: CustomSimplePaletteColorOptions
   blue: CustomSimplePaletteColorOptions
   yellow: CustomSimplePaletteColorOptions
+  white: string
 }
 
 export interface CustomTypographyPropsVariantOverrides {
