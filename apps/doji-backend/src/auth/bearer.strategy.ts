@@ -1,7 +1,7 @@
+import { AuthService } from '@backend/auth/auth.service'
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy } from 'passport-http-bearer'
-import { AuthService } from 'src/auth/auth.service'
 
 @Injectable()
 export class BearerStrategy extends PassportStrategy(Strategy, 'bearer') {

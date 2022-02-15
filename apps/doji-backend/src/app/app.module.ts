@@ -1,11 +1,12 @@
+import { AuthModule } from '@backend/auth/auth.module'
+import { environment } from '@backend/environments/environment'
+import { MessagingModule } from '@backend/messaging/messaging.module'
+import { RegisterModule } from '@backend/register/register.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Module, ValidationPipe } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { APP_PIPE } from '@nestjs/core'
 
-import { AuthModule } from '../auth/auth.module'
-import { environment } from '../environments/environment'
-import { RegisterModule } from '../register/register.module'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 
@@ -19,12 +20,14 @@ import { AppService } from './app.service'
       password: environment.database.password,
       dbName: environment.database.dbName,
       host: environment.database.host,
+      port: parseInt(environment.database.port),
       forceUtcTimezone: true,
       validate: true,
       strict: true,
     }),
     AuthModule,
     RegisterModule,
+    MessagingModule,
   ],
   controllers: [AppController],
   providers: [
