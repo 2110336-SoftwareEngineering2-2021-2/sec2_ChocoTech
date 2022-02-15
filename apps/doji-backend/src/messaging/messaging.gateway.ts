@@ -25,12 +25,11 @@ import {
   WebSocketServer,
   WsException,
 } from '@nestjs/websockets'
+import { messaging } from '@sec2-choco-tech/api'
 import { ClassConstructor, plainToClass, plainToInstance } from 'class-transformer'
 import { Validator, ValidatorOptions } from 'class-validator'
 import { Redis } from 'ioredis'
 import { Server, Socket } from 'socket.io'
-
-const ONLINE_STATUS_CHANGE_EVENT = 'online-status-change'
 
 class DtoValidationError extends Error {
   constructor(private readonly errors: ValidationError[]) {
@@ -62,7 +61,7 @@ export class MessagingGateway implements OnGatewayConnection, OnGatewayDisconnec
     msgService.listenToOnlineStatusChange((e: OnlineStatusEvent) => {
       Array.from(this.server.sockets.sockets.values()).map((x) => {
         if ((x.data.subscribed as Set<string>).has(e.username))
-          x.emit(ONLINE_STATUS_CHANGE_EVENT, JSON.stringify(e))
+          x.emit(messaging.ServerEvent.ONLINE_STATUS_CHANGE, JSON.stringify(e))
       })
     })
   }
@@ -99,7 +98,7 @@ export class MessagingGateway implements OnGatewayConnection, OnGatewayDisconnec
     this.logger.log('Disconnected to ' + client.id + ' for user ' + client.data.username)
   }
 
-  @SubscribeMessage('listen-online-status')
+  @SubscribeMessage(messaging.ClientEvent.LISTEN_ONLINE_STATUS)
   async listenOnlineStatusChange(@MessageBody() request: any, @ConnectedSocket() client: Socket) {
     const req = this.validateDto(ListenOnlineStatusRequest, request)
     ;(client.data.subscribed as Set<string>).add(req.username)
