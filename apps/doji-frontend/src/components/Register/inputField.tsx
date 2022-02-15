@@ -1,8 +1,6 @@
 import { TextField } from '@mui/material'
 import { FieldConfig, useField } from 'formik'
 
-import React from 'react'
-
 interface Props extends FieldConfig {
   label: string
 }
@@ -13,7 +11,7 @@ const InputField = ({ label, ...props }: Props) => {
     <TextField
       fullWidth
       placeholder={label}
-      sx={{ paddingX: 2, paddingY: 1 }}
+      sx={{ marginY: 2 }}
       {...field}
       {...props}
       error={meta.touched && Boolean(meta.error)}
