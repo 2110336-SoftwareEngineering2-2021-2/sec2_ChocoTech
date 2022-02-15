@@ -1,48 +1,41 @@
-import DojiAppBar from '@frontend/components/ChangePassword/ChangePasswordBar'
 import TopNav from '@frontend/components/NavigationBar/TopNav'
 import Navbar from '@frontend/components/navbar'
-import { Alert, Button, Container, Snackbar, TextField, Typography, styled } from '@mui/material'
-import { object, string } from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Button, Container, TextField, Typography } from '@mui/material'
+import { InferType, object, ref, string } from 'yup'
 
 import React, { useEffect } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import { SubmitErrorHandler, SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import toast, { Toaster } from 'react-hot-toast'
 
+const changePasswordSchema = object({
+  oldPassword: string().trim().required('Please enter the password'),
+  newPassword: string()
+    .trim()
+    .required('Please enter the password')
+    .matches(/^.{8,16}$/, 'Password should have 8-16 letters'),
+  passwordConfirmation: string()
+    .trim()
+    .oneOf([ref('newPassword')], 'Incorrect password confirmation'),
+})
+export type ChangePasswordModel = InferType<typeof changePasswordSchema>
+
 export function ChangePassword() {
-  const { register, control } = useForm()
-  const oldPassword = useWatch({
-    control,
-    name: 'oldPassword',
+  const { register, control, handleSubmit } = useForm<ChangePasswordModel>({
+    resolver: yupResolver(changePasswordSchema),
   })
-  const newPassword = useWatch({
-    control,
-    name: 'newPassword',
-  })
-  const passwordConfirmation = useWatch({
-    control,
-    name: 'passwordConfirmation',
-  })
-  let passwordSchema = object({
-    oldPasswordSchema: string().required(),
-    newPasswordSchema: string().required(),
-    confirmPasswordSchema: string().required(),
-  })
-  const valid = passwordSchema.isValidSync({
-    oldPasswordSchema: oldPassword,
-    newPasswordSchema: newPassword,
-    confirmPasswordSchema: passwordConfirmation,
-  })
-  function submit(e) {
+  const onSubmit: SubmitHandler<ChangePasswordModel> = (data) => {
     //assume that the old password is 12345
-    if (oldPassword != '12345') {
+    if (data.oldPassword !== '12345') {
       toast.error('Current password is incorrect!')
-    } else if (passwordConfirmation != newPassword) {
-      toast.error('Password Confirmation is incorrect!')
     } else {
       toast.success('Password has been changed')
     }
-    e.preventDefault()
-    return false
+  }
+  const onError: SubmitErrorHandler<ChangePasswordModel> = (data) => {
+    console.log(data)
+    if (data.newPassword) toast.error(data.newPassword.message)
+    if (data.passwordConfirmation) toast.error(data.passwordConfirmation.message)
   }
   return (
     <div>
@@ -53,7 +46,7 @@ export function ChangePassword() {
           Choose a secure password{' '}
         </Typography>
         <Container sx={{ mt: 3 }} fixed>
-          <form onSubmit={submit}>
+          <form onSubmit={handleSubmit(onSubmit, onError)}>
             <TextField
               {...register('oldPassword')}
               type="password"
@@ -72,20 +65,12 @@ export function ChangePassword() {
               sx={{ width: '100%', mb: 3 }}
               label="Confirm new password..."
             ></TextField>
-            <Button
-              type="submit"
-              size="medium"
-              variant="contained"
-              sx={{ p: 2, width: '100%' }}
-              disabled={!valid}
-              onClick={submit}
-            >
+            <Button type="submit" size="medium" variant="contained" sx={{ p: 2, width: '100%' }}>
               <Typography variant="large" fontWeight="400">
                 Change password
               </Typography>
             </Button>
           </form>
-          <Toaster position="bottom-center" reverseOrder={false} />
         </Container>
       </Container>
     </div>

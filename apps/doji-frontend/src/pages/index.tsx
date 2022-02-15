@@ -1,4 +1,4 @@
-import { Button, Container, Link as MuiLink, Stack, Typography, styled } from '@mui/material'
+import { Button, Link as MuiLink, Stack, Typography } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
 
