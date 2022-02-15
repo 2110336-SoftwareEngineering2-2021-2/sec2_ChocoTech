@@ -31,6 +31,7 @@
     "@mikro-orm/nestjs": "^4.3.1",
     "@mikro-orm/postgresql": "^4.5.10",
     "@mui/material": "^5.3.1",
+    "@nestjs-modules/mailer": "^1.6.1",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.1.7",
     "@nestjs/core": "^8.0.0",
