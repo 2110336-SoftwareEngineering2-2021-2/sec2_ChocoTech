@@ -46,7 +46,7 @@ export function Index() {
   const [isEditProfile, setEditProfile] = useState(false)
   return (
     <>
-      <TopNav icon="back" />
+      <TopNav icon="back" title="My details" href="./feed" />
       <ProfileContainer spacing={4} alignItems="center">
         <Stack display="flex" flexDirection="row" alignItems="flex-end">
           <StyleAvatar alt="Ree" src="/static/images/avatar/1.jpg" />
