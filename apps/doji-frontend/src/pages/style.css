@@ -1,0 +1,14 @@
+#__next {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+html,
+body {
+  margin: 0;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}

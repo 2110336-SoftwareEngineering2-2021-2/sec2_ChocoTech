@@ -1,7 +1,9 @@
+import { UserReference } from '@backend/auth/auth.service'
 import { User } from '@backend/entities/User'
-import { UserRegistrationRequest } from '@backend/register/register.dto'
+import { UserChangePassword, UserRegistrationRequest } from '@backend/register/register.dto'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
+import { colors } from '@mui/material'
 import { HttpException, HttpStatus, Injectable, UnprocessableEntityException } from '@nestjs/common'
 import bcrypt from 'bcrypt'
 
@@ -25,5 +27,14 @@ export class RegisterService {
       }
     }
     return
+  }
+  async changePassword(dto: UserChangePassword, userRef: UserReference) {
+    const user = await userRef.getUser()
+    if (await bcrypt.compare(dto.currentPassword, user.passwordHash)) {
+      user.passwordHash = await bcrypt.hash(dto.newPassword, 10)
+      await this.userRepo.persistAndFlush(user)
+    } else {
+      throw new UnprocessableEntityException('Your current password is not correct.')
+    }
   }
 }
