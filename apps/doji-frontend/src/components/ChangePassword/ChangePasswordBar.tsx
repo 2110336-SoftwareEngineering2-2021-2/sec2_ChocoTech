@@ -29,7 +29,7 @@ export function ChangePasswordBar() {
             </Typography>
           </Grid>
         </Grid>
-      </Toolbar>lksjk
+      </Toolbar>
     </StyledAppBar>
   )
 }
