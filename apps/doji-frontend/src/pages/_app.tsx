@@ -2,7 +2,8 @@ import { theme } from '@libs/mui'
 import { ThemeProvider } from '@mui/material'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
-import './styles.css'
+
+import './style.css'
 
 function CustomApp({ Component, pageProps }: AppProps) {
   return (
@@ -10,9 +11,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Welcome to doji-frontend!</title>
       </Head>
-      <main className="app">
-        <Component {...pageProps} />
-      </main>
+      <Component {...pageProps} />
     </ThemeProvider>
   )
 }

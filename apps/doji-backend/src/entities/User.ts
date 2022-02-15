@@ -17,7 +17,7 @@ export class User {
   @Property()
   onlineStatus: boolean = false
 
-  @Property()
+  @Property({unique: true})
   email: string
 
   @Property()
