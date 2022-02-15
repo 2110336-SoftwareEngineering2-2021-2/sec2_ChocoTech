@@ -1,14 +1,5 @@
-import Navbar from '@frontend/components/navbar'
-import {
-  Button,
-  Container,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material'
+import TopNav from '@frontend/components/NavigationBar/TopNav'
+import { Button, Container, Stack, TextField, Typography } from '@mui/material'
 import Link from 'next/link'
 
 import { useState } from 'react'
@@ -16,61 +7,95 @@ import { useState } from 'react'
 export function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [wrongPassword, setWrongPassword] = useState(false)
 
   const submitLoginRequest = async () => {
-    const res = await fetch('/api/auth/password', {
+    fetch('/api/auth/password', {
       method: 'POST',
-      body: JSON.stringify({ username, password }),
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({ username, password }),
+    }).then((response) => {
+      if (response.status === 200) {
+        window.location.replace('./home')
+      }
+      setWrongPassword(true)
+      return
     })
-    const data = await res.json()
-    console.log(data)
   }
 
   return (
     <Container maxWidth="sm">
-      <Navbar action="back" title="Log in" href="/.." />
+      <TopNav icon="back" title="Log in" href="./.." />
 
       <Stack direction="column" justifyContent="space-between" mt={2} spacing={2}>
-        <TextField
-          fullWidth
-          type="email"
-          size="medium"
-          label="Email"
-          value={username}
-          onChange={(e) => {
-            setUsername(e.target.value)
-          }}
-        ></TextField>
+        {!wrongPassword && (
+          <TextField
+            fullWidth
+            type="email"
+            size="medium"
+            label="Email"
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value)
+            }}
+          ></TextField>
+        )}
+        {wrongPassword && (
+          <TextField
+            error
+            fullWidth
+            type="email"
+            size="medium"
+            label="Email"
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value)
+            }}
+          ></TextField>
+        )}
 
-        <TextField
-          fullWidth
-          type="password"
-          size="medium"
-          label="Password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value)
-          }}
-        ></TextField>
+        {!wrongPassword && (
+          <TextField
+            fullWidth
+            type="password"
+            size="medium"
+            label="Password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value)
+            }}
+          ></TextField>
+        )}
+        {wrongPassword && (
+          <TextField
+            error
+            helperText="Incorrect Email or Password."
+            fullWidth
+            type="password"
+            size="medium"
+            label="Password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value)
+            }}
+          />
+        )}
 
         <Typography variant="regular" component="a" color="primary" align="left">
-          <Link href="/ChangePassword" passHref>
-            Forgot password?
-          </Link>
+          <Link href="/forgot-password">Forgot password?</Link>
         </Typography>
 
         <Typography variant="tiny" pt={8}>
           By continuing, you agree to our{' '}
-          <Link href="login/terms-of-service" passHref>
+          <Link href="login/terms-of-service">
             <Typography variant="tiny" component="a" color="primary">
               Terms of Service{' '}
             </Typography>
           </Link>
           and{' '}
-          <Link href="login/privacy-policy" passHref>
+          <Link href="login/privacy-policy">
             <Typography variant="tiny" component="a" color="primary">
               Privacy Policy
             </Typography>
