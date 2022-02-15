@@ -12,6 +12,6 @@ export class RegisterController {
     @Body() dto: Omit<User, 'id' | 'coinBalance' | 'onlineStatus' | 'registerationDate'>,
   ) {
     await this.registerService.register(dto)
-    return;
+    return
   }
 }
