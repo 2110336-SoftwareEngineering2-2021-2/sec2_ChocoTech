@@ -1,4 +1,6 @@
 import DojiAppBar from '@frontend/components/ChangePassword/ChangePasswordBar'
+import TopNav from '@frontend/components/NavigationBar/TopNav'
+import Navbar from '@frontend/components/navbar'
 import { Alert, Button, Container, Snackbar, TextField, Typography, styled } from '@mui/material'
 import { object, string } from 'yup'
 
@@ -44,7 +46,7 @@ export function ChangePassword() {
   }
   return (
     <div>
-      <DojiAppBar></DojiAppBar>
+      <Navbar href="/" action="back" title="Change password"></Navbar>
       <Container maxWidth="sm">
         <Typography variant="small" fontWeight={400}>
           {' '}

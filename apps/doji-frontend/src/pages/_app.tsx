@@ -10,7 +10,6 @@ const StyledContainer = styled(Container)`
   flex-direction: column;
   flex-grow: 1;
   min-height: 600px;
-  margin-top: ${({ theme }) => theme.spacing(4)};
 `
 
 function CustomApp({ Component, pageProps }: AppProps) {

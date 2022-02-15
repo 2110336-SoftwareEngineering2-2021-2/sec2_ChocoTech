@@ -6,12 +6,13 @@ export function Index() {
   return (
     <Stack
       sx={{ minHeight: '100%' }}
+      margin-top={4}
       direction="column"
       justifyContent="space-between"
       alignItems="center"
       flexGrow={1}
     >
-      <Typography variant="title3" fontWeight={700} p={[2, 4]} align="center">
+      <Typography variant="title3" fontWeight={700} p={[2, 4]} align="center" marginTop={4}>
         Do
         <Typography variant="title3" component="span" color="primary">
           ji

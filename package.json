@@ -41,6 +41,7 @@
     "core-js": "^3.6.5",
     "ioredis": "^4.28.3",
     "lodash": "^4.17.21",
+    "material-ui-icons": "^1.0.0-beta.36",
     "next": "12.0.9",
     "passport": "^0.5.2",
     "passport-http-bearer": "^1.0.1",
