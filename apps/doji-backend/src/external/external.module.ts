@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment'
         })
         const logger = new Logger('Redis')
         redis.on('error', (err) => logger.error(err))
+        return redis
       },
     },
   ],

@@ -1,9 +1,11 @@
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
+import { colors } from '@mui/material'
 import { HttpException, HttpStatus, Injectable, UnprocessableEntityException } from '@nestjs/common'
 import bcrypt from 'bcrypt'
+import { UserReference } from 'src/auth/auth.service'
 import { User } from 'src/entities/User'
-import { UserRegistrationRequest } from 'src/register/register.dto'
+import { UserChangePassword, UserRegistrationRequest } from 'src/register/register.dto'
 
 @Injectable()
 export class RegisterService {
@@ -16,14 +18,23 @@ export class RegisterService {
     newUser.displayName = dto.displayName
     newUser.passwordHash = await bcrypt.hash(dto.password, 10)
     try {
-      await this.userRepo.persistAndFlush(newUser)//add to database
+      await this.userRepo.persistAndFlush(newUser) //add to database
     } catch (e) {
       if (e instanceof UniqueConstraintViolationException) {
-        throw new UnprocessableEntityException("User with this username or email already exist.")
+        throw new UnprocessableEntityException('User with this username or email already exist.')
       } else {
         throw e
       }
     }
     return
+  }
+  async changePassword(dto: UserChangePassword, userRef: UserReference) {
+    const user = await userRef.getUser()
+    if (await bcrypt.compare(dto.currentPassword, user.passwordHash)) {
+      user.passwordHash = await bcrypt.hash(dto.newPassword, 10)
+      await this.userRepo.persistAndFlush(user)
+    } else {
+      throw new UnprocessableEntityException('Your current password is not correct.')
+    }
   }
 }
