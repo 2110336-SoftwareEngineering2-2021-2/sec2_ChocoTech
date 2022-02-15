@@ -44,6 +44,17 @@ const StyleCircleAdd = styled(AddCircleTwoToneIcon)`
 `
 export function Index() {
   const [isEditProfile, setEditProfile] = useState(false)
+  const [displayName, setDisplayName] = useState('') // should initial with user displayName
+  const [email, setEmail] = useState('')
+
+  function submitNewProfile() {
+    console.log(displayName, email)
+  }
+
+  // cal api GET /api/profile
+  // setDisplayName(...)
+  // setEmail(...)
+
   return (
     <>
       <TopNav icon="back" title="My details" href="./feed" />
@@ -67,6 +78,7 @@ export function Index() {
             variant="contained"
             onClick={() => {
               setEditProfile(false)
+              submitNewProfile()
             }}
           >
             Save
@@ -84,6 +96,9 @@ export function Index() {
             defaultValue="Uttanon246"
             placeholder="enter display name"
             readOnly={!isEditProfile}
+            onChange={(e) => {
+              setDisplayName(e.target.value)
+            }}
           />
           <StyleProfileTextField
             adornment="First name"
@@ -112,6 +127,9 @@ export function Index() {
             adornment="Email"
             defaultValue="uttanon.aug@gmail.com"
             readOnly={!isEditProfile}
+            onChange={(e) => {
+              setEmail(e.target.value)
+            }}
           />
         </ProfileTextForm>
       </ProfileContainer>
