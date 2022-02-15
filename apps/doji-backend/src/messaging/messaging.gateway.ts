@@ -30,6 +30,8 @@ import {
 } from 'src/messaging/messaging.dto'
 import { MessagingService } from 'src/messaging/messaging.service'
 
+const ONLINE_STATUS_CHANGE_EVENT = 'online-status-change'
+
 class DtoValidationError extends Error {
   constructor(private readonly errors: ValidationError[]) {
     super(JSON.stringify(errors))
@@ -42,8 +44,6 @@ class WsExceptionFilter extends BaseWsExceptionFilter {
     ;(host.switchToWs().getClient() as Socket).emit('error', exception.message)
   }
 }
-
-const ONLINE_STATUS_CHANGE_EVENT = 'online-status-change'
 
 @WebSocketGateway()
 @UseFilters(new WsExceptionFilter())
@@ -86,7 +86,7 @@ export class MessagingGateway implements OnGatewayConnection, OnGatewayDisconnec
       const user = await this.authService.retriveUserFromToken(auth.token)
       client.data.username = user.username
       client.data.subscribed = new Set()
-      await this.msgService.incrementOnlineSessionCount(user.username, 1)
+      await this.msgService.adjustOnlineSessionCount(user.username, 1)
       this.logger.log('Connected to ' + client.id + ' with user ' + user.username)
     } catch (e) {
       client.disconnect()
@@ -95,7 +95,7 @@ export class MessagingGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   async handleDisconnect(client: Socket) {
-    await this.msgService.incrementOnlineSessionCount(client.data.username, -1)
+    await this.msgService.adjustOnlineSessionCount(client.data.username, -1)
     this.logger.log('Disconnected to ' + client.id + ' for user ' + client.data.username)
   }
 

@@ -27,10 +27,10 @@ function serializeUserReference(ref: UserReference) {
 }
 
 function deserializeUserReference(
-  ref_str: string,
+  userRefString: string,
   userRepo: EntityRepository<User>,
 ): UserReference {
-  const obj: RawUserReference = JSON.parse(ref_str)
+  const obj: RawUserReference = JSON.parse(userRefString)
   return {
     username: obj.username,
     getUser: () => userRepo.findOneOrFail({ username: obj.username }),
