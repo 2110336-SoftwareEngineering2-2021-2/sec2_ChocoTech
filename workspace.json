@@ -1,6 +1,7 @@
 {
   "version": 2,
   "projects": {
+    "api": "libs/api",
     "doji-backend": "apps/doji-backend",
     "doji-frontend": "apps/doji-frontend",
     "doji-frontend-e2e": "apps/doji-frontend-e2e",
