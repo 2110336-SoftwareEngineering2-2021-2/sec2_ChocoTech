@@ -1,7 +1,6 @@
 import BottomNav from '@frontend/components/NavigationBar/BottomNav'
 import TopNav from '@frontend/components/NavigationBar/TopNav'
 import ProfileTextfield from '@frontend/components/TextField/ProfileTextfield'
-// import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone'
 import { Avatar, Button, Stack, Typography, styled } from '@mui/material'
 
 import { useState } from 'react'
@@ -44,9 +43,34 @@ const StyleAvatar = styled(Avatar)`
 // `
 export function Index() {
   const [isEditProfile, setEditProfile] = useState(false)
+  const [displayName, setDisplayName] = useState('') // should initial with user displayName
+  const [email, setEmail] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [location, setLocation] = useState('')
+
+  function submitNewProfile() {
+    const axios = require('axios')
+
+    axios
+      .put('https://dev.choco.saenyakorn.dev/api/profile/edit', {
+        displayName,
+        email,
+        firstName,
+        lastName,
+        location,
+      })
+      .then(function (response) {
+        console.log(response)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+
   return (
     <>
-      <TopNav icon="back" />
+      <TopNav icon="back" title="My details" href="./feed" />
       <ProfileContainer spacing={4} alignItems="center">
         <Stack display="flex" flexDirection="row" alignItems="flex-end">
           <StyleAvatar alt="Ree" src="/static/images/avatar/1.jpg" />
@@ -67,6 +91,7 @@ export function Index() {
             variant="contained"
             onClick={() => {
               setEditProfile(false)
+              submitNewProfile()
             }}
           >
             Save
@@ -84,24 +109,36 @@ export function Index() {
             defaultValue="Uttanon246"
             placeholder="enter display name"
             readOnly={!isEditProfile}
+            onChange={(e) => {
+              setDisplayName(e.target.value)
+            }}
           />
           <StyleProfileTextField
             adornment="First name"
             defaultValue="Uttanon"
             placeholder="enter first name"
             readOnly={!isEditProfile}
+            onChange={(e) => {
+              setFirstName(e.target.value)
+            }}
           />
           <StyleProfileTextField
             adornment="Last name"
             defaultValue="Ausungnoen"
             placeholder="enter last name"
             readOnly={!isEditProfile}
+            onChange={(e) => {
+              setLastName(e.target.value)
+            }}
           />
           <StyleProfileTextField
             adornment="Location"
             defaultValue="Thailand"
             placeholder="enter location"
             readOnly={!isEditProfile}
+            onChange={(e) => {
+              setLocation(e.target.value)
+            }}
           />
         </ProfileTextForm>
         <ProfileFormHeader variant="tiny" fontWeight={400}>
@@ -112,6 +149,9 @@ export function Index() {
             adornment="Email"
             defaultValue="uttanon.aug@gmail.com"
             readOnly={!isEditProfile}
+            onChange={(e) => {
+              setEmail(e.target.value)
+            }}
           />
         </ProfileTextForm>
       </ProfileContainer>

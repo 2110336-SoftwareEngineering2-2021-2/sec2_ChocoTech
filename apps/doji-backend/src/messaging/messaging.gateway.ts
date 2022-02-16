@@ -5,15 +5,7 @@ import {
   OnlineStatusEvent,
 } from '@backend/messaging/messaging.dto'
 import { MessagingService } from '@backend/messaging/messaging.service'
-import {
-  ArgumentsHost,
-  Catch,
-  Inject,
-  Logger,
-  UseFilters,
-  ValidationError,
-  ValidationPipe,
-} from '@nestjs/common'
+import { ArgumentsHost, Catch, Logger, UseFilters, ValidationError } from '@nestjs/common'
 import {
   BaseWsExceptionFilter,
   ConnectedSocket,
@@ -23,12 +15,10 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsException,
 } from '@nestjs/websockets'
 import { messaging } from '@sec2-choco-tech/api'
-import { ClassConstructor, plainToClass, plainToInstance } from 'class-transformer'
+import { ClassConstructor, plainToInstance } from 'class-transformer'
 import { Validator, ValidatorOptions } from 'class-validator'
-import { Redis } from 'ioredis'
 import { Server, Socket } from 'socket.io'
 
 class DtoValidationError extends Error {

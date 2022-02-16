@@ -5,22 +5,22 @@ import { ExternalModule } from '@backend/external/external.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Module } from '@nestjs/common'
 import { PassportModule } from '@nestjs/passport'
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 
 import { AuthController } from './auth.controller'
 
 @Module({
-  imports: [MikroOrmModule.forFeature([User]), PassportModule, ExternalModule],
-  controllers: [AuthController],
-  providers: [AuthService, BearerStrategy],
-  exports: [AuthService],
-})
-@Module({
   imports: [
+    MikroOrmModule.forFeature([User]),
+    PassportModule,
+    ExternalModule,
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 10,
     }),
   ],
-  providers: [ThrottlerGuard],
+  controllers: [AuthController],
+  providers: [AuthService, BearerStrategy, ThrottlerGuard],
+  exports: [AuthService],
 })
 export class AuthModule {}

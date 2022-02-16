@@ -3,8 +3,7 @@ import { User } from '@backend/entities/User'
 import { UserChangePassword, UserRegistrationRequest } from '@backend/register/register.dto'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { colors } from '@mui/material'
-import { HttpException, HttpStatus, Injectable, UnprocessableEntityException } from '@nestjs/common'
+import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import bcrypt from 'bcrypt'
 
 @Injectable()

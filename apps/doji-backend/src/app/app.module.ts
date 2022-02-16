@@ -1,6 +1,7 @@
 import { AuthModule } from '@backend/auth/auth.module'
 import { environment } from '@backend/environments/environment'
 import { MessagingModule } from '@backend/messaging/messaging.module'
+import { ProfileModule } from '@backend/profile/profile.module'
 import { RegisterModule } from '@backend/register/register.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Module, ValidationPipe } from '@nestjs/common'
@@ -27,6 +28,7 @@ import { AppService } from './app.service'
     }),
     AuthModule,
     RegisterModule,
+    ProfileModule,
     MessagingModule,
   ],
   controllers: [AppController],
