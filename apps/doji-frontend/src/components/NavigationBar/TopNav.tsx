@@ -1,7 +1,6 @@
-import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined'
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
+// import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined'
+// import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 import { Box, Stack, Typography, styled } from '@mui/material'
-import Link from 'next/dist/client/link'
 
 const NavLayout = styled(Stack)`
   display: flex;
@@ -13,13 +12,9 @@ const NavLayout = styled(Stack)`
 function TopNav(props) {
   return (
     <NavLayout>
-      <Link href={props.href}>
-        <a>
-          {props.icon == 'back' && <ArrowBackIosNewOutlinedIcon />}
-          {props.icon == 'close' && <CloseOutlinedIcon />}
-        </a>
-      </Link>
-      <Typography>{props.title}</Typography>
+      {/* {props.icon == 'back' && <ArrowBackIosNewOutlinedIcon />}
+      {props.icon == 'close' && <CloseOutlinedIcon />} */}
+      <Typography>My details</Typography>
       <Box width="24px" height="24px"></Box>
     </NavLayout>
   )

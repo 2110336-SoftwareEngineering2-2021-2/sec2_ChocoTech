@@ -125,13 +125,13 @@ Each deployment take about 5-10 mins.
 **Production**
 
 - Frontend: https://choco.saenyakorn.dev
-- Backend: https://choco.saenyakorn.dev/_api
+- Backend: https://choco.saenyakorn.dev/api
 - Storybook: https://choco.saenyakorn.dev/storybook
 - Swagger: https://choco.saenyakorn.dev/swagger
 
 **Development**
 
 - Frontend: https://dev.choco.saenyakorn.dev
-- Backend: https://dev.choco.saenyakorn.dev/_api
+- Backend: https://dev.choco.saenyakorn.dev/api
 - Storybook: https://dev.choco.saenyakorn.dev/storybook
 - Swagger: https://dev.choco.saenyakorn.dev/swagger

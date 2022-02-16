@@ -1,7 +1,7 @@
 import BottomNav from '@frontend/components/NavigationBar/BottomNav'
 import TopNav from '@frontend/components/NavigationBar/TopNav'
 import ProfileTextfield from '@frontend/components/TextField/ProfileTextfield'
-import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone'
+// import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone'
 import { Avatar, Button, Stack, Typography, styled } from '@mui/material'
 
 import { useState } from 'react'
@@ -33,15 +33,15 @@ const StyleAvatar = styled(Avatar)`
   height: ${({ theme }) => theme.spacing(8)};
   margin-top: ${({ theme }) => theme.spacing(3)};
 `
-const StyleCircleAdd = styled(AddCircleTwoToneIcon)`
-  width: 16px;
-  height: 16px;
-  margin-left: -16px;
-  margin-top: -16px;
-  z-index: 1;
-  color: ${({ theme }) => theme.palette.primary.light};
-  stroke-width: 1.5px;
-`
+// const StyleCircleAdd = styled(AddCircleTwoToneIcon)`
+//   width: 16px;
+//   height: 16px;
+//   margin-left: -16px;
+//   margin-top: -16px;
+//   z-index: 1;
+//   color: ${({ theme }) => theme.palette.primary.light};
+//   stroke-width: 1.5px;
+// `
 export function Index() {
   const [isEditProfile, setEditProfile] = useState(false)
   const [displayName, setDisplayName] = useState('') // should initial with user displayName
@@ -64,7 +64,7 @@ export function Index() {
       <ProfileContainer spacing={4} alignItems="center">
         <Stack display="flex" flexDirection="row" alignItems="flex-end">
           <StyleAvatar alt="Ree" src="/static/images/avatar/1.jpg" />
-          <StyleCircleAdd />
+          {/* <StyleCircleAdd /> */}
         </Stack>
         {!isEditProfile && (
           <Button
