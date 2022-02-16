@@ -1,90 +1,137 @@
-# Sec2ChocoTech
+# Choco Tech
 
 This project was generated using [Nx](https://nx.dev).
+
+This project base on Doji requirement that we have learned in SE II.
 
 <p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
 
 🔎 **Smart, Fast and Extensible Build System**
 
-## Adding capabilities to your workspace
+## Table of Contents
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
+- [Preparing for development](#preparing-for-development)
+- [Testing before deploy](#testing-before-deploy)
+- [Deployment](#deployment)
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+## Preparing for development
 
-Below are our core plugins:
+1.  First, you need to clone the project using [git](https://git-scm.com/downloads). Following the command.
 
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- Web (no framework frontends)
-  - `npm install --save-dev @nrwl/web`
-- [Angular](https://angular.io)
-  - `npm install --save-dev @nrwl/angular`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `npm install --save-dev @nrwl/express`
-- [Node](https://nodejs.org)
-  - `npm install --save-dev @nrwl/node`
+    ```bash
+    git clone https://github.com/2110336-SoftwareEngineering2-2021-2/sec2_ChocoTech.git
+    ```
 
-There are also many [community plugins](https://nx.dev/community) you could add.
+2.  Then, you have to install all dependencies.
 
-## Generate an application
+    ```bash
+    yarn install
+    # or  (same result)
+    yarn
+    ```
 
-Run `nx g @nrwl/react:app my-app` to generate an application.
+    If you don't have [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable). Please install [here](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
 
-> You can use any of the plugins above to generate applications as well.
+3.  This project requires Node.js version 16. To check your node version. Try
 
-When using Nx, you can create multiple applications and libraries in the same workspace.
+    ```bash
+    node -v
+    ```
 
-## Generate a library
+4.  Try to start your dev server! In this Nx workspace we have 2 main apps; [Next.js](https://nextjs.org/) for Frontend and [Nest.js](https://nestjs.com/) for Backend. In addition, we have [Storybook](https://storybook.js.org/) for UI docs
 
-Run `nx g @nrwl/react:lib my-lib` to generate a library.
+    But first of all, you have to run Postgres and Redis before development. Following the commands.
 
-> You can also use any of the plugins above to generate libraries as well.
+    ```bash
+     # create external network, called private
+     docker create network private
+    ```
 
-Libraries are shareable across libraries and applications. They can be imported from `@sec2-choco-tech/mylib`.
+    ```bash
+    # run Postgres and Redis
+    docker-compose up -d
+    # or (same result)
+    docker compose up -d
+    ```
 
-## Development server
+    Follow the command to start dev server for all apps. The Frontend app will run on http://localhost:3000 and the Backend app will run on http://localhost:3333
 
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
+    ```bash
+    yarn dev
+    ```
 
-## Code scaffolding
+    Follow the command to start dev server for only Frontend apps. The Frontend app will run on http://localhost:3000
 
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
+    ```bash
+    yarn dev:frontend
+    ```
 
-## Build
+    Follow the command to start dev server for only Backend apps. The Backend app will run on http://localhost:3333
 
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+    ```bash
+    yarn dev:backend
+    ```
 
-## Running unit tests
+    Follow the command to start Storybook. The Backend app will run on http://localhost:4400
 
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
+    ```bash
+    yarn mui:storybook
+    ```
 
-Run `nx affected:test` to execute the unit tests affected by a change.
+## Testing before deploy
 
-## Running end-to-end tests
+The project will deploy using `Dockerfile`.
 
-Run `ng e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
+If you try to test developed production app in your local machine. Try to build Docker image by follwing the command
 
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
+```bash
+docker build -t choco-app .
+```
 
-## Understand your workspace
+This command means Docker will search for `Dockerfile` and use it as building step. Then, Docker will create an image named `choco-app`. It'll take 5-10 mins on your first build.
 
-Run `nx dep-graph` to see a diagram of the dependencies of your projects.
+Then, try to start Docker container using the image by follwing the command.
 
-## Further help
+```bash
+docker run -p 8080:80 -it --env-file .env.compose  --network private --name choco-app choco-app
+```
 
-Visit the [Nx Documentation](https://nx.dev) to learn more.
+This command means Docker will run `choco-app` image and named the container as `choco-app`. It'll take `.env.compose` as environment variables for Backend and it'll run on port 8080 (e.g. http://localhost:8080). The network argument `private` is required for accesing `Postgres` and `Redis` (External network that you have created before).
 
-## ☁ Nx Cloud
+To make sure the container is running. Try
 
-### Distributed Computation Caching & Distributed Task Execution
+```bash
+docker ps
+```
 
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
+To kill the container. Try
 
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
+```bash
+docker container kill choco-app
+```
 
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
+The Frontend app, Backend app, Storyobook and Swagger will be combined into 1 image. The path rule will be defined in [nginx.conf](./nginx/nginx.conf)
 
-Visit [Nx Cloud](https://nx.app/) to learn more.
+## Deployment
+
+This project is deployed using [Railway](https://railway.app/), cloud service. To deploy the app.
+You just have to push commits to
+
+- `main` branch for production.
+- `dev` branch for development.
+
+Each deployment take about 5-10 mins.
+
+**Production**
+
+- Frontend: https://choco.saenyakorn.dev
+- Backend: https://choco.saenyakorn.dev/_api
+- Storybook: https://choco.saenyakorn.dev/storybook
+- Swagger: https://choco.saenyakorn.dev/swagger
+
+**Development**
+
+- Frontend: https://dev.choco.saenyakorn.dev
+- Backend: https://dev.choco.saenyakorn.dev/_api
+- Storybook: https://dev.choco.saenyakorn.dev/storybook
+- Swagger: https://dev.choco.saenyakorn.dev/swagger
