@@ -13,6 +13,9 @@ export class ProfileService {
     const user = await userRef.getUser()
     user.email = dto.email
     user.displayName = dto.displayName
+    user.firstName = dto.firstName
+    user.lastName = dto.lastName
+    user.location = dto.location
     await this.userRepo.persistAndFlush(user)
   }
 }

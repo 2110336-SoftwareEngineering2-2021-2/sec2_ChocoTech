@@ -9,4 +9,16 @@ export class UserEditProfileRequest {
   @ApiProperty()
   @IsEmail()
   email: string
+
+  @ApiProperty()
+  @IsString()
+  firstName: string
+
+  @ApiProperty()
+  @IsString()
+  lastName: string
+
+  @ApiProperty()
+  @IsString()
+  location: string
 }
