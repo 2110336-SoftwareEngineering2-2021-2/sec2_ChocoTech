@@ -1,10 +1,10 @@
+import { User } from '@backend/entities/User'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common'
 import bcrypt from 'bcrypt'
 import { randomBytes } from 'crypto'
 import { Redis } from 'ioredis'
-import { User } from 'src/entities/User'
 
 export type UserToken = string
 
@@ -27,10 +27,10 @@ function serializeUserReference(ref: UserReference) {
 }
 
 function deserializeUserReference(
-  ref_str: string,
+  userRefString: string,
   userRepo: EntityRepository<User>,
 ): UserReference {
-  const obj: RawUserReference = JSON.parse(ref_str)
+  const obj: RawUserReference = JSON.parse(userRefString)
   return {
     username: obj.username,
     getUser: () => userRepo.findOneOrFail({ username: obj.username }),
@@ -48,6 +48,12 @@ function generateRandomUserToken(): Promise<UserToken> {
 
 const TOKEN_EXPIRE_DURATION_SECONDS = 60 * 60 * 24 * 30
 
+export class InvalidToken extends Error {
+  constructor() {
+    super('Invalid Token')
+  }
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -57,12 +63,19 @@ export class AuthService {
 
   async retriveUserFromToken(token: UserToken): Promise<UserReference> {
     const key = userTokenToRedisKey(token)
-    const ref_str = await this.redis.get(key)
+    try {
+      const ref_str = await this.redis.get(key)
+      const user = deserializeUserReference(ref_str, this.userRepo)
 
-    //Extends expiration time
-    await this.redis.expire(key, TOKEN_EXPIRE_DURATION_SECONDS)
+      await user.getUser()
 
-    return deserializeUserReference(ref_str, this.userRepo)
+      //Extends expiration time
+      await this.redis.expire(key, TOKEN_EXPIRE_DURATION_SECONDS)
+
+      return user
+    } catch (e) {
+      throw new InvalidToken()
+    }
   }
 
   async issueTokenForUser(user: User): Promise<UserToken> {

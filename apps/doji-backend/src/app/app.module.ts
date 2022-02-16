@@ -1,16 +1,19 @@
+import { AuthModule } from '@backend/auth/auth.module'
+import { environment } from '@backend/environments/environment'
+import { MessagingModule } from '@backend/messaging/messaging.module'
+import { ProfileModule } from '@backend/profile/profile.module'
+import { RegisterModule } from '@backend/register/register.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Module, ValidationPipe } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
 import { APP_PIPE } from '@nestjs/core'
-import { AuthModule } from 'src/auth/auth.module'
-import { environment } from 'src/environments/environment'
-import { ProfileModule } from 'src/profile/profile.module'
-import { RegisterModule } from 'src/register/register.module'
 
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MikroOrmModule.forRoot({
       autoLoadEntities: true,
       type: 'postgresql',
@@ -18,6 +21,7 @@ import { AppService } from './app.service'
       password: environment.database.password,
       dbName: environment.database.dbName,
       host: environment.database.host,
+      port: parseInt(environment.database.port),
       forceUtcTimezone: true,
       validate: true,
       strict: true,
@@ -25,6 +29,7 @@ import { AppService } from './app.service'
     AuthModule,
     RegisterModule,
     ProfileModule,
+    MessagingModule,
   ],
   controllers: [AppController],
   providers: [
