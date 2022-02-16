@@ -1,7 +1,7 @@
 import { User } from '@backend/entities/User'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { ForbiddenException, Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import bcrypt from 'bcrypt'
 import { randomBytes } from 'crypto'
 import { Redis } from 'ioredis'
