@@ -1,5 +1,5 @@
-import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined'
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
+// import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined'
+// import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 import { Box, Stack, Typography, styled } from '@mui/material'
 
 const NavLayout = styled(Stack)`
@@ -12,8 +12,8 @@ const NavLayout = styled(Stack)`
 function TopNav(props) {
   return (
     <NavLayout>
-      {props.icon == 'back' && <ArrowBackIosNewOutlinedIcon />}
-      {props.icon == 'close' && <CloseOutlinedIcon />}
+      {/* {props.icon == 'back' && <ArrowBackIosNewOutlinedIcon />}
+      {props.icon == 'close' && <CloseOutlinedIcon />} */}
       <Typography>My details</Typography>
       <Box width="24px" height="24px"></Box>
     </NavLayout>
