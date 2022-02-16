@@ -1,9 +1,19 @@
 import { theme } from '@libs/mui'
-import { ThemeProvider } from '@mui/material'
+import { Container, ThemeProvider, styled } from '@mui/material'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 
-import './styles.css'
+import { Toaster } from 'react-hot-toast'
+
+import './style.css'
+
+const StyledContainer = styled(Container)`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-height: 600px;
+  margin-top: ${({ theme }) => theme.spacing(4)};
+`
 
 function CustomApp({ Component, pageProps }: AppProps) {
   return (
@@ -11,9 +21,10 @@ function CustomApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Welcome to doji-frontend!</title>
       </Head>
-      <main className="app">
+      <StyledContainer maxWidth="sm">
         <Component {...pageProps} />
-      </main>
+        <Toaster position="bottom-center" reverseOrder={false} />
+      </StyledContainer>
     </ThemeProvider>
   )
 }

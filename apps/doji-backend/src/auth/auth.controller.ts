@@ -1,10 +1,10 @@
+import { AuthService, UserReference } from '@backend/auth/auth.service'
+import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Body, Controller, ForbiddenException, Post, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
 import { ThrottlerGuard } from '@nestjs/throttler'
 import { IsString } from 'class-validator'
-import { AuthService, UserReference } from 'src/auth/auth.service'
-import { CurrentUser, UserAuthGuard } from 'src/auth/user-auth.guard'
 
 class PasswordLoginBody {
   @ApiProperty()
