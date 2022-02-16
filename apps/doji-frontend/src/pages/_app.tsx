@@ -3,6 +3,8 @@ import { Container, ThemeProvider, styled } from '@mui/material'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 
+import { Toaster } from 'react-hot-toast'
+
 import './style.css'
 
 const StyledContainer = styled(Container)`
@@ -21,6 +23,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
       </Head>
       <StyledContainer maxWidth="sm">
         <Component {...pageProps} />
+        <Toaster position="bottom-center" reverseOrder={false} />
       </StyledContainer>
     </ThemeProvider>
   )
