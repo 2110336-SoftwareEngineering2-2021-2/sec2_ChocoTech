@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, PrimaryKey, Property } from '@mikro-orm/core'
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core'
 
 @Entity()
 export class User {
@@ -22,4 +22,13 @@ export class User {
 
   @Property()
   registerationDate: Date = new Date()
+
+  @Property()
+  firstName: string
+
+  @Property()
+  lastName: string
+
+  @Property()
+  location: string
 }
