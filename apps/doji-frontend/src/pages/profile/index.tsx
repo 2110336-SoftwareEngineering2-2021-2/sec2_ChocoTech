@@ -1,7 +1,6 @@
 import BottomNav from '@frontend/components/NavigationBar/BottomNav'
 import TopNav from '@frontend/components/NavigationBar/TopNav'
 import ProfileTextfield from '@frontend/components/TextField/ProfileTextfield'
-// import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone'
 import { Avatar, Button, Stack, Typography, styled } from '@mui/material'
 
 import { useState } from 'react'
@@ -51,12 +50,23 @@ export function Index() {
   const [location, setLocation] = useState('')
 
   function submitNewProfile() {
-    console.log(displayName, email)
-  }
+    const axios = require('axios')
 
-  // cal api GET /api/profile
-  // setDisplayName(...)
-  // setEmail(...)
+    axios
+      .put('https://dev.choco.saenyakorn.dev/api/profile/edit', {
+        displayName,
+        email,
+        firstName,
+        lastName,
+        location,
+      })
+      .then(function (response) {
+        console.log(response)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
 
   return (
     <>

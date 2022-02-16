@@ -10,23 +10,24 @@ export function Login() {
   const [wrongPassword, setWrongPassword] = useState(false)
 
   const submitLoginRequest = async () => {
-    // need to connect the api
-    // .
-    // fetch('/api/auth/password', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ username, password }),
-    // }).then((response) => {
-    //   if (response.status === 200) {
-    //     window.location.replace('./home')
-    //     do something with token
-    //   }
-    // setWrongPassword(true)
-    // console.log('wrong p')
-    //   return
-    // })
+    const axios = require('axios')
+
+    axios
+      .post('https://dev.choco.saenyakorn.dev/api/password', {
+        username,
+        password,
+      })
+      .then(function (response) {
+        if (response.status === 201) {
+          window.location.replace('./home')
+          // do something with token
+        } else {
+          setWrongPassword(true)
+        }
+      })
+      .catch(function (error) {
+        setWrongPassword(true)
+      })
   }
 
   return (
