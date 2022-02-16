@@ -1,8 +1,9 @@
 import { AuthService, UserReference } from '@backend/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { Body, Controller, ForbiddenException, Get, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, ForbiddenException, Post, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
+import { ThrottlerGuard } from '@nestjs/throttler'
 import { IsString } from 'class-validator'
 
 class PasswordLoginBody {
@@ -30,6 +31,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('password')
+  @UseGuards(ThrottlerGuard)
   @ApiOperation({ description: 'Log user in with username and password' })
   async authWithPassword(@Body() body: PasswordLoginBody): Promise<UserTokenBody> {
     const user = await this.authService.userFromUsernamePassword(body.username, body.password)

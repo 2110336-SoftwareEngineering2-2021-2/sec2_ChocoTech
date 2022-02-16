@@ -14,4 +14,13 @@ import { AuthController } from './auth.controller'
   providers: [AuthService, BearerStrategy],
   exports: [AuthService],
 })
+@Module({
+  imports: [
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 10,
+    }),
+  ],
+  providers: [ThrottlerGuard],
+})
 export class AuthModule {}
