@@ -31,6 +31,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('password')
+  @UseGuards(ThrottlerGuard)
   @ApiOperation({ description: 'Log user in with username and password' })
   async authWithPassword(@Body() body: PasswordLoginBody): Promise<UserTokenBody> {
     const user = await this.authService.userFromUsernamePassword(body.username, body.password)
