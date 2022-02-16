@@ -30,14 +30,12 @@ export function Index() {
       toast.success('Password has been changed')
     }
   }
-  const onError: SubmitErrorHandler<ChangePasswordModel> = (data) => {
-    console.log(data)
-    if (data.newPassword) toast.error(data.newPassword.message)
-    if (data.passwordConfirmation) toast.error(data.passwordConfirmation.message)
+  const onError: SubmitErrorHandler<ChangePasswordModel> = (error) => {
+    if (error.newPassword) toast.error(error.newPassword.message)
+    if (error.passwordConfirmation) toast.error(error.passwordConfirmation.message)
   }
   return (
     <div>
-      <TopNav href="/" action="back" title="Change password"></TopNav>
       <Container maxWidth="sm">
         <Typography variant="small" fontWeight={400}>
           {' '}
