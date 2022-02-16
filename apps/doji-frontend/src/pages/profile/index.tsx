@@ -46,6 +46,9 @@ export function Index() {
   const [isEditProfile, setEditProfile] = useState(false)
   const [displayName, setDisplayName] = useState('') // should initial with user displayName
   const [email, setEmail] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [location, setLocation] = useState('')
 
   function submitNewProfile() {
     console.log(displayName, email)
@@ -105,18 +108,27 @@ export function Index() {
             defaultValue="Uttanon"
             placeholder="enter first name"
             readOnly={!isEditProfile}
+            onChange={(e) => {
+              setFirstName(e.target.value)
+            }}
           />
           <StyleProfileTextField
             adornment="Last name"
             defaultValue="Ausungnoen"
             placeholder="enter last name"
             readOnly={!isEditProfile}
+            onChange={(e) => {
+              setLastName(e.target.value)
+            }}
           />
           <StyleProfileTextField
             adornment="Location"
             defaultValue="Thailand"
             placeholder="enter location"
             readOnly={!isEditProfile}
+            onChange={(e) => {
+              setLocation(e.target.value)
+            }}
           />
         </ProfileTextForm>
         <ProfileFormHeader variant="tiny" fontWeight={400}>
