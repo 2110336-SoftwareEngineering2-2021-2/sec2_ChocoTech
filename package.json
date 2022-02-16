@@ -26,6 +26,7 @@
     "@emotion/react": "11.5.0",
     "@emotion/server": "11.4.0",
     "@emotion/styled": "11.3.0",
+    "@hookform/resolvers": "^2.8.8",
     "@mikro-orm/core": "^4.5.10",
     "@mikro-orm/nestjs": "^4.3.1",
     "@mikro-orm/postgresql": "^4.5.10",
@@ -51,6 +52,8 @@
     "passport-http-bearer": "^1.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-hook-form": "^7.27.0",
+    "react-hot-toast": "^2.2.0",
     "react-icons": "^4.3.1",
     "react-query": "^3.34.15",
     "reflect-metadata": "^0.1.13",
@@ -58,7 +61,8 @@
     "rxjs": "^7.0.0",
     "serialize-error": "^9.0.0",
     "swagger-ui-express": "^4.3.0",
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "7.12.13",
