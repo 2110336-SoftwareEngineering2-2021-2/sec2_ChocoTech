@@ -1,8 +1,8 @@
+import { UserReference } from '@backend/auth/auth.service'
+import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
+import { UserEditProfileRequest } from '@backend/profile/profile.dto'
 import { Body, Controller, Put, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth } from '@nestjs/swagger'
-import { UserReference } from 'src/auth/auth.service'
-import { CurrentUser, UserAuthGuard } from 'src/auth/user-auth.guard'
-import { UserEditProfileRequest } from 'src/profile/profile.dto'
 
 import { ProfileService } from './profile.service'
 

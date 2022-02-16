@@ -1,8 +1,7 @@
 import { UserReference } from '@backend/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
-import { User } from '@backend/entities/User'
 import { UserChangePassword, UserRegistrationRequest } from '@backend/register/register.dto'
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Post, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth } from '@nestjs/swagger'
 
 import { RegisterService } from './register.service'

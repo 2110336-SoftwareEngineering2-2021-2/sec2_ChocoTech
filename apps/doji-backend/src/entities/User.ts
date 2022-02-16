@@ -23,12 +23,12 @@ export class User {
   @Property()
   registerationDate: Date = new Date()
 
-  @Property()
+  @Property({ nullable: true })
   firstName: string
 
-  @Property()
+  @Property({ nullable: true })
   lastName: string
 
-  @Property()
+  @Property({ nullable: true })
   location: string
 }

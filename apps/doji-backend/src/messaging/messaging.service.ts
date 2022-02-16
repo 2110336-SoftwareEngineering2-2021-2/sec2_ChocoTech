@@ -1,8 +1,6 @@
-import { newRedisClient } from '@backend/external/external.module'
 import { OnlineStatusEvent } from '@backend/messaging/messaging.dto'
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
-import { channel } from 'diagnostics_channel'
 import { Redis } from 'ioredis'
 
 enum MessagingPubSubTopic {
