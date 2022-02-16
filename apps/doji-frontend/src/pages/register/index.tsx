@@ -1,11 +1,9 @@
-import { Button, Container, Stack, styled } from '@mui/material'
+import InputField from '@frontend/components/Register/inputField'
+import MultiStepForm, { FormStep } from '@frontend/components/Register/multiStepForm'
+import { Container, styled } from '@mui/material'
+import axios from 'axios'
 import router from 'next/router'
 import * as yup from 'yup'
-
-import React from 'react'
-
-import InputField from '../../components/Register/inputField'
-import MultiStepForm, { FormStep } from '../../components/Register/multiStepForm'
 
 const usernameValidation = yup.object({
   username: yup.string().required('Please Enter a username'),
@@ -35,18 +33,22 @@ const StyledContainer = styled(Container)`
   min-height: 600px;
   margin-top: ${({ theme }) => theme.spacing(4)};
 `
+const baseURL = 'https://dev.choco.saenyakorn.dev/api/'
 
 function Register() {
   return (
     <MultiStepForm
       initialValues={{
         username: '',
-        email: '',
         password: '',
+        displayName: '',
+        email: '',
       }}
       onSubmit={(values) => {
+        values.displayName = values.username
         alert(JSON.stringify(values, null, 2))
-        router.push('./register/complete')
+        axios.post(baseURL, JSON.stringify(values, null, 2))
+        router.push({ pathname: './register/complete' })
       }}
     >
       <FormStep

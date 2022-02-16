@@ -24,7 +24,7 @@ function Complete() {
             </Typography>
           </Toolbar>
         </AppBar>
-        <Stack direction="column" mb="40%">
+        <Stack direction="column" mb="100%">
           <Typography variant="h6" pt={[2, 4]} lineHeight="32px">
             Welcome to Doji,{' '}
             <Typography variant="h6" component="span" color="primary" lineHeight="32px">

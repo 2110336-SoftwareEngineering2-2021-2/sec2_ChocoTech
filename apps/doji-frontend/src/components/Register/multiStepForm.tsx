@@ -107,7 +107,7 @@ const MultiStepForm = ({ children, initialValues, onSubmit }: Props) => {
                 steps={totalSteps}
                 position="static"
                 activeStep={stepNumber}
-                sx={{ maxWidth: 400, flexGrow: 1, marginY: 2 }}
+                sx={{ flexGrow: 1, marginY: 2 }}
                 backButton={<Button variant="text"></Button>}
                 nextButton={<Button variant="text"></Button>}
               />
