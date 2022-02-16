@@ -44,7 +44,7 @@ export class AuthController {
   }
 
   @Post('debug_token')
-  @UseGuards(UserAuthGuard, ThrottlerGuard)
+  @UseGuards(UserAuthGuard)
   @ApiOperation({ description: 'Inspect the token' })
   @ApiResponse({ status: 403, description: 'The token is invalid' })
   @ApiResponse({ status: 200, description: 'The value associated with the given token' })
