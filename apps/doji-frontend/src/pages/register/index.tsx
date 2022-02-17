@@ -33,7 +33,7 @@ const StyledContainer = styled(Container)`
   min-height: 600px;
   margin-top: ${({ theme }) => theme.spacing(4)};
 `
-const baseURL = 'https://dev.choco.saenyakorn.dev/api/'
+const baseURL = 'https://dev.choco.saenyakorn.dev/api/register'
 
 function Register() {
   return (
@@ -46,9 +46,16 @@ function Register() {
       }}
       onSubmit={(values) => {
         values.displayName = values.username
-        alert(JSON.stringify(values, null, 2))
-        axios.post(baseURL, JSON.stringify(values, null, 2))
-        router.push({ pathname: './register/complete' })
+        axios
+          .post(baseURL, JSON.stringify(values, null, 2))
+          .then(function (response) {
+            if (response.status === 201) {
+              router.push({ pathname: './register/complete' })
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
       }}
     >
       <FormStep
