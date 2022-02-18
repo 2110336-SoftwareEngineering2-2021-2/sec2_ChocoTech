@@ -46,23 +46,22 @@ function Register() {
       }}
       onSubmit={(values) => {
         values.displayName = values.username
-        router.push({
-          pathname: './register/[username]',
-          query: { username: values.username },
-        })
-        // axios
-        //   .post(baseURL, JSON.stringify(values, null, 2))
-        //   .then(function (response) {
-        //     if (response.status === 201) {
-        //       router.push({
-        //         pathname: './register/complete/[username]',
-        //         query: { username: values.username },
-        //       })
-        //     }
-        //   })
-        //   .catch(function (error) {
-        //     console.log(error)
-        //   })
+        delete values.confirmPassword
+        axios
+          .post(baseURL, values)
+          .then(function (response) {
+            if (response.status === 201) {
+              router.push({
+                pathname: './register/[username]',
+                query: { username: values.username },
+              })
+            }
+          })
+          .catch(function (error) {
+            if (error.response.status === 422) {
+              alert('User with this username or email already exist.')
+            }
+          })
       }}
     >
       <FormStep
