@@ -1,4 +1,6 @@
+import Context from '@mui/base/TabsUnstyled/TabsContext'
 import { AppBar, Button, Container, Link, Stack, Toolbar, Typography, styled } from '@mui/material'
+import { useRouter } from 'next/router'
 
 const StyledContainer = styled(Container)`
   display: flex;
@@ -8,6 +10,7 @@ const StyledContainer = styled(Container)`
 `
 
 function Complete() {
+  const router = useRouter()
   return (
     <StyledContainer maxWidth="sm">
       <Stack
@@ -28,7 +31,7 @@ function Complete() {
           <Typography variant="h6" pt={[2, 4]} lineHeight="32px">
             Welcome to Doji,{' '}
             <Typography variant="h6" component="span" color="primary" lineHeight="32px">
-              Uttanon
+              {router.query.username}
             </Typography>
           </Typography>
           <Stack direction="column" spacing={2} m={5} alignItems="center">

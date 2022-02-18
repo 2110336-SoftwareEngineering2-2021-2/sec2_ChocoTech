@@ -46,16 +46,23 @@ function Register() {
       }}
       onSubmit={(values) => {
         values.displayName = values.username
-        axios
-          .post(baseURL, JSON.stringify(values, null, 2))
-          .then(function (response) {
-            if (response.status === 201) {
-              router.push({ pathname: './register/complete' })
-            }
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
+        router.push({
+          pathname: './register/[username]',
+          query: { username: values.username },
+        })
+        // axios
+        //   .post(baseURL, JSON.stringify(values, null, 2))
+        //   .then(function (response) {
+        //     if (response.status === 201) {
+        //       router.push({
+        //         pathname: './register/complete/[username]',
+        //         query: { username: values.username },
+        //       })
+        //     }
+        //   })
+        //   .catch(function (error) {
+        //     console.log(error)
+        //   })
       }}
     >
       <FormStep
