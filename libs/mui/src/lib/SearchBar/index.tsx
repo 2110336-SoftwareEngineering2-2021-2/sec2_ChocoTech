@@ -48,5 +48,3 @@ export const SearchBar = forwardRef<SearchBarRef, SearchBarProps>((props, ref) =
     </Stack>
   )
 })
-
-export default SearchBar

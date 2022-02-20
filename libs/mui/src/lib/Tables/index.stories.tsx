@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react'
 import { useCallback } from 'react'
 import { FiGitlab } from 'react-icons/fi'
 
-import Tables, { TablesActionType, TablesProps } from '.'
+import { Tables, TablesActionType, TablesProps } from '.'
 
 export default {
   component: Tables,
