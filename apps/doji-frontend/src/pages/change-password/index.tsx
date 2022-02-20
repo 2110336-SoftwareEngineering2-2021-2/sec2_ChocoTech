@@ -1,10 +1,9 @@
-import TopNav from '@frontend/components/NavigationBar/TopNav'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Container, TextField, Typography } from '@mui/material'
 import { InferType, object, ref, string } from 'yup'
 
 import { SubmitErrorHandler, SubmitHandler, useForm, useWatch } from 'react-hook-form'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 
 const changePasswordSchema = object({
   oldPassword: string().trim().required('Please enter the password'),

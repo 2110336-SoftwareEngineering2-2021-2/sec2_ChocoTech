@@ -1,10 +1,9 @@
-import TopNav from '@frontend/components/NavigationBar/TopNav'
+import { TopBarActionType, TopBarProps } from '@libs/mui'
 import { Container, Stack, Typography } from '@mui/material'
 
 export function TermsOfService() {
   return (
     <Container maxWidth="sm">
-      <TopNav icon="close" title="Terms of Service" href="./" />
       <Stack direction="column" justifyContent="space-between" mt={2} spacing={2}>
         <Typography variant="regular" fontWeight={400}>
           Terms of Service
@@ -24,3 +23,8 @@ export function TermsOfService() {
 }
 
 export default TermsOfService
+
+export const topBarProps: TopBarProps = {
+  title: 'Terms of Service',
+  action: TopBarActionType.Close,
+}

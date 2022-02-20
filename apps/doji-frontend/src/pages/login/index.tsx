@@ -1,9 +1,8 @@
 import Storage from '@frontend/common/storage'
 import { StorageKey } from '@frontend/common/storage/constants'
-import TopNav from '@frontend/components/NavigationBar/TopNav'
 import { httpClient } from '@frontend/services'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { TopBarProps } from '@libs/mui'
+import { TopBarActionType, TopBarProps } from '@libs/mui'
 import { Button, Link as MuiLink, Stack, TextField, Typography } from '@mui/material'
 import Link from 'next/link'
 import { InferType, object, string } from 'yup'
@@ -53,7 +52,6 @@ export default function LoginPage() {
 
   return (
     <>
-      <TopNav icon="back" title="Log in" href="./.." />
       <Stack
         component="form"
         direction="column"
@@ -110,7 +108,7 @@ export default function LoginPage() {
   )
 }
 
-LoginPage.topBarProps = {
+export const topBarProps: TopBarProps = {
   title: 'Log in',
-  action: 'back',
-} as TopBarProps
+  action: TopBarActionType.Back,
+}
