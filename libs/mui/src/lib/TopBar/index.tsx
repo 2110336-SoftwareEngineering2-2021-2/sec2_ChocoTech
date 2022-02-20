@@ -52,7 +52,7 @@ const ActionIcon: React.FC<Pick<TopBarProps, 'action' | 'onClose'>> = ({ action,
 
 const TopBar: React.FC<TopBarProps> = ({ title, action = TopBarActionType.None, onClose }) => {
   return (
-    <Stack direction="row" spacing={1} justifyContent="center" sx={{ position: 'relative' }} p={1}>
+    <Stack direction="row" justifyContent="center" sx={{ position: 'relative' }} p={1}>
       <IconContainer>
         <ActionIcon action={action} onClose={onClose} />
       </IconContainer>
