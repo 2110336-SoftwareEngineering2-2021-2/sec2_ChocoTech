@@ -24,7 +24,11 @@ const loginRequest = async (loginData: LoginModel): Promise<{ token: string }> =
 }
 
 export default function LoginPage() {
-  const { register, handleSubmit } = useForm<LoginModel>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginModel>({
     resolver: yupResolver(LoginSchema),
   })
   const loginQuery = useMutation(loginRequest, {
@@ -60,8 +64,21 @@ export default function LoginPage() {
         noValidate
       >
         <Stack direction="column" spacing={2}>
-          <TextField fullWidth label="username" {...register('username')}></TextField>
-          <TextField fullWidth label="password" type="password" {...register('password')} />
+          <TextField
+            fullWidth
+            label="username"
+            {...register('username')}
+            error={!!errors?.username}
+            helperText={errors?.username?.message ?? ''}
+          />
+          <TextField
+            fullWidth
+            label="password"
+            type="password"
+            {...register('password')}
+            error={!!errors?.password}
+            helperText={errors?.password?.message ?? ''}
+          />
           <Link href="/forgot-password" passHref>
             <MuiLink variant="regular" color="primary" align="left">
               Forgot password?
