@@ -39,6 +39,7 @@ jobs:
           cache-dependency-path: '**/yarn.lock'
 
       - name: Make envfile for production
+        if: ${{ github.ref == 'refs/heads/main' }}
         uses: SpicyPizza/create-envfile@v1.3
         with:
           envkey_NODE_ENV: production
@@ -58,6 +59,7 @@ jobs:
           fail_on_empty: false
 
       - name: Make envfile for production
+        if: ${{ github.ref == 'refs/heads/migrate' }}
         uses: SpicyPizza/create-envfile@v1.3
         with:
           envkey_NODE_ENV: production
