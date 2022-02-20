@@ -1,0 +1,101 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main, dev, migrate]
+  pull_request:
+    branches: [dev]
+    types: [opened, edited]
+
+permissions:
+  actions: read
+  checks: read
+  contents: write
+  deployments: read
+  issues: write
+  discussions: read
+  packages: write
+  pull-requests: write
+  repository-projects: write
+  security-events: read
+  statuses: write
+
+jobs:
+  build-and-deploy:
+    strategy:
+      matrix:
+        node-version: [16.x]
+        platform: [ubuntu-latest]
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'yarn'
+          cache-dependency-path: '**/yarn.lock'
+
+      - name: Make envfile for production
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_NODE_ENV: production
+          envkey_REDIS_DATABASE: ${{ secrets.REDIS_DATABASE_PROD }}
+          envkey_NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL_PROD }}
+          envkey_POSTGRES_DATABASE_NAME: ${{ secrets.POSTGRES_DATABASE_NAME_PROD }}
+          envkey_PORT_NEST: ${{ secrets.PORT_NEST }}
+          envkey_POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          envkey_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          envkey_POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          envkey_POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          envkey_REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          envkey_REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          envkey_REDIS_USER: ${{ secrets.REDIS_USER }}
+          file_name: .env.prod
+          fail_on_empty: false
+
+      - name: Make envfile for production
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_NODE_ENV: production
+          envkey_REDIS_DATABASE: ${{ secrets.REDIS_DATABASE_DEV }}
+          envkey_NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL_DEV }}
+          envkey_POSTGRES_DATABASE_NAME: ${{ secrets.POSTGRES_DATABASE_NAME_DEV }}
+          envkey_PORT_NEST: ${{ secrets.PORT_NEST }}
+          envkey_POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          envkey_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          envkey_POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          envkey_POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          envkey_REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          envkey_REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          envkey_REDIS_USER: ${{ secrets.REDIS_USER }}
+          file_name: .env.dev
+          fail_on_empty: false
+
+      - name: Set prod env
+        run: mv .env.prod .env
+
+      - name: Set dev env
+        run: mv .env.dev .env
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn --prefer-offline --frozen-lockfile
+
+      - name: Migrate remote database
+        run: yarn migrate-db
