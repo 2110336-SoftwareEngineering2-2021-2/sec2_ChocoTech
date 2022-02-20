@@ -1,119 +1,110 @@
+import Storage from '@frontend/common/storage'
+import { StorageKey } from '@frontend/common/storage/constants'
 import TopNav from '@frontend/components/NavigationBar/TopNav'
-import { Button, Container, Stack, TextField, Typography } from '@mui/material'
+import { httpClient } from '@frontend/services'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Button, Container, Link as MuiLink, Stack, TextField, Typography } from '@mui/material'
 import Link from 'next/link'
+import { InferType, object, string } from 'yup'
 
-import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
+import { useMutation } from 'react-query'
 
-export function Login() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [wrongPassword, setWrongPassword] = useState(false)
+const LoginSchema = object({
+  username: string().trim().required('Please enter the username'),
+  password: string().trim().required('Please enter the password'),
+})
 
-  const submitLoginRequest = async () => {
-    const axios = require('axios')
+type LoginModel = InferType<typeof LoginSchema>
 
-    axios
-      .post('https://dev.choco.saenyakorn.dev/api/password', {
-        username,
-        password,
+const loginRequest = async (loginData: LoginModel): Promise<{ token: string }> => {
+  const { data } = await httpClient.post<{ token: string }>('/auth/password', loginData)
+  return data
+}
+
+export default function LoginPage() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginModel>({
+    resolver: yupResolver(LoginSchema),
+  })
+  const loginQuery = useMutation(loginRequest, {
+    onSuccess: ({ token }) => {
+      const localStorage = new Storage('localStorage')
+      localStorage.set<string>(StorageKey.TOKEN, token)
+    },
+  })
+
+  const onSubmit = async (formData: LoginModel) => {
+    try {
+      toast.promise(loginQuery.mutateAsync(formData), {
+        loading: 'Loading',
+        success: 'Login success',
+        error: 'Login failed, please try again',
       })
-      .then(function (response) {
-        if (response.status === 201) {
-          window.location.replace('./home')
-          // do something with token
-        } else {
-          setWrongPassword(true)
-        }
-      })
-      .catch(function (error) {
-        setWrongPassword(true)
-      })
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   return (
-    <Container maxWidth="sm">
+    <>
       <TopNav icon="back" title="Log in" href="./.." />
-
-      <Stack direction="column" justifyContent="space-between" mt={2} spacing={2}>
-        {!wrongPassword && (
+      <Stack
+        component="form"
+        direction="column"
+        justifyContent="space-between"
+        mt={2}
+        spacing={2}
+        flexGrow={1}
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+      >
+        <Stack direction="column" spacing={2}>
           <TextField
             fullWidth
-            type="username"
-            size="medium"
-            label="Username"
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value)
-            }}
-          ></TextField>
-        )}
-        {wrongPassword && (
-          <TextField
-            error
-            fullWidth
-            type="username"
-            size="medium"
-            label="Username"
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value)
-            }}
-          ></TextField>
-        )}
-
-        {!wrongPassword && (
-          <TextField
-            fullWidth
-            type="password"
-            size="medium"
-            label="Password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value)
-            }}
-          ></TextField>
-        )}
-        {wrongPassword && (
-          <TextField
-            error
-            helperText="Incorrect Username or Password."
-            fullWidth
-            type="password"
-            size="medium"
-            label="Password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value)
-            }}
+            label="username"
+            {...register('username')}
+            error={!!errors?.username}
+            helperText={errors?.username?.message ?? ''}
           />
-        )}
-
-        <Typography variant="regular" component="a" color="primary" align="left">
-          <Link href="/forgot-password">Forgot password?</Link>
-        </Typography>
-
-        <Typography variant="tiny" pt={8}>
-          By continuing, you agree to our{' '}
-          <Link href="login/terms-of-service">
-            <Typography variant="tiny" component="a" color="primary">
-              Terms of Service{' '}
-            </Typography>
+          <TextField
+            fullWidth
+            label="password"
+            type="password"
+            {...register('password')}
+            error={!!errors?.password}
+            helperText={errors?.password?.message ?? ''}
+          />
+          <Link href="/forgot-password" passHref>
+            <MuiLink variant="regular" color="primary" align="left">
+              Forgot password?
+            </MuiLink>
           </Link>
-          and{' '}
-          <Link href="login/privacy-policy">
-            <Typography variant="tiny" component="a" color="primary">
-              Privacy Policy
-            </Typography>
-          </Link>
-          .
-        </Typography>
+        </Stack>
+        <Stack direction="column" spacing={2} pb={10}>
+          <Typography variant="tiny" lineHeight={1.2}>
+            By continuing, you agree to our{' '}
+            <Link href="terms-of-service" passHref>
+              <MuiLink variant="tiny" color="primary">
+                Terms of Service{' '}
+              </MuiLink>
+            </Link>
+            and{' '}
+            <Link href="privacy-policy" passHref>
+              <MuiLink variant="tiny" color="primary">
+                Privacy Policy
+              </MuiLink>
+            </Link>
+            .
+          </Typography>
 
-        <Button size="large" onClick={submitLoginRequest}>
-          Log in
-        </Button>
+          <Button type="submit">Log in</Button>
+        </Stack>
       </Stack>
-    </Container>
+    </>
   )
 }
-
-export default Login

@@ -34,3 +34,16 @@ export function overrideTypography(theme: Theme): Components['MuiTypography'] {
     ],
   }
 }
+
+export function overrideLink(theme: Theme): Components['MuiLink'] {
+  return {
+    styleOverrides: {
+      root: {
+        textDecoration: 'none',
+        '&:hover': {
+          textDecoration: 'underline',
+        },
+      },
+    },
+  }
+}

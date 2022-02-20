@@ -2,7 +2,7 @@ import { Components, Theme } from '@mui/material'
 
 import { overrideButton, overrideButtonBase } from './button'
 import { overrideFilledInput, overrideOutlinedInput, overrideTextField } from './textfield'
-import { overrideTypography } from './typography'
+import { overrideLink, overrideTypography } from './typography'
 
 export default function overrideComponents(theme: Theme): Components {
   return {
@@ -12,5 +12,6 @@ export default function overrideComponents(theme: Theme): Components {
     MuiTextField: overrideTextField(theme),
     MuiOutlinedInput: overrideOutlinedInput(theme),
     MuiFilledInput: overrideFilledInput(theme),
+    MuiLink: overrideLink(theme),
   }
 }

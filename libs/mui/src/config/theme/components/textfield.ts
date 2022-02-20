@@ -3,7 +3,7 @@ import { Components, Theme } from '@mui/material'
 export function overrideTextField(theme: Theme): Components['MuiTextField'] {
   return {
     defaultProps: {
-      size: 'small',
+      size: 'medium',
     },
   }
 }

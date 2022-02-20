@@ -14,7 +14,7 @@ export function overrideButton(theme: Theme): Components['MuiButton'] {
       variant: 'contained',
       color: 'primary',
       disableElevation: true,
-      size: 'small',
+      size: 'large',
     },
     styleOverrides: {
       root: {
