@@ -161,7 +161,7 @@ export function Index() {
 
 export default Index
 
-export const topBarProps: TopBarProps = {
+Index.topBarProps = {
   title: 'My details',
   action: TopBarActionType.Back,
-}
+} as TopBarProps

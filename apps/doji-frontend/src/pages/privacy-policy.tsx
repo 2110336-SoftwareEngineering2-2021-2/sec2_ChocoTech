@@ -24,7 +24,7 @@ export function PrivatePolicy() {
 
 export default PrivatePolicy
 
-export const topBarProps: TopBarProps = {
+PrivatePolicy.topBarProps = {
   title: 'Private Policy',
   action: TopBarActionType.Close,
-}
+} as TopBarProps

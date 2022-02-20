@@ -24,7 +24,7 @@ export function TermsOfService() {
 
 export default TermsOfService
 
-export const topBarProps: TopBarProps = {
+TermsOfService.topBarProps = {
   title: 'Terms of Service',
   action: TopBarActionType.Close,
-}
+} as TopBarProps
