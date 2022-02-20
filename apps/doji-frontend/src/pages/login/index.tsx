@@ -108,7 +108,7 @@ export default function LoginPage() {
   )
 }
 
-export const topBarProps: TopBarProps = {
+LoginPage.topBarProps = {
   title: 'Log in',
   action: TopBarActionType.Back,
-}
+} as TopBarProps

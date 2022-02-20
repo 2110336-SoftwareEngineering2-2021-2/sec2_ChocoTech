@@ -23,6 +23,8 @@ type ExtendedAppProps = AppProps & {
 }
 
 function CustomApp({ Component, pageProps }: ExtendedAppProps) {
+  console.log(Component.topBarProps)
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
