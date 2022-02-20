@@ -53,7 +53,7 @@ jobs:
           fail_on_empty: false
 
       - name: Make envfile for production
-        if: ${{ github.ref == 'refs/heads/migrate' }}
+        if: ${{ github.ref == 'refs/heads/dev' }}
         uses: SpicyPizza/create-envfile@v1.3
         with:
           envkey_NODE_ENV: production
