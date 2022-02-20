@@ -1,4 +1,5 @@
 import { ThemeProvider } from '@mui/material'
+import { RouterContext } from 'next/dist/shared/lib/router-context'
 
 import { theme } from '../src/config/theme'
 
@@ -38,5 +39,14 @@ export const parameters = {
         value: '#3b5998',
       },
     ],
+  },
+  nextRouter: {
+    Provider: RouterContext.Provider,
+    path: '/',
+    asPath: '/',
+    query: {},
+    push: (path) => {
+      console.log(path)
+    },
   },
 }
