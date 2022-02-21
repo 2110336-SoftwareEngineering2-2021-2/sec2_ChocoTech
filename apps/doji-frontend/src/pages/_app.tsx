@@ -37,13 +37,16 @@ function CustomApp({ Component, pageProps }: ExtendedAppProps) {
   useEffect(() => {
     const storage = new Storage('localStorage')
     const token = storage.get<string>(StorageKey.TOKEN)
-    if (token) {
-      httpClient.get<MeResponseDTO>('/auth/me').then(({ data }) => {
+    if (!token) return
+    httpClient
+      .get<MeResponseDTO>('/auth/me')
+      .then(({ data }) => {
         setUser(data)
       })
-    } else {
-      storage.remove(StorageKey.TOKEN)
-    }
+      .catch((err) => {
+        console.error(err)
+        storage.remove(StorageKey.TOKEN)
+      })
   }, [setUser])
 
   return (
