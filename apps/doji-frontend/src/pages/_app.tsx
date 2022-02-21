@@ -1,10 +1,15 @@
-import { queryClient } from '@frontend/services'
+import Storage from '@frontend/common/storage'
+import { StorageKey } from '@frontend/common/storage/constants'
+import { httpClient, queryClient } from '@frontend/services'
+import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
+import { MeResponseDTO } from '@libs/api'
 import { TopBar, theme } from '@libs/mui'
 import { Container, ThemeProvider, styled } from '@mui/material'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 
+import { useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { QueryClientProvider } from 'react-query'
 
@@ -23,7 +28,23 @@ type ExtendedAppProps = AppProps & {
 }
 
 function CustomApp({ Component, pageProps }: ExtendedAppProps) {
-  
+  const { setUser } = useAuthStore()
+
+  /**
+   * Initialize user data from local storage,
+   * it'll be run only once when the app is loaded
+   */
+  useEffect(() => {
+    const storage = new Storage('localStorage')
+    const token = storage.get<string>(StorageKey.TOKEN)
+    if (token) {
+      httpClient.get<MeResponseDTO>('/auth/me').then(({ data }) => {
+        setUser(data)
+      })
+    } else {
+      storage.remove(StorageKey.TOKEN)
+    }
+  }, [setUser])
 
   return (
     <QueryClientProvider client={queryClient}>

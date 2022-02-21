@@ -1,17 +1,17 @@
-import { messaging } from '@sec2-choco-tech/api'
+import { IAuthHandshake, IListenOnlineStatusRequest, IOnlineStatusEvent } from '@libs/api'
 import { IsString } from 'class-validator'
 
-export class AuthHandshake implements messaging.IAuthHandshake {
+export class AuthHandshake implements IAuthHandshake {
   @IsString()
   token: string
 }
 
-export class ListenOnlineStatusRequest implements messaging.IListenOnlineStatusRequest {
+export class ListenOnlineStatusRequest implements IListenOnlineStatusRequest {
   @IsString()
   username: string
 }
 
-export class OnlineStatusEvent implements messaging.IOnlineStatusEvent {
+export class OnlineStatusEvent implements IOnlineStatusEvent {
   username: string
   isOnline: boolean
 }

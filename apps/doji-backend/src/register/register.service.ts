@@ -1,6 +1,6 @@
 import { UserReference } from '@backend/auth/auth.service'
-import { User } from '@backend/entities/User'
 import { UserChangePassword, UserRegistrationRequest } from '@backend/register/register.dto'
+import { User } from '@libs/api'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'

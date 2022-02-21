@@ -63,7 +63,8 @@
     "serialize-error": "^9.0.0",
     "swagger-ui-express": "^4.3.0",
     "tslib": "^2.0.0",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "zustand": "^3.7.0"
   },
   "devDependencies": {
     "@babel/core": "7.12.13",

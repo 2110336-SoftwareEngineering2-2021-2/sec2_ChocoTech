@@ -1,7 +1,9 @@
 import Storage from '@frontend/common/storage'
 import { StorageKey } from '@frontend/common/storage/constants'
 import { httpClient } from '@frontend/services'
+import { useAuthStore } from '@frontend/stores'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { LoginResponseDTO } from '@libs/api'
 import { TopBarActionType, TopBarProps } from '@libs/mui'
 import { Button, Link as MuiLink, Stack, TextField, Typography } from '@mui/material'
 import Link from 'next/link'
@@ -18,8 +20,8 @@ const LoginSchema = object({
 
 type LoginModel = InferType<typeof LoginSchema>
 
-const loginRequest = async (loginData: LoginModel): Promise<{ token: string }> => {
-  const { data } = await httpClient.post<{ token: string }>('/auth/password', loginData)
+const loginRequest = async (loginData: LoginModel): Promise<LoginResponseDTO> => {
+  const { data } = await httpClient.post<LoginResponseDTO>('/auth/password', loginData)
   return data
 }
 
@@ -31,10 +33,14 @@ export default function LoginPage() {
   } = useForm<LoginModel>({
     resolver: yupResolver(LoginSchema),
   })
+
+  const { setUser } = useAuthStore()
+
   const loginQuery = useMutation(loginRequest, {
-    onSuccess: ({ token }) => {
+    onSuccess: ({ token, user }) => {
       const localStorage = new Storage('localStorage')
       localStorage.set<string>(StorageKey.TOKEN, token)
+      setUser(user)
     },
   })
 

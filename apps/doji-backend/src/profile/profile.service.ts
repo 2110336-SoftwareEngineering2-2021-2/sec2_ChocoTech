@@ -1,6 +1,6 @@
 import { UserReference } from '@backend/auth/auth.service'
-import { User } from '@backend/entities/User'
 import { UserEditProfileRequest } from '@backend/profile/profile.dto'
+import { User } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable } from '@nestjs/common'
