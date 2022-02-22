@@ -3,7 +3,10 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "declaration": true,
-    "types": []
+    "types": [],
+    "emitDecoratorMetadata": true,
+    "noImplicitReturns": false,
+    "strictPropertyInitialization": false
   },
   "include": ["**/*.ts"],
   "exclude": ["**/*.spec.ts"]
