@@ -1,6 +1,6 @@
 import { Meta, Story } from '@storybook/react'
 
-import TopBar, { TopBarProps } from '.'
+import { TopBar, TopBarProps } from '.'
 
 export default {
   component: TopBar,

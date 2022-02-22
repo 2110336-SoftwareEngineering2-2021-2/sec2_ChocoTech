@@ -3,6 +3,9 @@ import { StorageKey } from '@frontend/common/storage/constants'
 import axios from 'axios'
 
 import toast from 'react-hot-toast'
+import { QueryClient } from 'react-query'
+
+export const queryClient = new QueryClient()
 
 export const httpClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,

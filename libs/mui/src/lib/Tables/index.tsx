@@ -53,7 +53,7 @@ export interface TablesProps {
   }
 }
 
-const Tables: React.FC<TablesProps> = ({
+export const Tables: React.FC<TablesProps> = ({
   content,
   caption,
   action = { type: 'none' },
@@ -116,5 +116,3 @@ const Tables: React.FC<TablesProps> = ({
     </Stack>
   )
 }
-
-export default Tables

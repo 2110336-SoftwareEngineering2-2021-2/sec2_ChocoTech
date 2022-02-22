@@ -2,7 +2,7 @@ import { Button, Container, Link as MuiLink, Stack, Typography, styled } from '@
 import Image from 'next/image'
 import Link from 'next/link'
 
-export function Index() {
+function Index() {
   return (
     <Stack
       sx={{ minHeight: '100%' }}
@@ -50,3 +50,5 @@ export function Index() {
 }
 
 export default Index
+
+Index.topBar = 'Hello'

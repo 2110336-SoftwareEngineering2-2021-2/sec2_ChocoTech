@@ -17789,6 +17789,11 @@ yup@^0.32.11:
     property-expr "^2.0.4"
     toposort "^2.0.2"
 
+zustand@^3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.7.0.tgz#a5c68fb06bdee9c63ad829de2432635be6d0ce69"
+  integrity sha512-USzVzLGrvZ8VK1/sEsOAmeqa8N7D3OBdZskVaL7DL89Q4QLTYD053iIlZ5KDidyZ+Od80Dttin/f8ZulOLFFDQ==
+
 zwitch@^1.0.0:
   version "1.0.5"
   resolved "https://registry.npmjs.org/zwitch/-/zwitch-1.0.5.tgz"

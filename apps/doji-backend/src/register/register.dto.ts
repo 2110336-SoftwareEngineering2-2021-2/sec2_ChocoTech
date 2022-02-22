@@ -18,13 +18,3 @@ export class UserRegistrationRequest {
   @IsEmail()
   email: string
 }
-
-export class UserChangePassword {
-  @ApiProperty()
-  @IsString()
-  currentPassword: string
-
-  @ApiProperty()
-  @IsString()
-  newPassword: string
-}
