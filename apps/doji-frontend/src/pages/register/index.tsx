@@ -1,4 +1,3 @@
-import InputField from '@frontend/components/Register/inputField'
 import MultiStepForm, { FormStep } from '@frontend/components/Register/multiStepForm'
 import { Container, styled } from '@mui/material'
 import axios from 'axios'
@@ -43,6 +42,7 @@ function Register() {
         password: '',
         displayName: '',
         email: '',
+        confirmPassword: '',
       }}
       onSubmit={(values) => {
         values.displayName = values.username
@@ -70,27 +70,20 @@ function Register() {
         header="Choose a Username"
         body1="Choose a username for your new account. "
         body2="You cannot change your username later."
-      >
-        <InputField name="username" label="Username" />
-      </FormStep>
+      ></FormStep>
       <FormStep
         stepName="Email"
         validationSchema={emailValidation}
         header="Choose an email"
         body1="Choose an email for your new account."
         body2="You can always change your email later."
-      >
-        <InputField name="email" label="Email" />
-      </FormStep>
+      ></FormStep>
       <FormStep
         stepName="Password"
         validationSchema={passwordValidation}
         header="Setup a new password"
         body1="Choosea secure password"
-      >
-        <InputField name="password" label="Password" type="password" />
-        <InputField name="confirmPassword" label="Confirm password" type="password" />
-      </FormStep>
+      ></FormStep>
     </MultiStepForm>
   )
 }

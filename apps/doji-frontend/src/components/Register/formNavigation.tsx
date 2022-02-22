@@ -1,9 +1,6 @@
 import { Button } from '@mui/material'
-import { FormikValues } from 'formik'
 
 interface Props {
-  hasPrevious?: boolean
-  onBackClick: (values: FormikValues) => void
   isLastStep: boolean
 }
 
