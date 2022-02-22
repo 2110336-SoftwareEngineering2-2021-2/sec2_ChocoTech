@@ -26,12 +26,6 @@ const passwordValidation = yup.object({
     .oneOf([yup.ref('password'), null], 'Passwords must match'),
 })
 
-const StyledContainer = styled(Container)`
-  display: flex;
-  flex-grow: 1;
-  min-height: 600px;
-  margin-top: ${({ theme }) => theme.spacing(4)};
-`
 const baseURL = 'https://dev.choco.saenyakorn.dev/api/register'
 
 function Register() {
