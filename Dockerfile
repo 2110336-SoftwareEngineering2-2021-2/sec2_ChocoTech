@@ -12,15 +12,10 @@ COPY . .
 RUN yarn build:storybook
 # Build all application
 RUN yarn build
+# Install only production dependencies
+RUN yarn install --frozen-lockfile --production --ignore-scripts --prefer-offline
 
 # ------ stage 2 ---------
-FROM node:14-alpine AS script
-WORKDIR /build
-COPY package.json yarn.lock ./
-# Install dependencies for production
-RUN yarn --frozen-lockfile --production
-
-# ------ stage 3 ---------
 FROM ubuntu/nginx:1.18-20.04_beta
 WORKDIR /etc/nginx/
 ENV NODE_ENV production
@@ -48,7 +43,7 @@ COPY --from=base /build/dist ./dist
 COPY --from=base /build/apps ./apps
 COPY --from=base /build/libs ./libs
 COPY --from=base /build/tools ./tools
-COPY --from=script /build/node_modules ./node_modules
+COPY --from=base /build/node_modules ./node_modules
 
 COPY start_production.sh .
 RUN chmod +x start_production.sh

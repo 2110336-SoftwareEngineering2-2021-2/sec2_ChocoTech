@@ -2,6 +2,7 @@ import Storage from '@frontend/common/storage'
 import { StorageKey } from '@frontend/common/storage/constants'
 import { httpClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
+import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { LoginResponseDTO } from '@libs/api'
 import { TopBarActionType, TopBarProps } from '@libs/mui'
@@ -25,7 +26,7 @@ const loginRequest = async (loginData: LoginModel): Promise<LoginResponseDTO> =>
   return data
 }
 
-export default function LoginPage() {
+const LoginPage: ExtendedNextPage = () => {
   const {
     register,
     handleSubmit,
@@ -36,7 +37,7 @@ export default function LoginPage() {
 
   const { setUser } = useAuthStore()
 
-  const loginQuery = useMutation(loginRequest, {
+  const loginMutation = useMutation(loginRequest, {
     onSuccess: ({ token, user }) => {
       const localStorage = new Storage('localStorage')
       localStorage.set<string>(StorageKey.TOKEN, token)
@@ -46,7 +47,7 @@ export default function LoginPage() {
 
   const onSubmit = async (formData: LoginModel) => {
     try {
-      toast.promise(loginQuery.mutateAsync(formData), {
+      toast.promise(loginMutation.mutateAsync(formData), {
         loading: 'Loading',
         success: 'Login success',
         error: 'Login failed, please try again',
@@ -113,6 +114,8 @@ export default function LoginPage() {
     </>
   )
 }
+
+export default LoginPage
 
 LoginPage.topBarProps = {
   title: 'Log in',

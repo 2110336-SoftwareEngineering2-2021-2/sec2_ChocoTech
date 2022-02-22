@@ -1,75 +1,96 @@
+import { httpClient } from '@frontend/services'
+import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Button, Container, TextField, Typography } from '@mui/material'
+import { UserChangeRequestDTO } from '@libs/api'
+import { TopBarActionType } from '@libs/mui'
+import { Button, Stack, TextField, Typography } from '@mui/material'
+import { AxiosError } from 'axios'
 import { InferType, object, ref, string } from 'yup'
 
-import { SubmitErrorHandler, SubmitHandler, useForm, useWatch } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
+import { useMutation } from 'react-query'
 
-const changePasswordSchema = object({
+const ChangePasswordSchema = object({
   oldPassword: string().trim().required('Please enter the password'),
   newPassword: string()
     .trim()
     .required('Please enter the password')
     .matches(/^.{8,16}$/, 'Password should have 8-16 letters'),
-  passwordConfirmation: string()
+  confirmPassword: string()
     .trim()
-    .oneOf([ref('newPassword')], 'Incorrect password confirmation'),
+    .oneOf([ref('newPassword')], 'Incorrect confirm password'),
 })
-export type ChangePasswordModel = InferType<typeof changePasswordSchema>
+export type ChangePasswordModel = InferType<typeof ChangePasswordSchema>
 
-export function Index() {
-  const { register, control, handleSubmit } = useForm<ChangePasswordModel>({
-    resolver: yupResolver(changePasswordSchema),
-  })
-  const onSubmit: SubmitHandler<ChangePasswordModel> = (data) => {
-    //assume that the old password is 12345
-    if (data.oldPassword !== '12345') {
-      toast.error('Current password is incorrect!')
-    } else {
-      toast.success('Password has been changed')
-    }
-  }
-  const onError: SubmitErrorHandler<ChangePasswordModel> = (error) => {
-    if (error.newPassword) toast.error(error.newPassword.message)
-    if (error.passwordConfirmation) toast.error(error.passwordConfirmation.message)
-  }
-  return (
-    <div>
-      <Container maxWidth="sm">
-        <Typography variant="small" fontWeight={400}>
-          {' '}
-          Choose a secure password{' '}
-        </Typography>
-        <Container sx={{ mt: 3 }} fixed>
-          <form onSubmit={handleSubmit(onSubmit, onError)}>
-            <TextField
-              {...register('oldPassword')}
-              type="password"
-              sx={{ width: '100%', mb: 2 }}
-              label="Current password..."
-            ></TextField>
-            <TextField
-              {...register('newPassword')}
-              type="password"
-              sx={{ width: '100%', mb: 2 }}
-              label="New password..."
-            ></TextField>
-            <TextField
-              {...register('passwordConfirmation')}
-              type="password"
-              sx={{ width: '100%', mb: 3 }}
-              label="Confirm new password..."
-            ></TextField>
-            <Button type="submit" size="medium" variant="contained" sx={{ p: 2, width: '100%' }}>
-              <Typography variant="large" fontWeight="400">
-                Change password
-              </Typography>
-            </Button>
-          </form>
-        </Container>
-      </Container>
-    </div>
+const changePasswordRequest = async (formData: UserChangeRequestDTO) => {
+  await httpClient.post<unknown, unknown, UserChangeRequestDTO>(
+    '/register/change_password',
+    formData,
   )
 }
 
-export default Index
+const ChangePasswordPage: ExtendedNextPage = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ChangePasswordModel>({
+    resolver: yupResolver(ChangePasswordSchema),
+  })
+
+  const changePasswordMutation = useMutation(changePasswordRequest, {
+    onSuccess: () => {
+      toast.success('Password changed successfully')
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.response.data.message)
+    },
+  })
+
+  const onSubmit: SubmitHandler<ChangePasswordModel> = async (data) => {
+    await changePasswordMutation.mutate({
+      currentPassword: data.oldPassword,
+      newPassword: data.newPassword,
+    })
+  }
+
+  return (
+    <Stack component="form" noValidate onSubmit={handleSubmit(onSubmit)} spacing={2}>
+      <TextField
+        {...register('oldPassword')}
+        type="password"
+        label="Current password..."
+        error={!!errors.oldPassword}
+        helperText={errors.oldPassword?.message}
+      ></TextField>
+      <TextField
+        {...register('newPassword')}
+        type="password"
+        label="New password..."
+        error={!!errors.newPassword}
+        helperText={errors.newPassword?.message}
+      />
+      <TextField
+        {...register('confirmPassword')}
+        type="password"
+        label="Confirm new password..."
+        error={!!errors.confirmPassword}
+        helperText={errors.confirmPassword?.message}
+      ></TextField>
+      <Button type="submit" variant="contained" sx={{ p: 2 }}>
+        <Typography variant="large" fontWeight="400">
+          Change password
+        </Typography>
+      </Button>
+    </Stack>
+  )
+}
+
+export default ChangePasswordPage
+
+ChangePasswordPage.shouldAuthenticated = true
+ChangePasswordPage.topBarProps = {
+  title: 'Choose a secure password',
+  action: TopBarActionType.Back,
+}

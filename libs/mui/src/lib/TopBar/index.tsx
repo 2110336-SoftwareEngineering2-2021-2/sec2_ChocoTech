@@ -56,7 +56,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onClose,
 }) => {
   return (
-    <Stack direction="row" justifyContent="center" sx={{ position: 'relative' }} p={1}>
+    <Stack direction="row" justifyContent="center" sx={{ position: 'relative' }} p={1} mb={4}>
       <IconContainer>
         <ActionIcon action={action} onClose={onClose} />
       </IconContainer>
