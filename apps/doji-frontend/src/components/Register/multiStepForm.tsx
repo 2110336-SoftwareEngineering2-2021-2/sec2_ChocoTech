@@ -1,17 +1,13 @@
-import EmailStep from '@frontend/components/Register/emailStep'
-import PasswordStep from '@frontend/components/Register/passwordStep'
-import UsernameStep from '@frontend/components/Register/usernameStep'
+import RegisteredTextfield from '@frontend/components/Register/registerTextfield'
 import { yupResolver } from '@hookform/resolvers/yup'
 import {
   AppBar,
   Button,
-  Container,
   IconButton,
   MobileStepper,
   Stack,
   Toolbar,
   Typography,
-  styled,
 } from '@mui/material'
 import * as yup from 'yup'
 
@@ -95,9 +91,30 @@ const MultiStepForm = ({ children, initialValues, onSubmit }: Props) => {
           <Typography>
             {step.props.body1} <br /> {step.props.body2}
           </Typography>
-          {stepNumber === 0 && <UsernameStep />}
-          {stepNumber === 1 && <EmailStep />}
-          {stepNumber === 2 && <PasswordStep />}
+          {stepNumber === 0 && (
+            <RegisteredTextfield
+              type={''}
+              name="username"
+              errors={method.formState.errors.username}
+            />
+          )}
+          {stepNumber === 1 && (
+            <RegisteredTextfield type={''} name="email" errors={method.formState.errors.email} />
+          )}
+          {stepNumber === 2 && (
+            <RegisteredTextfield
+              type="password"
+              name="password"
+              errors={method.formState.errors.password}
+            />
+          )}
+          {stepNumber === 2 && (
+            <RegisteredTextfield
+              type="password"
+              name="confirmPassword"
+              errors={method.formState.errors.confirmPassword}
+            />
+          )}
           <FormNavigation isLastStep={isLastStep} />
           <MobileStepper
             variant="dots"
