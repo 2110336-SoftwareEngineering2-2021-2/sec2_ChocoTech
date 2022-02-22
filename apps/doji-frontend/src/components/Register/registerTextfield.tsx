@@ -7,6 +7,7 @@ interface RegisteredTextfieldProps {
   name: string
   type: string
   errors: FieldError
+  label: string
 }
 const RegisteredTextfield: FC<RegisteredTextfieldProps> = (field) => {
   const name = field.name
@@ -18,7 +19,7 @@ const RegisteredTextfield: FC<RegisteredTextfieldProps> = (field) => {
   return (
     <TextField
       {...field}
-      label={name}
+      label={field.label}
       type={field.type}
       variant="outlined"
       error={!!errors[name]}

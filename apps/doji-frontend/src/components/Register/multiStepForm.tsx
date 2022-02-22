@@ -95,16 +95,23 @@ const MultiStepForm = ({ children, initialValues, onSubmit }: Props) => {
             <RegisteredTextfield
               type={''}
               name="username"
+              label="Username"
               errors={method.formState.errors.username}
             />
           )}
           {stepNumber === 1 && (
-            <RegisteredTextfield type={''} name="email" errors={method.formState.errors.email} />
+            <RegisteredTextfield
+              type={''}
+              label="Email"
+              name="email"
+              errors={method.formState.errors.email}
+            />
           )}
           {stepNumber === 2 && (
             <RegisteredTextfield
               type="password"
               name="password"
+              label="Password"
               errors={method.formState.errors.password}
             />
           )}
@@ -112,6 +119,7 @@ const MultiStepForm = ({ children, initialValues, onSubmit }: Props) => {
             <RegisteredTextfield
               type="password"
               name="confirmPassword"
+              label="Confirm Password"
               errors={method.formState.errors.confirmPassword}
             />
           )}
