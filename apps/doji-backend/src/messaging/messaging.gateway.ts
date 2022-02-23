@@ -5,6 +5,7 @@ import {
   OnlineStatusEvent,
 } from '@backend/messaging/messaging.dto'
 import { MessagingService } from '@backend/messaging/messaging.service'
+import { ClientEvent, ServerEvent } from '@libs/api'
 import { ArgumentsHost, Catch, Logger, UseFilters, ValidationError } from '@nestjs/common'
 import {
   BaseWsExceptionFilter,
@@ -16,7 +17,6 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets'
-import { messaging } from '@sec2-choco-tech/api'
 import { ClassConstructor, plainToInstance } from 'class-transformer'
 import { Validator, ValidatorOptions } from 'class-validator'
 import { Server, Socket } from 'socket.io'
@@ -51,7 +51,7 @@ export class MessagingGateway implements OnGatewayConnection, OnGatewayDisconnec
     msgService.listenToOnlineStatusChange((e: OnlineStatusEvent) => {
       Array.from(this.server.sockets.sockets.values()).map((x) => {
         if ((x.data.subscribed as Set<string>).has(e.username))
-          x.emit(messaging.ServerEvent.ONLINE_STATUS_CHANGE, JSON.stringify(e))
+          x.emit(ServerEvent.ONLINE_STATUS_CHANGE, JSON.stringify(e))
       })
     })
   }
@@ -88,7 +88,7 @@ export class MessagingGateway implements OnGatewayConnection, OnGatewayDisconnec
     this.logger.log('Disconnected to ' + client.id + ' for user ' + client.data.username)
   }
 
-  @SubscribeMessage(messaging.ClientEvent.LISTEN_ONLINE_STATUS)
+  @SubscribeMessage(ClientEvent.LISTEN_ONLINE_STATUS)
   async listenOnlineStatusChange(@MessageBody() request: any, @ConnectedSocket() client: Socket) {
     const req = this.validateDto(ListenOnlineStatusRequest, request)
     ;(client.data.subscribed as Set<string>).add(req.username)

@@ -1,6 +1,6 @@
 import BottomNav from '@frontend/components/NavigationBar/BottomNav'
-import TopNav from '@frontend/components/NavigationBar/TopNav'
 import ProfileTextfield from '@frontend/components/TextField/ProfileTextfield'
+import { TopBarActionType, TopBarProps } from '@libs/mui'
 import { Avatar, Button, Stack, Typography, styled } from '@mui/material'
 
 import { useState } from 'react'
@@ -70,7 +70,6 @@ export function Index() {
 
   return (
     <>
-      <TopNav icon="back" title="My details" href="./feed" />
       <ProfileContainer spacing={4} alignItems="center">
         <Stack display="flex" flexDirection="row" alignItems="flex-end">
           <StyleAvatar alt="Ree" src="/static/images/avatar/1.jpg" />
@@ -161,3 +160,8 @@ export function Index() {
 }
 
 export default Index
+
+Index.topBarProps = {
+  title: 'My details',
+  action: TopBarActionType.Back,
+} as TopBarProps

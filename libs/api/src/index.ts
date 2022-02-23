@@ -1,2 +1,5 @@
 export * from './lib/api'
-export * as messaging from './lib/messaging'
+export * from './lib/messaging'
+export * from './lib/dtos/auth'
+export * from './lib/dtos/register'
+export * from './lib/entities/User'
