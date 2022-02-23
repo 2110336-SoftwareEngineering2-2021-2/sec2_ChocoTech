@@ -25,7 +25,7 @@ export const CountrySelect: React.FC<CountrySelectProps> = (props) => {
       options={countries}
       autoHighlight
       defaultValue={countries.find((country) => country.code === defaultCountryCode)}
-      getOptionLabel={(option) => option.label}
+      getOptionLabel={(option: CountryType) => option.label}
       onChange={(_, value) => {
         if (value && !Array.isArray(value) && typeof value !== 'string') {
           setCountryCode(value.code.toLowerCase())
@@ -33,7 +33,7 @@ export const CountrySelect: React.FC<CountrySelectProps> = (props) => {
           setCountryCode('')
         }
       }}
-      renderOption={(props, option) => (
+      renderOption={(props, option: CountryType) => (
         <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
           <img
             loading="lazy"
