@@ -6,15 +6,15 @@ import {
   Link as MuiLink,
   SwitchProps as MuiSwitchProps,
   Stack,
+  StackProps,
   Switch,
   Typography,
-  useTheme,
 } from '@mui/material'
 import Link, { LinkProps } from 'next/link'
 
 import { useCallback } from 'react'
 
-import { StyledBadge } from './styled'
+import { StyledBadge, StyledStack } from './styled'
 
 export enum TablesActionType {
   Link = 'link',
@@ -44,13 +44,14 @@ export type TableActionProps =
       type: TablesActionType.None
     }
 
-export interface TablesProps {
+export interface TablesProps extends StackProps {
   content: string
   caption?: string
   action?: TableActionProps
   avatar?: MuiAvatarProps & {
     status?: TablesAvatarStatus
   }
+  hoverable?: boolean
 }
 
 export const Tables: React.FC<TablesProps> = ({
@@ -58,6 +59,8 @@ export const Tables: React.FC<TablesProps> = ({
   caption,
   action = { type: 'none' },
   avatar: avartarProps,
+  hoverable = true,
+  ...props
 }) => {
   const renderAction = useCallback(() => {
     if (action.type === TablesActionType.Button) {
@@ -80,26 +83,28 @@ export const Tables: React.FC<TablesProps> = ({
   }, [action])
 
   return (
-    <Stack
+    <StyledStack
       direction="row"
       p={1.5}
       justifyContent="space-between"
       alignItems="center"
-      sx={{ minHeight: 64 }}
+      sx={{ minHeight: 64, ...props.sx }}
+      hoverable={hoverable}
+      {...props}
     >
       <Stack direction="row" gap={1.5} justifyContent="space-between" alignItems="center">
         {avartarProps &&
-          (avartarProps.status !== TablesAvatarStatus.None ? (
+          (avartarProps.status && avartarProps.status !== TablesAvatarStatus.None ? (
             <StyledBadge
               overlap="circular"
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               variant="dot"
               status={avartarProps.status}
             >
-              <Avatar {...avartarProps} sx={{ ...avartarProps.sx, width: 40, height: 40 }} />
+              <Avatar {...avartarProps} sx={{ width: 40, height: 40, ...avartarProps.sx }} />
             </StyledBadge>
           ) : (
-            <Avatar {...avartarProps} sx={{ ...avartarProps.sx, width: 40, height: 40 }} />
+            <Avatar {...avartarProps} sx={{ width: 40, height: 40, ...avartarProps.sx }} />
           ))}
         <Stack direction="column" spacing={0.5}>
           <Typography variant="regular" fontWeight={400} color="ink.darkest">
@@ -113,6 +118,6 @@ export const Tables: React.FC<TablesProps> = ({
         </Stack>
       </Stack>
       {renderAction()}
-    </Stack>
+    </StyledStack>
   )
 }
