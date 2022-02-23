@@ -3,9 +3,6 @@ name: Migrate Schema
 on:
   push:
     branches: [main, dev]
-  pull_request:
-    branches: [main]
-    types: [opened, edited]
 
 permissions:
   actions: read
