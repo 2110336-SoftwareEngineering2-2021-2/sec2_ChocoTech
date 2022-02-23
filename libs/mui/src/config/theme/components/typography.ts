@@ -2,6 +2,9 @@ import { Components, Theme } from '@mui/material'
 
 export function overrideTypography(theme: Theme): Components['MuiTypography'] {
   return {
+    defaultProps: {
+      color: theme.palette.ink.darkest,
+    },
     variants: [
       {
         props: { variant: 'title1' },
