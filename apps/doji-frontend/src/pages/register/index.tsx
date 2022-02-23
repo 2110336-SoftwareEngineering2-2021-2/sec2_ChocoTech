@@ -1,8 +1,13 @@
-import MultiStepForm, { FormStep } from '@frontend/components/Register/multiStepForm'
-import { Container, styled } from '@mui/material'
-import axios from 'axios'
+import MultiStepForm, { FormStep, RegisterModel } from '@frontend/components/Register/multiStepForm'
+import { httpClient } from '@frontend/services'
+import { UserCreationDTO } from '@libs/api'
+import { AxiosError } from 'axios'
 import router from 'next/router'
 import * as yup from 'yup'
+
+import { SubmitHandler } from 'react-hook-form'
+import toast from 'react-hot-toast'
+import { useMutation } from 'react-query'
 
 const usernameValidation = yup.object({
   username: yup.string().required('Please Enter a username'),
@@ -26,9 +31,35 @@ const passwordValidation = yup.object({
     .oneOf([yup.ref('password'), null], 'Passwords must match'),
 })
 
-const baseURL = 'https://dev.choco.saenyakorn.dev/api/register'
+const registerRequest = async (formData: UserCreationDTO) => {
+  const { data } = await httpClient.post<UserCreationDTO>('/register', formData)
+  return data
+}
 
 function Register() {
+  const registerMutation = useMutation(registerRequest, {
+    onSuccess: ({ username }) => {
+      toast.success('Register successfully')
+      router.push({
+        pathname: './register/[username]',
+        query: { username: username },
+      })
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.response.data.message)
+    },
+  })
+
+  const onSubmit: SubmitHandler<RegisterModel> = async (data) => {
+    await registerMutation.mutate({
+      username: data.username,
+      password: data.password,
+      displayName: data.username,
+      email: data.email,
+      confirmPassword: data.confirmPassword,
+    })
+  }
+
   return (
     <MultiStepForm
       initialValues={{
@@ -38,25 +69,7 @@ function Register() {
         email: '',
         confirmPassword: '',
       }}
-      onSubmit={(values) => {
-        values.displayName = values.username
-        delete values.confirmPassword
-        axios
-          .post(baseURL, values)
-          .then(function (response) {
-            if (response.status === 201) {
-              router.push({
-                pathname: './register/[username]',
-                query: { username: values.username },
-              })
-            }
-          })
-          .catch(function (error) {
-            if (error.response.status === 422) {
-              alert('User with this username or email already exist.')
-            }
-          })
-      }}
+      onSubmit={onSubmit}
     >
       <FormStep
         stepName="Username"

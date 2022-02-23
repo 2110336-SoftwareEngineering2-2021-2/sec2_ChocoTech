@@ -17,7 +17,7 @@ import { FiChevronLeft } from 'react-icons/fi'
 
 import FormNavigation from './formNavigation'
 
-interface initVal {
+export interface RegisterModel {
   username: string
   password: string
   displayName: string
@@ -27,8 +27,8 @@ interface initVal {
 
 interface Props {
   children: React.ReactNode
-  initialValues: initVal
-  onSubmit: (values: initVal) => void | Promise<any>
+  initialValues: RegisterModel
+  onSubmit: (values: RegisterModel) => void | Promise<any>
 }
 
 const MultiStepForm = ({ children, initialValues, onSubmit }: Props) => {
@@ -42,23 +42,19 @@ const MultiStepForm = ({ children, initialValues, onSubmit }: Props) => {
   const totalSteps = steps.length
   const isLastStep = stepNumber === totalSteps - 1
 
-  const method = useForm<initVal>({ resolver: yupResolver(step.props.validationSchema) })
+  const method = useForm<RegisterModel>({ resolver: yupResolver(step.props.validationSchema) })
 
-  const next = (values: initVal) => {
+  const next = (values: RegisterModel) => {
     setSnapshot(values)
     setStepNumber(stepNumber + 1)
   }
 
-  const previous = (values: initVal) => {
+  const previous = (values: RegisterModel) => {
     setSnapshot(values)
     setStepNumber(stepNumber - 1)
   }
 
-  const formSubmitHandler = async (values: initVal) => {
-    if (step.props.onSubmit) {
-      await step.props.onSubmit(values)
-    }
-
+  const formSubmitHandler = async (values: RegisterModel) => {
     if (isLastStep) {
       return onSubmit(values)
     } else {
