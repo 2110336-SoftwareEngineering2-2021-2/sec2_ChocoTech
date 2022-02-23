@@ -1,6 +1,6 @@
 import { UserReference } from '@backend/auth/auth.service'
 import { UserRegistrationRequest } from '@backend/register/register.dto'
-import { User, UserChangeRequestDTO } from '@libs/api'
+import { User, UserChangePasswordRequestDTO } from '@libs/api'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
@@ -27,7 +27,7 @@ export class RegisterService {
     }
     return
   }
-  async changePassword(dto: UserChangeRequestDTO, userRef: UserReference) {
+  async changePassword(dto: UserChangePasswordRequestDTO, userRef: UserReference) {
     const user = await userRef.getUser()
     if (await bcrypt.compare(dto.currentPassword, user.passwordHash)) {
       user.passwordHash = await bcrypt.hash(dto.newPassword, 10)

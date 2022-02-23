@@ -1,6 +1,6 @@
 import MultiStepForm, { FormStep, RegisterModel } from '@frontend/components/Register/multiStepForm'
 import { httpClient } from '@frontend/services'
-import { UserCreationDTO } from '@libs/api'
+import { UserCreationRequestDTO } from '@libs/api'
 import { AxiosError } from 'axios'
 import router from 'next/router'
 import * as yup from 'yup'
@@ -31,19 +31,16 @@ const passwordValidation = yup.object({
     .oneOf([yup.ref('password'), null], 'Passwords must match'),
 })
 
-const registerRequest = async (formData: UserCreationDTO) => {
-  const { data } = await httpClient.post<UserCreationDTO>('/register', formData)
+const registerRequest = async (formData: UserCreationRequestDTO) => {
+  const { data } = await httpClient.post<UserCreationRequestDTO>('/register', formData)
   return data
 }
 
-function Register() {
+function RegisterPage() {
   const registerMutation = useMutation(registerRequest, {
     onSuccess: ({ username }) => {
       toast.success('Register successfully')
-      router.push({
-        pathname: './register/[username]',
-        query: { username: username },
-      })
+      router.push(`/register/${username}`)
     },
     onError: (error: AxiosError) => {
       toast.error(error.response.data.message)
@@ -93,4 +90,4 @@ function Register() {
     </MultiStepForm>
   )
 }
-export default Register
+export default RegisterPage
