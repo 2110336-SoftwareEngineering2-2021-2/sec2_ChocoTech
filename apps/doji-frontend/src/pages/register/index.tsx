@@ -56,7 +56,6 @@ function Register() {
       password: data.password,
       displayName: data.username,
       email: data.email,
-      confirmPassword: data.confirmPassword,
     })
   }
 

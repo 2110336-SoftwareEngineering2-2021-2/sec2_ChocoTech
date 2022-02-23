@@ -11,14 +11,7 @@ function Complete() {
       alignItems="center"
       flexGrow={1}
     >
-      <AppBar position="static" elevation={0} color="transparent">
-        <Toolbar>
-          <Typography variant="h6" flexGrow={1} align="center">
-            Register complete
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Stack direction="column" mb="100%">
+      <Stack direction="column" mt="50%" alignItems="center">
         <Typography variant="h6" pt={[2, 4]} lineHeight="32px">
           Welcome to Doji,{' '}
           <Typography variant="h6" component="span" color="primary" lineHeight="32px">
@@ -36,3 +29,7 @@ function Complete() {
 }
 
 export default Complete
+
+Complete.topBarProps = {
+  title: 'Register complete',
+}

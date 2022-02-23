@@ -1,13 +1,10 @@
-import { TextField, TextFieldProps } from '@mui/material'
+import { BaseTextFieldProps, TextField } from '@mui/material'
 
 import React, { FC } from 'react'
 import { FieldError, useFormContext } from 'react-hook-form'
 
-interface RegisteredTextfieldProps {
-  name: string
-  type: string
+interface RegisteredTextfieldProps extends BaseTextFieldProps {
   errors: FieldError
-  label: string
 }
 const RegisteredTextfield: FC<RegisteredTextfieldProps> = (field) => {
   const name = field.name
