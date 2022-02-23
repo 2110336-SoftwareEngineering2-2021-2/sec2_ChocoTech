@@ -62,7 +62,9 @@
     "migrate-db": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "commands": ["ts-node ../../node_modules/@mikro-orm/cli/cli.js schema:update --run"],
+        "commands": [
+          "ts-node ../../node_modules/@mikro-orm/cli/cli.js schema:update --run --drop-tables=false"
+        ],
         "envFile": "apps/doji-backend/mikro-orm-cli.env",
         "cwd": "apps/doji-backend"
       }

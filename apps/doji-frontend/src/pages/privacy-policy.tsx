@@ -1,10 +1,9 @@
-import TopNav from '@frontend/components/NavigationBar/TopNav'
+import { TopBarActionType, TopBarProps } from '@libs/mui'
 import { Container, Stack, Typography } from '@mui/material'
 
 export function PrivatePolicy() {
   return (
     <Container maxWidth="sm">
-      <TopNav icon="close" title="Private Policy" href="./" />
       <Stack direction="column" justifyContent="space-between" mt={2} spacing={2}>
         <Typography variant="regular" fontWeight={400}>
           Private Policy
@@ -24,3 +23,8 @@ export function PrivatePolicy() {
 }
 
 export default PrivatePolicy
+
+PrivatePolicy.topBarProps = {
+  title: 'Private Policy',
+  action: TopBarActionType.Close,
+} as TopBarProps

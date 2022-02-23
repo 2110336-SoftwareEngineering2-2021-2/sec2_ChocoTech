@@ -1,4 +1,4 @@
-import { User } from '@backend/entities/User'
+import { User } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Inject, Injectable } from '@nestjs/common'

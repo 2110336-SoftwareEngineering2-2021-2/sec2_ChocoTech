@@ -6,7 +6,6 @@ import {
   CustomTypographyPropsVariantOverrides,
 } from '@typing/mui'
 
-/* eslint-disable */
 declare module '@mui/material/styles' {
   interface PaletteOptions extends CustomPaletteOptions {}
   interface SimplePaletteColorOptions extends CustomSimplePaletteColorOptions {}
