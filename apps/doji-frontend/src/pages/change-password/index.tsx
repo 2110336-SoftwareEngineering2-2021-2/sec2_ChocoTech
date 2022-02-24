@@ -1,7 +1,7 @@
 import { httpClient } from '@frontend/services'
 import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { UserChangeRequestDTO } from '@libs/api'
+import { UserChangePasswordRequestDTO } from '@libs/api'
 import { TopBarActionType } from '@libs/mui'
 import { Button, Stack, TextField, Typography } from '@mui/material'
 import { AxiosError } from 'axios'
@@ -23,8 +23,8 @@ const ChangePasswordSchema = object({
 })
 export type ChangePasswordModel = InferType<typeof ChangePasswordSchema>
 
-const changePasswordRequest = async (formData: UserChangeRequestDTO) => {
-  await httpClient.post<unknown, unknown, UserChangeRequestDTO>(
+const changePasswordRequest = async (formData: UserChangePasswordRequestDTO) => {
+  await httpClient.post<unknown, unknown, UserChangePasswordRequestDTO>(
     '/register/change_password',
     formData,
   )

@@ -1,6 +1,6 @@
 import { BaseTextFieldProps, TextField } from '@mui/material'
 
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { FieldError, useFormContext } from 'react-hook-form'
 
 interface RegisteredTextfieldProps extends BaseTextFieldProps {

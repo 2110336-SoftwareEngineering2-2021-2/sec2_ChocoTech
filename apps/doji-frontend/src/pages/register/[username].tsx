@@ -1,4 +1,4 @@
-import { AppBar, Button, Container, Link, Stack, Toolbar, Typography, styled } from '@mui/material'
+import { Button, Link, Stack, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 
 function Complete() {
@@ -19,8 +19,8 @@ function Complete() {
           </Typography>
         </Typography>
         <Stack direction="column" spacing={2} m={5} alignItems="center">
-          <Link href="../profile">
-            <Button>View profile</Button>
+          <Link href="../login">
+            <Button>Login</Button>
           </Link>
         </Stack>
       </Stack>
