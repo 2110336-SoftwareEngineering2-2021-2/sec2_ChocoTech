@@ -1,4 +1,4 @@
-import { User } from '@libs/api'
+import { User } from '@backend/entities/User'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Module } from '@nestjs/common'
 

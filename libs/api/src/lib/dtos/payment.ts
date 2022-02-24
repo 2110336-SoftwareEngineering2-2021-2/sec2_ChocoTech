@@ -1,4 +1,4 @@
-export interface AttachCardRequestDTO {
+export interface IAttachCardRequestDTO {
   cardToken: string
   isDefault: boolean
 }
