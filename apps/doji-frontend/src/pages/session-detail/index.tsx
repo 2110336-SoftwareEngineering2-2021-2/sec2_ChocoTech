@@ -2,7 +2,17 @@ import { SearchBar, Tables, TopBar } from '@libs/mui'
 import { DatePicker, TimePicker } from '@mui/lab'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
-import { Avatar, Box, Grid, TextField, Typography } from '@mui/material'
+import {
+  Avatar,
+  BottomNavigation,
+  Box,
+  Button,
+  Container,
+  Grid,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material'
 
 import React from 'react'
 
@@ -16,10 +26,10 @@ export function Index() {
     console.log(items)
   }
   return (
-    <Box>
+    <Box display="flex" flexDirection="column" position="relative" minHeight="sm">
       <TopBar title="New session" action="back"></TopBar>
       <Box>
-        <Grid container alignItems="center" display="flex">
+        <Grid container alignItems="center">
           <Grid item xs={12}>
             <Typography fontWeight={700} variant="title3">
               How to read indicators
@@ -87,6 +97,28 @@ export function Index() {
             <TagsInput />
           </Grid>
         </Grid>
+        <Box position="relative" bottom={0} left={0} right={0} marginTop={3}>
+          <Container sx={{ padding: 2, backgroundColor: 'white' }} maxWidth="sm">
+            <Grid container alignItems="center">
+              <Grid item xs={6}>
+                <Typography variant="large" fontWeight={700}>
+                  Total Price
+                </Typography>
+              </Grid>
+              <Grid item xs={6} textAlign="right">
+                <Typography variant="large" fontWeight={700} color="#367D7F">
+                  500
+                </Typography>
+                <Typography variant="regular" fontWeight={400} color="#367D7F">
+                  &nbsp; Doji coins
+                </Typography>
+              </Grid>
+              <Grid item xs={12} marginTop={2} marginBottom={1}>
+                <Button fullWidth>Schedule</Button>
+              </Grid>
+            </Grid>
+          </Container>
+        </Box>
       </Box>
     </Box>
   )

@@ -1,5 +1,5 @@
 import { Tables } from '@libs/mui'
-import { Autocomplete, Avatar, Chip, ListItem, TextField } from '@mui/material'
+import { Autocomplete, Avatar, Chip, TextField } from '@mui/material'
 
 const friendList = [
   {
@@ -8,7 +8,7 @@ const friendList = [
   },
   {
     value: '2',
-    text: 'Yeltsa kciR',
+    text: 'Yeltsa Kcir',
   },
   {
     value: '3',
