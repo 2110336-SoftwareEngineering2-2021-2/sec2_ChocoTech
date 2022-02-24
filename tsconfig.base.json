@@ -18,8 +18,8 @@
     "paths": {
       "@backend/*": ["apps/doji-backend/src/*"],
       "@frontend/*": ["apps/doji-frontend/src/*"],
-      "@libs/mui": ["libs/mui/src/index.ts"],
       "@libs/api": ["libs/api/src/index.ts"],
+      "@libs/mui": ["libs/mui/src/index.ts"],
       "@typing/*": ["types/*"]
     }
   },
