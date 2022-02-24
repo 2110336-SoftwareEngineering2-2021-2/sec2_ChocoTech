@@ -28,7 +28,7 @@ export class MeResponseDTO implements IMeResponseDTO {
   @ApiProperty()
   registerationDate: Date
 
-  @ApiProperty()
+  @ApiProperty({ enum: Object.values(UserRole), default: UserRole.USER })
   role: UserRole
 
   @ApiProperty()
