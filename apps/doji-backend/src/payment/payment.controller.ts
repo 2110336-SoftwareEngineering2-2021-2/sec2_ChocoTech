@@ -9,13 +9,13 @@ import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
-  @Post('attach_card')
+  @Post('card')
   @UseGuards(UserAuthGuard)
   @ApiOperation({ description: 'Attach new card to a given user' })
   @ApiResponse({ status: 403, description: 'The token is invalid' })
   @ApiResponse({ status: 200, description: 'The value associated with the given token' })
   @ApiBearerAuth()
-  async getUserInformation(
+  async attachCreditCard(
     @CurrentUser() userRef: UserReference,
     @Body() dto: AttachCardRequestDTO,
   ): Promise<User> {
