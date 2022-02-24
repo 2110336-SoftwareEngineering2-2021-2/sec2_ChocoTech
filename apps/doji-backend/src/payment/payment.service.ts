@@ -12,7 +12,7 @@ export class PaymentService {
 
   constructor(@InjectRepository(User) private readonly userRepo: EntityRepository<User>) {}
 
-  async setCardAsDefault(user: User, cardToken: string): Promise<void> {
+  private async setCardAsDefault(user: User, cardToken: string): Promise<void> {
     await axios.patch(
       `https://api.omise.co/customers/${user.omiseCustomerToken}`,
       {
@@ -27,7 +27,7 @@ export class PaymentService {
     )
   }
 
-  async createCustomer(user: User, cardToken?: string): Promise<User> {
+  private async createCustomer(user: User, cardToken?: string): Promise<User> {
     const customer = await this.omise.customers.create({
       email: user.email,
       description: user.username,
@@ -40,7 +40,7 @@ export class PaymentService {
     return user
   }
 
-  async attachCard(user: User, cardToken: string, isDefault?: boolean): Promise<User> {
+  async attachCreditCard(user: User, cardToken: string, isDefault?: boolean): Promise<User> {
     if (!user.omiseCustomerToken) {
       return this.createCustomer(user, cardToken)
     }
@@ -52,5 +52,13 @@ export class PaymentService {
     if (isDefault) await this.setCardAsDefault(user, cardToken)
 
     return user
+  }
+
+  async retrieveCreditCards(user: User): Promise<Omise.Cards.ICardList> {
+    if (!user.omiseCustomerToken) {
+      throw new Error('User has no omise customer token')
+    }
+
+    return await this.omise.customers.listCards(user.omiseCustomerToken)
   }
 }
