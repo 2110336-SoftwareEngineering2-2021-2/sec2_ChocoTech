@@ -1,4 +1,6 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core'
+import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/core'
+
+import { UserRole } from '../types/userRole'
 
 @Entity()
 export class User {
@@ -23,12 +25,19 @@ export class User {
   @Property()
   registerationDate: Date = new Date()
 
-  @Property({ nullable: true })
-  firstName: string
+  @Enum(() => UserRole)
+  @Property({ default: UserRole.USER })
+  role: UserRole
 
   @Property({ nullable: true })
-  lastName: string
+  firstName?: string
 
   @Property({ nullable: true })
-  location: string
+  lastName?: string
+
+  @Property({ nullable: true })
+  location?: string
+
+  @Property({ nullable: true })
+  omiseCustomerToken?: string
 }
