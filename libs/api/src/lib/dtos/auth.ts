@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 
 import { User } from '../entities/User'
+import { UserRole } from '../types/userRole'
 
 export class LoginResponseDTO {
   @ApiProperty()
@@ -30,11 +31,17 @@ export class MeResponseDTO {
   registerationDate: Date
 
   @ApiProperty()
-  firstName: string
+  role: UserRole
 
   @ApiProperty()
-  lastName: string
+  firstName?: string
 
   @ApiProperty()
-  location: string
+  lastName?: string
+
+  @ApiProperty()
+  location?: string
+
+  @ApiProperty()
+  omiseCustomerToken?: string
 }

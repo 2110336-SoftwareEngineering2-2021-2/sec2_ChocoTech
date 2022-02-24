@@ -1,7 +1,7 @@
 import { UserReference } from '@backend/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
 import { PaymentService } from '@backend/payment/payment.service'
-import { AttachCardRequestDTO, User } from '@libs/api'
+import { AttachCardRequestDTO, MeResponseDTO } from '@libs/api'
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import Omise from 'omise'
@@ -27,9 +27,9 @@ export class PaymentController {
   @ApiResponse({ status: 200, description: 'The value associated with the given token' })
   @ApiBearerAuth()
   async attachCreditCard(
-    @CurrentUser() userRef: UserReference,
     @Body() dto: AttachCardRequestDTO,
-  ): Promise<User> {
+    @CurrentUser() userRef: UserReference,
+  ): Promise<MeResponseDTO> {
     const user = await userRef.getUser()
     const updatedUser = await this.paymentService.attachCreditCard(
       user,
