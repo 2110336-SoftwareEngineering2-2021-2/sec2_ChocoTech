@@ -4,6 +4,7 @@ import { MessagingModule } from '@backend/messaging/messaging.module'
 import { PaymentModule } from '@backend/payment/payment.module'
 import { ProfileModule } from '@backend/profile/profile.module'
 import { RegisterModule } from '@backend/register/register.module'
+import { WorkHistoryModule } from '@backend/work-history/work-history.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Module, ValidationPipe } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
@@ -32,6 +33,7 @@ import { AppService } from './app.service'
     ProfileModule,
     MessagingModule,
     PaymentModule,
+    WorkHistoryModule,
   ],
   controllers: [AppController],
   providers: [
