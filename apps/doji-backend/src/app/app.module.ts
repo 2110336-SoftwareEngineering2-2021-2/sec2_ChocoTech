@@ -3,6 +3,7 @@ import { environment } from '@backend/environments/environment'
 import { MessagingModule } from '@backend/messaging/messaging.module'
 import { ProfileModule } from '@backend/profile/profile.module'
 import { RegisterModule } from '@backend/register/register.module'
+import { ScheduleModule } from '@backend/schedule/schedule.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Module, ValidationPipe } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
@@ -30,6 +31,7 @@ import { AppService } from './app.service'
     RegisterModule,
     ProfileModule,
     MessagingModule,
+    ScheduleModule,
   ],
   controllers: [AppController],
   providers: [
