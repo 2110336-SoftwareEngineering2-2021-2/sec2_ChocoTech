@@ -36,6 +36,7 @@ import { AppService } from './app.service'
     RegisterModule,
     ProfileModule,
     MessagingModule,
+    ScheduleModule,
     PaymentModule,
     WorkHistoryModule,
     SessionModule,
