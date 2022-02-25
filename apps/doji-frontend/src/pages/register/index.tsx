@@ -19,10 +19,7 @@ const registerValidation = yup.object({
   password: yup
     .string()
     .required('Please Enter your password')
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])(?=.{8,})/,
-      'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character',
-    ),
+    .min(8, 'Must have at least 8 characters'),
   confirmPassword: yup
     .string()
     .required('Please Enter your password')
@@ -65,7 +62,6 @@ function RegisterPage() {
     >
       <FormProvider {...method}>
         <form onSubmit={method.handleSubmit(onSubmit)}>
-          <Typography>Username</Typography>
           <RegisteredTextfield
             type={''}
             name="username"
@@ -73,7 +69,6 @@ function RegisterPage() {
             errors={method.formState.errors.username}
           />
 
-          <Typography>Display name</Typography>
           <RegisteredTextfield
             type={''}
             label="Display name"
@@ -81,7 +76,6 @@ function RegisterPage() {
             errors={method.formState.errors.displayName}
           />
 
-          <Typography>Email</Typography>
           <RegisteredTextfield
             type={''}
             label="Email"
@@ -89,7 +83,6 @@ function RegisterPage() {
             errors={method.formState.errors.email}
           />
 
-          <Typography>Password</Typography>
           <RegisteredTextfield
             type="password"
             name="password"
@@ -97,7 +90,6 @@ function RegisterPage() {
             errors={method.formState.errors.password}
           />
 
-          <Typography>Confirm Password</Typography>
           <RegisteredTextfield
             type="password"
             name="confirmPassword"
