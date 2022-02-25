@@ -1,4 +1,4 @@
-import { IconButton, Stack, Typography, styled, useTheme } from '@mui/material'
+import { Button, ButtonProps, IconButton, Stack, Typography, styled, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
 
 import { MouseEventHandler } from 'react'
@@ -18,10 +18,19 @@ export enum TopBarActionType {
   None = 'none',
 }
 
+export enum TopBarActionMode {
+  Normal = 'normal',
+  Heading = 'heading',
+}
+
 export interface TopBarProps {
   title?: string
   action?: TopBarActionType
   onClose?: MouseEventHandler<HTMLButtonElement>
+  mode?: TopBarActionMode
+  button?: ButtonProps & {
+    label: string
+  }
 }
 
 const ActionIcon: React.FC<Pick<TopBarProps, 'action' | 'onClose'>> = ({ action, onClose }) => {
@@ -54,7 +63,24 @@ export const TopBar: React.FC<TopBarProps> = ({
   title,
   action = TopBarActionType.None,
   onClose,
+  mode = TopBarActionMode.Normal,
+  button,
 }) => {
+  if (mode === TopBarActionMode.Heading) {
+    return (
+      <Stack direction="row" justifyContent="space-between" p={1} mb={4}>
+        <Typography variant="title2" color="ink.darkest" fontWeight={400}>
+          {title}
+        </Typography>
+        {button && (
+          <Button color="primary" {...button}>
+            {button.label}
+          </Button>
+        )}
+      </Stack>
+    )
+  }
+
   return (
     <Stack direction="row" justifyContent="center" sx={{ position: 'relative' }} p={1} mb={4}>
       <IconContainer>
