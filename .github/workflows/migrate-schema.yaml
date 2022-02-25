@@ -46,6 +46,8 @@ jobs:
           envkey_REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
           envkey_REDIS_USER: ${{ secrets.REDIS_USER }}
+          envkey_OMISE_PUBLIC_KEY: ${{ secrets.OMISE_PUBLIC_KEY }}
+          envkey_OMISE_SECRET_KEY: ${{ secrets.OMISE_SECRET_KEY }}
           file_name: .env.prod
           fail_on_empty: false
 
@@ -66,6 +68,8 @@ jobs:
           envkey_REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
           envkey_REDIS_USER: ${{ secrets.REDIS_USER }}
+          envkey_OMISE_PUBLIC_KEY: ${{ secrets.OMISE_PUBLIC_KEY }}
+          envkey_OMISE_SECRET_KEY: ${{ secrets.OMISE_SECRET_KEY }}
           file_name: .env.dev
           fail_on_empty: false
 

@@ -3,7 +3,7 @@ import { StorageKey } from '@frontend/common/storage/constants'
 import { httpClient, queryClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
-import { MeResponseDTO } from '@libs/api'
+import { IMeResponseDTO } from '@libs/api'
 import { TopBar, theme } from '@libs/mui'
 import { Container, ThemeProvider, styled } from '@mui/material'
 import { AppProps } from 'next/app'
@@ -45,7 +45,7 @@ function CustomApp({ Component, pageProps, router }: ExtendedAppProps) {
       return
     }
     httpClient
-      .get<MeResponseDTO>('/auth/me')
+      .get<IMeResponseDTO>('/auth/me')
       .then(({ data }) => {
         setUser(data)
         setIsAuthenticated(true)
