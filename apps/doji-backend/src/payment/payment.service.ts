@@ -2,7 +2,7 @@ import { User } from '@backend/entities/User'
 import { environment } from '@backend/environments/environment'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import axios from 'axios'
 import Omise from 'omise'
 
@@ -13,18 +13,15 @@ export class PaymentService {
   constructor(@InjectRepository(User) private readonly userRepo: EntityRepository<User>) {}
 
   private async setCardAsDefault(user: User, cardToken: string): Promise<void> {
-    await axios.patch(
-      `https://api.omise.co/customers/${user.omiseCustomerToken}`,
-      {
-        default_card: cardToken,
+    await axios({
+      method: 'PATCH',
+      url: `https://api.omise.co/customers/${user.omiseCustomerToken}s`,
+      data: `default_card=${cardToken}`,
+      auth: {
+        username: environment.omise.secretKey,
+        password: '',
       },
-      {
-        auth: {
-          username: environment.omise.secretKey,
-          password: '',
-        },
-      },
-    )
+    })
   }
 
   private async createCustomer(user: User, cardToken?: string): Promise<User> {
@@ -45,11 +42,18 @@ export class PaymentService {
       return this.createCustomer(user, cardToken)
     }
 
-    await this.omise.customers.update(user.omiseCustomerToken, {
+    const customer = await this.omise.customers.update(user.omiseCustomerToken, {
       card: cardToken,
     })
 
-    if (isDefault) await this.setCardAsDefault(user, cardToken)
+    if (isDefault) {
+      const cards = customer.cards.data
+      try {
+        await this.setCardAsDefault(user, cards[cards.length - 1].id)
+      } catch (error) {
+        throw new BadRequestException('Cannot set card as default')
+      }
+    }
 
     return user
   }
