@@ -10,7 +10,6 @@ import {
   Get,
   HttpCode,
   NotFoundException,
-  Res,
   UseGuards,
 } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
