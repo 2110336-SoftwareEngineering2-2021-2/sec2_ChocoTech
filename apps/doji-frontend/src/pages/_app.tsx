@@ -8,6 +8,7 @@ import { TopBar, theme } from '@libs/mui'
 import { Container, ThemeProvider, styled } from '@mui/material'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
+import Script from 'next/script'
 
 import { useEffect, useState } from 'react'
 import { Toaster } from 'react-hot-toast'
@@ -85,6 +86,7 @@ function CustomApp({ Component, pageProps, router }: ExtendedAppProps) {
           }}
         />
       </ThemeProvider>
+      <Script src="https://cdn.omise.co/omise.js" />
     </QueryClientProvider>
   )
 }

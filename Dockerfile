@@ -1,6 +1,7 @@
 FROM node:14-alpine AS base
 WORKDIR /build
 ARG NEXT_PUBLIC_API_URL=http://localhost:3333/api
+ARG NEXT_PUBLIC_OMISE_PUBLIC_KEY=""
 # Prepare for installing dependencies
 # Utilise Docker cache to save re-installing dependencies if unchanged
 COPY package.json yarn.lock ./

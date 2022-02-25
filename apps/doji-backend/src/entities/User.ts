@@ -1,13 +1,17 @@
 import { IUser } from '@libs/api'
 import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/core'
-import { UserRole } from 'libs/api/src/lib/constants/userRole'
+
+enum UserRole {
+  EXPERT = 'expert',
+  USER = 'user',
+}
 
 @Entity()
 export class User implements IUser {
   @PrimaryKey()
   username: string
 
-  @Property()
+  @Property({ hidden: true })
   passwordHash: string
 
   @Property()
@@ -27,7 +31,7 @@ export class User implements IUser {
 
   @Enum(() => UserRole)
   @Property({ default: UserRole.USER })
-  role: UserRole
+  role: UserRole = UserRole.USER
 
   @Property({ nullable: true })
   firstName?: string

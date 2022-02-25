@@ -10,6 +10,7 @@ import Omise from 'omise'
 @Controller('payment')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
+
   @Get('cards')
   @UseGuards(UserAuthGuard)
   @ApiOperation({ description: 'Get user credit cards' })
@@ -37,7 +38,6 @@ export class PaymentController {
       dto.cardToken,
       dto.isDefault,
     )
-    delete updatedUser.passwordHash
     return updatedUser
   }
 }
