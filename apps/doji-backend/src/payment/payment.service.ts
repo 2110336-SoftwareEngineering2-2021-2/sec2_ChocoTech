@@ -58,11 +58,11 @@ export class PaymentService {
     return user
   }
 
-  async retrieveCreditCards(user: User): Promise<Omise.Cards.ICardList> {
+  async retrieveCreditCards(user: User): Promise<Omise.Cards.ICard[]> {
     if (!user.omiseCustomerToken) {
       throw new Error('User has no omise customer token')
     }
 
-    return await this.omise.customers.listCards(user.omiseCustomerToken)
+    return (await this.omise.customers.listCards(user.omiseCustomerToken)).data
   }
 }
