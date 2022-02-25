@@ -1,6 +1,7 @@
 import { AuthModule } from '@backend/auth/auth.module'
 import { environment } from '@backend/environments/environment'
 import { MessagingModule } from '@backend/messaging/messaging.module'
+import { PaymentModule } from '@backend/payment/payment.module'
 import { ProfileModule } from '@backend/profile/profile.module'
 import { RegisterModule } from '@backend/register/register.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
@@ -30,6 +31,7 @@ import { AppService } from './app.service'
     RegisterModule,
     ProfileModule,
     MessagingModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [
