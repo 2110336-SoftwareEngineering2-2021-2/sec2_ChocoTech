@@ -2,13 +2,14 @@ import { User } from '@backend/entities/User'
 import { environment } from '@backend/environments/environment'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import axios from 'axios'
 import Omise from 'omise'
 
 @Injectable()
 export class PaymentService {
   private readonly omise: Omise.IOmise = Omise(environment.omise)
+  private readonly logger = new Logger('PaymentService')
 
   constructor(@InjectRepository(User) private readonly userRepo: EntityRepository<User>) {}
 
@@ -51,6 +52,7 @@ export class PaymentService {
       try {
         await this.setCardAsDefault(user, cards[cards.length - 1].id)
       } catch (error) {
+        this.logger.error(error)
         throw new BadRequestException('Cannot set card as default')
       }
     }
