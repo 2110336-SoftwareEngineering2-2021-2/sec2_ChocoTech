@@ -43,3 +43,9 @@ export class ScheduleMeResponseDTO implements IScheduleMeResponseDTO {
   @ApiProperty()
   meetingProviderId: string
 }
+
+export class ScheduleReference {
+  @ApiProperty()
+  @IsNumber()
+  scheduleId: number
+}
