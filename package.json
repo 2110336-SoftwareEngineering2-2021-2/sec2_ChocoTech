@@ -64,6 +64,7 @@
     "serialize-error": "^9.0.0",
     "swagger-ui-express": "^4.3.0",
     "tslib": "^2.0.0",
+    "uuidv4": "^6.2.12",
     "yup": "^0.32.11",
     "zustand": "^3.7.0"
   },
