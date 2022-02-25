@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsNumber, IsString } from 'class-validator'
 
-export class ScheduleCancelRequest {
-  @ApiProperty()
-  @IsString()
-  username: string
-}
-
 export class ScheduleDeleteParticipantRequest {
   @ApiProperty()
   @IsNumber()
@@ -15,4 +9,10 @@ export class ScheduleDeleteParticipantRequest {
   @ApiProperty()
   @IsString()
   username: string
+}
+
+export class ScheduleReference {
+  @ApiProperty()
+  @IsNumber()
+  scheduleId: number
 }
