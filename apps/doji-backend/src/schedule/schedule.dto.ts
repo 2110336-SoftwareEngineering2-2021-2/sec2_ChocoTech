@@ -1,3 +1,4 @@
+import { IScheduleMeResponseDTO, ScheduleStatus } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsNumber, IsString } from 'class-validator'
 
@@ -15,4 +16,30 @@ export class ScheduleReference {
   @ApiProperty()
   @IsNumber()
   scheduleId: number
+}
+
+export class ScheduleMeResponseDTO implements IScheduleMeResponseDTO {
+  @ApiProperty()
+  id!: number
+
+  @ApiProperty()
+  startTime: Date
+
+  @ApiProperty()
+  duration: number
+
+  @ApiProperty()
+  topic: string
+
+  @ApiProperty()
+  fee: number
+
+  @ApiProperty()
+  status!: ScheduleStatus
+
+  @ApiProperty()
+  coinOnHold: number
+
+  @ApiProperty()
+  meetingProviderId: string
 }

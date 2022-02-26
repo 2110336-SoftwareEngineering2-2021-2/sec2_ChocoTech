@@ -1,28 +1,12 @@
 import { ScheduleStatus } from '@libs/api'
-import { ApiProperty } from '@nestjs/swagger'
 
-export class ScheduleMeResponseDTO {
-  @ApiProperty()
-  id!: number
-
-  @ApiProperty()
+export interface IScheduleMeResponseDTO {
+  id: number
   startTime: Date
-
-  @ApiProperty()
   duration: number
-
-  @ApiProperty()
   topic: string
-
-  @ApiProperty()
   fee: number
-
-  @ApiProperty()
-  status!: ScheduleStatus
-
-  @ApiProperty()
+  status: ScheduleStatus
   coinOnHold: number
-
-  @ApiProperty()
   meetingProviderId: string
 }
