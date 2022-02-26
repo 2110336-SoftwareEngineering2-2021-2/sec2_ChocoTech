@@ -1,7 +1,7 @@
 import RegisteredTextfield from '@frontend/components/Register/registerTextfield'
 import { httpClient } from '@frontend/services'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { UserCreationRequestDTO } from '@libs/api'
+import { IUserRegistrationRequestDTO } from '@libs/api'
 import { TopBarActionType } from '@libs/mui'
 import { Button, Stack, Typography } from '@mui/material'
 import { AxiosError } from 'axios'
@@ -28,8 +28,8 @@ const registerValidation = yup.object({
 
 type RegisterModel = yup.InferType<typeof registerValidation>
 
-const registerRequest = async (formData: UserCreationRequestDTO) => {
-  await httpClient.post<UserCreationRequestDTO>('/register', formData)
+const registerRequest = async (formData: IUserRegistrationRequestDTO) => {
+  await httpClient.post<IUserRegistrationRequestDTO>('/register', formData)
   return formData.username
 }
 

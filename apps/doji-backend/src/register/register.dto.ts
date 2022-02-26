@@ -1,8 +1,8 @@
-import { IUserChangePasswordRequestDTO } from '@libs/api'
+import { IUserChangePasswordRequestDTO, IUserRegistrationRequestDTO } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsEmail, IsString } from 'class-validator'
 
-export class UserRegistrationRequest {
+export class UserRegistrationRequestDTO implements IUserRegistrationRequestDTO {
   @ApiProperty()
   @IsString()
   username: string
