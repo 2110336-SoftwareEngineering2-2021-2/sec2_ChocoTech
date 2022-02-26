@@ -1,10 +1,11 @@
+import { IWorkHistory } from '@libs/api'
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core'
-import { v4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
 @Entity()
-export class WorkHistory {
+export class WorkHistory implements IWorkHistory {
   @PrimaryKey()
-  uuid: string = v4()
+  id: string = uuidv4()
 
   @PrimaryKey()
   expertUserName: string

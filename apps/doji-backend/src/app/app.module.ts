@@ -33,7 +33,7 @@ import { AppService } from './app.service'
     ProfileModule,
     MessagingModule,
     PaymentModule,
-    // WorkHistoryModule,
+    WorkHistoryModule,
   ],
   controllers: [AppController],
   providers: [
