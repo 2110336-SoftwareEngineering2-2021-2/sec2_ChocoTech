@@ -1,29 +1,11 @@
-import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/core'
-
-@Entity()
-export class Schedule {
-  @PrimaryKey()
-  id!: number
-
-  @Property()
-  startTime: Date = new Date()
-
-  @Property()
+export interface ISchedule {
+  id: number
+  startTime: Date
   duration: number
-
-  @Property()
   topic: string
-
-  @Property()
   fee: number
-
-  @Enum(() => ScheduleStatus)
-  status!: ScheduleStatus
-
-  @Property()
+  status: ScheduleStatus
   coinOnHold: number
-
-  @Property()
   meetingProviderId: string
 }
 
