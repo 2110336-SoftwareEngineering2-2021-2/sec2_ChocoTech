@@ -31,7 +31,7 @@ const variants = [
   'tiny',
 ] as Variant[]
 
-const weights = [100, 400, 700]
+const weights = [100, 400, 500, 700]
 
 const Template: Story<TypographyProps> = () => {
   return (

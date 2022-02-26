@@ -28,7 +28,7 @@ export function overrideTypography(theme: Theme): Components['MuiTypography'] {
       },
       {
         props: { variant: 'small' },
-        style: { fontSize: '14px', lineHeight: '14px', fontFamily: 'Inter' },
+        style: { fontSize: '14px', lineHeight: '16px', fontFamily: 'Inter' },
       },
       {
         props: { variant: 'tiny' },
