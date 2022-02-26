@@ -114,7 +114,7 @@ const MyBalancePage: ExtendedNextPage = () => {
     },
   )
 
-  if (userQ.isError || transQ.isError) return 'Error ' + (userQ.error || transQ.error)
+  if (userQ.isError || transQ.isError) return <div>'Error ' + (userQ.error || transQ.error)</div>
 
   if (userQ.isLoading || transQ.isLoading) return <CircularProgress />
 
