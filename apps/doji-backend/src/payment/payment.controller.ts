@@ -5,7 +5,7 @@ import { CoinTransactionService } from '@backend/payment/coin-transaction.servic
 import {
   AttachCardRequestDTO,
   DepositRequest,
-  UserTransactionLine,
+  UserTransactionLineResponse,
   WithdrawalRequest,
 } from '@backend/payment/payment.dto'
 import { PaymentService } from '@backend/payment/payment.service'
@@ -50,8 +50,10 @@ export class PaymentController {
 
   @Get('transaction')
   @ApiOperation({ description: "Retrieve user's transaction" })
-  @ApiResponse({ status: 200, type: [UserTransactionLine] })
-  async getUserTransactions(@CurrentUser() userRef: UserReference): Promise<UserTransactionLine[]> {
+  @ApiResponse({ status: 200, type: [UserTransactionLineResponse] })
+  async getUserTransactions(
+    @CurrentUser() userRef: UserReference,
+  ): Promise<UserTransactionLineResponse[]> {
     return await this.coinTransactionService.getUserTransactions(await userRef.getUser())
   }
 

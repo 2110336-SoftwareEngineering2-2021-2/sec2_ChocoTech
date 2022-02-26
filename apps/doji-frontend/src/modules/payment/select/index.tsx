@@ -1,6 +1,8 @@
+import { stangToBathString } from '@frontend/pages/balance'
 import { httpClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage, PaymentType } from '@frontend/type'
+import { IDepositRequest, IErrorMessage, IUser } from '@libs/api'
 import { Tables, TopBarActionType } from '@libs/mui'
 import {
   AvatarProps,
@@ -20,10 +22,11 @@ import Link from 'next/link'
 import Omise from 'omise'
 
 import { useCallback, useRef, useState } from 'react'
+import toast from 'react-hot-toast'
 import { FaCcMastercard, FaCcVisa, FaCheckCircle } from 'react-icons/fa'
 import { ImCross } from 'react-icons/im'
 import { IconBaseProps } from 'react-icons/lib'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 
 export enum TopUpDialogState {
   IDLE,
@@ -36,7 +39,8 @@ export function TopUpDialog(props: {
   currentBalance: string
   actionText: string
   onSubmit: (val: number) => void
-  dialogState: TopUpDialogState
+  dialogState: 'idle' | 'loading' | 'error' | 'success'
+  children?: any
 }) {
   const theme = useTheme()
   const [inputText, setInputText] = useState('')
@@ -44,9 +48,9 @@ export function TopUpDialog(props: {
   const inputValid = /^[0-9]+$/.test(inputText)
 
   const statusContent = new Map([
-    [TopUpDialogState.WAITING, <CircularProgress size="5em" />],
-    [TopUpDialogState.FAILURE, <ImCross fontSize="5em" color={theme.palette.primary.main} />],
-    [TopUpDialogState.SUCCESS, <FaCheckCircle fontSize="5em" color={theme.palette.primary.main} />],
+    ['loading', <CircularProgress size="5em" />],
+    ['error', <ImCross fontSize="5em" color={theme.palette.primary.main} />],
+    ['success', <FaCheckCircle fontSize="5em" color={theme.palette.primary.main} />],
   ])
 
   if (statusContent.has(props.dialogState)) {
@@ -78,6 +82,7 @@ export function TopUpDialog(props: {
           THB
         </Typography>
       </Stack>
+      {props.children}
       <Typography>Current Balance: {props.currentBalance}</Typography>
       <Button
         fullWidth={true}
@@ -124,13 +129,27 @@ const SelectPaymentPage: ExtendedNextPage = () => {
   }
 
   const [drawer, setDrawer] = useState(false)
-  const [topUpDialog, setTopUpDialog] = useState(TopUpDialogState.IDLE)
+  const [targetCard, setTargetCard] = useState<string | null>(null)
 
-  if (isLoading) return null
+  const userQ = useQuery<IUser>('/auth/me', () =>
+    httpClient.get('/auth/me').then((res) => res.data),
+  )
+  const deposit = useMutation<unknown, AxiosError<IErrorMessage>, IDepositRequest>(
+    '/payment/deposit',
+    (d) => httpClient.post('/payment/deposit', d),
+    {
+      onSuccess: () => {
+        userQ.refetch()
+      },
+      onError: (e) => {
+        toast.error('Fail to deposit: ' + e.response?.data?.message)
+      },
+    },
+  )
 
-  if (isError) return <div>Error</div>
+  if (isLoading || userQ.isLoading) return null
 
-  console.log(data)
+  if (isError || userQ.isError) return <div>Error</div>
 
   return (
     <Stack spacing={1}>
@@ -139,7 +158,10 @@ const SelectPaymentPage: ExtendedNextPage = () => {
           key={card.id}
           content={`${card.brand} ${card.last_digits}`}
           avatar={renderPaymentIcon(card.brand.toLowerCase() as PaymentType)}
-          onClick={() => setDrawer(true)}
+          onClick={() => {
+            setDrawer(true)
+            setTargetCard(card.id)
+          }}
         />
       ))}
       <Stack pt={3}>
@@ -151,19 +173,18 @@ const SelectPaymentPage: ExtendedNextPage = () => {
         open={drawer}
         onClose={() => {
           setDrawer(false)
-          setTopUpDialog(TopUpDialogState.IDLE)
+          deposit.reset()
         }}
         anchor="bottom"
         PaperProps={{ sx: { alignItems: 'center' } }}
       >
         <TopUpDialog
-          currentBalance="Hello"
+          currentBalance={stangToBathString(userQ.data.coinBalance)}
           actionText="Top Up"
           onSubmit={(v) => {
-            setTopUpDialog(TopUpDialogState.WAITING)
-            setTimeout(() => setTopUpDialog(TopUpDialogState.SUCCESS), 1000)
+            deposit.mutate({ amount: v * 100, card: targetCard })
           }}
-          dialogState={topUpDialog}
+          dialogState={deposit.status}
         />
       </Drawer>
     </Stack>

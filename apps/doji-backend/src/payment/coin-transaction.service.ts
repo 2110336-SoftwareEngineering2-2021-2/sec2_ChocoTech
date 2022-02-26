@@ -1,7 +1,7 @@
 import { CoinTransaction } from '@backend/entities/CoinTransaction'
 import { Account, CoinTransactionLine } from '@backend/entities/CoinTransactionLine'
 import { User } from '@backend/entities/User'
-import { UserTransactionLine } from '@backend/payment/payment.dto'
+import { UserTransactionLineResponse } from '@backend/payment/payment.dto'
 import { EntityRepository, QueryOrder, Repository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable } from '@nestjs/common'
@@ -61,13 +61,13 @@ export class CoinTransactionService {
     return t
   }
 
-  async getUserTransactions(user: User): Promise<UserTransactionLine[]> {
+  async getUserTransactions(user: User): Promise<UserTransactionLineResponse[]> {
     const ts = await this.coinTransactionLineRepo.find(
       { accountUser: user, account: Account.USER_PAYABLE_ACCOUNT },
-      { orderBy: { timestamp: QueryOrder.DESC } },
+      { orderBy: { timestamp: QueryOrder.DESC }, populate: ['transaction'] },
     )
     return ts.map((t) => {
-      const r = new UserTransactionLine()
+      const r = new UserTransactionLineResponse()
       r.id = t.id
       r.amount = t.amount
       r.description = t.transaction.description

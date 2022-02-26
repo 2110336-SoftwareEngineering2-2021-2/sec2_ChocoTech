@@ -1,4 +1,9 @@
-import { IAttachCardRequestDTO } from '@libs/api'
+import {
+  IAttachCardRequestDTO,
+  IDepositRequest,
+  IUserTransactionLineResponse,
+  IWithdrawalRequest,
+} from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsBoolean, IsNumber, IsPositive, IsString } from 'class-validator'
 
@@ -12,7 +17,7 @@ export class AttachCardRequestDTO implements IAttachCardRequestDTO {
   isDefault: boolean
 }
 
-export class UserTransactionLine {
+export class UserTransactionLineResponse implements IUserTransactionLineResponse {
   @ApiProperty()
   id: string
 
@@ -26,7 +31,7 @@ export class UserTransactionLine {
   amount: number
 }
 
-export class DepositRequest {
+export class DepositRequest implements IDepositRequest {
   @ApiProperty()
   @IsPositive()
   amount: number
@@ -36,7 +41,7 @@ export class DepositRequest {
   card: string
 }
 
-export class WithdrawalRequest {
+export class WithdrawalRequest implements IWithdrawalRequest {
   @ApiProperty()
   @IsPositive()
   amount: number

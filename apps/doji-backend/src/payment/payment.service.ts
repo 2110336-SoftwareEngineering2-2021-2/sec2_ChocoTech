@@ -87,7 +87,7 @@ export class PaymentService {
       throw new UnprocessableEntityException('User does not have the card')
     }
 
-    if (amount < 20) {
+    if (amount < 2000) {
       throw new UnprocessableEntityException('Minimum amount is 20THB')
     }
 

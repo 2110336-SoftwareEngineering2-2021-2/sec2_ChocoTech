@@ -1,11 +1,27 @@
 import { TopUpDialog, TopUpDialogState } from '@frontend/modules/payment/select'
+import { httpClient } from '@frontend/services'
 import { ExtendedNextPage } from '@frontend/type'
-import { Button, Card, Drawer, IconButton, Stack, Typography, styled } from '@mui/material'
+import { IErrorMessage, IUser, IUserTransactionLineResponse, IWithdrawalRequest } from '@libs/api'
+import {
+  Button,
+  Card,
+  CircularProgress,
+  Drawer,
+  IconButton,
+  Stack,
+  TextField,
+  Typography,
+  styled,
+} from '@mui/material'
 import { Box, useTheme } from '@mui/system'
+import { AxiosError } from 'axios'
 import Link from 'next/link'
+import { userInfo } from 'os'
 
 import { useState } from 'react'
+import toast from 'react-hot-toast'
 import { BiChevronRight } from 'react-icons/bi'
+import { useMutation, useQuery } from 'react-query'
 
 function WalletCard(props: { balance: string; onClickWithdraw: () => void }) {
   const theme = useTheme()
@@ -66,16 +82,41 @@ function TransactionRecord(props: { id: string; value: string; title: string }) 
   )
 }
 
+export function stangToBathString(amount: number) {
+  const sign = amount < 0
+  if (sign) amount = -amount
+
+  const whole = Math.floor(amount / 100)
+  const partial = String(amount % 100).padStart(2, '0')
+
+  return `${sign ? '-' : ''}${whole}.${partial}`
+}
+
 const MyBalancePage: ExtendedNextPage = () => {
   const theme = useTheme()
-  const transactions = [
-    { id: '112', value: '$999.99', title: 'How to Turn 10k Into 1k' },
-    { id: '112', value: '$999.99', title: 'How to Turn 10k Into 1k' },
-    { id: '112', value: '$999.99', title: 'How to Turn 10k Into 1k' },
-  ]
 
   const [withdrawDrawer, setWithdrawDrawer] = useState(false)
-  const [withdrawDialogState, setWithdrawDialogState] = useState(TopUpDialogState.IDLE)
+  const [withdrawDestination, setWithdrawDestination] = useState<string>('')
+
+  const userQ = useQuery<IUser>('/auth/me', () =>
+    httpClient.get('/auth/me').then((res) => res.data),
+  )
+  const transQ = useQuery<IUserTransactionLineResponse[]>('/payment/transaction', () =>
+    httpClient.get('/payment/transaction').then((res) => res.data),
+  )
+  const withdrawM = useMutation<unknown, AxiosError<IErrorMessage>, IWithdrawalRequest>(
+    '/payment/withdraw',
+    (r) => httpClient.post('/payment/withdraw', r),
+    {
+      onError: (e) => {
+        toast.error(`Fail to withdraw: ${e.response?.data?.message}`)
+      },
+    },
+  )
+
+  if (userQ.isError || transQ.isError) return 'Error ' + (userQ.error || transQ.error)
+
+  if (userQ.isLoading || transQ.isLoading) return <CircularProgress />
 
   return (
     <Stack spacing="1em">
@@ -83,31 +124,48 @@ const MyBalancePage: ExtendedNextPage = () => {
         My Balance
       </Typography>
       <Box sx={{ px: '1em' }}>
-        <WalletCard balance="$50" onClickWithdraw={() => setWithdrawDrawer(true)} />
+        <WalletCard
+          balance={stangToBathString(userQ.data.coinBalance) + ' THB'}
+          onClickWithdraw={() => setWithdrawDrawer(true)}
+        />
       </Box>
       <Typography variant="h5" fontWeight={700}>
         Transaction Records
       </Typography>
       <Stack paddingX="1em" spacing="0.75em">
-        {transactions.map((t) => (
-          <TransactionRecord id={t.id} value={t.value} title={t.title} />
+        {transQ.data.map((t) => (
+          <TransactionRecord id={t.id} value={stangToBathString(t.amount)} title={t.description} />
         ))}
       </Stack>
       <Drawer
         open={withdrawDrawer}
-        onClose={() => setWithdrawDrawer(false)}
+        onClose={() => {
+          setWithdrawDrawer(false)
+          withdrawM.reset()
+          transQ.refetch()
+        }}
         anchor="bottom"
         PaperProps={{ sx: { alignItems: 'center' } }}
       >
         <TopUpDialog
-          dialogState={withdrawDialogState}
+          dialogState={withdrawM.status}
           actionText="Withdraw"
-          currentBalance="555 THB"
-          onSubmit={(e) => setWithdrawDialogState(TopUpDialogState.WAITING)}
-        />
+          currentBalance={`${stangToBathString(userQ.data.coinBalance)} THB`}
+          onSubmit={(v) =>
+            withdrawM.mutate({ amount: v * 100, destinationAccount: withdrawDestination })
+          }
+        >
+          <TextField
+            label="Destination Account"
+            value={withdrawDestination}
+            onChange={(e) => setWithdrawDestination(e.target.value)}
+          />
+        </TopUpDialog>
       </Drawer>
     </Stack>
   )
 }
+
+MyBalancePage.shouldAuthenticated = true
 
 export default MyBalancePage
