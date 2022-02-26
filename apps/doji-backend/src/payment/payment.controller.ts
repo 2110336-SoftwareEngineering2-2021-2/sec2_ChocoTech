@@ -10,13 +10,14 @@ import Omise from 'omise'
 @Controller('payment')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
+
   @Get('cards')
   @UseGuards(UserAuthGuard)
   @ApiOperation({ description: 'Get user credit cards' })
   @ApiResponse({ status: 403, description: 'The token is invalid' })
   @ApiResponse({ status: 200, description: 'The value associated with the given token' })
   @ApiBearerAuth()
-  async getCreditCards(@CurrentUser() userRef: UserReference): Promise<Omise.Cards.ICardList> {
+  async getCreditCards(@CurrentUser() userRef: UserReference): Promise<Omise.Cards.ICard[]> {
     const user = await userRef.getUser()
     return await this.paymentService.retrieveCreditCards(user)
   }
@@ -37,7 +38,6 @@ export class PaymentController {
       dto.cardToken,
       dto.isDefault,
     )
-    delete updatedUser.passwordHash
     return updatedUser
   }
 }

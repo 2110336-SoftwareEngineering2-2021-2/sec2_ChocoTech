@@ -33,7 +33,6 @@ export class AuthController {
   @ApiBearerAuth()
   async getUserInformation(@CurrentUser() userRef: UserReference): Promise<MeResponseDTO> {
     const user = await userRef.getUser()
-    delete user.passwordHash
     return user
   }
 
