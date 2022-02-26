@@ -20,23 +20,18 @@ export class ScheduleService {
 
   async deleteScheduleParticipant(scheduleId: number, userRef: UserReference) {
     const user = await userRef.getUser()
-    try {
-      await this.scheduleRepo.findOne({ id: scheduleId })
-      await this.userScheduleRepo.findOne({ scheduleId: scheduleId, username: user.username })
-    } catch (e) {
-      if (e instanceof NotFoundException) {
-        throw new NotFoundException('Schedule not found or you are not in the shcedule')
-      } else {
-        throw e
-      }
-    }
-    const num = await this.userScheduleRepo.nativeDelete({
+    const schedule = await this.scheduleRepo.findOne({ id: scheduleId })
+    if (!schedule) return new NotFoundException('Schedule not found or you are not in the shcedule')
+    const participant = await this.userScheduleRepo.findOne({
       scheduleId: scheduleId,
       username: user.username,
     })
-    if (num === 0) {
-      throw new NotFoundException('Schedule not found or you are not in the shcedule')
-    }
+    if (!participant)
+      return new NotFoundException('Schedule not found or you are not in the shcedule')
+    await this.userScheduleRepo.nativeDelete({
+      scheduleId: scheduleId,
+      username: user.username,
+    })
     return
   }
 }
