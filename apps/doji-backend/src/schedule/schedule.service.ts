@@ -1,5 +1,6 @@
 import { UserReference } from '@backend/auth/auth.service'
-import { Schedule, User_Schedule } from '@libs/api'
+import { Schedule } from '@backend/entities/Schedule'
+import { UserSchedule } from '@backend/entities/UserSchedule'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable, NotFoundException } from '@nestjs/common'
@@ -8,8 +9,8 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 export class ScheduleService {
   constructor(
     @InjectRepository(Schedule) private readonly scheduleRepo: EntityRepository<Schedule>,
-    @InjectRepository(User_Schedule)
-    private readonly userScheduleRepo: EntityRepository<User_Schedule>,
+    @InjectRepository(UserSchedule)
+    private readonly userScheduleRepo: EntityRepository<UserSchedule>,
   ) {}
 
   async scheduleFromId(scheduleId: number): Promise<Schedule | null> {
