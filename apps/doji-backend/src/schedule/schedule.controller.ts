@@ -18,7 +18,7 @@ import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
-  @Get('id')
+  @Get()
   @HttpCode(200)
   @ApiOperation({ description: 'Get current schedule information using username' })
   @ApiResponse({ status: 200 })
@@ -31,7 +31,7 @@ export class ScheduleController {
     return schedule
   }
 
-  @Delete()
+  @Delete('participant')
   @UseGuards(UserAuthGuard)
   @HttpCode(200)
   @ApiBearerAuth()
