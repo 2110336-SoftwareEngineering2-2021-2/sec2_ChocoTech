@@ -1,11 +1,12 @@
+import { Schedule } from '@backend/entities/Schedule'
+import { UserSchedule } from '@backend/entities/UserSchedule'
 import { ScheduleController } from '@backend/schedule/schedule.controller'
 import { ScheduleService } from '@backend/schedule/schedule.service'
-import { Schedule, User_Schedule } from '@libs/api'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Module } from '@nestjs/common'
 
 @Module({
-  imports: [MikroOrmModule.forFeature([Schedule, User_Schedule])],
+  imports: [MikroOrmModule.forFeature([Schedule, UserSchedule])],
   controllers: [ScheduleController],
   providers: [ScheduleService],
   exports: [ScheduleService],
