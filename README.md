@@ -32,13 +32,21 @@ This project base on Doji requirement that we have learned in SE II.
 
     If you don't have [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable). Please install [here](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
 
-3.  This project requires Node.js version 16. To check your node version. Try
+3.  Setup environment variables
+
+    ```bash
+    cp .env .env.local
+    ```
+
+    Don't forget to fill `OMISE_PUBLIC_KEY` and `OMISE_SECRET_KEY` in `.env.local`
+
+4.  This project requires Node.js version 16. To check your node version. Try
 
     ```bash
     node -v
     ```
 
-4.  Try to start your dev server! In this Nx workspace we have 2 main apps; [Next.js](https://nextjs.org/) for Frontend and [Nest.js](https://nestjs.com/) for Backend. In addition, we have [Storybook](https://storybook.js.org/) for UI docs
+5.  Try to start your dev server! In this Nx workspace we have 2 main apps; [Next.js](https://nextjs.org/) for Frontend and [Nest.js](https://nestjs.com/) for Backend. In addition, we have [Storybook](https://storybook.js.org/) for UI docs
 
     But first of all, you have to run Postgres and Redis before development. Following the commands.
 

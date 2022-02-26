@@ -1,7 +1,7 @@
 import { AuthService } from '@backend/auth/auth.service'
 import { BearerStrategy } from '@backend/auth/bearer.strategy'
+import { User } from '@backend/entities/User'
 import { ExternalModule } from '@backend/external/external.module'
-import { User } from '@libs/api'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Module } from '@nestjs/common'
 import { PassportModule } from '@nestjs/passport'

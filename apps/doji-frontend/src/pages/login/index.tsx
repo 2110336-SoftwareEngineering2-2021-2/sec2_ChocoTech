@@ -4,7 +4,7 @@ import { httpClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { LoginResponseDTO } from '@libs/api'
+import { ILoginResponseDTO } from '@libs/api'
 import { TopBarActionType, TopBarProps } from '@libs/mui'
 import { Button, Link as MuiLink, Stack, TextField, Typography } from '@mui/material'
 import Link from 'next/link'
@@ -21,8 +21,8 @@ const LoginSchema = object({
 
 type LoginModel = InferType<typeof LoginSchema>
 
-const loginRequest = async (loginData: LoginModel): Promise<LoginResponseDTO> => {
-  const { data } = await httpClient.post<LoginResponseDTO>('/auth/password', loginData)
+const loginRequest = async (loginData: LoginModel): Promise<ILoginResponseDTO> => {
+  const { data } = await httpClient.post<ILoginResponseDTO>('/auth/password', loginData)
   return data
 }
 

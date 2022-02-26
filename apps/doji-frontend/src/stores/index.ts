@@ -1,11 +1,11 @@
-import { MeResponseDTO } from '@libs/api'
+import { IMeResponseDTO } from '@libs/api'
 import create from 'zustand'
 
 export interface AuthStore {
   isAdmin: boolean
   isAuthenticated: boolean
-  userInfo?: MeResponseDTO
-  setUser: (user: MeResponseDTO) => void
+  userInfo?: IMeResponseDTO
+  setUser: (user: IMeResponseDTO) => void
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({

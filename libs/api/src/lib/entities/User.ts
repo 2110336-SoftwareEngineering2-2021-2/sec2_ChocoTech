@@ -1,34 +1,16 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core'
+import { UserRole } from '../constants/userRole'
 
-@Entity()
-export class User {
-  @PrimaryKey()
+export interface IUser {
   username: string
-
-  @Property()
   passwordHash: string
-
-  @Property()
   displayName: string
-
-  @Property()
-  coinBalance: number = 0
-
-  @Property()
-  onlineStatus: boolean = false
-
-  @Property({ unique: true })
+  coinBalance: number
+  onlineStatus: boolean
   email: string
-
-  @Property()
-  registerationDate: Date = new Date()
-
-  @Property({ nullable: true })
-  firstName: string
-
-  @Property({ nullable: true })
-  lastName: string
-
-  @Property({ nullable: true })
-  location: string
+  registerationDate: Date
+  role: UserRole
+  firstName?: string
+  lastName?: string
+  location?: string
+  omiseCustomerToken?: string
 }

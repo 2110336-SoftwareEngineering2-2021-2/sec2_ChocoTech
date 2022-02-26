@@ -1,12 +1,18 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsString } from 'class-validator'
-
-export class UserChangeRequestDTO {
-  @ApiProperty()
-  @IsString()
+export interface IUserChangePasswordRequestDTO {
   currentPassword: string
+  newPassword: string
+}
+
+export class UserCreationRequestDTO {
+  @ApiProperty()
+  username: string
 
   @ApiProperty()
-  @IsString()
-  newPassword: string
+  displayName: string
+
+  @ApiProperty()
+  email: string
+
+  @ApiProperty()
+  password: string
 }
