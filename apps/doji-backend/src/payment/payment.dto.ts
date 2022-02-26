@@ -5,7 +5,7 @@ import {
   IWithdrawalRequest,
 } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
-import { IsBoolean, IsNumber, IsPositive, IsString } from 'class-validator'
+import { IsBoolean, IsPositive, IsString } from 'class-validator'
 
 export class AttachCardRequestDTO implements IAttachCardRequestDTO {
   @ApiProperty()

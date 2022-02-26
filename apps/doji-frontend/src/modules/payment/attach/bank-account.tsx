@@ -6,7 +6,7 @@ const AddNewBankAccountPage: ExtendedNextPage = () => {
   return (
     <>
       <Typography variant="title2" align="center" color="primary" mt={20}>
-        Comming Soon
+        Commng Soon
       </Typography>
     </>
   )

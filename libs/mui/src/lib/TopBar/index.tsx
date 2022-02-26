@@ -1,4 +1,4 @@
-import { IconButton, Stack, Typography, styled, useTheme } from '@mui/material'
+import { Button, ButtonProps, IconButton, Stack, Typography, styled, useTheme } from '@mui/material'
 import { NextRouter, useRouter } from 'next/router'
 
 import { FiChevronLeft, FiX } from 'react-icons/fi'
@@ -17,9 +17,18 @@ export enum TopBarActionType {
   None = 'none',
 }
 
+export enum TopBarActionMode {
+  Normal = 'normal',
+  Heading = 'heading',
+}
+
 export interface TopBarProps {
   title?: string
   action?: TopBarActionType
+  mode?: TopBarActionMode
+  button?: ButtonProps & {
+    label: string
+  }
   onClose?: (event: React.MouseEvent, router: NextRouter) => void
 }
 
@@ -53,7 +62,24 @@ export const TopBar: React.FC<TopBarProps> = ({
   title,
   action = TopBarActionType.None,
   onClose,
+  mode = TopBarActionMode.Normal,
+  button,
 }) => {
+  if (mode === TopBarActionMode.Heading) {
+    return (
+      <Stack direction="row" justifyContent="space-between" p={1} mb={4}>
+        <Typography variant="title2" color="ink.darkest" fontWeight={400}>
+          {title}
+        </Typography>
+        {button && (
+          <Button color="primary" {...button}>
+            {button.label}
+          </Button>
+        )}
+      </Stack>
+    )
+  }
+
   return (
     <Stack direction="row" justifyContent="center" sx={{ position: 'relative' }} p={1} mb={4}>
       <IconContainer>
