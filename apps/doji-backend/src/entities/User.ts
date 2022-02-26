@@ -1,6 +1,10 @@
 import { IUser } from '@libs/api'
 import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/core'
-import { UserRole } from 'libs/api/src/lib/constants/userRole'
+
+export enum UserRole {
+  EXPERT = 'expert',
+  USER = 'user',
+}
 
 @Entity()
 export class User implements IUser {
