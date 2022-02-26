@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger'
+
 export interface IUserChangePasswordRequestDTO {
   currentPassword: string
   newPassword: string
