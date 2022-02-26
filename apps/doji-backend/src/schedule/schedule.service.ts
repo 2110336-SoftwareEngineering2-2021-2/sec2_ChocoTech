@@ -29,9 +29,12 @@ export class ScheduleService {
       scheduleId: scheduleId,
       username: user.username,
     })
-    if (num === 0) {
-      throw new NotFoundException('Schedule not found or you are not in the shcedule')
-    }
+    if (!participant)
+      return new NotFoundException('Schedule not found or you are not in the shcedule')
+    await this.userScheduleRepo.nativeDelete({
+      scheduleId: scheduleId,
+      username: user.username,
+    })
     return
   }
 }
