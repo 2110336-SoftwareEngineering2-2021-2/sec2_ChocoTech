@@ -1,7 +1,8 @@
+import { IUserSchedule } from '@libs/api'
 import { Entity, PrimaryKey, PrimaryKeyType } from '@mikro-orm/core'
 
 @Entity()
-export class User_Schedule {
+export class UserSchedule implements IUserSchedule {
   @PrimaryKey()
   username: string
 
