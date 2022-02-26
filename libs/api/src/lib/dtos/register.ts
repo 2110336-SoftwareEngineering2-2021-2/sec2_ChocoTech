@@ -3,16 +3,9 @@ export interface IUserChangePasswordRequestDTO {
   newPassword: string
 }
 
-export class UserCreationRequestDTO {
-  @ApiProperty()
+export class IUserRegistrationRequestDTO {
   username: string
-
-  @ApiProperty()
   displayName: string
-
-  @ApiProperty()
   email: string
-
-  @ApiProperty()
   password: string
 }
