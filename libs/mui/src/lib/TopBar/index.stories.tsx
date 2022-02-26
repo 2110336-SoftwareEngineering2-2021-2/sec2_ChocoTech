@@ -1,6 +1,8 @@
 import { Meta, Story } from '@storybook/react'
 
-import { TopBar, TopBarProps } from '.'
+import { FiChevronRight } from 'react-icons/fi'
+
+import { TopBar, TopBarActionMode, TopBarProps } from '.'
 
 export default {
   component: TopBar,
@@ -22,4 +24,21 @@ const Template: Story<TopBarProps> = (args) => {
 export const Default = Template.bind({})
 Default.args = {
   title: 'Title',
+}
+
+export const Heading = Template.bind({})
+Heading.args = {
+  title: 'Title',
+  mode: TopBarActionMode.Heading,
+}
+
+export const HeadingWithButton = Template.bind({})
+HeadingWithButton.args = {
+  title: 'Title',
+  mode: TopBarActionMode.Heading,
+  button: {
+    label: 'Button',
+    onClick: () => alert('Clicked'),
+    endIcon: <FiChevronRight />,
+  },
 }
