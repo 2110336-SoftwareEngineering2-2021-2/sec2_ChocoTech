@@ -9,7 +9,7 @@ const mockDatas: SessionCardProps[] = [
     topic: 'hello',
     expertName: 'Poravee',
     price: 69,
-    imgURL: '/static/images/avatar/1.jpg',
+    profileImageURL: '/static/images/avatar/1.jpg',
     sessionDetail:
       'Weeheeheehee dee heeheeheehee weeoh aweem away Weeheeheehee dee heeheeheehee weeoh aweem away',
   },
@@ -17,7 +17,7 @@ const mockDatas: SessionCardProps[] = [
     topic: 'Poravee Zalnw007',
     expertName: 'Poravee',
     price: 5555555555555,
-    imgURL: '/static/images/avatar/1.jpg',
+    profileImageURL: '/static/images/avatar/1.jpg',
     sessionDetail: 'พวกกูไม่แก๊งหรอก ไอ้ Sus พวกกูแค่ชอบ C Walk',
   },
 ]

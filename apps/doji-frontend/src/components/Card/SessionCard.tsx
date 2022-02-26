@@ -9,8 +9,8 @@ export type SessionCardProps = {
   topic: string
   expertName: string
   price: number
-  sessionDetail: string
-  imgURL: string
+  profileImageURL: string
+  sessionDetail?: string
 }
 function SessionCard(props: SessionCardProps) {
   return (
@@ -21,7 +21,7 @@ function SessionCard(props: SessionCardProps) {
             {props.topic}
           </Typography>
           <Stack direction="row" alignItems="center" mt={1}>
-            <StyleAvatar src={props.imgURL} />
+            <StyleAvatar src={props.profileImageURL} />
             <Typography color="ink.lighter" ml={1} mr={0.5} variant="small" fontWeight={400}>
               by
             </Typography>
