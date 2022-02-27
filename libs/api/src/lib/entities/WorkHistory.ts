@@ -3,5 +3,4 @@ export interface IWorkHistory {
   expertUserName: string
   topic: string
   description: string
-  updatedAt: Date
 }

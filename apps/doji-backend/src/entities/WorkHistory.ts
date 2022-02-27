@@ -7,7 +7,7 @@ export class WorkHistory implements IWorkHistory {
   @PrimaryKey()
   id: string = uuidv4()
 
-  @PrimaryKey()
+  @Property()
   expertUserName: string
 
   @Property()
@@ -15,7 +15,4 @@ export class WorkHistory implements IWorkHistory {
 
   @Property()
   description: string
-
-  @Property({ onUpdate: () => new Date() })
-  updatedAt: Date = new Date()
 }
