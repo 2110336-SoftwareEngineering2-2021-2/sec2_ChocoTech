@@ -17,9 +17,9 @@ import { ExpertRequestService } from './expert-request.service'
 @Controller('expert-request')
 export class ExpertRequestController {
   constructor(private readonly expertRequestService: ExpertRequestService) {}
-  @Get('request-id/:id')
-  findById(@Param('id', new ParseIntPipe()) id: number) {
-    return this.expertRequestService.findRequestById(id)
+  @Get('request-username/:username')
+  findByUsername(@Param('username') username: string) {
+    return this.expertRequestService.findRequestById(username)
   }
   @Get('request-status/:status')
   findByStatus(@Param('status') status: string) {
@@ -30,11 +30,11 @@ export class ExpertRequestController {
       throw new HttpException('The status is not valid.', HttpStatus.BAD_REQUEST)
     }
   }
-  @Patch('update-status/:id')
-  updateStatus(@Param('id', new ParseIntPipe()) id: number, @Body() status: updatRequestStatus) {
+  @Patch('update-status/:username')
+  updateStatus(@Param('username') username: string, @Body() status: updatRequestStatus) {
     const statusEnum = status.requestStatus as RequestStatus
     if (Object.values(RequestStatus).includes(statusEnum)) {
-      return this.expertRequestService.updateStatus(id, statusEnum)
+      return this.expertRequestService.updateStatus(username, statusEnum)
     } else {
       throw new HttpException('The status is not valid.', HttpStatus.BAD_REQUEST)
     }

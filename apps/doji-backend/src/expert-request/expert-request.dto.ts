@@ -8,6 +8,9 @@ export class ExpertRequestDto {
   @ApiProperty()
   @IsString()
   applicationContent: string
+  @ApiProperty()
+  @IsString()
+  field: string
 }
 
 export class updatRequestStatus {

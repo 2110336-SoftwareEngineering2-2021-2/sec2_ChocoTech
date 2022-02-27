@@ -30,10 +30,12 @@ export class ExpertRequestService {
       { requestDate: QueryOrder.DESC },
     )
   }
-  async updateStatus(requestId: number, status: RequestStatus) {
+  async updateStatus(expertUsername: string, status: RequestStatus) {
     let request: ExpertRequest
     try {
-      request = await this.expertRequestRepo.findOneOrFail({ id: requestId })
+      request = await this.expertRequestRepo.findOneOrFail({
+        expertUser: { username: expertUsername },
+      })
     } catch (e) {
       if (e instanceof NotFoundError) {
         throw new NotFoundException('Expert request not found.')
@@ -44,10 +46,12 @@ export class ExpertRequestService {
     request.status = status
     return await this.expertRequestRepo.persistAndFlush(request)
   }
-  async findRequestById(requestId: number) {
+  async findRequestById(expertUsername: string) {
     let request: ExpertRequest
     try {
-      request = await this.expertRequestRepo.findOneOrFail({ id: requestId })
+      request = await this.expertRequestRepo.findOneOrFail({
+        expertUser: { username: expertUsername },
+      })
     } catch (e) {
       if (e instanceof NotFoundError) {
         throw new NotFoundException('Expert request not found.')
@@ -65,24 +69,19 @@ export class ExpertRequestService {
     return requestInfo
   }
   async newRequest(dto: ExpertRequestDto) {
-    let userReference: User
-    try {
-      userReference = await this.userRepo.findOneOrFail({ username: dto.expertUserUsername })
-    } catch (e) {
-      if (e instanceof NotFoundError) {
-        throw new NotFoundException('User not found.')
-      } else {
-        throw e
-      }
-    }
     const newExpertRequest = new ExpertRequest()
     newExpertRequest.applicationContent = dto.applicationContent
-    newExpertRequest.expertUser = userReference
+    newExpertRequest.field = dto.field
     try {
+      newExpertRequest.expertUser = await this.userRepo.findOneOrFail({
+        username: dto.expertUserUsername,
+      })
       return await this.expertRequestRepo.persistAndFlush(newExpertRequest)
     } catch (e) {
       if (e instanceof UniqueConstraintViolationException) {
         throw new UnprocessableEntityException('This user has already requested.')
+      } else if (e instanceof NotFoundError) {
+        throw new NotFoundException('User not found.')
       } else {
         throw e
       }

@@ -1,4 +1,4 @@
-import { Entity, OneToOne, PrimaryKey, Property, Unique } from '@mikro-orm/core'
+import { Entity, OneToOne, Property } from '@mikro-orm/core'
 
 import { User } from './User'
 
@@ -10,15 +10,14 @@ export enum RequestStatus {
 
 @Entity()
 export class ExpertRequest {
-  @PrimaryKey()
-  id: number
-  @OneToOne()
-  @Unique()
-  expertUser!: User
+  @OneToOne({ orphanRemoval: true, primary: true })
+  expertUser: User
   @Property()
   applicationContent: string
   @Property()
   status: RequestStatus = RequestStatus.PENDING
+  @Property()
+  field: string
   @Property()
   requestDate: Date = new Date()
 }
