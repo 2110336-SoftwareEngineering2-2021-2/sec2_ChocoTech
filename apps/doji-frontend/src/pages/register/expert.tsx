@@ -10,7 +10,7 @@ import router from 'next/router'
 import * as yup from 'yup'
 
 import React from 'react'
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { BsCheck2 } from 'react-icons/bs'
 import { useMutation } from 'react-query'
@@ -48,7 +48,6 @@ function RegisterPage() {
   } = useForm<EApplicationModel>({
     resolver: yupResolver(expertApplicationValidation),
   })
-
   const registerMutation = useMutation(registerRequest, {
     onSuccess: () => {
       handleClickOpen()
@@ -59,9 +58,9 @@ function RegisterPage() {
   })
 
   const onSubmit: SubmitHandler<EApplicationModel> = async (data) => {
+    console.log(data)
     await registerMutation.mutate(data)
   }
-
   return (
     <Stack
       sx={{ minHeight: '100%' }}
@@ -97,7 +96,7 @@ function SimpleDialog(props: SimpleDialogProps) {
 
   const handleClose = () => {
     onClose('')
-    router.replace('/expert-application')
+    router.push('/my-session')
   }
 
   return (
