@@ -6,12 +6,11 @@ import {
   HttpException,
   HttpStatus,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common'
 
-import { ExpertRequestDto, updatRequestStatus } from './expert-request.dto'
+import { ExpertRequestDto, updateRequestStatus } from './expert-request.dto'
 import { ExpertRequestService } from './expert-request.service'
 
 @Controller('expert-request')
@@ -31,7 +30,7 @@ export class ExpertRequestController {
     }
   }
   @Patch('update-status/:username')
-  updateStatus(@Param('username') username: string, @Body() status: updatRequestStatus) {
+  updateStatus(@Param('username') username: string, @Body() status: updateRequestStatus) {
     const statusEnum = status.requestStatus as RequestStatus
     if (Object.values(RequestStatus).includes(statusEnum)) {
       return this.expertRequestService.updateStatus(username, statusEnum)

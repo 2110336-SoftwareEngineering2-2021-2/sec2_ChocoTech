@@ -13,8 +13,11 @@ export class ExpertRequestDto {
   field: string
 }
 
-export class updatRequestStatus {
-  @ApiProperty()
+export class updateRequestStatus {
+  @ApiProperty({
+    description: '3 status of request: pending, accepted, declined',
+    example: 'accepted',
+  })
   @IsString()
   requestStatus: string
 }
