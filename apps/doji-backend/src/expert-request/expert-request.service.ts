@@ -31,7 +31,16 @@ export class ExpertRequestService {
     )
   }
   async updateStatus(requestId: number, status: RequestStatus) {
-    const request = await this.expertRequestRepo.findOneOrFail({ id: requestId })
+    let request: ExpertRequest
+    try {
+      request = await this.expertRequestRepo.findOneOrFail({ id: requestId })
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        throw new NotFoundException('Expert request not found.')
+      } else {
+        throw e
+      }
+    }
     request.status = status
     return await this.expertRequestRepo.persistAndFlush(request)
   }
