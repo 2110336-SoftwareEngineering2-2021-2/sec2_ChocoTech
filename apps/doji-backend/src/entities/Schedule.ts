@@ -1,12 +1,5 @@
+import { ScheduleStatus } from '@libs/api'
 import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/core'
-
-export enum ScheduleStatus {
-  PENDING = 'pending',
-  ACCEPTED = 'accepted',
-  ENDED = 'ended',
-  REVIEWED = 'reviewed',
-  CANCELED = 'canceled',
-}
 
 @Entity()
 export class Schedule {
@@ -27,7 +20,7 @@ export class Schedule {
 
   @Enum(() => ScheduleStatus)
   @Property({ default: ScheduleStatus.PENDING })
-  status: ScheduleStatus = ScheduleStatus.PENDING
+  status!: ScheduleStatus
 
   @Property()
   coinOnHold: number
