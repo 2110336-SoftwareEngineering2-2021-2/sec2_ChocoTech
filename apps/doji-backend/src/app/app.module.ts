@@ -1,3 +1,4 @@
+import { AdminModule } from '@backend/admin/admin.module'
 import { AuthModule } from '@backend/auth/auth.module'
 import { environment } from '@backend/environments/environment'
 import { MessagingModule } from '@backend/messaging/messaging.module'
@@ -28,6 +29,7 @@ import { AppService } from './app.service'
       strict: true,
     }),
     AuthModule,
+    AdminModule,
     RegisterModule,
     ProfileModule,
     MessagingModule,
