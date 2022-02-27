@@ -1,7 +1,6 @@
 import { Button, ButtonProps, IconButton, Stack, Typography, styled, useTheme } from '@mui/material'
-import { useRouter } from 'next/router'
+import { NextRouter, useRouter } from 'next/router'
 
-import { MouseEventHandler } from 'react'
 import { FiChevronLeft, FiX } from 'react-icons/fi'
 
 const IconContainer = styled('div')`
@@ -26,11 +25,11 @@ export enum TopBarActionMode {
 export interface TopBarProps {
   title?: string
   action?: TopBarActionType
-  onClose?: MouseEventHandler<HTMLButtonElement>
   mode?: TopBarActionMode
   button?: ButtonProps & {
     label: string
   }
+  onClose?: (event: React.MouseEvent, router: NextRouter) => void
 }
 
 const ActionIcon: React.FC<Pick<TopBarProps, 'action' | 'onClose'>> = ({ action, onClose }) => {
@@ -44,7 +43,7 @@ const ActionIcon: React.FC<Pick<TopBarProps, 'action' | 'onClose'>> = ({ action,
   switch (action) {
     case TopBarActionType.Close:
       return (
-        <IconButton onClick={onClose}>
+        <IconButton onClick={(event) => onClose?.(event, router)}>
           <FiX color={theme.palette.ink.darkest} />
         </IconButton>
       )

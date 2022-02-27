@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import { badgeUnstyledClasses } from '@mui/base/BadgeUnstyled'
-import { Badge, styled } from '@mui/material'
+import { Badge, Stack, StackProps, styled } from '@mui/material'
 
 import { TablesAvatarStatus } from '.'
 
@@ -49,4 +49,23 @@ export const StyledBadge = styled(Badge)<{ status?: TablesAvatarStatus }>`
         ${status === TablesAvatarStatus.Online && ripple}  
     `
   }}
+`
+
+type StyledStack = StackProps & {
+  hoverable?: boolean
+}
+
+export const StyledStack = styled(Stack)<StyledStack>`
+  ${({ hoverable, theme }) => css`
+    background: ${theme.palette.white};
+    border-radius: ${theme.shape.borderRadius}px;
+    transition: ${theme.transitions.create('background-color')};
+    ${hoverable &&
+    css`
+      &:hover {
+        cursor: pointer;
+        background: ${theme.palette.sky.lightest};
+      }
+    `}
+  `};
 `

@@ -11,7 +11,7 @@ export class User implements IUser {
   @PrimaryKey()
   username: string
 
-  @Property()
+  @Property({ hidden: true })
   passwordHash: string
 
   @Property()
@@ -31,7 +31,7 @@ export class User implements IUser {
 
   @Enum(() => UserRole)
   @Property({ default: UserRole.USER })
-  role: UserRole
+  role: UserRole = UserRole.USER
 
   @Property({ nullable: true })
   firstName?: string
