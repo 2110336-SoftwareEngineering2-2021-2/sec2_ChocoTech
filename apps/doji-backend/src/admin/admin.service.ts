@@ -1,32 +1,19 @@
-import { AdminCreationRequestDTO } from '@backend/admin/admin.dto'
+import { UserReference } from '@backend/auth/auth.service'
 import { Admin } from '@backend/entities/Admin'
-import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
+import { ExpertApp } from '@backend/entities/ExpertApp'
+import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { Injectable, UnprocessableEntityException } from '@nestjs/common'
-import bcrypt from 'bcrypt'
+import { Injectable, NotFoundException } from '@nestjs/common'
 
 @Injectable()
 export class AdminService {
-  constructor(@InjectRepository(Admin) private readonly adminRepo: EntityRepository<Admin>) {}
+  constructor(
+    @InjectRepository(ExpertApp) private readonly expertAppRepo: EntityRepository<ExpertApp>,
+  ) {}
 
-  async adminCreation(dto: AdminCreationRequestDTO) {
-    const newAdmin = new Admin()
-    newAdmin.username = dto.username
-    newAdmin.passwordHash = await bcrypt.hash(dto.password, 10)
-    try {
-      await this.adminRepo.persistAndFlush(newAdmin) //add to database
-    } catch (e) {
-      if (e instanceof UniqueConstraintViolationException) {
-        throw new UnprocessableEntityException('Admin with this username already exist.')
-      } else {
-        throw e
-      }
-    }
-    return
-  }
-
-  async getAllAdmin(): Promise<Admin[]> {
-    const admin = await this.adminRepo.findAll()
-    return admin
+  async expertExpFromusername(username: string): Promise<ExpertApp | null> {
+    const experience = await this.expertAppRepo.findOne({ username: username })
+    if (!experience) return null
+    return experience
   }
 }

@@ -1,11 +1,10 @@
-import { Entity, ManyToOne, Property } from '@mikro-orm/core'
-
-import { User } from './User'
+import { IExpertApp } from '@libs/api'
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core'
 
 @Entity()
-export class ExpertApp {
-  @ManyToOne({ primary: true })
-  user: User
+export class ExpertApp implements IExpertApp {
+  @PrimaryKey()
+  username: string
 
   @Property()
   field: string

@@ -1,11 +1,8 @@
 import { UserReference } from '@backend/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
-import {
-  ScheduleDeleteParticipantRequest,
-  ScheduleMeResponseDTO,
-  ScheduleReference,
-} from '@backend/schedule/schedule.dto'
+import { ScheduleDeleteParticipantRequest, ScheduleReference } from '@backend/schedule/schedule.dto'
 import { ScheduleService } from '@backend/schedule/schedule.service'
+import { ScheduleMeResponseDTO } from '@libs/api'
 import {
   Body,
   Controller,
