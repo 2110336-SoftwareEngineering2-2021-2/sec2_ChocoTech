@@ -36,7 +36,13 @@ const registerRequest = async (formData: IUserRegistrationRequestDTO) => {
 //---------------------------------------------------------------------------------------------------
 
 function RegisterPage() {
-  const method = useForm<RegisterModel>({ resolver: yupResolver(registerValidation) })
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterModel>({
+    resolver: yupResolver(registerValidation),
+  })
 
   const registerMutation = useMutation(registerRequest, {
     onSuccess: (username) => {
@@ -60,50 +66,30 @@ function RegisterPage() {
       justifyContent="space-between"
       flexGrow={1}
     >
-      <FormProvider {...method}>
-        <form onSubmit={method.handleSubmit(onSubmit)}>
-          <RegisteredTextfield
-            type={''}
-            name="username"
-            label="Username"
-            errors={method.formState.errors.username}
-          />
-
-          <RegisteredTextfield
-            type={''}
-            label="Display name"
-            name="displayName"
-            errors={method.formState.errors.displayName}
-          />
-
-          <RegisteredTextfield
-            type={''}
-            label="Email"
-            name="email"
-            errors={method.formState.errors.email}
-          />
-
-          <RegisteredTextfield
-            type="password"
-            name="password"
-            label="Password"
-            errors={method.formState.errors.password}
-          />
-
-          <RegisteredTextfield
-            type="password"
-            name="confirmPassword"
-            label="Confirm Password"
-            errors={method.formState.errors.confirmPassword}
-          />
-          <br />
-          <br />
-
-          <Button fullWidth size="large" type="submit" color="primary" variant="contained">
-            Register
-          </Button>
-        </form>
-      </FormProvider>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <RegisteredTextfield label="Username" errors={errors.username} {...register('username')} />
+        <RegisteredTextfield
+          label="Display name"
+          errors={errors.displayName}
+          {...register('displayName')}
+        />
+        <RegisteredTextfield type="email" label="Email" name="email" errors={errors.email} />
+        <RegisteredTextfield
+          type="password"
+          label="Password"
+          errors={errors.password}
+          {...register('password')}
+        />
+        <RegisteredTextfield
+          type="password"
+          label="Confirm Password"
+          errors={errors.confirmPassword}
+          {...register('confirmPassword')}
+        />
+        <Button fullWidth size="large" type="submit" color="primary" variant="contained">
+          Register
+        </Button>
+      </form>
     </Stack>
   )
 }

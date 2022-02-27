@@ -25,7 +25,6 @@ export enum TopBarModeType {
 export interface TopBarProps {
   title?: string
   action?: TopBarActionType
-  onClose?: MouseEventHandler<HTMLButtonElement>
   mode?: TopBarModeType
   button?: ButtonProps & {
     label: string
@@ -69,7 +68,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   if (mode === TopBarModeType.Heading) {
     return (
       <Stack direction="row" justifyContent="space-between" p={1} mb={4}>
-        <Typography variant="title2" color="ink.darkest" fontWeight={400}>
+        <Typography variant="title2" color="ink.darkest" fontWeight={700}>
           {title}
         </Typography>
         {button && (

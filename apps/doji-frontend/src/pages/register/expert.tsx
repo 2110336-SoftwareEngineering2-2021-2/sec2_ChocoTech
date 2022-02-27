@@ -1,11 +1,11 @@
 import RegisteredTextfield from '@frontend/components/Register/registerTextfield'
-import { SimpleDialogProps } from '@frontend/pages/expert-application'
+import { SimpleDialogProps } from '@frontend/pages/my-session'
 import { httpClient } from '@frontend/services'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { UserCreationRequestDTO } from '@libs/api'
+import { IExpertRegistrationRequestDTO } from '@libs/api'
 import { TopBarActionType } from '@libs/mui'
 import { Button, Dialog, Stack, Typography } from '@mui/material'
-import axios, { AxiosError } from 'axios'
+import { AxiosError } from 'axios'
 import router from 'next/router'
 import * as yup from 'yup'
 
@@ -15,16 +15,16 @@ import toast from 'react-hot-toast'
 import { BsCheck2 } from 'react-icons/bs'
 import { useMutation } from 'react-query'
 
-const registerValidation = yup.object({
-  contentField: yup.string().required('Please enter a content field'),
-  applicationContent: yup.string().required('Please enter an application content'),
+const expertApplicationValidation = yup.object({
+  field: yup.string().required('Please enter a content field'),
+  desc: yup.string().required('Please enter an application content'),
 })
 
-type RegisterModel = yup.InferType<typeof registerValidation>
+type EApplicationModel = yup.InferType<typeof expertApplicationValidation>
 
-const registerRequest = async (formData: UserCreationRequestDTO) => {
-  await httpClient.post<UserCreationRequestDTO>('/register', formData)
-  return formData.username
+const registerRequest = async (formData: IExpertRegistrationRequestDTO) => {
+  await httpClient.post<IExpertRegistrationRequestDTO>('/expert/application', formData)
+  return
 }
 
 //---------------------------------------------------------------------------------------------------
@@ -41,7 +41,13 @@ function RegisterPage() {
     setOpen(false)
   }
   //---------------------------------------------------------------------------------------------------
-  const method = useForm<RegisterModel>({ resolver: yupResolver(registerValidation) })
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<EApplicationModel>({
+    resolver: yupResolver(expertApplicationValidation),
+  })
 
   const registerMutation = useMutation(registerRequest, {
     onSuccess: () => {
@@ -52,16 +58,8 @@ function RegisterPage() {
     },
   })
 
-  const onSubmit: SubmitHandler<RegisterModel> = async (data) => {
-    //await registerMutation.mutate(data)
-    axios
-      .post('http://localhost:3333/api/', data)
-      .then(function (response) {})
-      .catch(function (error) {
-        if (error.response.status === 422) {
-          alert('User with this username or email already exist.')
-        }
-      })
+  const onSubmit: SubmitHandler<EApplicationModel> = async (data) => {
+    await registerMutation.mutate(data)
   }
 
   return (
@@ -71,25 +69,18 @@ function RegisterPage() {
       justifyContent="space-between"
       flexGrow={1}
     >
-      <FormProvider {...method}>
-        <form onSubmit={method.handleSubmit(onSubmit)}>
-          <RegisteredTextfield
-            type={''}
-            name="contentField"
-            label="Content Field"
-            errors={method.formState.errors.contentField}
-          />
-          <RegisteredTextfield
-            type={''}
-            name="applicationContent"
-            label="Application Content"
-            errors={method.formState.errors.applicationContent}
-          />
-          <Button fullWidth type="submit" variant="contained" onClick={handleClickOpen}>
-            Apply for an expert
-          </Button>
-        </form>
-      </FormProvider>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <RegisteredTextfield label="Content Field" errors={errors.field} {...register('field')} />
+        <RegisteredTextfield
+          label="Application Content"
+          errors={errors.desc}
+          {...register('desc')}
+        />
+        <Button fullWidth type="submit" variant="contained">
+          Apply for an expert
+        </Button>
+      </form>
+
       <SimpleDialog open={open} onClose={handleClose} />
     </Stack>
   )

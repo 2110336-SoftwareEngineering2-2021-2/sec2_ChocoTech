@@ -28,7 +28,7 @@ function SimpleDialog(props: SimpleDialogProps) {
         <Typography fontWeight={400} variant="regular" align="center">
           In order to create new session you have to apply for an experts first
         </Typography>
-        <Link href="/expert-application/register" passHref>
+        <Link href="/register/expert" passHref>
           <Button sx={{ mt: 3 }}>Register</Button>
         </Link>
         <Button variant="text" sx={{ mt: 2 }} onClick={handleClose}>
@@ -117,4 +117,4 @@ export default function MySessionPage() {
     </Stack>
   )
 }
-//ChangePasswordPage.shouldAuthenticated = true
+MySessionPage.shouldAuthenticated = true
