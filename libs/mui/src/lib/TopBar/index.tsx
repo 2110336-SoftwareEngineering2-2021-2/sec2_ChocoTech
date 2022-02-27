@@ -17,7 +17,7 @@ export enum TopBarActionType {
   None = 'none',
 }
 
-export enum TopBarActionMode {
+export enum TopBarModeType {
   Normal = 'normal',
   Heading = 'heading',
 }
@@ -25,7 +25,8 @@ export enum TopBarActionMode {
 export interface TopBarProps {
   title?: string
   action?: TopBarActionType
-  mode?: TopBarActionMode
+  onClose?: MouseEventHandler<HTMLButtonElement>
+  mode?: TopBarModeType
   button?: ButtonProps & {
     label: string
   }
@@ -62,17 +63,17 @@ export const TopBar: React.FC<TopBarProps> = ({
   title,
   action = TopBarActionType.None,
   onClose,
-  mode = TopBarActionMode.Normal,
+  mode = TopBarModeType.Normal,
   button,
 }) => {
-  if (mode === TopBarActionMode.Heading) {
+  if (mode === TopBarModeType.Heading) {
     return (
       <Stack direction="row" justifyContent="space-between" p={1} mb={4}>
         <Typography variant="title2" color="ink.darkest" fontWeight={400}>
           {title}
         </Typography>
         {button && (
-          <Button color="primary" {...button}>
+          <Button color="primary" size="small" {...button}>
             {button.label}
           </Button>
         )}
