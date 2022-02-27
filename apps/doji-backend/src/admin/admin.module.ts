@@ -10,4 +10,4 @@ import { Module } from '@nestjs/common'
   providers: [AdminService],
   exports: [AdminService],
 })
-export class AdminModule {}
+export class ScheduleModule {}

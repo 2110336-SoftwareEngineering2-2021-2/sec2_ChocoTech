@@ -8,7 +8,4 @@ export class Admin implements IAdmin {
 
   @Property()
   passwordHash: string
-
-  //   @OneToMany(() => User, (user) => user.verifiedByAdmin)
-  //   aprovedExpert = new Collection<User>(this)
 }
