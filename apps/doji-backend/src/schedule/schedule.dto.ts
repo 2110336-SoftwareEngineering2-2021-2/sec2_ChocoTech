@@ -34,8 +34,8 @@ export class ScheduleMeResponseDTO implements IScheduleMeResponseDTO {
   @ApiProperty()
   fee: number
 
-  @ApiProperty()
-  status!: ScheduleStatus
+  @ApiProperty({ enum: Object.values(ScheduleStatus), default: ScheduleStatus.PENDING })
+  status: ScheduleStatus
 
   @ApiProperty()
   coinOnHold: number

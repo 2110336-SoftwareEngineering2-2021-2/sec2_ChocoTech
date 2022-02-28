@@ -20,7 +20,7 @@ export class Schedule {
 
   @Enum(() => ScheduleStatus)
   @Property({ default: ScheduleStatus.PENDING })
-  status!: ScheduleStatus
+  status: ScheduleStatus = ScheduleStatus.PENDING
 
   @Property()
   coinOnHold: number
