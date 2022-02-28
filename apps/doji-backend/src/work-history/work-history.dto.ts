@@ -1,7 +1,8 @@
+import { IWorkHistory } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsString } from 'class-validator'
 
-export class WorkHistoryRequest {
+export class WorkHistoryRequestDTO implements IWorkHistory {
   @ApiProperty()
   @IsString()
   topic: string
@@ -9,24 +10,7 @@ export class WorkHistoryRequest {
   @ApiProperty()
   @IsString()
   description: string
-}
 
-export class EditWorkHistoryRequest {
-  @ApiProperty()
-  @IsString()
   id: string
-
-  @ApiProperty()
-  @IsString()
-  topic: string
-
-  @ApiProperty()
-  @IsString()
-  description: string
-}
-
-export class DeleteWorkHistoryRequest {
-  @ApiProperty()
-  @IsString()
-  id: string
+  expertUserName: string
 }

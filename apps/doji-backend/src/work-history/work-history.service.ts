@@ -1,10 +1,6 @@
 import { UserReference } from '@backend/auth/auth.service'
 import { WorkHistory } from '@backend/entities/WorkHistory'
-import {
-  DeleteWorkHistoryRequest,
-  EditWorkHistoryRequest,
-  WorkHistoryRequest,
-} from '@backend/work-history/work-history.dto'
+import { WorkHistoryRequestDTO } from '@backend/work-history/work-history.dto'
 import { EntityRepository, NotFoundError } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
@@ -21,7 +17,7 @@ export class WorkHistoryService {
     })
   }
 
-  async addWorkHistory(dto: WorkHistoryRequest, userRef: UserReference) {
+  async addWorkHistory(dto: WorkHistoryRequestDTO, userRef: UserReference) {
     const workHistory = new WorkHistory()
     workHistory.expertUserName = userRef.username
     workHistory.topic = dto.topic
@@ -29,11 +25,11 @@ export class WorkHistoryService {
     await this.workHistoryRepo.persistAndFlush(workHistory)
   }
 
-  async editWorkHistory(dto: EditWorkHistoryRequest, userRef: UserReference) {
+  async editWorkHistory(dto: WorkHistoryRequestDTO, userRef: UserReference, workId: string) {
     let workHistory: WorkHistory
     try {
       workHistory = await this.workHistoryRepo.findOneOrFail({
-        id: dto.id,
+        id: workId,
       })
       if (workHistory.expertUserName !== userRef.username) {
         throw new ForbiddenException('This is not your work history')
@@ -50,11 +46,11 @@ export class WorkHistoryService {
     await this.workHistoryRepo.persistAndFlush(workHistory)
   }
 
-  async deleteWorkHistory(dto: DeleteWorkHistoryRequest, userRef: UserReference) {
+  async deleteWorkHistory(userRef: UserReference, workId: string) {
     let workHistory: WorkHistory
     try {
       workHistory = await this.workHistoryRepo.findOneOrFail({
-        id: dto.id,
+        id: workId,
       })
       if (workHistory.expertUserName !== userRef.username) {
         throw new ForbiddenException('This is not your work history')
