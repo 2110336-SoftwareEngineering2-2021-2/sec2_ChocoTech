@@ -1,7 +1,7 @@
 import { TextField, TextFieldProps } from '@mui/material'
 
-import { FC, forwardRef } from 'react'
-import { FieldError, useFormContext } from 'react-hook-form'
+import { forwardRef } from 'react'
+import { FieldError } from 'react-hook-form'
 
 export type RegisteredTextfieldProps = TextFieldProps & {
   errors: FieldError
