@@ -58,7 +58,7 @@ function WalletCard(props: { balance: string; onClickWithdraw: () => void }) {
         <Button fullWidth={true} variant="outlined" onClick={props.onClickWithdraw}>
           Withdraw
         </Button>
-        <Link href="/payment">
+        <Link href="/payment" passHref>
           <Button fullWidth={true}>Buy Doji Coin</Button>
         </Link>
       </Stack>

@@ -8,12 +8,12 @@ export enum Account {
   /**
    * Fund Charged from Omise
    */
-  CHARGED_OMISE_CASH_ACCOUNT,
+  CHARGED_OMISE_CASH_ACCOUNT = "changed_omise_cash_account",
 
   /**
    * Platform's debt owe by the user
    */
-  USER_PAYABLE_ACCOUNT,
+  USER_PAYABLE_ACCOUNT = "user_payable_account",
 }
 
 @Entity()
@@ -27,6 +27,7 @@ export class CoinTransactionLine {
   @ManyToOne({ nullable: true })
   accountUser?: User
 
+  @Enum(() => AccountEnum)
   @Property({ nullable: true })
   account: Account
 

@@ -60,7 +60,7 @@ export class PaymentController {
   @Post('deposit')
   @ApiOperation({ description: 'Deposite doji coin' })
   @ApiResponse({ status: 422, description: 'Invalid Card' })
-  async deposit(@CurrentUser() userRef: UserReference, @Body() req: DepositRequest) {
+  async deposit(@CurrentUser() userRef: UserReference, @Body() dto: DepositRequestDTO) {
     await this.paymentService.deposit(await userRef.getUser(), req.amount, req.card)
   }
 

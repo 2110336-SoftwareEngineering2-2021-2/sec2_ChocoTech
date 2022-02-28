@@ -29,10 +29,10 @@ import { IconBaseProps } from 'react-icons/lib'
 import { useMutation, useQuery } from 'react-query'
 
 export enum TopUpDialogState {
-  IDLE,
-  WAITING,
-  SUCCESS,
-  FAILURE,
+  IDLE="idle",
+  WAITING="waiting",
+  SUCCESS="success",
+  FAILURE="failure",
 }
 
 export function TopUpDialog(props: {
