@@ -11,6 +11,9 @@ export class WorkHistoryRequestDTO implements IWorkHistory {
   @IsString()
   description: string
 
-  id: string
-  expertUserName: string
+  @ApiProperty()
+  id!: string
+
+  @ApiProperty()
+  expertUserName!: string
 }
