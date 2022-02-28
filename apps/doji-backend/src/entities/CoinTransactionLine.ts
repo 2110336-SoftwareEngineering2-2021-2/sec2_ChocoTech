@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
+import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
 import { randomUUID } from 'crypto'
 
 import { CoinTransaction } from './CoinTransaction'
@@ -8,12 +8,12 @@ export enum Account {
   /**
    * Fund Charged from Omise
    */
-  CHARGED_OMISE_CASH_ACCOUNT = "changed_omise_cash_account",
+  CHARGED_OMISE_CASH_ACCOUNT = 'changed_omise_cash_account',
 
   /**
    * Platform's debt owe by the user
    */
-  USER_PAYABLE_ACCOUNT = "user_payable_account",
+  USER_PAYABLE_ACCOUNT = 'user_payable_account',
 }
 
 @Entity()
@@ -27,7 +27,7 @@ export class CoinTransactionLine {
   @ManyToOne({ nullable: true })
   accountUser?: User
 
-  @Enum(() => AccountEnum)
+  @Enum(() => Account)
   @Property({ nullable: true })
   account: Account
 
