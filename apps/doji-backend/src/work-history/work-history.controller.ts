@@ -10,7 +10,7 @@ import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 import { WorkHistoryService } from './work-history.service'
 
-@Controller('work-history')
+@Controller('expert/work/histories')
 export class WorkHistoryController {
   constructor(private readonly workHistoryService: WorkHistoryService) {}
 
