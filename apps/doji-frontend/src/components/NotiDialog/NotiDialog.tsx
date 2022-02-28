@@ -1,6 +1,4 @@
 import { Button, ButtonProps, Dialog, Stack, Typography } from '@mui/material'
-import Link from 'next/link'
-import router from 'next/router'
 
 export interface DialogProps {
   open: boolean
@@ -9,7 +7,6 @@ export interface DialogProps {
   labelheader: string
   labelinfo: string
   button1?: ButtonProps & {
-    url: string
     label: string
   }
   button2?: ButtonProps & {
@@ -46,7 +43,7 @@ function NotiDialog({
           {labelinfo}
         </Typography>
         {button1 && (
-          <Button sx={{ mt: 3 }} onClick={() => router.push(button1.url)}>
+          <Button sx={{ mt: 3 }} onClick={button1.onClick}>
             {button1.label}
           </Button>
         )}

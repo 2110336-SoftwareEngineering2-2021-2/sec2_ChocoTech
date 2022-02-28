@@ -14,7 +14,7 @@ export class ExpertAppService {
   async applicationRequest(dto: ExpertApplicationRequest, userRef: UserReference) {
     const user = await userRef.getUser()
     const application = new ExpertApp()
-    application.username = user.username
+    application.user = user
     application.field = dto.field
     application.desc = dto.desc
     console.log(application)

@@ -1,6 +1,7 @@
 import NotiDialog from '@frontend/components/NotiDialog/NotiDialog'
 import { TopBar, TopBarModeType } from '@libs/mui'
 import { Box, Stack, Tab, Tabs, Typography } from '@mui/material'
+import router from 'next/router'
 
 import React from 'react'
 import { BiPlus } from 'react-icons/bi'
@@ -50,7 +51,7 @@ export default function MySessionPage() {
     setOpen(true)
   }
 
-  const handleClose = (value: string) => {
+  const handleClose = () => {
     setOpen(false)
   }
 
@@ -84,7 +85,7 @@ export default function MySessionPage() {
         labelheader="You have to register!"
         labelinfo="In order to create new session you have to apply for an experts first"
         onClose={handleClose}
-        button1={{ label: 'Register', url: '/register/expert' }}
+        button1={{ label: 'Register', onClick: () => router.push('/register/expert') }}
         button2={{ label: 'No, thanks' }}
       />
     </Stack>
