@@ -1,21 +1,19 @@
 import RegisteredTextfield from '@frontend/components/Register/registerTextfield'
 import { httpClient } from '@frontend/services'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IUserRegistrationRequestDTO } from '@libs/api'
+import { IAdminCreationRequestDTO } from '@libs/api'
 import { TopBarActionType } from '@libs/mui'
 import { Button, Stack, Typography } from '@mui/material'
 import { AxiosError } from 'axios'
 import router from 'next/router'
 import * as yup from 'yup'
 
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { useMutation } from 'react-query'
 
-const registerValidation = yup.object({
+const newAdminValidation = yup.object({
   username: yup.string().required('Please Enter a username'),
-  displayName: yup.string().required('Please Enter a display name'),
-  email: yup.string().email().required('Please Enter your Email'),
   password: yup
     .string()
     .required('Please Enter your password')
@@ -26,76 +24,75 @@ const registerValidation = yup.object({
     .oneOf([yup.ref('password'), null], 'Passwords must match'),
 })
 
-type RegisterModel = yup.InferType<typeof registerValidation>
+type NewAdminModel = yup.InferType<typeof newAdminValidation>
 
-const registerRequest = async (formData: IUserRegistrationRequestDTO) => {
-  await httpClient.post<IUserRegistrationRequestDTO>('/register', formData)
-  return formData.username
+const newAdminRequest = async (formData: IAdminCreationRequestDTO) => {
+  await httpClient.post<IAdminCreationRequestDTO>('/admin/newAdmin', formData)
 }
 
 //---------------------------------------------------------------------------------------------------
 
-function RegisterPage() {
+function NewAdminPage() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterModel>({
-    resolver: yupResolver(registerValidation),
+  } = useForm<NewAdminModel>({
+    resolver: yupResolver(newAdminValidation),
   })
 
-  const registerMutation = useMutation(registerRequest, {
-    onSuccess: (username) => {
-      toast.success('Register successfully')
-      router.push(`/register/${username}`)
+  const newAdminMutation = useMutation(newAdminRequest, {
+    onSuccess: () => {
+      toast.success('Create new admin successfully')
+      router.push('/admin')
     },
     onError: (error: AxiosError) => {
       toast.error(error.response.data.message)
     },
   })
 
-  const onSubmit: SubmitHandler<RegisterModel> = async (data) => {
+  const onSubmit: SubmitHandler<NewAdminModel> = async (data) => {
     delete data.confirmPassword
-    await registerMutation.mutate(data)
+    await newAdminMutation.mutate(data)
   }
 
   return (
-    <Stack
-      sx={{ minHeight: '100%' }}
-      direction="column"
-      justifyContent="space-between"
-      flexGrow={1}
-    >
+    <Stack>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <Typography variant="large" fontWeight={500}>
+          Username
+        </Typography>
         <RegisteredTextfield label="Username" errors={errors.username} {...register('username')} />
-        <RegisteredTextfield
-          label="Display name"
-          errors={errors.displayName}
-          {...register('displayName')}
-        />
-        <RegisteredTextfield label="Email" errors={errors.email} {...register('email')} />
+        <Typography variant="large" fontWeight={500}>
+          Password
+        </Typography>
         <RegisteredTextfield
           type="password"
           label="Password"
           errors={errors.password}
           {...register('password')}
         />
+        <Typography variant="large" fontWeight={500}>
+          Confirm Password
+        </Typography>
         <RegisteredTextfield
           type="password"
           label="Confirm Password"
           errors={errors.confirmPassword}
           {...register('confirmPassword')}
         />
-        <Button fullWidth size="large" type="submit" color="primary" variant="contained">
-          Register
+        <br />
+        <br />
+        <Button fullWidth type="submit">
+          Create new admin
         </Button>
       </form>
     </Stack>
   )
 }
-export default RegisterPage
+export default NewAdminPage
 
-RegisterPage.topBarProps = {
-  title: 'Register',
+NewAdminPage.topBarProps = {
+  title: 'New Admin',
   action: TopBarActionType.Back,
 }

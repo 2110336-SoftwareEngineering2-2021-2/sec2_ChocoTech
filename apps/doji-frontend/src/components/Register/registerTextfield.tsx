@@ -1,31 +1,24 @@
-import { BaseTextFieldProps, TextField } from '@mui/material'
+import { TextField, TextFieldProps } from '@mui/material'
 
-import { FC } from 'react'
-import { FieldError, useFormContext } from 'react-hook-form'
+import { forwardRef } from 'react'
+import { FieldError } from 'react-hook-form'
 
-interface RegisteredTextfieldProps extends BaseTextFieldProps {
+export type RegisteredTextfieldProps = TextFieldProps & {
   errors: FieldError
 }
-const RegisteredTextfield: FC<RegisteredTextfieldProps> = (field) => {
-  const name = field.name
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext()
-
-  return (
-    <TextField
-      {...field}
-      label={field.label}
-      type={field.type}
-      variant="outlined"
-      error={!!errors[name]}
-      helperText={errors[name]?.message}
-      {...register(name)}
-      sx={{ marginY: 2 }}
-      fullWidth
-    />
-  )
-}
-
+const RegisteredTextfield = forwardRef<HTMLInputElement, RegisteredTextfieldProps>(
+  ({ errors, ...rest }, ref) => {
+    return (
+      <TextField
+        {...rest}
+        error={!!errors}
+        helperText={errors?.message}
+        sx={{ marginY: 2, ...rest.sx }}
+        ref={ref}
+        fullWidth
+      />
+    )
+  },
+)
+RegisteredTextfield.displayName = 'RegisteredTextfield'
 export default RegisteredTextfield
