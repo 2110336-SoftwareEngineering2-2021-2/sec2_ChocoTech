@@ -1,9 +1,9 @@
 import { UserReference } from '@backend/auth/auth.service'
 import { ExpertApp } from '@backend/entities/ExpertApp'
 import { ExpertApplicationRequest } from '@backend/expert/expert.dto'
-import { EntityRepository } from '@mikro-orm/core'
+import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 
 @Injectable()
 export class ExpertAppService {
@@ -17,6 +17,15 @@ export class ExpertAppService {
     application.username = user.username
     application.field = dto.field
     application.desc = dto.desc
-    await this.expertAppRepo.persistAndFlush(application)
+    console.log(application)
+    try {
+      await this.expertAppRepo.persistAndFlush(application)
+    } catch (e) {
+      if (e instanceof UniqueConstraintViolationException) {
+        throw new UnprocessableEntityException('You already send the application.')
+      } else {
+        throw e
+      }
+    }
   }
 }

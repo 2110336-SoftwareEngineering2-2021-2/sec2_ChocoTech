@@ -73,7 +73,7 @@ function RegisterPage() {
           errors={errors.displayName}
           {...register('displayName')}
         />
-        <RegisteredTextfield type="email" label="Email" name="email" errors={errors.email} />
+        <RegisteredTextfield label="Email" errors={errors.email} {...register('email')} />
         <RegisteredTextfield
           type="password"
           label="Password"

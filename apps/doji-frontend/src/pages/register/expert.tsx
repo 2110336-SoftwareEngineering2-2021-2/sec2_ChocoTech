@@ -1,10 +1,10 @@
+import NotiDialog from '@frontend/components/NotiDialog/NotiDialog'
 import RegisteredTextfield from '@frontend/components/Register/registerTextfield'
-import { SimpleDialogProps } from '@frontend/pages/my-session'
 import { httpClient } from '@frontend/services'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IExpertRegistrationRequestDTO } from '@libs/api'
 import { TopBarActionType } from '@libs/mui'
-import { Button, Dialog, Stack, Typography } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import { AxiosError } from 'axios'
 import router from 'next/router'
 import * as yup from 'yup'
@@ -27,10 +27,7 @@ const registerRequest = async (formData: IExpertRegistrationRequestDTO) => {
   return
 }
 
-//---------------------------------------------------------------------------------------------------
-
 function RegisterPage() {
-  //---------------------------------------------------------------------------------------------------
   const [open, setOpen] = React.useState(false)
 
   const handleClickOpen = () => {
@@ -39,8 +36,8 @@ function RegisterPage() {
 
   const handleClose = () => {
     setOpen(false)
+    router.push('/my-session')
   }
-  //---------------------------------------------------------------------------------------------------
   const {
     register,
     handleSubmit,
@@ -50,15 +47,19 @@ function RegisterPage() {
   })
   const registerMutation = useMutation(registerRequest, {
     onSuccess: () => {
+      toast.dismiss()
       handleClickOpen()
     },
     onError: (error: AxiosError) => {
+      toast.dismiss()
       toast.error(error.response.data.message)
+    },
+    onMutate: () => {
+      toast.loading('loading...')
     },
   })
 
   const onSubmit: SubmitHandler<EApplicationModel> = async (data) => {
-    console.log(data)
     await registerMutation.mutate(data)
   }
   return (
@@ -79,8 +80,13 @@ function RegisterPage() {
           Apply for an expert
         </Button>
       </form>
-
-      <SimpleDialog open={open} onClose={handleClose} />
+      <NotiDialog
+        open={open}
+        onClose={handleClose}
+        labelheader="Request has been sent"
+        labelinfo="please wait for admin to approve this request"
+        icon={<BsCheck2 size={42} />}
+      />
     </Stack>
   )
 }
@@ -89,30 +95,4 @@ export default RegisterPage
 RegisterPage.topBarProps = {
   title: 'Apply for an expert',
   action: TopBarActionType.Back,
-}
-
-function SimpleDialog(props: SimpleDialogProps) {
-  const { onClose, open } = props
-
-  const handleClose = () => {
-    onClose('')
-    router.push('/my-session')
-  }
-
-  return (
-    <Dialog onClose={handleClose} open={open}>
-      <Stack margin={2.5}>
-        <Stack margin={3} alignItems="center">
-          <BsCheck2 size={42} />
-        </Stack>
-        <Typography fontWeight={700} variant="title3" align="center">
-          Request has been sent
-        </Typography>
-        <br />
-        <Typography fontWeight={400} variant="regular" align="center" marginBottom={1.5}>
-          please wait for admin to approve this request
-        </Typography>
-      </Stack>
-    </Dialog>
-  )
 }

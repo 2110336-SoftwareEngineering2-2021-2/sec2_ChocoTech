@@ -1,50 +1,16 @@
+import NotiDialog from '@frontend/components/NotiDialog/NotiDialog'
 import { TopBar, TopBarModeType } from '@libs/mui'
-import { Box, Button, Dialog, Stack, Tab, Tabs, Typography } from '@mui/material'
-import Link from 'next/link'
+import { Box, Stack, Tab, Tabs, Typography } from '@mui/material'
 
 import React from 'react'
 import { BiPlus } from 'react-icons/bi'
 
 interface TabPanelProps {
-  children?: React.ReactNode
   index: number
   value: number
 }
 
-function SimpleDialog(props: SimpleDialogProps) {
-  const { onClose, open } = props
-
-  const handleClose = () => {
-    onClose('')
-  }
-
-  return (
-    <Dialog onClose={handleClose} open={open}>
-      <Stack margin={3}>
-        <Typography fontWeight={700} variant="title3" align="center">
-          You have to register!
-        </Typography>
-        <br />
-        <Typography fontWeight={400} variant="regular" align="center">
-          In order to create new session you have to apply for an experts first
-        </Typography>
-        <Link href="/register/expert" passHref>
-          <Button sx={{ mt: 3 }}>Register</Button>
-        </Link>
-        <Button variant="text" sx={{ mt: 2 }} onClick={handleClose}>
-          No, thanks
-        </Button>
-      </Stack>
-    </Dialog>
-  )
-}
-
-export interface SimpleDialogProps {
-  open: boolean
-  onClose: (value: string) => void
-}
-
-function TabPanel(props: TabPanelProps) {
+const TabPanel: React.FC<TabPanelProps> = (props) => {
   const { children, value, index, ...other } = props
 
   return (
@@ -113,7 +79,14 @@ export default function MySessionPage() {
           Finished page
         </TabPanel>
       </Box>
-      <SimpleDialog open={open} onClose={handleClose} />
+      <NotiDialog
+        open={open}
+        labelheader="You have to register!"
+        labelinfo="In order to create new session you have to apply for an experts first"
+        onClose={handleClose}
+        button1={{ label: 'Register', url: '/register/expert' }}
+        button2={{ label: 'No, thanks' }}
+      />
     </Stack>
   )
 }
