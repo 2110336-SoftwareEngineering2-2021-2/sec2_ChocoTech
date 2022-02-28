@@ -3,9 +3,14 @@ export interface IUserChangePasswordRequestDTO {
   newPassword: string
 }
 
-export class IUserRegistrationRequestDTO {
+export interface IUserRegistrationRequestDTO {
   username: string
   displayName: string
   email: string
+  password: string
+}
+
+export interface IAdminCreationRequestDTO {
+  username: string
   password: string
 }

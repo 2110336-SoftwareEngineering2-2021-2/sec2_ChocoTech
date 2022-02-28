@@ -44,4 +44,7 @@ export class User implements IUser {
 
   @Property({ nullable: true })
   omiseCustomerToken?: string
+
+  // @ManyToOne({ nullable: true })
+  // verifiedByAdmin!: Admin
 }
