@@ -13,9 +13,8 @@ export class WorkHistoryController {
   @Get()
   @UseGuards(UserAuthGuard)
   @ApiBearerAuth()
-  async getWorkHistory(@Body() dto: WorkHistoryRequest, @CurrentUser() user: UserReference) {
-    await this.workHistoryService.getWorkHistory(dto, user)
-    return
+  async getAllWorkHistory(@CurrentUser() user: UserReference) {
+    return await this.workHistoryService.getAllWorkHistory(user)
   }
 
   @Post()

@@ -1,7 +1,7 @@
 import { UserReference } from '@backend/auth/auth.service'
 import { WorkHistory } from '@backend/entities/WorkHistory'
 import { WorkHistoryRequest } from '@backend/work-history/work-history.dto'
-import { EntityRepository } from '@mikro-orm/core'
+import { EntityRepository, Filter, FilterQuery } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable } from '@nestjs/common'
 
@@ -11,10 +11,11 @@ export class WorkHistoryService {
     @InjectRepository(WorkHistory) private readonly workHistoryRepo: EntityRepository<WorkHistory>,
   ) {}
 
-  async getWorkHistory(dto: WorkHistoryRequest, userRef: UserReference) {
-    let workHistoryList = await this.workHistoryRepo.findAll({})
-    const workHistory = new WorkHistory()
-    await this.workHistoryRepo.persistAndFlush(workHistory)
+  async getAllWorkHistory(userRef: UserReference) {
+    const expertUserName = userRef.username
+    return await this.workHistoryRepo.find({
+      expertUserName: expertUserName,
+    })
   }
 
   async addWorkHistory(dto: WorkHistoryRequest, userRef: UserReference) {
