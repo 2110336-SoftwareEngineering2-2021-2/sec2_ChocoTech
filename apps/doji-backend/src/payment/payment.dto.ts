@@ -1,7 +1,7 @@
 import {
   IAttachCardRequestDTO,
   IDepositRequest,
-  IUserTransactionLineResponse,
+  IUserTransactionLineResponseDTO,
   IWithdrawalRequest,
 } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
@@ -17,7 +17,7 @@ export class AttachCardRequestDTO implements IAttachCardRequestDTO {
   isDefault: boolean
 }
 
-export class UserTransactionLineResponse implements IUserTransactionLineResponse {
+export class UserTransactionLineResponseDTO implements IUserTransactionLineResponseDTO {
   @ApiProperty()
   id: string
 
@@ -38,7 +38,7 @@ export class DepositRequest implements IDepositRequest {
 
   @ApiProperty()
   @IsString()
-  card: string
+  cardId: string
 }
 
 export class WithdrawalRequest implements IWithdrawalRequest {

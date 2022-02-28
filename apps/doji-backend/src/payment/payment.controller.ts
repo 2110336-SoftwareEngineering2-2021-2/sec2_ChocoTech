@@ -5,7 +5,7 @@ import { CoinTransactionService } from '@backend/payment/coin-transaction.servic
 import {
   AttachCardRequestDTO,
   DepositRequest,
-  UserTransactionLineResponse,
+  UserTransactionLineResponseDTO,
   WithdrawalRequest,
 } from '@backend/payment/payment.dto'
 import { PaymentService } from '@backend/payment/payment.service'
@@ -50,24 +50,24 @@ export class PaymentController {
 
   @Get('transaction')
   @ApiOperation({ description: "Retrieve user's transaction" })
-  @ApiResponse({ status: 200, type: [UserTransactionLineResponse] })
+  @ApiResponse({ status: 200, type: [UserTransactionLineResponseDTO] })
   async getUserTransactions(
     @CurrentUser() userRef: UserReference,
-  ): Promise<UserTransactionLineResponse[]> {
+  ): Promise<UserTransactionLineResponseDTO[]> {
     return await this.coinTransactionService.getUserTransactions(await userRef.getUser())
   }
 
   @Post('deposit')
   @ApiOperation({ description: 'Deposite doji coin' })
   @ApiResponse({ status: 422, description: 'Invalid Card' })
-  async deposit(@CurrentUser() userRef: UserReference, @Body() dto: DepositRequestDTO) {
-    await this.paymentService.deposit(await userRef.getUser(), req.amount, req.card)
+  async deposit(@CurrentUser() userRef: UserReference, @Body() dto: DepositRequest) {
+    await this.paymentService.deposit(await userRef.getUser(), dto.amount, dto.cardId)
   }
 
   @Post('withdraw')
   @ApiOperation({ description: 'Withdraw Doji Coin' })
   @ApiResponse({ status: 422, description: 'Insufficient Fund' })
-  async withdraw(@CurrentUser() userRef: UserReference, @Body() req: WithdrawalRequest) {
-    await this.paymentService.withdraw(await userRef.getUser(), req.amount, req.destinationAccount)
+  async withdraw(@CurrentUser() userRef: UserReference, @Body() dto: WithdrawalRequest) {
+    await this.paymentService.withdraw(await userRef.getUser(), dto.amount, dto.destinationAccount)
   }
 }

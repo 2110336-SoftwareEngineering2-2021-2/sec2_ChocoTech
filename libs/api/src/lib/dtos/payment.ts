@@ -3,7 +3,7 @@ export interface IAttachCardRequestDTO {
   isDefault: boolean
 }
 
-export interface IUserTransactionLineResponse {
+export interface IUserTransactionLineResponseDTO {
   id: string
   description: string
   timestamp: Date
@@ -12,7 +12,7 @@ export interface IUserTransactionLineResponse {
 
 export interface IDepositRequest {
   amount: number
-  card: string
+  cardId: string
 }
 
 export interface IWithdrawalRequest {

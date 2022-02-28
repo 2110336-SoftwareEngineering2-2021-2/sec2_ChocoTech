@@ -1,7 +1,7 @@
-import { stangToBathString } from '@frontend/pages/balance'
 import { httpClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage, PaymentType } from '@frontend/type'
+import { stangToBathString } from '@frontend/utils/stangBathToString'
 import { IDepositRequest, IErrorMessage, IUser } from '@libs/api'
 import { Tables, TopBarActionType } from '@libs/mui'
 import {
@@ -21,7 +21,8 @@ import { AxiosError } from 'axios'
 import Link from 'next/link'
 import Omise from 'omise'
 
-import { useCallback, useRef, useState } from 'react'
+import { FormEventHandler, useCallback, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { FaCcMastercard, FaCcVisa, FaCheckCircle } from 'react-icons/fa'
 import { ImCross } from 'react-icons/im'
@@ -29,23 +30,19 @@ import { IconBaseProps } from 'react-icons/lib'
 import { useMutation, useQuery } from 'react-query'
 
 export enum TopUpDialogState {
-  IDLE="idle",
-  WAITING="waiting",
-  SUCCESS="success",
-  FAILURE="failure",
+  IDLE = 'idle',
+  WAITING = 'waiting',
+  SUCCESS = 'success',
+  FAILURE = 'failure',
 }
 
 export function TopUpDialog(props: {
-  currentBalance: string
   actionText: string
-  onSubmit: (val: number) => void
   dialogState: 'idle' | 'loading' | 'error' | 'success'
   children?: any
+  onSubmit: FormEventHandler<HTMLFormElement>
 }) {
   const theme = useTheme()
-  const [inputText, setInputText] = useState('')
-
-  const inputValid = /^[0-9]+$/.test(inputText)
 
   const statusContent = new Map([
     ['loading', <CircularProgress size="5em" />],
@@ -62,36 +59,14 @@ export function TopUpDialog(props: {
   }
 
   return (
-    <Stack padding="2em" alignItems="center" spacing="0.5em" maxWidth="sm">
-      <Typography variant="h5" fontWeight={700}>
-        Specify Amount
-      </Typography>
-
-      <Stack direction="row" alignItems="center" spacing="0.5em">
-        <TextField
-          inputProps={{
-            inputMode: 'numeric',
-            pattern: '[0-9]*',
-            style: { ...theme.typography.h4, textAlign: 'right' },
-          }}
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          error={!inputValid && inputText.length > 0}
-        />
-        <Typography variant="h4" fontWeight={700}>
-          THB
-        </Typography>
+    <form onSubmit={props.onSubmit}>
+      <Stack padding="2em" alignItems="center" spacing="1em" maxWidth="sm">
+        {props.children}
+        <Button fullWidth={true} type="submit">
+          {props.actionText}
+        </Button>
       </Stack>
-      {props.children}
-      <Typography>Current Balance: {props.currentBalance}</Typography>
-      <Button
-        fullWidth={true}
-        disabled={!inputValid}
-        onClick={() => props.onSubmit(parseInt(inputText))}
-      >
-        {props.actionText}
-      </Button>
-    </Stack>
+    </form>
   )
 }
 
@@ -128,18 +103,17 @@ const SelectPaymentPage: ExtendedNextPage = () => {
     }
   }
 
-  const [drawer, setDrawer] = useState(false)
   const [targetCard, setTargetCard] = useState<string | null>(null)
 
-  const userQ = useQuery<IUser>('/auth/me', () =>
+  const userInfoQuery = useQuery<IUser>('/auth/me', () =>
     httpClient.get('/auth/me').then((res) => res.data),
   )
-  const deposit = useMutation<unknown, AxiosError<IErrorMessage>, IDepositRequest>(
+  const depositMutation = useMutation<unknown, AxiosError<IErrorMessage>, IDepositRequest>(
     '/payment/deposit',
     (d) => httpClient.post('/payment/deposit', d),
     {
       onSuccess: () => {
-        userQ.refetch()
+        userInfoQuery.refetch()
       },
       onError: (e) => {
         toast.error('Fail to deposit: ' + e.response?.data?.message)
@@ -147,9 +121,15 @@ const SelectPaymentPage: ExtendedNextPage = () => {
     },
   )
 
-  if (isLoading || userQ.isLoading) return null
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
 
-  if (isError || userQ.isError) return <div>Error</div>
+  if (isLoading || userInfoQuery.isLoading) return null
+
+  if (isError || userInfoQuery.isError) return <div>Error</div>
 
   return (
     <Stack spacing={1}>
@@ -159,7 +139,6 @@ const SelectPaymentPage: ExtendedNextPage = () => {
           content={`${card.brand} ${card.last_digits}`}
           avatar={renderPaymentIcon(card.brand.toLowerCase() as PaymentType)}
           onClick={() => {
-            setDrawer(true)
             setTargetCard(card.id)
           }}
         />
@@ -170,22 +149,34 @@ const SelectPaymentPage: ExtendedNextPage = () => {
         </Link>
       </Stack>
       <Drawer
-        open={drawer}
+        open={targetCard !== null}
         onClose={() => {
-          setDrawer(false)
-          deposit.reset()
+          setTargetCard(null)
+          depositMutation.reset()
         }}
         anchor="bottom"
         PaperProps={{ sx: { alignItems: 'center' } }}
       >
         <TopUpDialog
-          currentBalance={stangToBathString(userQ.data.coinBalance)}
           actionText="Top Up"
-          onSubmit={(v) => {
-            deposit.mutate({ amount: v * 100, card: targetCard })
-          }}
-          dialogState={deposit.status}
-        />
+          dialogState={depositMutation.status}
+          onSubmit={handleSubmit((form) =>
+            depositMutation.mutate({ cardId: targetCard, amount: form.amount * 100 }),
+          )}
+        >
+          <Typography variant="title2">Specify Amount</Typography>
+          <Stack direction="row" alignItems="center" spacing="0.5em">
+            <TextField
+              {...register('amount', { required: true, pattern: /^\d+$/ })}
+              error={!!errors.amount}
+              label="Amount"
+            />
+            <Typography variant="title2">THB</Typography>
+          </Stack>
+          <Typography variant="regular">
+            Current Balance: {stangToBathString(userInfoQuery.data.coinBalance)} THB
+          </Typography>
+        </TopUpDialog>
       </Drawer>
     </Stack>
   )
