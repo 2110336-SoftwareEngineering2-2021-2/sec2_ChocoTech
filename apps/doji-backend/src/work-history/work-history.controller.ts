@@ -1,6 +1,6 @@
 import { UserReference } from '@backend/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
-import { WorkHistoryRequest } from '@backend/work-history/work-history.dto'
+import { EditWorkHistoryRequest, WorkHistoryRequest } from '@backend/work-history/work-history.dto'
 import { Body, Controller, Delete, Get, Post, Put, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth } from '@nestjs/swagger'
 
@@ -28,7 +28,7 @@ export class WorkHistoryController {
   @Put()
   @UseGuards(UserAuthGuard)
   @ApiBearerAuth()
-  async editWorkHistory(@Body() dto: WorkHistoryRequest, @CurrentUser() user: UserReference) {
+  async editWorkHistory(@Body() dto: EditWorkHistoryRequest, @CurrentUser() user: UserReference) {
     await this.workHistoryService.editWorkHistory(dto, user)
     return
   }

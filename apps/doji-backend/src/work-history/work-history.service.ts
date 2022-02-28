@@ -1,9 +1,9 @@
 import { UserReference } from '@backend/auth/auth.service'
 import { WorkHistory } from '@backend/entities/WorkHistory'
-import { WorkHistoryRequest } from '@backend/work-history/work-history.dto'
-import { EntityRepository, Filter, FilterQuery } from '@mikro-orm/core'
+import { EditWorkHistoryRequest, WorkHistoryRequest } from '@backend/work-history/work-history.dto'
+import { EntityRepository, NotFoundError } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 
 @Injectable()
 export class WorkHistoryService {
@@ -12,9 +12,8 @@ export class WorkHistoryService {
   ) {}
 
   async getAllWorkHistory(userRef: UserReference) {
-    const expertUserName = userRef.username
     return await this.workHistoryRepo.find({
-      expertUserName: expertUserName,
+      expertUserName: userRef.username,
     })
   }
 
@@ -26,9 +25,22 @@ export class WorkHistoryService {
     await this.workHistoryRepo.persistAndFlush(workHistory)
   }
 
-  async editWorkHistory(dto: WorkHistoryRequest, userRef: UserReference) {
-    const workHistory = new WorkHistory()
-    workHistory.expertUserName = userRef.username
+  async editWorkHistory(dto: EditWorkHistoryRequest, userRef: UserReference) {
+    let workHistory: WorkHistory
+    try {
+      workHistory = await this.workHistoryRepo.findOneOrFail({
+        id: dto.id,
+      })
+      if (workHistory.expertUserName !== userRef.username) {
+        throw new ForbiddenException('This is not your work history.')
+      }
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw new NotFoundException('Work history ID is not founded.')
+      } else {
+        throw error
+      }
+    }
     workHistory.topic = dto.topic
     workHistory.description = dto.description
     await this.workHistoryRepo.persistAndFlush(workHistory)

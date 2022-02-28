@@ -10,3 +10,17 @@ export class WorkHistoryRequest {
   @IsString()
   description: string
 }
+
+export class EditWorkHistoryRequest {
+  @ApiProperty()
+  @IsString()
+  id: string
+
+  @ApiProperty()
+  @IsString()
+  topic: string
+
+  @ApiProperty()
+  @IsString()
+  description: string
+}
