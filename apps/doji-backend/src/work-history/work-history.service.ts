@@ -36,11 +36,11 @@ export class WorkHistoryService {
         id: dto.id,
       })
       if (workHistory.expertUserName !== userRef.username) {
-        throw new ForbiddenException('This is not your work history.')
+        throw new ForbiddenException('This is not your work history')
       }
     } catch (error) {
       if (error instanceof NotFoundError) {
-        throw new NotFoundException('Work history ID is not founded.')
+        throw new NotFoundException('Work history ID is not founded')
       } else {
         throw error
       }
@@ -57,11 +57,11 @@ export class WorkHistoryService {
         id: dto.id,
       })
       if (workHistory.expertUserName !== userRef.username) {
-        throw new ForbiddenException('This is not your work history.')
+        throw new ForbiddenException('This is not your work history')
       }
     } catch (error) {
       if (error instanceof NotFoundError) {
-        throw new NotFoundException('Work history ID is not founded.')
+        throw new NotFoundException('Work history ID is not founded')
       } else {
         throw error
       }
