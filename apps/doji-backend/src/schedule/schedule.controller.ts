@@ -22,11 +22,11 @@ export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
   @Get()
-  @HttpCode(200)
-  @ApiOperation({ description: 'Get current schedule information using username' })
-  @ApiResponse({ status: 200 })
-  @ApiResponse({ status: 404, description: 'Schedule not found' })
-  async getScheduleInformation(@Body() body: ScheduleReference): Promise<ScheduleMeResponseDTO> {
+  // @HttpCode(200)
+  // @ApiOperation({ description: 'Get current schedule information using username' })
+  // @ApiResponse({ status: 200 })
+  // @ApiResponse({ status: 404, description: 'Schedule not found' })
+  async getScheduleInformation(@Body() body: ScheduleReference) {
     const schedule = await this.scheduleService.scheduleFromId(body.scheduleId)
     if (!schedule) {
       throw new NotFoundException('Schedule not found')
