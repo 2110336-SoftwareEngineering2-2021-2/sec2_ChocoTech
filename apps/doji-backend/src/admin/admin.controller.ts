@@ -9,7 +9,7 @@ import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
-  @Get('all')
+  @Get()
   @UseGuards(UserAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ description: 'Get all admin' })
@@ -19,7 +19,7 @@ export class AdminController {
     return await this.adminService.getAllAdmin()
   }
 
-  @Post('newAdmin')
+  @Post()
   @UseGuards(UserAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ description: 'Regis new admin' })

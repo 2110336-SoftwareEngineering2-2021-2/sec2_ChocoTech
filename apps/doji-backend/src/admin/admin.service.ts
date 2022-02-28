@@ -2,7 +2,7 @@ import { AdminCreationRequestDTO } from '@backend/admin/admin.dto'
 import { Admin } from '@backend/entities/Admin'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { ForbiddenException, Injectable, UnprocessableEntityException } from '@nestjs/common'
+import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 import bcrypt from 'bcrypt'
 
 @Injectable()
@@ -27,9 +27,6 @@ export class AdminService {
 
   async getAllAdmin(): Promise<Admin[]> {
     const admin = await this.adminRepo.findAll()
-    if (!admin.length) {
-      throw new ForbiddenException('There is no admin')
-    }
     return admin
   }
 }
