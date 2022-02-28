@@ -9,6 +9,12 @@ import { Injectable } from '@nestjs/common'
 export class ProfileService {
   constructor(@InjectRepository(User) private readonly userRepo: EntityRepository<User>) {}
 
+  async getMyProfile(userRef: UserReference) {
+    return await this.userRepo.findOneOrFail({
+      username: userRef.username,
+    })
+  }
+
   async editProfile(dto: UserEditProfileRequest, userRef: UserReference) {
     const user = await userRef.getUser()
     user.email = dto.email
