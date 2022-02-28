@@ -1,6 +1,10 @@
 import { UserReference } from '@backend/auth/auth.service'
 import { WorkHistory } from '@backend/entities/WorkHistory'
-import { EditWorkHistoryRequest, WorkHistoryRequest } from '@backend/work-history/work-history.dto'
+import {
+  DeleteWorkHistoryRequest,
+  EditWorkHistoryRequest,
+  WorkHistoryRequest,
+} from '@backend/work-history/work-history.dto'
 import { EntityRepository, NotFoundError } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
@@ -46,8 +50,22 @@ export class WorkHistoryService {
     await this.workHistoryRepo.persistAndFlush(workHistory)
   }
 
-  // async deleteWorkHistory(dto: WorkHistoryRequest, userRef: UserReference) {
-  //   this.workHistoryRepo.findOne()
-  //   await this.workHistoryRepo.removeAndFlush(workHistory)
-  // }
+  async deleteWorkHistory(dto: DeleteWorkHistoryRequest, userRef: UserReference) {
+    let workHistory: WorkHistory
+    try {
+      workHistory = await this.workHistoryRepo.findOneOrFail({
+        id: dto.id,
+      })
+      if (workHistory.expertUserName !== userRef.username) {
+        throw new ForbiddenException('This is not your work history.')
+      }
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw new NotFoundException('Work history ID is not founded.')
+      } else {
+        throw error
+      }
+    }
+    await this.workHistoryRepo.removeAndFlush(workHistory)
+  }
 }

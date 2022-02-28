@@ -24,3 +24,9 @@ export class EditWorkHistoryRequest {
   @IsString()
   description: string
 }
+
+export class DeleteWorkHistoryRequest {
+  @ApiProperty()
+  @IsString()
+  id: string
+}
