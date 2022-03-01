@@ -34,8 +34,8 @@ export class Session implements ISession {
   coinOnHold: number
 
   @Enum(() => SessionStatus)
-  @Property()
-  status: SessionStatus
+  @Property({ default: SessionStatus.PENDING })
+  status: SessionStatus = SessionStatus.PENDING
 
   @Property()
   topic: string

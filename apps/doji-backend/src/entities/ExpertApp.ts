@@ -1,8 +1,7 @@
-import { IExpertApp } from '@libs/api'
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core'
 
 @Entity()
-export class ExpertApp implements IExpertApp {
+export class ExpertApp {
   @PrimaryKey()
   username: string
 
