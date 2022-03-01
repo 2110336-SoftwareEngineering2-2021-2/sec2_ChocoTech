@@ -5,6 +5,7 @@ import { User } from '@backend/entities/User'
 import {
   GetServiceByNameAndExpertUsernameDTO,
   ScheduleSessionDTO,
+  ServiceInformationDTO,
 } from '@backend/session/session.dto'
 import { EntityRepository, NotFoundError } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
@@ -38,7 +39,7 @@ export class SessionService {
         session.participants.add(user)
       })
     })
-    this.sessionRepo.persistAndFlush(session)
+    await this.sessionRepo.persistAndFlush(session)
   }
   async getServiceByNameAndExpertUsername(dto: GetServiceByNameAndExpertUsernameDTO) {
     let service: Service
@@ -47,20 +48,16 @@ export class SessionService {
       service = await this.serviceRepo.findOneOrFail({
         $and: [{ expert: { username: dto.expertUsername } }, { name: dto.serviceName }],
       })
+      expertData = await this.userRepo.findOneOrFail({ username: dto.expertUsername })
     } catch (error) {
       throw new HttpException('Service not found', HttpStatus.NOT_FOUND)
     }
-    try {
-      expertData = await this.userRepo.findOneOrFail({ username: dto.expertUsername })
-    } catch (error) {
-      throw new HttpException('Expert not found', HttpStatus.NOT_FOUND)
-    }
-    return Object({
-      firstname: expertData.firstName,
-      lastname: expertData.lastName,
-      title: service.name,
-      description: service.description,
-      fee: service.fee,
-    })
+    const serviceInfo = new ServiceInformationDTO()
+    serviceInfo.firstname = expertData.firstName
+    serviceInfo.lastname = expertData.lastName
+    serviceInfo.title = service.name
+    serviceInfo.description = service.description
+    serviceInfo.fee = service.fee
+    return serviceInfo
   }
 }

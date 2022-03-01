@@ -11,3 +11,11 @@ export interface IGetServiceByNameAndExpertUsernameDTO {
   expertUsername: string
   serviceName: string
 }
+
+export interface IServiceInformationDTO {
+  firstname: string
+  lastname: string
+  title: string
+  description: string
+  fee: number
+}
