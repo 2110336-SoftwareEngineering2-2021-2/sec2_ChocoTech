@@ -1,24 +1,19 @@
-import { IScheduleMeResponseDTO, ScheduleStatus } from '@libs/api'
+import { User } from '@backend/entities/User'
+import { ISession, SessionStatus } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsNumber, IsString } from 'class-validator'
 
-export class ScheduleDeleteParticipantRequest {
+export class SessionDeleteParticipantRequest {
   @ApiProperty()
   @IsNumber()
-  scheduleId: number
+  SessionId: number
 
   @ApiProperty()
   @IsString()
   username: string
 }
 
-export class ScheduleReference {
-  @ApiProperty()
-  @IsNumber()
-  scheduleId: number
-}
-
-export class ScheduleMeResponseDTO implements IScheduleMeResponseDTO {
+export class SessionDTO implements ISession {
   @ApiProperty()
   id!: number
 
@@ -34,14 +29,20 @@ export class ScheduleMeResponseDTO implements IScheduleMeResponseDTO {
   @ApiProperty()
   fee: number
 
-  @ApiProperty({ enum: Object.values(ScheduleStatus), default: ScheduleStatus.PENDING })
-  status: ScheduleStatus
+  @ApiProperty({ enum: Object.values(SessionStatus), default: SessionStatus.PENDING })
+  status: SessionStatus
 
   @ApiProperty()
   coinOnHold: number
 
   @ApiProperty()
   meetingProviderId: string
+
+  @ApiProperty()
+  soruceId: string
+
+  @ApiProperty()
+  creator: User
 }
 
 export class ScheduleReference {
