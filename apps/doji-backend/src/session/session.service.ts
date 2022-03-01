@@ -19,8 +19,9 @@ export class SessionService {
     @InjectRepository(Service) private readonly serviceRepo: EntityRepository<Service>,
   ) {}
   async schedule(dto: ScheduleSessionDTO, userRef: UserReference) {
-    const service = await this.serviceRepo.findOneOrFail({
-      $and: [{ expert: { username: dto.expertUsername } }, { name: dto.serviceName }],
+    const service = await this.serviceRepo.findOne({
+      name: dto.serviceName,
+      expert: { username: dto.expertUsername },
     })
     const creator = await userRef.getUser()
     const session = new Session()
@@ -29,27 +30,25 @@ export class SessionService {
     session.coinOnHold = dto.fee
     session.topic = service.name
     session.duration = dto.duration
-    session.startTime = new Date(dto.startTime)
-    session.soruceId = 'unknown'
+    session.startTime = dto.startTime
+    session.sourceId = 'unknown'
     session.creator = creator
     session.service = service
     session.participants.add(creator)
-    await dto.participantsUsername.forEach((value) => {
-      this.userRepo.findOneOrFail({ username: value }).then((user) => {
+    dto.participantsUsername.forEach(async (value) => {
+      await this.userRepo.findOneOrFail({ username: value }).then((user) => {
         session.participants.add(user)
       })
     })
     await this.sessionRepo.persistAndFlush(session)
   }
   async getServiceByNameAndExpertUsername(dto: GetServiceByNameAndExpertUsernameDTO) {
-    let service: Service
-    let expertData: User
-    try {
-      service = await this.serviceRepo.findOneOrFail({
-        $and: [{ expert: { username: dto.expertUsername } }, { name: dto.serviceName }],
-      })
-      expertData = await this.userRepo.findOneOrFail({ username: dto.expertUsername })
-    } catch (error) {
+    const service = await this.serviceRepo.findOne({
+      name: dto.serviceName,
+      expert: { username: dto.expertUsername },
+    })
+    const expertData = await this.userRepo.findOne({ username: dto.expertUsername })
+    if (service === null || expertData === null) {
       throw new HttpException('Service not found', HttpStatus.NOT_FOUND)
     }
     const serviceInfo = new ServiceInformationDTO()

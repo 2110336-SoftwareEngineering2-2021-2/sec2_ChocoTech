@@ -12,7 +12,7 @@ export interface ISession {
   topic: string
   duration: number
   startTime: Date
-  soruceId: string
+  sourceId: string
   creator: IUser
   service: IService
 }

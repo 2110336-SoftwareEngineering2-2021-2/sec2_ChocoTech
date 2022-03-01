@@ -40,7 +40,7 @@ export class Session implements ISession {
   @Property()
   startTime: Date
   @Property()
-  soruceId: string
+  sourceId: string
   @ManyToOne(() => User)
   creator: User
   @ManyToOne(() => Service)

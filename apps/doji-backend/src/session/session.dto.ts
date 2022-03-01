@@ -4,7 +4,8 @@ import {
   IServiceInformationDTO,
 } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
-import { IsArray, IsNumber, IsString } from 'class-validator'
+import { Type } from 'class-transformer'
+import { IsArray, IsDate, IsNumber, IsString } from 'class-validator'
 
 export class ScheduleSessionDTO implements IScheduleSessionDTO {
   @ApiProperty()
@@ -17,7 +18,8 @@ export class ScheduleSessionDTO implements IScheduleSessionDTO {
   @IsNumber()
   duration: number
   @ApiProperty()
-  @IsString()
+  @IsDate()
+  @Type(() => Date)
   startTime: Date
   @ApiProperty()
   @IsNumber()
