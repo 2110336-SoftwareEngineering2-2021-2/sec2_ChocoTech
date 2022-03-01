@@ -5,7 +5,7 @@ import { User } from '../entities/User'
 
 @Entity()
 export class Service implements IService {
-  @ManyToOne({ primary: true })
+  @ManyToOne(() => User, { primary: true })
   expert: User
   @PrimaryKey()
   name: string

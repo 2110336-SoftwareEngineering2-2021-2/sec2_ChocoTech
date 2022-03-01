@@ -8,7 +8,7 @@ export interface ISession {
   meetingProviderId: string
   fee: number
   coinOnHold: number
-  status: SessionStatus
+  status?: SessionStatus
   topic: string
   duration: number
   startTime: Date
