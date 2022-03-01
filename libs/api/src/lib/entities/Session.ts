@@ -1,3 +1,6 @@
+import { IUser } from '@libs/api'
+import { IService } from 'libs/api/src/lib/entities/Service'
+
 import { SessionStatus } from '../constants/sessionStatus'
 
 export interface ISession {
@@ -10,7 +13,6 @@ export interface ISession {
   duration: number
   startTime: Date
   soruceId: string
-  creatorId: string
-  expertId: string
-  serviceName: string
+  creator: IUser
+  service: IService
 }
