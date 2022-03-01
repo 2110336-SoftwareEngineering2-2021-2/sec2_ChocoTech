@@ -41,8 +41,10 @@ export class Session implements ISession {
   startTime: Date
   @Property()
   soruceId: string
-  @ManyToOne()
+  @ManyToOne(() => User)
   creator: User
-  @ManyToOne()
+  @ManyToOne(() => Service)
   service: Service
+  @ManyToMany(() => User, 'sessions', { owner: true })
+  participants = new Collection<User>(this)
 }
