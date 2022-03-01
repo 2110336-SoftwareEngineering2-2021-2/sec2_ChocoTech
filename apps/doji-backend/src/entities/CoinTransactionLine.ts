@@ -28,7 +28,7 @@ export class CoinTransactionLine {
   accountUser?: User
 
   @Enum(() => Account)
-  @Property({ nullable: true })
+  @Property()
   account: Account
 
   @Property({ nullable: true })

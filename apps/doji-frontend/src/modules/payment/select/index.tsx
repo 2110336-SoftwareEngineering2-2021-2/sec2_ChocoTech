@@ -2,7 +2,7 @@ import { httpClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage, PaymentType } from '@frontend/type'
 import { stangToBathString } from '@frontend/utils/stangBathToString'
-import { IDepositRequest, IErrorMessage, IUser } from '@libs/api'
+import { IDepositRequest, IErrorMessage, IMeResponseDTO, IUser } from '@libs/api'
 import { Tables, TopBarActionType } from '@libs/mui'
 import {
   AvatarProps,
@@ -104,8 +104,9 @@ const SelectPaymentPage: ExtendedNextPage = () => {
   }
 
   const [targetCard, setTargetCard] = useState<string | null>(null)
+  const { setUser } = useAuthStore()
 
-  const userInfoQuery = useQuery<IUser>('/auth/me', () =>
+  const userInfoQuery = useQuery<IMeResponseDTO>('/auth/me', () =>
     httpClient.get('/auth/me').then((res) => res.data),
   )
   const depositMutation = useMutation<unknown, AxiosError<IErrorMessage>, IDepositRequest>(
@@ -113,7 +114,7 @@ const SelectPaymentPage: ExtendedNextPage = () => {
     (d) => httpClient.post('/payment/deposit', d),
     {
       onSuccess: () => {
-        userInfoQuery.refetch()
+        userInfoQuery.refetch().then((res) => setUser(res.data))
       },
       onError: (e) => {
         toast.error('Fail to deposit: ' + e.response?.data?.message)

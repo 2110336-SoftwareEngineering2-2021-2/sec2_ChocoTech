@@ -1,10 +1,12 @@
 import { WalletCard } from '@frontend/components/WalletCard'
 import { TopUpDialog, TopUpDialogState } from '@frontend/modules/payment/select'
 import { httpClient } from '@frontend/services'
+import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
 import { stangToBathString } from '@frontend/utils/stangBathToString'
 import {
   IErrorMessage,
+  IMeResponseDTO,
   IUser,
   IUserTransactionLineResponseDTO,
   IWithdrawalRequest,
@@ -53,7 +55,9 @@ const MyBalancePage: ExtendedNextPage = () => {
 
   const [withdrawDrawer, setWithdrawDrawer] = useState(false)
 
-  const userInfoQuery = useQuery<IUser>('/auth/me', () =>
+  const { setUser } = useAuthStore()
+
+  const userInfoQuery = useQuery<IMeResponseDTO>('/auth/me', () =>
     httpClient.get('/auth/me').then((res) => res.data),
   )
   const transactionsQuery = useQuery<IUserTransactionLineResponseDTO[]>(
@@ -66,6 +70,10 @@ const MyBalancePage: ExtendedNextPage = () => {
     {
       onError: (e) => {
         toast.error(`Fail to withdraw: ${e.response?.data?.message}`)
+      },
+      onSuccess: () => {
+        userInfoQuery.refetch().then((res) => setUser(res.data))
+        transactionsQuery.refetch()
       },
     },
   )
@@ -103,7 +111,6 @@ const MyBalancePage: ExtendedNextPage = () => {
         onClose={() => {
           setWithdrawDrawer(false)
           withdrawMutation.reset()
-          transactionsQuery.refetch()
         }}
         anchor="bottom"
         PaperProps={{ sx: { alignItems: 'center' } }}
