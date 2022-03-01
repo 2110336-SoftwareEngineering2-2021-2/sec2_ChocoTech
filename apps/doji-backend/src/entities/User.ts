@@ -1,3 +1,4 @@
+import { ExpertApp } from '@backend/entities/ExpertApp'
 import { IUser } from '@libs/api'
 import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/core'
 

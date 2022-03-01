@@ -2,7 +2,7 @@ import { Meta, Story } from '@storybook/react'
 
 import { FiChevronRight } from 'react-icons/fi'
 
-import { TopBar, TopBarActionMode, TopBarProps } from '.'
+import { TopBar, TopBarModeType, TopBarProps } from '.'
 
 export default {
   component: TopBar,
@@ -29,13 +29,13 @@ Default.args = {
 export const Heading = Template.bind({})
 Heading.args = {
   title: 'Title',
-  mode: TopBarActionMode.Heading,
+  mode: TopBarModeType.Heading,
 }
 
 export const HeadingWithButton = Template.bind({})
 HeadingWithButton.args = {
   title: 'Title',
-  mode: TopBarActionMode.Heading,
+  mode: TopBarModeType.Heading,
   button: {
     label: 'Button',
     onClick: () => alert('Clicked'),
