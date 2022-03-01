@@ -1,4 +1,3 @@
-import { UserReference } from '@backend/auth/auth.service'
 import { ExpertApp } from '@backend/entities/ExpertApp'
 import { ExpertApplicationRequest } from '@backend/expert/expert.dto'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
@@ -11,10 +10,8 @@ export class ExpertAppService {
     @InjectRepository(ExpertApp) private readonly expertAppRepo: EntityRepository<ExpertApp>,
   ) {}
 
-  async applicationRequest(dto: ExpertApplicationRequest, userRef: UserReference) {
-    const user = await userRef.getUser()
+  async applicationRequest(dto: ExpertApplicationRequest) {
     const application = new ExpertApp()
-    application.user = user
     application.field = dto.field
     application.desc = dto.desc
     console.log(application)
