@@ -13,13 +13,13 @@ export class WorkHistoryService {
 
   async getAllWorkHistory(userRef: UserReference) {
     return await this.workHistoryRepo.find({
-      expertUserName: userRef.username,
+      expert: await userRef.getUser(),
     })
   }
 
   async addWorkHistory(dto: WorkHistoryRequestDTO, userRef: UserReference) {
     const workHistory = new WorkHistory()
-    workHistory.expertUserName = userRef.username
+    workHistory.expert = await userRef.getUser()
     workHistory.topic = dto.topic
     workHistory.description = dto.description
     await this.workHistoryRepo.persistAndFlush(workHistory)
@@ -31,7 +31,7 @@ export class WorkHistoryService {
       workHistory = await this.workHistoryRepo.findOneOrFail({
         id: workId,
       })
-      if (workHistory.expertUserName !== userRef.username) {
+      if (workHistory.expert !== (await userRef.getUser())) {
         throw new ForbiddenException('This is not your work history')
       }
     } catch (error) {
@@ -52,7 +52,7 @@ export class WorkHistoryService {
       workHistory = await this.workHistoryRepo.findOneOrFail({
         id: workId,
       })
-      if (workHistory.expertUserName !== userRef.username) {
+      if (workHistory.expert !== (await userRef.getUser())) {
         throw new ForbiddenException('This is not your work history')
       }
     } catch (error) {

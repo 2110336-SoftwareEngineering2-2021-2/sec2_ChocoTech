@@ -1,14 +1,16 @@
 import { IWorkHistory } from '@libs/api'
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core'
-import { v4 as uuidv4 } from 'uuid'
+import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
+import { uuid } from 'uuidv4'
+
+import { User } from '../entities/User'
 
 @Entity()
 export class WorkHistory implements IWorkHistory {
   @PrimaryKey()
-  id: string = uuidv4()
+  id: string = uuid()
 
-  @Property()
-  expertUserName: string
+  @ManyToOne({ primary: true })
+  expert: User
 
   @Property()
   topic: string

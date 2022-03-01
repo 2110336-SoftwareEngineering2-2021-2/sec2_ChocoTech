@@ -1,4 +1,4 @@
-import { IWorkHistory } from '@libs/api'
+import { IUser, IWorkHistory } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsString } from 'class-validator'
 
@@ -15,5 +15,5 @@ export class WorkHistoryRequestDTO implements IWorkHistory {
   id!: string
 
   @ApiProperty()
-  expertUserName!: string
+  expert!: IUser
 }
