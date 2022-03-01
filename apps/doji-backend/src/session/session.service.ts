@@ -6,25 +6,23 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 
 @Injectable()
 export class SessionService {
-  constructor(@InjectRepository(Session) private readonly SessionRepo: EntityRepository<Session>) {}
+  constructor(@InjectRepository(Session) private readonly sessionRepo: EntityRepository<Session>) {}
 
-  async getAllSession(): Promise<Session[]> {
-    return await this.SessionRepo.findAll()
+  async getAllSession(userRef: UserReference): Promise<Session[]> {
+    const user = await userRef.getUser()
+    const userSession = user.sessions.getItems()
+    console.log(userSession)
+    return userSession
   }
 
-  async deleteSessionParticipant(SessionId: number, userRef: UserReference) {
+  async deleteSessionParticipant(sessionId: number, userRef: UserReference) {
     const user = await userRef.getUser()
-    const Session = await this.SessionRepo.findOne({ id: SessionId })
-    if (!Session) {
+    const session = await this.sessionRepo.findOne(sessionId)
+    const found = user.sessions.contains(session)
+    if (!found) {
       throw new NotFoundException('Session not found or you are not in the shcedule')
     }
-    const num = await this.userSessionRepo.nativeDelete({
-      SessionId: SessionId,
-      username: user.username,
-    })
-    if (num === 0) {
-      throw new NotFoundException('Session not found or you are not in the shcedule')
-    }
+    user.sessions.remove(session)
     return
   }
 }

@@ -13,11 +13,8 @@ export class ExpertAppController {
   @Post('application')
   @UseGuards(UserAuthGuard)
   @ApiBearerAuth()
-  async applicationRequest(
-    @Body() dto: ExpertApplicationRequest,
-    @CurrentUser() user: UserReference,
-  ) {
-    await this.expertAppService.applicationRequest(dto, user)
+  async applicationRequest(@Body() dto: ExpertApplicationRequest) {
+    await this.expertAppService.applicationRequest(dto)
     return
   }
 }

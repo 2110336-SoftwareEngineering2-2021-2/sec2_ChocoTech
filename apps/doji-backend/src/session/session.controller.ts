@@ -6,16 +6,18 @@ import { SessionService } from '@backend/session/session.service'
 import { Body, Controller, Delete, Get, HttpCode, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
-@Controller('Session')
+@Controller('session')
 export class SessionController {
   constructor(private readonly SessionService: SessionService) {}
 
   @Get()
+  @UseGuards(UserAuthGuard)
   @HttpCode(200)
+  @ApiBearerAuth()
   @ApiOperation({ description: 'Get all Session information' })
   @ApiResponse({ status: 200 })
-  async findAll(): Promise<Session[]> {
-    return await this.SessionService.getAllSession()
+  async findAll(@CurrentUser() user: UserReference): Promise<Session[]> {
+    return await this.SessionService.getAllSession(user)
   }
 
   @Delete('participant')
