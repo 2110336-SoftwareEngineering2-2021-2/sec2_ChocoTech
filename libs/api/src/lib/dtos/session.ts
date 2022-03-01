@@ -6,3 +6,8 @@ export interface IScheduleSessionDTO {
   startTime: Date
   participantsUsername: string[]
 }
+
+export interface IGetServiceByNameAndExpertUsernameDTO {
+  expertUsername: string
+  serviceName: string
+}

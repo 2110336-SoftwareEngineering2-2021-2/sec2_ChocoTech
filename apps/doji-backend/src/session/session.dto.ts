@@ -1,4 +1,4 @@
-import { IScheduleSessionDTO } from '@libs/api'
+import { IGetServiceByNameAndExpertUsernameDTO, IScheduleSessionDTO } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsArray, IsNumber, IsString } from 'class-validator'
 
@@ -21,4 +21,12 @@ export class ScheduleSessionDTO implements IScheduleSessionDTO {
   @ApiProperty()
   @IsArray()
   participantsUsername: string[]
+}
+export class GetServiceByNameAndExpertUsernameDTO implements IGetServiceByNameAndExpertUsernameDTO {
+  @ApiProperty()
+  @IsString()
+  expertUsername: string
+  @ApiProperty()
+  @IsString()
+  serviceName: string
 }
