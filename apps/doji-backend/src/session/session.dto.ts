@@ -44,9 +44,3 @@ export class SessionDTO implements ISession {
   @ApiProperty()
   creator: User
 }
-
-export class ScheduleReference {
-  @ApiProperty()
-  @IsNumber()
-  scheduleId: number
-}
