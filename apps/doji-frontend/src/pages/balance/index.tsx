@@ -1,5 +1,5 @@
+import { DialogState, TopUpDialog } from '@frontend/components/TopUpDialog'
 import { WalletCard } from '@frontend/components/WalletCard'
-import { TopUpDialog, TopUpDialogState } from '@frontend/modules/payment/select'
 import { httpClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
@@ -7,31 +7,16 @@ import { stangToBathString } from '@frontend/utils/stangBathToString'
 import {
   IErrorMessage,
   IMeResponseDTO,
-  IUser,
   IUserTransactionLineResponseDTO,
   IWithdrawalRequest,
 } from '@libs/api'
-import {
-  Button,
-  Card,
-  CircularProgress,
-  Drawer,
-  IconButton,
-  Stack,
-  TextField,
-  Typography,
-  styled,
-} from '@mui/material'
+import { CircularProgress, Drawer, Stack, TextField, Typography } from '@mui/material'
 import { Box, useTheme } from '@mui/system'
 import { AxiosError } from 'axios'
-import { useMaybeDeferContent } from 'next/dist/server/render'
-import Link from 'next/link'
-import { userInfo } from 'os'
 
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { BiChevronRight } from 'react-icons/bi'
 import { useMutation, useQuery } from 'react-query'
 
 function TransactionRecord(props: { id: string; value: string; title: string }) {
@@ -85,7 +70,7 @@ const MyBalancePage: ExtendedNextPage = () => {
   } = useForm()
 
   if (userInfoQuery.isError || transactionsQuery.isError)
-    return <div>'Error ' + (userQ.error || transQ.error)</div>
+    return <div>{'Error' + (userInfoQuery.error || transactionsQuery.error)}</div>
 
   if (userInfoQuery.isLoading || transactionsQuery.isLoading) return <CircularProgress />
 
@@ -102,8 +87,13 @@ const MyBalancePage: ExtendedNextPage = () => {
         Transaction Records
       </Typography>
       <Stack paddingX="1em" spacing="0.75em">
-        {transactionsQuery.data.map((t) => (
-          <TransactionRecord id={t.id} value={stangToBathString(t.amount)} title={t.description} />
+        {transactionsQuery.data.map((transaction) => (
+          <TransactionRecord
+            key={transaction.id}
+            id={transaction.id}
+            value={stangToBathString(transaction.amount)}
+            title={transaction.description}
+          />
         ))}
       </Stack>
       <Drawer
@@ -116,7 +106,7 @@ const MyBalancePage: ExtendedNextPage = () => {
         PaperProps={{ sx: { alignItems: 'center' } }}
       >
         <TopUpDialog
-          dialogState={withdrawMutation.status}
+          dialogState={withdrawMutation.status as DialogState}
           actionText="Withdraw"
           onSubmit={handleSubmit((form) =>
             withdrawMutation.mutate({

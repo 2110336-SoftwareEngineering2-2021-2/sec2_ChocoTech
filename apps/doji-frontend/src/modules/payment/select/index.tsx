@@ -1,3 +1,4 @@
+import { DialogState, TopUpDialog } from '@frontend/components/TopUpDialog'
 import { httpClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage, PaymentType } from '@frontend/type'
@@ -7,7 +8,6 @@ import { Tables, TablesActionType, TopBarActionType } from '@libs/mui'
 import {
   AvatarProps,
   Button,
-  CircularProgress,
   Drawer,
   MenuItem,
   Stack,
@@ -21,54 +21,13 @@ import { AxiosError } from 'axios'
 import Link from 'next/link'
 import Omise from 'omise'
 
-import { FormEventHandler, useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { FaCcMastercard, FaCcVisa, FaCheckCircle } from 'react-icons/fa'
+import { FaCcMastercard, FaCcVisa } from 'react-icons/fa'
 import { ImCross } from 'react-icons/im'
 import { IconBaseProps } from 'react-icons/lib'
 import { useMutation, useQuery } from 'react-query'
-
-export enum TopUpDialogState {
-  IDLE = 'idle',
-  WAITING = 'waiting',
-  SUCCESS = 'success',
-  FAILURE = 'failure',
-}
-
-export function TopUpDialog(props: {
-  actionText: string
-  dialogState: 'idle' | 'loading' | 'error' | 'success'
-  children?: any
-  onSubmit: FormEventHandler<HTMLFormElement>
-}) {
-  const theme = useTheme()
-
-  const statusContent = new Map([
-    ['loading', <CircularProgress size="5em" />],
-    ['error', <ImCross fontSize="5em" color={theme.palette.primary.main} />],
-    ['success', <FaCheckCircle fontSize="5em" color={theme.palette.primary.main} />],
-  ])
-
-  if (statusContent.has(props.dialogState)) {
-    return (
-      <Stack padding="2em" alignItems="center" spacing="0.5em" maxWidth="sm">
-        {statusContent.get(props.dialogState)}
-      </Stack>
-    )
-  }
-
-  return (
-    <form onSubmit={props.onSubmit}>
-      <Stack padding="2em" alignItems="center" spacing="1em" maxWidth="sm">
-        {props.children}
-        <Button fullWidth={true} type="submit">
-          {props.actionText}
-        </Button>
-      </Stack>
-    </form>
-  )
-}
 
 const SelectPaymentPage: ExtendedNextPage = () => {
   const theme = useTheme()
@@ -192,7 +151,7 @@ const SelectPaymentPage: ExtendedNextPage = () => {
       >
         <TopUpDialog
           actionText="Top Up"
-          dialogState={depositMutation.status}
+          dialogState={depositMutation.status as DialogState}
           onSubmit={handleSubmit((form) =>
             depositMutation.mutate({ cardId: targetCard, amount: form.amount * 100 }),
           )}
