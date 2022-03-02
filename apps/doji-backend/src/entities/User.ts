@@ -1,6 +1,8 @@
 import { ExpertApp } from '@backend/entities/ExpertApp'
 import { IUser } from '@libs/api'
-import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/core'
+import { Collection, Entity, Enum, ManyToMany, PrimaryKey, Property } from '@mikro-orm/core'
+
+import { Session } from '../entities/Session'
 
 export enum UserRole {
   EXPERT = 'expert',
@@ -45,6 +47,9 @@ export class User implements IUser {
 
   @Property({ nullable: true })
   omiseCustomerToken?: string
+
+  @ManyToMany(() => Session, (session) => session.participants)
+  sessions = new Collection<Session>(this)
 
   // @ManyToOne({ nullable: true })
   // verifiedByAdmin!: Admin
