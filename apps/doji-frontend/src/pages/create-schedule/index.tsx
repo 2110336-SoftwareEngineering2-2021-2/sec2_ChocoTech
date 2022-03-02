@@ -1,4 +1,4 @@
-import { SearchBar, TopBar } from '@libs/mui'
+import { SearchBar, TopBar, TopBarActionType } from '@libs/mui'
 import { Box } from '@mui/material'
 
 import SessionCard from './SessionCard'
@@ -6,14 +6,15 @@ import SessionCard from './SessionCard'
 export function Index() {
   return (
     <Box>
-      <TopBar title="New session" action="back"></TopBar>
+      <TopBar title="New session" action={TopBarActionType.Back}></TopBar>
       <SearchBar margin="none"></SearchBar>
       <Box marginTop={3}>
         <SessionCard
           title="How to read indicator"
           price={250}
           expertName="Rick Astley"
-          description="asdjflskd aslkdfl;  k;laskd ksljdklf  masm,ndfl kskl jlkjlks kasjdljfkldj lkasjdflksn m,id asd ,m ns,m kjsdlfkja m,.ma sdkfj lk"
+          description="Are you sure you want to create this session? You will be deducted 500 Doji coins"
+          destination="/session-detail"
         ></SessionCard>
       </Box>
     </Box>
