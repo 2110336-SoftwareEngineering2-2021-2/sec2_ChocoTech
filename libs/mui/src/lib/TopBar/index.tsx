@@ -1,7 +1,6 @@
-import { IconButton, Stack, Typography, styled, useTheme } from '@mui/material'
-import { useRouter } from 'next/router'
+import { Button, ButtonProps, IconButton, Stack, Typography, styled, useTheme } from '@mui/material'
+import { NextRouter, useRouter } from 'next/router'
 
-import { MouseEventHandler } from 'react'
 import { FiChevronLeft, FiX } from 'react-icons/fi'
 
 const IconContainer = styled('div')`
@@ -18,10 +17,19 @@ export enum TopBarActionType {
   None = 'none',
 }
 
+export enum TopBarModeType {
+  Normal = 'normal',
+  Heading = 'heading',
+}
+
 export interface TopBarProps {
   title?: string
   action?: TopBarActionType
-  onClose?: MouseEventHandler<HTMLButtonElement>
+  mode?: TopBarModeType
+  button?: ButtonProps & {
+    label: string
+  }
+  onClose?: (event: React.MouseEvent, router: NextRouter) => void
 }
 
 const ActionIcon: React.FC<Pick<TopBarProps, 'action' | 'onClose'>> = ({ action, onClose }) => {
@@ -35,7 +43,7 @@ const ActionIcon: React.FC<Pick<TopBarProps, 'action' | 'onClose'>> = ({ action,
   switch (action) {
     case TopBarActionType.Close:
       return (
-        <IconButton onClick={onClose}>
+        <IconButton onClick={(event) => onClose?.(event, router)}>
           <FiX color={theme.palette.ink.darkest} />
         </IconButton>
       )
@@ -54,7 +62,24 @@ export const TopBar: React.FC<TopBarProps> = ({
   title,
   action = TopBarActionType.None,
   onClose,
+  mode = TopBarModeType.Normal,
+  button,
 }) => {
+  if (mode === TopBarModeType.Heading) {
+    return (
+      <Stack direction="row" justifyContent="space-between" p={1} mb={4}>
+        <Typography variant="title2" color="ink.darkest" fontWeight={700}>
+          {title}
+        </Typography>
+        {button && (
+          <Button color="primary" size="small" {...button}>
+            {button.label}
+          </Button>
+        )}
+      </Stack>
+    )
+  }
+
   return (
     <Stack direction="row" justifyContent="center" sx={{ position: 'relative' }} p={1} mb={4}>
       <IconContainer>

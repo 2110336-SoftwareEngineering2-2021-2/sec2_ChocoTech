@@ -1,6 +1,6 @@
+import { LoginResponseDTO, MeResponseDTO } from '@backend/auth/auth.dto'
 import { AuthService, UserReference } from '@backend/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
-import { LoginResponseDTO, MeResponseDTO } from '@libs/api'
 import { Body, Controller, ForbiddenException, Get, Post, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
 import { ThrottlerGuard } from '@nestjs/throttler'
@@ -33,7 +33,6 @@ export class AuthController {
   @ApiBearerAuth()
   async getUserInformation(@CurrentUser() userRef: UserReference): Promise<MeResponseDTO> {
     const user = await userRef.getUser()
-    delete user.passwordHash
     return user
   }
 

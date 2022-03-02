@@ -1,40 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { IUser } from '../entities/User'
 
-import { User } from '../entities/User'
-
-export class LoginResponseDTO {
-  @ApiProperty()
+export interface ILoginResponseDTO {
   token: string
-
-  @ApiProperty()
-  user: Omit<User, 'passwordHash'>
+  user: IMeResponseDTO
 }
 
-export class MeResponseDTO {
-  @ApiProperty()
-  username: string
-
-  @ApiProperty()
-  displayName: string
-
-  @ApiProperty()
-  coinBalance: number
-
-  @ApiProperty()
-  onlineStatus: boolean
-
-  @ApiProperty()
-  email: string
-
-  @ApiProperty()
-  registerationDate: Date
-
-  @ApiProperty()
-  firstName: string
-
-  @ApiProperty()
-  lastName: string
-
-  @ApiProperty()
-  location: string
-}
+export interface IMeResponseDTO extends Omit<IUser, 'passwordHash'> {}

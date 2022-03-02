@@ -5,3 +5,5 @@ export type ExtendedNextPage = NextPage & {
   topBarProps?: TopBarProps
   shouldAuthenticated?: boolean
 }
+
+export type PaymentType = 'visa' | 'mastercard'

@@ -3,11 +3,12 @@ import { StorageKey } from '@frontend/common/storage/constants'
 import { httpClient, queryClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
-import { MeResponseDTO } from '@libs/api'
+import { IMeResponseDTO } from '@libs/api'
 import { TopBar, theme } from '@libs/mui'
 import { Container, ThemeProvider, styled } from '@mui/material'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
+import Script from 'next/script'
 
 import { useEffect, useState } from 'react'
 import { Toaster } from 'react-hot-toast'
@@ -45,7 +46,7 @@ function CustomApp({ Component, pageProps, router }: ExtendedAppProps) {
       return
     }
     httpClient
-      .get<MeResponseDTO>('/auth/me')
+      .get<IMeResponseDTO>('/auth/me')
       .then(({ data }) => {
         setUser(data)
         setIsAuthenticated(true)
@@ -85,6 +86,7 @@ function CustomApp({ Component, pageProps, router }: ExtendedAppProps) {
           }}
         />
       </ThemeProvider>
+      <Script src="https://cdn.omise.co/omise.js" />
     </QueryClientProvider>
   )
 }

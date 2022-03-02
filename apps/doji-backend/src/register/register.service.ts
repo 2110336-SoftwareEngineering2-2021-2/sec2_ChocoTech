@@ -1,6 +1,9 @@
 import { UserReference } from '@backend/auth/auth.service'
-import { UserRegistrationRequest } from '@backend/register/register.dto'
-import { User, UserChangeRequestDTO } from '@libs/api'
+import { User } from '@backend/entities/User'
+import {
+  UserChangePasswordRequestDTO,
+  UserRegistrationRequestDTO,
+} from '@backend/register/register.dto'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
@@ -9,7 +12,7 @@ import bcrypt from 'bcrypt'
 @Injectable()
 export class RegisterService {
   constructor(@InjectRepository(User) private readonly userRepo: EntityRepository<User>) {}
-  async register(dto: UserRegistrationRequest) {
+  async register(dto: UserRegistrationRequestDTO) {
     //create new user and hash password
     const newUser = new User()
     newUser.username = dto.username
@@ -27,7 +30,7 @@ export class RegisterService {
     }
     return
   }
-  async changePassword(dto: UserChangeRequestDTO, userRef: UserReference) {
+  async changePassword(dto: UserChangePasswordRequestDTO, userRef: UserReference) {
     const user = await userRef.getUser()
     if (await bcrypt.compare(dto.currentPassword, user.passwordHash)) {
       user.passwordHash = await bcrypt.hash(dto.newPassword, 10)
