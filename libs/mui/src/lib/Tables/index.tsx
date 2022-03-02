@@ -12,12 +12,12 @@ import {
   Switch,
   Typography,
 } from '@mui/material'
-import { CustomMenu } from 'libs/mui/src/lib/Tables/menu'
 import Link, { LinkProps } from 'next/link'
 
 import { useCallback, useState } from 'react'
 import { FiMoreVertical } from 'react-icons/fi'
 
+import { CustomMenu } from './menu'
 import { StyledBadge, StyledStack } from './styled'
 
 export enum TablesActionType {

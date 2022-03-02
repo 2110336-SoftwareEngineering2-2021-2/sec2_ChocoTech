@@ -34,7 +34,7 @@ export class PaymentService {
   private async setCardAsDefault(user: User, cardToken: string): Promise<void> {
     await axios({
       method: 'PATCH',
-      url: `https://api.omise.co/customers/${user.omiseCustomerToken}s`,
+      url: `https://api.omise.co/customers/${user.omiseCustomerToken}`,
       data: `default_card=${cardToken}`,
       auth: {
         username: environment.omise.secretKey,
@@ -70,7 +70,7 @@ export class PaymentService {
       try {
         await this.setCardAsDefault(user, cards[cards.length - 1].id)
       } catch (error) {
-        this.logger.error(error)
+        this.logger.error(error.response.data.message)
         throw new BadRequestException('Cannot set card as default')
       }
     }

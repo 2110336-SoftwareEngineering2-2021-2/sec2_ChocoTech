@@ -72,6 +72,8 @@ export function TopUpDialog(props: {
 
 const SelectPaymentPage: ExtendedNextPage = () => {
   const theme = useTheme()
+  const { userInfo, setUser } = useAuthStore()
+  const [targetCard, setTargetCard] = useState<string | null>(null)
 
   const { data, isLoading, isError } = useQuery<Omise.Cards.ICard[], AxiosError>(
     `/payment/cards`,
@@ -103,35 +105,28 @@ const SelectPaymentPage: ExtendedNextPage = () => {
     }
   }
 
-  const [targetCard, setTargetCard] = useState<string | null>(null)
-  const { userInfo, setUser } = useAuthStore()
-
-  const userInfoQuery = useQuery<IMeResponseDTO>(
-    '/auth/me',
-    () => httpClient.get('/auth/me').then((res) => res.data),
-    {
-      onSuccess: (data) => setUser(data),
-    },
+  const userInfoQuery = useQuery<IMeResponseDTO>('/auth/me', () =>
+    httpClient.get('/auth/me').then((res) => res.data),
   )
 
   const depositMutation = useMutation<unknown, AxiosError<IErrorMessage>, IDepositRequest>(
-    '/payment/deposit',
+    `/payment/deposit/${userInfo.username}`,
     (d) => httpClient.post('/payment/deposit', d),
     {
       onSuccess: () => {
         userInfoQuery.refetch().then((res) => setUser(res.data))
       },
+      onError: (e) => {
+        toast.error('Fail to deposit')
+      },
     },
   )
   const deleteCreditCardMutation = useMutation<void, AxiosError<IErrorMessage>, { cardId: string }>(
-    `/payment/cards/${userInfo.username}`,
+    `/payment/cards`,
     (data) => httpClient.delete(`/payment/cards/${data.cardId}`),
     {
       onSuccess: () => {
         userInfoQuery.refetch().then((res) => setUser(res.data))
-      },
-      onError: (e) => {
-        toast.error('Fail to delete card')
       },
     },
   )
@@ -161,15 +156,24 @@ const SelectPaymentPage: ExtendedNextPage = () => {
           key={card.id}
           content={`${card.brand} ${card.last_digits}`}
           avatar={renderPaymentIcon(card.brand.toLowerCase() as PaymentType)}
-          onClick={() => setTargetCard(card.id)}
-          // action={{
-          //   type: TablesActionType.Menu,
-          //   children: (
-          //     <MenuItem onClick={async () => await handleDeleteCreditCard(card.id)}>
-          //       delete
-          //     </MenuItem>
-          //   ),
-          // }}
+          onClick={(event) => {
+            event.stopPropagation()
+            setTargetCard(card.id)
+          }}
+          onMouseOver={() => console.log('WWww')}
+          action={{
+            type: TablesActionType.Menu,
+            children: (
+              <MenuItem
+                onClick={async (event) => {
+                  event.stopPropagation()
+                  await handleDeleteCreditCard(card.id)
+                }}
+              >
+                delete
+              </MenuItem>
+            ),
+          }}
         />
       ))}
       <Stack pt={3}>
@@ -178,7 +182,7 @@ const SelectPaymentPage: ExtendedNextPage = () => {
         </Link>
       </Stack>
       <Drawer
-        open={targetCard !== null}
+        open={!!targetCard}
         onClose={() => {
           setTargetCard(null)
           depositMutation.reset()
