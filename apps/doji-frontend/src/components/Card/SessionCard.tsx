@@ -32,7 +32,7 @@ function SessionCard(props: SessionCardProps) {
         </Box>
         <Stack alignItems="flex-end">
           <Typography color="primary.dark" variant="large" fontWeight={700}>
-            {props.price}
+            {`${props.price} DC`}
           </Typography>
           <Typography color="primary.dark" variant="tiny" fontWeight={400}>
             /hr/person

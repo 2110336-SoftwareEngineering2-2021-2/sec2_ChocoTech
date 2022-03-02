@@ -8,17 +8,16 @@ const mockDatas: SessionCardProps[] = [
   {
     topic: 'hello',
     expertName: 'Poravee',
-    price: 69,
+    price: 250,
     profileImageURL: '/static/images/avatar/1.jpg',
-    sessionDetail:
-      'Weeheeheehee dee heeheeheehee weeoh aweem away Weeheeheehee dee heeheeheehee weeoh aweem away',
+    sessionDetail: 'OS Session',
   },
   {
-    topic: 'Poravee Zalnw007',
+    topic: 'Poravee2',
     expertName: 'Poravee',
-    price: 5555555555555,
+    price: 875,
     profileImageURL: '/static/images/avatar/1.jpg',
-    sessionDetail: 'พวกกูไม่แก๊งหรอก ไอ้ Sus พวกกูแค่ชอบ C Walk',
+    sessionDetail: 'SE MOCKUP DATA',
   },
 ]
 
