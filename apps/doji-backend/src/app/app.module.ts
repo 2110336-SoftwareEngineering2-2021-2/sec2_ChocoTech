@@ -1,5 +1,7 @@
+import { AdminModule } from '@backend/admin/admin.module'
 import { AuthModule } from '@backend/auth/auth.module'
 import { environment } from '@backend/environments/environment'
+import { ExpertAppModule } from '@backend/expert/expert.module'
 import { MessagingModule } from '@backend/messaging/messaging.module'
 import { PaymentModule } from '@backend/payment/payment.module'
 import { ProfileModule } from '@backend/profile/profile.module'
@@ -29,11 +31,13 @@ import { AppService } from './app.service'
       strict: true,
     }),
     AuthModule,
+    AdminModule,
     RegisterModule,
     ProfileModule,
     MessagingModule,
     PaymentModule,
     SessionModule,
+    ExpertAppModule,
   ],
   controllers: [AppController],
   providers: [
