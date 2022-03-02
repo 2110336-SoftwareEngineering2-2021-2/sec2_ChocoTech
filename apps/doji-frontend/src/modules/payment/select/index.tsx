@@ -75,9 +75,6 @@ const SelectPaymentPage: ExtendedNextPage = () => {
       onSuccess: () => {
         userInfoQuery.refetch().then((res) => setUser(res.data))
       },
-      onError: (e) => {
-        toast.error('Fail to deposit')
-      },
     },
   )
   const deleteCreditCardMutation = useMutation<void, AxiosError<IErrorMessage>, { cardId: string }>(
@@ -153,7 +150,10 @@ const SelectPaymentPage: ExtendedNextPage = () => {
           actionText="Top Up"
           dialogState={depositMutation.status as DialogState}
           onSubmit={handleSubmit((form) =>
-            depositMutation.mutate({ cardId: targetCard, amount: form.amount * 100 }),
+            toast.promise(
+              depositMutation.mutateAsync({ cardId: targetCard, amount: form.amount * 100 }),
+              { loading: 'loading', success: 'top up success', error: 'fail to top up' },
+            ),
           )}
         >
           <Typography variant="title2">Specify Amount</Typography>
