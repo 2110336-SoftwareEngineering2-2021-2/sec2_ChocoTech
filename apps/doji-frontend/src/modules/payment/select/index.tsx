@@ -3,13 +3,13 @@ import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage, PaymentType } from '@frontend/type'
 import { stangToBathString } from '@frontend/utils/stangBathToString'
 import { IDepositRequest, IErrorMessage, IMeResponseDTO, IUser } from '@libs/api'
-import { Tables, TopBarActionType } from '@libs/mui'
+import { Tables, TablesActionType, TopBarActionType } from '@libs/mui'
 import {
   AvatarProps,
   Button,
   CircularProgress,
   Drawer,
-  Input,
+  MenuItem,
   Stack,
   SxProps,
   TextField,
@@ -104,11 +104,16 @@ const SelectPaymentPage: ExtendedNextPage = () => {
   }
 
   const [targetCard, setTargetCard] = useState<string | null>(null)
-  const { setUser } = useAuthStore()
+  const { userInfo, setUser } = useAuthStore()
 
-  const userInfoQuery = useQuery<IMeResponseDTO>('/auth/me', () =>
-    httpClient.get('/auth/me').then((res) => res.data),
+  const userInfoQuery = useQuery<IMeResponseDTO>(
+    '/auth/me',
+    () => httpClient.get('/auth/me').then((res) => res.data),
+    {
+      onSuccess: (data) => setUser(data),
+    },
   )
+
   const depositMutation = useMutation<unknown, AxiosError<IErrorMessage>, IDepositRequest>(
     '/payment/deposit',
     (d) => httpClient.post('/payment/deposit', d),
@@ -116,11 +121,28 @@ const SelectPaymentPage: ExtendedNextPage = () => {
       onSuccess: () => {
         userInfoQuery.refetch().then((res) => setUser(res.data))
       },
+    },
+  )
+  const deleteCreditCardMutation = useMutation<void, AxiosError<IErrorMessage>, { cardId: string }>(
+    `/payment/cards/${userInfo.username}`,
+    (data) => httpClient.delete(`/payment/cards/${data.cardId}`),
+    {
+      onSuccess: () => {
+        userInfoQuery.refetch().then((res) => setUser(res.data))
+      },
       onError: (e) => {
-        toast.error('Fail to deposit: ' + e.response?.data?.message)
+        toast.error('Fail to delete card')
       },
     },
   )
+
+  const handleDeleteCreditCard = async (targetCardId: string) => {
+    toast.promise(deleteCreditCardMutation.mutateAsync({ cardId: targetCardId }), {
+      loading: 'loading',
+      success: 'delete success',
+      error: 'fail to delete card',
+    })
+  }
 
   const {
     register,
@@ -139,9 +161,15 @@ const SelectPaymentPage: ExtendedNextPage = () => {
           key={card.id}
           content={`${card.brand} ${card.last_digits}`}
           avatar={renderPaymentIcon(card.brand.toLowerCase() as PaymentType)}
-          onClick={() => {
-            setTargetCard(card.id)
-          }}
+          onClick={() => setTargetCard(card.id)}
+          // action={{
+          //   type: TablesActionType.Menu,
+          //   children: (
+          //     <MenuItem onClick={async () => await handleDeleteCreditCard(card.id)}>
+          //       delete
+          //     </MenuItem>
+          //   ),
+          // }}
         />
       ))}
       <Stack pt={3}>
