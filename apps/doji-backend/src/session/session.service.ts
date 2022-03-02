@@ -35,9 +35,9 @@ export class SessionService {
     session.creator = creator
     session.service = service
     session.participants.add(creator)
-    await dto.participantsUsername.forEach(async (value) => {
-      await this.userRepo.findOneOrFail({ username: value }).then(async (user) => {
-        await session.participants.add(user)
+    await dto.participantsUsername.forEach((value) => {
+      this.userRepo.findOne({ username: value }).then((user) => {
+        session.participants.add(user)
       })
     })
     await this.sessionRepo.persistAndFlush(session)
