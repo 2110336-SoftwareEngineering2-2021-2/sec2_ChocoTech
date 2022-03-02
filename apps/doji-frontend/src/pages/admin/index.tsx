@@ -1,4 +1,4 @@
-import { SearchBar, TopBar, TopBarActionMode } from '@libs/mui'
+import { SearchBar, TopBar, TopBarModeType } from '@libs/mui'
 import { Stack } from '@mui/material'
 import router from 'next/router'
 
@@ -16,7 +16,7 @@ function AdminPage() {
           label: 'New',
           onClick: handleClickOpen,
         }}
-        mode={TopBarActionMode.Heading}
+        mode={TopBarModeType.Heading}
         title="Admin"
       />
       <SearchBar />
