@@ -27,10 +27,10 @@ export default function TagsInput() {
         multiple
         options={friendList}
         getOptionLabel={(option) => option.text}
-        key={(option) => option.value}
         renderTags={(value, getTagProps) =>
           value.map((option, index) => (
             <Chip
+              key={option.value}
               variant="outlined"
               label={option.text}
               avatar={<Avatar></Avatar>}
