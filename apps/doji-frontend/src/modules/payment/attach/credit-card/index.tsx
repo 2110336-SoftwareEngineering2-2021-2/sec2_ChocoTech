@@ -45,7 +45,7 @@ const AddNewCreditCardPage: ExtendedNextPage = () => {
 
   const attachCreditCardMutation = useMutation<void, AxiosError, IAttachCardRequestDTO>(
     async (data) => {
-      await httpClient.post<void, void, IAttachCardRequestDTO>('/payment/card', data)
+      await httpClient.post<void, void, IAttachCardRequestDTO>('/payment/cards', data)
     },
   )
 

@@ -9,7 +9,7 @@ import {
   WithdrawalRequest,
 } from '@backend/payment/payment.dto'
 import { PaymentService } from '@backend/payment/payment.service'
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import Omise from 'omise'
 
@@ -31,7 +31,7 @@ export class PaymentController {
     return await this.paymentService.retrieveCreditCards(user)
   }
 
-  @Post('card')
+  @Post('cards')
   @ApiOperation({ description: 'Attach new card to a given user' })
   @ApiResponse({ status: 403, description: 'The token is invalid' })
   @ApiResponse({ status: 200, description: 'The value associated with the given token' })
@@ -46,6 +46,18 @@ export class PaymentController {
       dto.isDefault,
     )
     return updatedUser
+  }
+
+  @Delete('cards/:cardId')
+  @ApiOperation({ description: 'Delete credit card with given cardId' })
+  @ApiResponse({ status: 403, description: 'The token is invalid' })
+  @ApiResponse({ status: 200, description: 'The value associated with the given token' })
+  async deleteCreditCard(
+    @Param('cardId') cardId: string,
+    @CurrentUser() userRef: UserReference,
+  ): Promise<void> {
+    const user = await userRef.getUser()
+    await this.paymentService.deleteCreditCard(user, cardId)
   }
 
   @Get('transaction')
