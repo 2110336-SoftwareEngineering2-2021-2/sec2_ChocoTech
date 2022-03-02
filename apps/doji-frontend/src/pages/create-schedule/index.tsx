@@ -1,7 +1,7 @@
 import { SearchBar, TopBar, TopBarActionType } from '@libs/mui'
 import { Box } from '@mui/material'
 
-import SessionCard from './SessionCard'
+import SessionCard from '../../components/ExpertService/SessionCard'
 
 export function Index() {
   return (

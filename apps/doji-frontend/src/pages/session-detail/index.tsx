@@ -1,4 +1,4 @@
-import ConfirmDialog from '@frontend/pages/session-detail/ConfirmDialog'
+import ConfirmDialog from '@frontend/components/ExpertService/ConfirmDialog'
 import { SearchBar, Tables, TopBar, TopBarActionType } from '@libs/mui'
 import { DatePicker, TimePicker } from '@mui/lab'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
@@ -17,7 +17,7 @@ import {
 
 import React from 'react'
 
-import TagsInput from './TagInput'
+import TagsInput from '../../components/ExpertService/TagInput'
 
 export function Index() {
   const [date, setDate] = React.useState<Date | null>(null)
