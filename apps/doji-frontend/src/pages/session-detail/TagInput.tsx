@@ -12,11 +12,11 @@ const friendList = [
   },
   {
     value: '3',
-    text: 'Super Idol',
+    text: 'John green',
   },
   {
     value: '4',
-    text: 'Ricardo',
+    text: 'Jonathan Dessner',
   },
 ]
 export default function TagsInput() {
