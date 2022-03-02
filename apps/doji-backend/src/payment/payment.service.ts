@@ -25,6 +25,12 @@ export class PaymentService {
     private readonly coinTransactionService: CoinTransactionService,
   ) {}
 
+  private async isCreditCardOwner(user: User, cardId: string): Promise<boolean> {
+    const cards = await this.retrieveCreditCards(user)
+    const foundCard = cards.find((card) => card.id === cardId)
+    return !!foundCard
+  }
+
   private async setCardAsDefault(user: User, cardToken: string): Promise<void> {
     await axios({
       method: 'PATCH',
@@ -78,6 +84,14 @@ export class PaymentService {
     }
 
     return (await this.omise.customers.listCards(user.omiseCustomerToken)).data
+  }
+
+  async deleteCreditCard(user: User, cardId: string): Promise<void> {
+    const isCreditCardOwner = await this.isCreditCardOwner(user, cardId)
+    if (!isCreditCardOwner) {
+      throw new BadRequestException('You are not an owner, cannot delete card')
+    }
+    await this.omise.customers.destroyCard(user.omiseCustomerToken, cardId)
   }
 
   async deposit(user: User, amount: number, card: string) {
