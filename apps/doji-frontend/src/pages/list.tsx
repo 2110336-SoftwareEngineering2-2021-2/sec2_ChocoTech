@@ -35,6 +35,9 @@ const ListPage: ExtendedNextPage = () => {
       <Link href="/balance" passHref>
         <MuiLink component="li">Balance Page</MuiLink>
       </Link>
+      <Link href="/working-history" passHref>
+        <MuiLink component="li">Working History Page</MuiLink>
+      </Link>
       {/* <Link href="/view-requests/expert-detail" passHref>
         <MuiLink component="li">View Request Page</MuiLink>
       </Link> */}
