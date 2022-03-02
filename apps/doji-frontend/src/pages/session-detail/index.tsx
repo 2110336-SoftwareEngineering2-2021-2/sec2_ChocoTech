@@ -1,5 +1,5 @@
 import ConfirmDialog from '@frontend/pages/session-detail/ConfirmDialog'
-import { SearchBar, Tables, TopBar } from '@libs/mui'
+import { SearchBar, Tables, TopBar, TopBarActionType } from '@libs/mui'
 import { DatePicker, TimePicker } from '@mui/lab'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
@@ -43,7 +43,7 @@ export function Index() {
   }
   return (
     <Box display="flex" flexDirection="column" position="relative" minHeight="sm">
-      <TopBar title="New session" action="back"></TopBar>
+      <TopBar title="New session" action={TopBarActionType.Back}></TopBar>
       <Box>
         <form onSubmit={handleSubmit}>
           <Grid container alignItems="center">
