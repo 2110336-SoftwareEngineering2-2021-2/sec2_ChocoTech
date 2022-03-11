@@ -1,6 +1,5 @@
 import { Tables } from '@libs/mui'
 import { Avatar, Box, Card, CardContent, Grid, Typography } from '@mui/material'
-import { textAlign } from '@mui/system'
 import Link from 'next/link'
 
 import React from 'react'
@@ -10,7 +9,8 @@ export interface SessionProb {
   price?: number
   expertName?: string
   description?: string
-  destination: string
+  expertUsername?: string
+  serviceName?: string
 }
 
 export const SessionCard: React.FC<SessionProb> = ({
@@ -18,12 +18,19 @@ export const SessionCard: React.FC<SessionProb> = ({
   price,
   expertName,
   description,
-  destination,
+  expertUsername,
+  serviceName,
 }) => {
   return (
     <Card variant="outlined">
-      <Link href={destination}>
-        <CardContent>
+      <Link
+        href={{
+          pathname: 'schedule-session',
+          query: { expert_username: expertUsername, service_name: serviceName },
+        }}
+        passHref
+      >
+        <CardContent sx={{ cursor: 'pointer' }}>
           <Grid container display="inline-flex">
             <Grid item xs={10}>
               <Typography variant="large" fontWeight={700}>
