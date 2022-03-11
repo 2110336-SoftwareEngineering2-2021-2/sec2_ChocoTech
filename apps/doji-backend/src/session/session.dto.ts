@@ -3,7 +3,7 @@ import { ISession, SessionStatus } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsNumber, IsString } from 'class-validator'
 
-export class SessionDeleteParticipantRequest {
+export class DeleteSessionParticipantRequest {
   @ApiProperty()
   @IsNumber()
   SessionId: number
