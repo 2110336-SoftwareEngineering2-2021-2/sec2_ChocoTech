@@ -1,21 +1,13 @@
 import ConfirmDialog from '@frontend/components/ExpertService/ConfirmDialog'
+import { IServiceInformationDTO } from '@libs/api'
 import { SearchBar, Tables, TopBar, TopBarActionType } from '@libs/mui'
 import { DatePicker, TimePicker } from '@mui/lab'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
-import {
-  Avatar,
-  BottomNavigation,
-  Box,
-  Button,
-  Container,
-  Grid,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { Avatar, Box, Button, Container, Grid, TextField, Typography } from '@mui/material'
+import axios from 'axios'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import TagsInput from '../../components/ExpertService/TagInput'
 
@@ -25,6 +17,18 @@ export function Index() {
   const [endTime, setEndTime] = React.useState<Date | null>(null)
   const [openDialog, setOpenDialog] = React.useState(false)
   const [confirm, setConfirm] = React.useState(false)
+  const [serviceData, setServiceData] = React.useState<IServiceInformationDTO>(null)
+  useEffect(() => {
+    const param = new URLSearchParams(window.location.search)
+    const url =
+      'http://localhost:3333/api/session/service/' +
+      param.get('expert_username') +
+      '/' +
+      param.get('service_name')
+    axios.get(url).then((res) => {
+      setServiceData(res.data)
+    })
+  }, [])
   function handleOpenDialog() {
     setOpenDialog(true)
   }
@@ -41,6 +45,9 @@ export function Index() {
     handleOpenDialog()
     e.preventDefault()
   }
+  if (serviceData === null) {
+    return null
+  }
   return (
     <Box display="flex" flexDirection="column" position="relative" minHeight="sm">
       <TopBar title="New session" action={TopBarActionType.Back}></TopBar>
@@ -49,15 +56,18 @@ export function Index() {
           <Grid container alignItems="center">
             <Grid item xs={12}>
               <Typography fontWeight={700} variant="title3">
-                How to read indicators
+                {serviceData.title}
               </Typography>
             </Grid>
             <Grid item xs={8} marginBottom={2}>
-              <Tables content="by Rick Astley" avatar={<Avatar></Avatar>}></Tables>
+              <Tables
+                content={'by ' + serviceData.firstname + ' ' + serviceData.lastname}
+                avatar={<Avatar></Avatar>}
+              ></Tables>
             </Grid>
             <Grid item xs={4} marginBottom={2} textAlign="right">
               <Typography variant="large" fontWeight={700} color="#367D7F">
-                250
+                {serviceData.fee}
               </Typography>
               <Typography variant="regular" fontWeight={400} color="#367D7F">
                 /hr/person
@@ -65,8 +75,7 @@ export function Index() {
             </Grid>
             <Grid item xs={12} marginBottom={3}>
               <Typography variant="regular" fontWeight={400}>
-                Hello, wellcome to our session. We will teach about trading technique here and a few
-                tips on crypto currency mining.
+                {serviceData.description}
               </Typography>
             </Grid>
             <Grid item xs={12} marginBottom={3}>
@@ -124,7 +133,7 @@ export function Index() {
                 </Grid>
                 <Grid item xs={6} textAlign="right">
                   <Typography variant="large" fontWeight={700} color="#367D7F">
-                    500
+                    {serviceData.fee}
                   </Typography>
                   <Typography variant="regular" fontWeight={400} color="#367D7F">
                     &nbsp; Doji coins
