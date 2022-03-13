@@ -14,8 +14,8 @@ export class SessionController {
   @UseGuards(UserAuthGuard)
   @HttpCode(200)
   @ApiBearerAuth()
-  @ApiOperation({ description: 'Get all Session information' })
-  @ApiResponse({ status: 200 })
+  @ApiOperation({ description: 'Get all session of current user information' })
+  @ApiResponse({ status: 200, description: 'All sessions of user have benn listed' })
   async findAll(@CurrentUser() user: UserReference): Promise<Session[]> {
     return await this.SessionService.getAllSession(user)
   }
