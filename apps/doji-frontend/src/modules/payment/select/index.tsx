@@ -1,15 +1,15 @@
+import { DialogState, TopUpDialog } from '@frontend/components/TopUpDialog'
 import { httpClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage, PaymentType } from '@frontend/type'
 import { stangToBathString } from '@frontend/utils/stangBathToString'
 import { IDepositRequest, IErrorMessage, IMeResponseDTO, IUser } from '@libs/api'
-import { Tables, TopBarActionType } from '@libs/mui'
+import { Tables, TablesActionType, TopBarActionType } from '@libs/mui'
 import {
   AvatarProps,
   Button,
-  CircularProgress,
   Drawer,
-  Input,
+  MenuItem,
   Stack,
   SxProps,
   TextField,
@@ -21,57 +21,18 @@ import { AxiosError } from 'axios'
 import Link from 'next/link'
 import Omise from 'omise'
 
-import { FormEventHandler, useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { FaCcMastercard, FaCcVisa, FaCheckCircle } from 'react-icons/fa'
+import { FaCcMastercard, FaCcVisa } from 'react-icons/fa'
 import { ImCross } from 'react-icons/im'
 import { IconBaseProps } from 'react-icons/lib'
 import { useMutation, useQuery } from 'react-query'
 
-export enum TopUpDialogState {
-  IDLE = 'idle',
-  WAITING = 'waiting',
-  SUCCESS = 'success',
-  FAILURE = 'failure',
-}
-
-export function TopUpDialog(props: {
-  actionText: string
-  dialogState: 'idle' | 'loading' | 'error' | 'success'
-  children?: any
-  onSubmit: FormEventHandler<HTMLFormElement>
-}) {
-  const theme = useTheme()
-
-  const statusContent = new Map([
-    ['loading', <CircularProgress size="5em" />],
-    ['error', <ImCross fontSize="5em" color={theme.palette.primary.main} />],
-    ['success', <FaCheckCircle fontSize="5em" color={theme.palette.primary.main} />],
-  ])
-
-  if (statusContent.has(props.dialogState)) {
-    return (
-      <Stack padding="2em" alignItems="center" spacing="0.5em" maxWidth="sm">
-        {statusContent.get(props.dialogState)}
-      </Stack>
-    )
-  }
-
-  return (
-    <form onSubmit={props.onSubmit}>
-      <Stack padding="2em" alignItems="center" spacing="1em" maxWidth="sm">
-        {props.children}
-        <Button fullWidth={true} type="submit">
-          {props.actionText}
-        </Button>
-      </Stack>
-    </form>
-  )
-}
-
 const SelectPaymentPage: ExtendedNextPage = () => {
   const theme = useTheme()
+  const { userInfo, setUser } = useAuthStore()
+  const [targetCard, setTargetCard] = useState<string | null>(null)
 
   const { data, isLoading, isError } = useQuery<Omise.Cards.ICard[], AxiosError>(
     `/payment/cards`,
@@ -103,24 +64,36 @@ const SelectPaymentPage: ExtendedNextPage = () => {
     }
   }
 
-  const [targetCard, setTargetCard] = useState<string | null>(null)
-  const { setUser } = useAuthStore()
-
   const userInfoQuery = useQuery<IMeResponseDTO>('/auth/me', () =>
     httpClient.get('/auth/me').then((res) => res.data),
   )
+
   const depositMutation = useMutation<unknown, AxiosError<IErrorMessage>, IDepositRequest>(
-    '/payment/deposit',
+    `/payment/deposit/${userInfo.username}`,
     (d) => httpClient.post('/payment/deposit', d),
     {
       onSuccess: () => {
         userInfoQuery.refetch().then((res) => setUser(res.data))
       },
-      onError: (e) => {
-        toast.error('Fail to deposit: ' + e.response?.data?.message)
+    },
+  )
+  const deleteCreditCardMutation = useMutation<void, AxiosError<IErrorMessage>, { cardId: string }>(
+    `/payment/cards`,
+    (data) => httpClient.delete(`/payment/cards/${data.cardId}`),
+    {
+      onSuccess: () => {
+        userInfoQuery.refetch().then((res) => setUser(res.data))
       },
     },
   )
+
+  const handleDeleteCreditCard = async (targetCardId: string) => {
+    toast.promise(deleteCreditCardMutation.mutateAsync({ cardId: targetCardId }), {
+      loading: 'loading',
+      success: 'delete success',
+      error: 'fail to delete card',
+    })
+  }
 
   const {
     register,
@@ -139,8 +112,23 @@ const SelectPaymentPage: ExtendedNextPage = () => {
           key={card.id}
           content={`${card.brand} ${card.last_digits}`}
           avatar={renderPaymentIcon(card.brand.toLowerCase() as PaymentType)}
-          onClick={() => {
+          onClick={(event) => {
+            event.stopPropagation()
             setTargetCard(card.id)
+          }}
+          onMouseOver={() => console.log('WWww')}
+          action={{
+            type: TablesActionType.Menu,
+            children: (
+              <MenuItem
+                onClick={async (event) => {
+                  event.stopPropagation()
+                  await handleDeleteCreditCard(card.id)
+                }}
+              >
+                delete
+              </MenuItem>
+            ),
           }}
         />
       ))}
@@ -150,7 +138,7 @@ const SelectPaymentPage: ExtendedNextPage = () => {
         </Link>
       </Stack>
       <Drawer
-        open={targetCard !== null}
+        open={!!targetCard}
         onClose={() => {
           setTargetCard(null)
           depositMutation.reset()
@@ -160,9 +148,12 @@ const SelectPaymentPage: ExtendedNextPage = () => {
       >
         <TopUpDialog
           actionText="Top Up"
-          dialogState={depositMutation.status}
+          dialogState={depositMutation.status as DialogState}
           onSubmit={handleSubmit((form) =>
-            depositMutation.mutate({ cardId: targetCard, amount: form.amount * 100 }),
+            toast.promise(
+              depositMutation.mutateAsync({ cardId: targetCard, amount: form.amount * 100 }),
+              { loading: 'loading', success: 'top up success', error: 'fail to top up' },
+            ),
           )}
         >
           <Typography variant="title2">Specify Amount</Typography>

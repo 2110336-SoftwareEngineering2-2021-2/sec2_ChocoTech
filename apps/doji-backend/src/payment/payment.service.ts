@@ -25,10 +25,16 @@ export class PaymentService {
     private readonly coinTransactionService: CoinTransactionService,
   ) {}
 
+  private async isCreditCardOwner(user: User, cardId: string): Promise<boolean> {
+    const cards = await this.retrieveCreditCards(user)
+    const foundCard = cards.find((card) => card.id === cardId)
+    return !!foundCard
+  }
+
   private async setCardAsDefault(user: User, cardToken: string): Promise<void> {
     await axios({
       method: 'PATCH',
-      url: `https://api.omise.co/customers/${user.omiseCustomerToken}s`,
+      url: `https://api.omise.co/customers/${user.omiseCustomerToken}`,
       data: `default_card=${cardToken}`,
       auth: {
         username: environment.omise.secretKey,
@@ -64,7 +70,7 @@ export class PaymentService {
       try {
         await this.setCardAsDefault(user, cards[cards.length - 1].id)
       } catch (error) {
-        this.logger.error(error)
+        this.logger.error(error.response.data.message)
         throw new BadRequestException('Cannot set card as default')
       }
     }
@@ -80,10 +86,20 @@ export class PaymentService {
     return (await this.omise.customers.listCards(user.omiseCustomerToken)).data
   }
 
-  async deposit(user: User, amount: number, card: string) {
+  async deleteCreditCard(user: User, cardId: string): Promise<void> {
+    const isCreditCardOwner = await this.isCreditCardOwner(user, cardId)
+    if (!isCreditCardOwner) {
+      throw new BadRequestException('You are not an owner, cannot delete card')
+    }
+    await this.omise.customers.destroyCard(user.omiseCustomerToken, cardId)
+  }
+
+  async deposit(user: User, amount: number, cardToken: string) {
     const userCards = await this.retrieveCreditCards(user)
-    if (!userCards.find((c) => c.id === card)) {
-      this.logger.error(`user ${user.username} attempted ${card} card but doesn not have that card`)
+    if (!userCards.find((card) => card.id === cardToken)) {
+      this.logger.error(
+        `user ${user.username} attempted ${cardToken} card but doesn not have that card`,
+      )
       throw new UnprocessableEntityException('User does not have the card')
     }
 
@@ -91,20 +107,24 @@ export class PaymentService {
       throw new UnprocessableEntityException('Minimum amount is 20THB')
     }
 
-    const charge = await this.omise.charges.create({
-      amount: amount,
-      currency: 'thb',
-      customer: user.omiseCustomerToken,
-      card: card,
-      capture: true,
-    })
+    try {
+      const charge = await this.omise.charges.create({
+        amount: amount,
+        currency: 'thb',
+        customer: user.omiseCustomerToken,
+        card: cardToken,
+        capture: true,
+      })
+      if (!charge.paid) {
+        this.logger.error(`Charge capture failed on ${charge.id}`)
+        throw new UnprocessableEntityException(`Failed to capture charge`)
+      }
 
-    if (!charge.paid) {
-      this.logger.error(`Charge capture failed on ${charge.id}`)
-      throw new UnprocessableEntityException(`Failed to capture charge`)
+      await this.coinTransactionService.depositUserAccount(user, charge.amount, charge.id)
+    } catch (error) {
+      this.logger.error(error.response.data.message)
+      throw new BadRequestException('Cannot set card as default')
     }
-
-    await this.coinTransactionService.depositUserAccount(user, charge.amount, charge.id)
   }
 
   async withdraw(user: User, amount: number, destinationAccount: string) {

@@ -1,6 +1,8 @@
 import {
   Avatar,
   Button,
+  IconButton,
+  MenuProps,
   AvatarProps as MuiAvatarProps,
   ButtonProps as MuiButtonProps,
   Link as MuiLink,
@@ -12,14 +14,17 @@ import {
 } from '@mui/material'
 import Link, { LinkProps } from 'next/link'
 
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
+import { FiMoreVertical } from 'react-icons/fi'
 
+import { CustomMenu } from './menu'
 import { StyledBadge, StyledStack } from './styled'
 
 export enum TablesActionType {
   Link = 'link',
   Button = 'button',
   Switch = 'switch',
+  Menu = 'menu',
   None = 'none',
 }
 
@@ -40,6 +45,9 @@ export type TableActionProps =
       type: TablesActionType.Link
       text: string
     } & LinkProps)
+  | ({
+      type: TablesActionType.Menu
+    } & Omit<MenuProps, 'anchorEl' | 'open'>)
   | {
       type: TablesActionType.None
     }
@@ -62,6 +70,16 @@ export const Tables: React.FC<TablesProps> = ({
   hoverable = true,
   ...props
 }) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
   const renderAction = useCallback(() => {
     if (action.type === TablesActionType.Button) {
       const { type, ...props } = action
@@ -79,8 +97,25 @@ export const Tables: React.FC<TablesProps> = ({
         </Link>
       )
     }
+    if (action.type === TablesActionType.Menu) {
+      const { type, ...props } = action
+      return (
+        <>
+          <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
+            <FiMoreVertical />
+          </IconButton>
+          <CustomMenu
+            {...props}
+            anchorEl={anchorEl}
+            open={open}
+            onClick={handleClose}
+            onClose={handleClose}
+          />
+        </>
+      )
+    }
     return null
-  }, [action])
+  }, [action, anchorEl])
 
   return (
     <StyledStack
