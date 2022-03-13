@@ -48,10 +48,6 @@ export class DeleteSessionParticipantRequest {
   @ApiProperty()
   @IsNumber()
   SessionId: number
-
-  @ApiProperty()
-  @IsString()
-  username: string
 }
 
 export class SessionDTO implements ISession {

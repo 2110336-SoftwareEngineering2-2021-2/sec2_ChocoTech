@@ -61,6 +61,7 @@ export class SessionService {
   }
   async getAllSession(userRef: UserReference): Promise<Session[]> {
     const user = await userRef.getUser()
+    await user.sessions.init()
     const userSession = user.sessions.getItems()
     return userSession
   }
@@ -71,14 +72,14 @@ export class SessionService {
 
     const user = await userRef.getUser()
     await user.sessions.init()
+
     const found = user.sessions.contains(session)
     if (!found) {
       throw new NotFoundException('Session not found or you are not in the shcedule')
     }
-
     user.sessions.remove(session)
     session.participants.remove(user)
-
+    this.sessionRepo.flush()
     return
   }
 }
