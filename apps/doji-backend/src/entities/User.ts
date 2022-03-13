@@ -1,6 +1,16 @@
 import { ExpertApp } from '@backend/entities/ExpertApp'
+import { FriendRequest } from '@backend/entities/Friendrequest'
 import { IUser } from '@libs/api'
-import { Collection, Entity, Enum, ManyToMany, PrimaryKey, Property } from '@mikro-orm/core'
+import {
+  Collection,
+  Entity,
+  Enum,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/core'
 
 import { Session } from '../entities/Session'
 
@@ -51,6 +61,11 @@ export class User implements IUser {
   @ManyToMany(() => Session, (session) => session.participants)
   sessions = new Collection<Session>(this)
 
+  @OneToMany(() => FriendRequest, (friendRequest) => friendRequest.sender)
+  outgoingFR = new Collection<FriendRequest>(this)
+
+  @OneToMany(() => FriendRequest, (friendRequest) => friendRequest.receiver)
+  incomingFR = new Collection<FriendRequest>(this)
   // @ManyToOne({ nullable: true })
   // verifiedByAdmin!: Admin
 }
