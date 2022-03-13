@@ -67,7 +67,10 @@ export class SessionService {
   }
 
   async deleteSessionParticipant(sessionId: number, userRef: UserReference) {
-    const session = await this.sessionRepo.findOne(sessionId)
+    const session = await this.sessionRepo.findOne({ id: sessionId })
+    if (!session) {
+      throw new NotFoundException('Session not found or you are not in the shcedule')
+    }
     await session.participants.init()
 
     const user = await userRef.getUser()
