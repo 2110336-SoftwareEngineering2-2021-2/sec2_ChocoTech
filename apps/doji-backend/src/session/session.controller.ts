@@ -1,15 +1,15 @@
 import { UserReference } from '@backend/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
+import { Session } from '@backend/entities/Session'
 import {
+  DeleteSessionParticipantRequest,
   GetServiceByNameAndExpertUsernameDTO,
   ScheduleSessionDTO,
   ServiceInformationDTO,
 } from '@backend/session/session.dto'
-import { Session } from '@backend/entities/Session'
-import { DeleteSessionParticipantRequest } from '@backend/session/session.dto'
 import { SessionService } from '@backend/session/session.service'
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth } from '@nestjs/swagger'
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, UseGuards } from '@nestjs/common'
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 @Controller('session')
 export class SessionController {
@@ -40,7 +40,7 @@ export class SessionController {
   @ApiOperation({ description: 'Get all session of current user information' })
   @ApiResponse({ status: 200, description: 'All sessions of user have benn listed' })
   async findAll(@CurrentUser() user: UserReference): Promise<Session[]> {
-    return await this.SessionService.getAllSession(user)
+    return await this.sessionService.getAllSession(user)
   }
 
   @Delete('participant')
@@ -54,7 +54,7 @@ export class SessionController {
     @Body() body: DeleteSessionParticipantRequest,
     @CurrentUser() user: UserReference,
   ) {
-    await this.SessionService.deleteSessionParticipant(body.SessionId, user)
+    await this.sessionService.deleteSessionParticipant(body.SessionId, user)
     return 'OK'
   }
 }

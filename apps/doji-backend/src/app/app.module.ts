@@ -1,3 +1,4 @@
+import { AdminModule } from '@backend/admin/admin.module'
 import { AuthModule } from '@backend/auth/auth.module'
 import { environment } from '@backend/environments/environment'
 import { ExpertAppModule } from '@backend/expert/expert.module'
@@ -31,10 +32,10 @@ import { AppService } from './app.service'
       strict: true,
     }),
     AuthModule,
+    AdminModule,
     RegisterModule,
     ProfileModule,
     MessagingModule,
-    SessionModule,
     PaymentModule,
     WorkHistoryModule,
     SessionModule,

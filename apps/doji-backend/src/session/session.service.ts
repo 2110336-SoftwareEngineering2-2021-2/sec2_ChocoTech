@@ -7,9 +7,9 @@ import {
   ScheduleSessionDTO,
   ServiceInformationDTO,
 } from '@backend/session/session.dto'
-import { EntityRepository, NotFoundError } from '@mikro-orm/core'
+import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common'
 
 @Injectable()
 export class SessionService {

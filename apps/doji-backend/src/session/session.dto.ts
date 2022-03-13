@@ -1,7 +1,11 @@
+import { SessionStatus } from '@backend/entities/Session'
+import { User } from '@backend/entities/User'
 import {
   IGetServiceByNameAndExpertUsernameDTO,
   IScheduleSessionDTO,
+  IService,
   IServiceInformationDTO,
+  ISession,
 } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
@@ -80,4 +84,10 @@ export class SessionDTO implements ISession {
 
   @ApiProperty()
   creator: User
+
+  @ApiProperty()
+  sourceId: string
+
+  @ApiProperty()
+  service: IService
 }
