@@ -1,7 +1,7 @@
-import { ExpertApp } from '@backend/entities/ExpertApp'
 import { IUser } from '@libs/api'
 import { Collection, Entity, Enum, ManyToMany, PrimaryKey, Property } from '@mikro-orm/core'
 
+import { Review } from '../entities/Review'
 import { Session } from '../entities/Session'
 
 export enum UserRole {
@@ -50,6 +50,9 @@ export class User implements IUser {
 
   @ManyToMany(() => Session, (session) => session.participants)
   sessions = new Collection<Session>(this)
+
+  @ManyToMany(() => Review, (review) => review.reportByUser)
+  reviews = new Collection<Review>(this)
 
   // @ManyToOne({ nullable: true })
   // verifiedByAdmin!: Admin
