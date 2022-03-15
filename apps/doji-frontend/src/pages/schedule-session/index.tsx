@@ -1,4 +1,5 @@
 import ConfirmDialog from '@frontend/components/ExpertService/ConfirmDialog'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { IServiceInformationDTO } from '@libs/api'
 import { SearchBar, Tables, TopBar, TopBarActionType } from '@libs/mui'
 import { DatePicker, TimePicker } from '@mui/lab'
@@ -6,10 +7,18 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import { Avatar, Box, Button, Container, Grid, TextField, Typography } from '@mui/material'
 import axios from 'axios'
+import * as yup from 'yup'
 
 import React, { useEffect } from 'react'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import TagsInput from '../../components/ExpertService/TagInput'
+
+const createScheduleValidation = yup.object({
+  date: yup.date().required('Please enter the date.'),
+})
+
+type scheduleModel = yup.InferType<typeof createScheduleValidation>
 
 export function Index() {
   const [date, setDate] = React.useState<Date | null>(null)
@@ -18,6 +27,14 @@ export function Index() {
   const [openDialog, setOpenDialog] = React.useState(false)
   const [confirm, setConfirm] = React.useState(false)
   const [serviceData, setServiceData] = React.useState<IServiceInformationDTO>(null)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm<scheduleModel>({
+    resolver: yupResolver(createScheduleValidation),
+  })
   useEffect(() => {
     const param = new URLSearchParams(window.location.search)
     const url =
@@ -41,9 +58,8 @@ export function Index() {
   function selectedTagsHandler(items) {
     console.log(items)
   }
-  function handleSubmit(e) {
-    handleOpenDialog()
-    e.preventDefault()
+  const onSubmit: SubmitHandler<scheduleModel> = async (data) => {
+    console.log(data)
   }
   if (serviceData === null) {
     return null
@@ -52,7 +68,7 @@ export function Index() {
     <Box display="flex" flexDirection="column" position="relative" minHeight="sm">
       <TopBar title="New session" action={TopBarActionType.Back}></TopBar>
       <Box>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container alignItems="center">
             <Grid item xs={12}>
               <Typography fontWeight={700} variant="title3">
@@ -80,14 +96,27 @@ export function Index() {
             </Grid>
             <Grid item xs={12} marginBottom={3}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                  label="Date"
-                  value={date}
-                  onChange={(newDate) => {
-                    setDate(newDate)
-                  }}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
-                />
+                <Controller
+                  name="date"
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <DatePicker
+                      disablePast
+                      label="Date"
+                      value={value}
+                      onChange={onChange}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          error={!!errors.date}
+                          helperText={errors.date?.message}
+                          {...register('date')}
+                          fullWidth
+                        />
+                      )}
+                    />
+                  )}
+                ></Controller>
               </LocalizationProvider>
             </Grid>
             <Grid item xs={6} marginBottom={3}>
