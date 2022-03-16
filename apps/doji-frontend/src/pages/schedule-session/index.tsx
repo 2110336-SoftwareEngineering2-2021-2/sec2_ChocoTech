@@ -14,16 +14,28 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import TagsInput from '../../components/ExpertService/TagInput'
 
+const today = new Date()
+today.setHours(0, 0, 0, 0)
 const createScheduleValidation = yup.object({
-  date: yup.date().required('Please enter the date.'),
+  date: yup
+    .date()
+    .typeError('This date is invalid')
+    .required('Please enter the date.')
+    .min(today, 'The date is invalid'),
+  startTime: yup
+    .date()
+    .typeError('The start time is invalid')
+    .required('Please enter the start time'),
+  endTime: yup
+    .date()
+    .typeError('The end time is invalid')
+    .required('Please enter the start end')
+    .min(yup.ref('startTime'), 'End time must be after start time'),
 })
 
 type scheduleModel = yup.InferType<typeof createScheduleValidation>
 
 export function Index() {
-  const [date, setDate] = React.useState<Date | null>(null)
-  const [startTime, setStartTime] = React.useState<Date | null>(null)
-  const [endTime, setEndTime] = React.useState<Date | null>(null)
   const [openDialog, setOpenDialog] = React.useState(false)
   const [confirm, setConfirm] = React.useState(false)
   const [serviceData, setServiceData] = React.useState<IServiceInformationDTO>(null)
@@ -34,6 +46,11 @@ export function Index() {
     control,
   } = useForm<scheduleModel>({
     resolver: yupResolver(createScheduleValidation),
+    defaultValues: {
+      date: new Date(),
+      startTime: new Date(),
+      endTime: new Date(),
+    },
   })
   useEffect(() => {
     const param = new URLSearchParams(window.location.search)
@@ -59,6 +76,7 @@ export function Index() {
     console.log(items)
   }
   const onSubmit: SubmitHandler<scheduleModel> = async (data) => {
+    handleOpenDialog()
     console.log(data)
   }
   if (serviceData === null) {
@@ -101,6 +119,7 @@ export function Index() {
                   control={control}
                   render={({ field: { onChange, value } }) => (
                     <DatePicker
+                      {...register('date')}
                       disablePast
                       label="Date"
                       value={value}
@@ -110,7 +129,6 @@ export function Index() {
                           {...params}
                           error={!!errors.date}
                           helperText={errors.date?.message}
-                          {...register('date')}
                           fullWidth
                         />
                       )}
@@ -121,26 +139,48 @@ export function Index() {
             </Grid>
             <Grid item xs={6} marginBottom={3}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <TimePicker
-                  label="Start Time"
-                  value={startTime}
-                  onChange={(newTime) => {
-                    setStartTime(newTime)
-                  }}
-                  renderInput={(params) => <TextField {...params} />}
-                />
+                <Controller
+                  name="startTime"
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <TimePicker
+                      {...register('startTime')}
+                      label="Start Time"
+                      value={value}
+                      onChange={onChange}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          error={!!errors.startTime}
+                          helperText={errors.startTime?.message}
+                        />
+                      )}
+                    />
+                  )}
+                ></Controller>
               </LocalizationProvider>
             </Grid>
             <Grid item xs={6} marginBottom={3}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <TimePicker
-                  label="End Time"
-                  value={endTime}
-                  onChange={(newTime) => {
-                    setEndTime(newTime)
-                  }}
-                  renderInput={(params) => <TextField {...params} />}
-                />
+                <Controller
+                  name="endTime"
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <TimePicker
+                      {...register('endTime')}
+                      label="End Time"
+                      value={value}
+                      onChange={onChange}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          error={!!errors.endTime}
+                          helperText={errors.endTime?.message}
+                        />
+                      )}
+                    />
+                  )}
+                ></Controller>
               </LocalizationProvider>
             </Grid>
             <Grid item xs={12} marginBottom={2}>
@@ -178,7 +218,12 @@ export function Index() {
           </Box>
         </form>
       </Box>
-      <ConfirmDialog confirm={confirm} isOpen={openDialog} onClose={handleCloseDialog} />
+      <ConfirmDialog
+        confirm={confirm}
+        isOpen={openDialog}
+        onClose={handleCloseDialog}
+        coinAmount={serviceData.fee}
+      />
     </Box>
   )
 }

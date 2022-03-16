@@ -21,7 +21,8 @@ export function ConfirmDialog(props) {
           </Typography>
           <br />
           <Typography variant="regular" fontWeight={400} sx={{ margin: 1 }}>
-            Are you sure you want to create this session? You will be deducted 500 Doji coins
+            Are you sure you want to create this session? You will be deducted {props.coinAmount}{' '}
+            Doji coins
           </Typography>
           <br />
           <Button
