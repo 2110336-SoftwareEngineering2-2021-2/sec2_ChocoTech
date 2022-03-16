@@ -3,26 +3,29 @@ import { Autocomplete, Avatar, Chip, TextField } from '@mui/material'
 
 const friendList = [
   {
-    value: '1',
+    value: 'incredible',
     text: 'Mr.Incredible',
   },
   {
-    value: '2',
+    value: 'yeltsa',
     text: 'Yeltsa Kcir',
   },
   {
-    value: '3',
+    value: 'john',
     text: 'John green',
   },
   {
-    value: '4',
+    value: 'jonathan',
     text: 'Jonathan Dessner',
   },
 ]
-export default function TagsInput() {
+export default function TagsInput(props) {
   return (
     <div>
       <Autocomplete
+        onChange={(event, value) => {
+          props.onChange(value)
+        }}
         filterSelectedOptions={true}
         multiple
         options={friendList}

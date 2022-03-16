@@ -1,6 +1,6 @@
 import ConfirmDialog from '@frontend/components/ExpertService/ConfirmDialog'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IServiceInformationDTO } from '@libs/api'
+import { IScheduleSessionDTO, IServiceInformationDTO } from '@libs/api'
 import { SearchBar, Tables, TopBar, TopBarActionType } from '@libs/mui'
 import { DatePicker, TimePicker } from '@mui/lab'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
@@ -31,6 +31,7 @@ const createScheduleValidation = yup.object({
     .typeError('The end time is invalid')
     .required('Please enter the start end')
     .min(yup.ref('startTime'), 'End time must be after start time'),
+  participants: yup.array(),
 })
 
 type scheduleModel = yup.InferType<typeof createScheduleValidation>
@@ -39,8 +40,17 @@ export function Index() {
   const [openDialog, setOpenDialog] = React.useState(false)
   const [confirm, setConfirm] = React.useState(false)
   const [serviceData, setServiceData] = React.useState<IServiceInformationDTO>(null)
+  const [scheduleSessionData, setscheduleSessionData] = React.useState<IScheduleSessionDTO>({
+    fee: 0,
+    expertUsername: '',
+    serviceName: '',
+    duration: 0,
+    startTime: new Date(),
+    participantsUsername: [],
+  })
   const {
     register,
+    watch,
     handleSubmit,
     formState: { errors },
     control,
@@ -50,10 +60,14 @@ export function Index() {
       date: new Date(),
       startTime: new Date(),
       endTime: new Date(),
+      participants: [],
     },
   })
+  const watchAll = watch()
   useEffect(() => {
     const param = new URLSearchParams(window.location.search)
+    scheduleSessionData.expertUsername = param.get('expert_username')
+    scheduleSessionData.serviceName = param.get('service_name')
     const url =
       'http://localhost:3333/api/session/service/' +
       param.get('expert_username') +
@@ -70,14 +84,34 @@ export function Index() {
   function handleCloseDialog(value) {
     setOpenDialog(false)
     setConfirm(value)
-    console.log(value)
+    if (value) {
+      console.log(scheduleSessionData)
+    }
   }
   function selectedTagsHandler(items) {
     console.log(items)
   }
+  function calculateTotal() {
+    const timeDiff = watchAll.endTime.getTime() - watchAll.startTime.getTime()
+    const duration = Math.round((timeDiff * 10) / 36e5) / 10
+    return duration * serviceData.fee * (watchAll.participants.length + 1)
+  }
   const onSubmit: SubmitHandler<scheduleModel> = async (data) => {
     handleOpenDialog()
-    console.log(data)
+    const timeDiff = data.endTime.getTime() - data.startTime.getTime()
+    scheduleSessionData.duration = Math.round((timeDiff * 10) / 36e5) / 10
+    const startDate = new Date(data.date)
+    startDate.setHours(
+      data.startTime.getHours(),
+      data.startTime.getMinutes(),
+      data.startTime.getSeconds(),
+    )
+    scheduleSessionData.startTime = startDate
+    scheduleSessionData.fee =
+      scheduleSessionData.duration * serviceData.fee * (data.participants.length + 1)
+    scheduleSessionData.participantsUsername = data.participants.map((element) => {
+      return element.value
+    })
   }
   if (serviceData === null) {
     return null
@@ -189,7 +223,11 @@ export function Index() {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <TagsInput />
+              <Controller
+                name="participants"
+                control={control}
+                render={({ field: { onChange, value } }) => <TagsInput onChange={onChange} />}
+              ></Controller>
             </Grid>
           </Grid>
           <Box position="relative" bottom={0} left={0} right={0} marginTop={3}>
@@ -202,7 +240,7 @@ export function Index() {
                 </Grid>
                 <Grid item xs={6} textAlign="right">
                   <Typography variant="large" fontWeight={700} color="#367D7F">
-                    {serviceData.fee}
+                    {calculateTotal()}
                   </Typography>
                   <Typography variant="regular" fontWeight={400} color="#367D7F">
                     &nbsp; Doji coins
@@ -222,7 +260,7 @@ export function Index() {
         confirm={confirm}
         isOpen={openDialog}
         onClose={handleCloseDialog}
-        coinAmount={serviceData.fee}
+        coinAmount={scheduleSessionData.fee}
       />
     </Box>
   )
