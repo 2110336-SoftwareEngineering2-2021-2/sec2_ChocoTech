@@ -63,6 +63,9 @@ export class User implements IUser {
   @ManyToMany(() => Review, (review) => review.reportByUser)
   reviews = new Collection<Review>(this)
 
+  @ManyToMany(() => Review, (review) => review.reportByUser)
+  reviews = new Collection<Review>(this)
+
   // @ManyToOne({ nullable: true })
   // verifiedByAdmin!: Admin
 }
