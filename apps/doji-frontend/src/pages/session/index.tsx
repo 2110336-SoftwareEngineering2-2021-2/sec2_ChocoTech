@@ -34,9 +34,3 @@ const Index: ExtendedNextPage = () => {
   )
 }
 export default Index
-
-//Index.shouldAuthenticated = true
-Index.topBarProps = {
-  title: 'Search session',
-  action: TopBarActionType.Back,
-}

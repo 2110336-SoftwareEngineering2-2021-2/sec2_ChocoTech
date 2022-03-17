@@ -25,7 +25,7 @@ import { NavigationListItem } from './types'
 export type UserRole = 'admin' | 'user' | 'expert' | 'none'
 
 export interface NavBarProps {
-  role: UserRole
+  role?: UserRole
   username?: string
   isLoggedIn?: boolean
 }

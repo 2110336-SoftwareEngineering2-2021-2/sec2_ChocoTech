@@ -166,8 +166,3 @@ const AddNewCreditCardPage: ExtendedNextPage = () => {
 }
 
 export default AddNewCreditCardPage
-
-AddNewCreditCardPage.topBarProps = {
-  title: 'Add new credit card',
-  action: TopBarActionType.Back,
-}

@@ -90,7 +90,3 @@ const ChangePasswordPage: ExtendedNextPage = () => {
 export default ChangePasswordPage
 
 ChangePasswordPage.shouldAuthenticated = true
-ChangePasswordPage.topBarProps = {
-  title: 'Choose a secure password',
-  action: TopBarActionType.Back,
-}

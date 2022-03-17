@@ -174,14 +174,6 @@ const SelectPaymentPage: ExtendedNextPage = () => {
   )
 }
 
-SelectPaymentPage.topBarProps = {
-  title: 'Choose a payment method',
-  action: TopBarActionType.Close,
-  onClose: (_, router) => {
-    router.back()
-  },
-}
-
 SelectPaymentPage.shouldAuthenticated = true
 
 export default SelectPaymentPage

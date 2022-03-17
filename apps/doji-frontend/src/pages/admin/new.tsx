@@ -91,8 +91,3 @@ function NewAdminPage() {
   )
 }
 export default NewAdminPage
-
-NewAdminPage.topBarProps = {
-  title: 'New Admin',
-  action: TopBarActionType.Back,
-}

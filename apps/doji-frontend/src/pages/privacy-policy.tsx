@@ -23,8 +23,3 @@ export function PrivatePolicy() {
 }
 
 export default PrivatePolicy
-
-PrivatePolicy.topBarProps = {
-  title: 'Private Policy',
-  action: TopBarActionType.Close,
-} as TopBarProps
