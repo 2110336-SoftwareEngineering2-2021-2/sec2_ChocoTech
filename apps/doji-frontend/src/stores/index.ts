@@ -1,21 +1,18 @@
+import Storage from '@frontend/common/storage'
+import { StorageKey } from '@frontend/common/storage/constants'
 import { IMeResponseDTO } from '@libs/api'
 import create from 'zustand'
 
+const localStorage = new Storage('localStorage')
+
 export interface AuthStore {
-  isAdmin: boolean
-  isAuthenticated: boolean
+  isAuthenticated: () => boolean
   userInfo?: IMeResponseDTO
   setUser: (user: IMeResponseDTO) => void
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
-  isAdmin: false,
-  isAuthenticated: false,
+  isAuthenticated: () => !!localStorage.get<string>(StorageKey.TOKEN),
   userInfo: undefined,
-  setUser: (user) =>
-    set({
-      isAdmin: false, // TODO: implement checking user role
-      isAuthenticated: true,
-      userInfo: user,
-    }),
+  setUser: (user) => set((state) => ({ ...state, userInfo: user })),
 }))
