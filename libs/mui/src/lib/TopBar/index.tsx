@@ -58,6 +58,10 @@ const ActionIcon: React.FC<Pick<TopBarProps, 'action' | 'onClose'>> = ({ action,
   }
 }
 
+/**
+ * Use NavBar instead
+ * @deprecated
+ */
 export const TopBar: React.FC<TopBarProps> = ({
   title,
   action = TopBarActionType.None,

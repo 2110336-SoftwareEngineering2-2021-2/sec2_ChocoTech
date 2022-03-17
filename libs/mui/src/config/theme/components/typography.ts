@@ -8,15 +8,15 @@ export function overrideTypography(theme: Theme): Components['MuiTypography'] {
     variants: [
       {
         props: { variant: 'title1' },
-        style: { fontSize: '48px', lineHeight: '56px', fontFamily: 'Inter' },
+        style: { fontSize: '48px', lineHeight: '56px', fontFamily: 'Inter', fontWeight: 700 },
       },
       {
         props: { variant: 'title2' },
-        style: { fontSize: '32px', lineHeight: '36px', fontFamily: 'Inter' },
+        style: { fontSize: '32px', lineHeight: '36px', fontFamily: 'Inter', fontWeight: 700 },
       },
       {
         props: { variant: 'title3' },
-        style: { fontSize: '24px', lineHeight: '28px', fontFamily: 'Inter' },
+        style: { fontSize: '24px', lineHeight: '28px', fontFamily: 'Inter', fontWeight: 700 },
       },
       {
         props: { variant: 'large' },
