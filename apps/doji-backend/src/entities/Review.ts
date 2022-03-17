@@ -1,14 +1,26 @@
 import { IReview } from '@libs/api'
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core'
+import { Collection, Entity, ManyToMany, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
+
+import { Session } from '../entities/Session'
+import { User } from '../entities/User'
 
 @Entity()
 export class Review implements IReview {
   @PrimaryKey()
-  id!: number
+  id: number
+
+  @Property()
+  rating: number
 
   @Property()
   content: string
 
-  @Property()
-  rating: number
+  @ManyToOne(() => User)
+  user: User
+
+  @ManyToOne(() => Session)
+  session: Session
+
+  @ManyToMany(() => User, 'reviews', { owner: true })
+  reportByUser = new Collection<User>(this)
 }

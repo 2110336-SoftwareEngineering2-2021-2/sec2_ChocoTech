@@ -24,27 +24,38 @@ export enum SessionStatus {
 export class Session implements ISession {
   @PrimaryKey()
   id!: number
+
   @Property()
   meetingProviderId: string
+
   @Property()
   fee: number
+
   @Property()
   coinOnHold: number
+
   @Enum(() => SessionStatus)
   @Property({ default: SessionStatus.PENDING, nullable: true })
   status?: SessionStatus = SessionStatus.PENDING
+
   @Property()
   topic: string
+
   @Property()
   duration: number
+
   @Property()
   startTime: Date
+
   @Property()
   sourceId: string
+
   @ManyToOne(() => User)
   creator: User
+
   @ManyToOne(() => Service)
   service: Service
+
   @ManyToMany(() => User, 'sessions', { owner: true })
   participants = new Collection<User>(this)
 }
