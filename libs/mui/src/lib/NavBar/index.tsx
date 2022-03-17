@@ -6,11 +6,14 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Link as MuiLink,
   Stack,
   Tooltip,
+  Typography,
   useTheme,
 } from '@mui/material'
 import { useResponsive } from 'libs/mui/src/hooks'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import { useMemo, useState } from 'react'
@@ -20,14 +23,13 @@ import { Logo } from '../Logo'
 import { UserBar } from '../UserBar'
 import { adminListItems, expertListItems, nonUserListItems, userListItems } from './constants'
 import { FlexList, Spacer } from './styled'
-import { NavigationListItem } from './types'
+import { NavigationListItem, NavigationListItemItem } from './types'
 
 export type UserRole = 'admin' | 'user' | 'expert' | 'none'
 
 export interface NavBarProps {
   role?: UserRole
   username?: string
-  isLoggedIn?: boolean
 }
 
 interface NavBarListItemProps extends DrawerProps {
@@ -97,7 +99,7 @@ const CustomDrawer: React.FC<NavBarListItemProps> = ({
   )
 }
 
-export const NavBar: React.FC<NavBarProps> = ({ role = 'none', isLoggedIn, username }) => {
+export const NavBar: React.FC<NavBarProps> = ({ role = 'none', username }) => {
   const theme = useTheme()
   const [open, setOpen] = useState(false)
   const isMdUp = useResponsive('md', 'up')
@@ -116,6 +118,10 @@ export const NavBar: React.FC<NavBarProps> = ({ role = 'none', isLoggedIn, usern
         return []
     }
   }, [role])
+
+  const itemNavList = useMemo(() => {
+    return itemList.filter((item) => item.type === 'item' && !item?.isInUserMenu)
+  }, [itemList]) as NavigationListItemItem[]
 
   const toggleDrawer = (event: React.KeyboardEvent | React.MouseEvent) => {
     if (
@@ -139,7 +145,16 @@ export const NavBar: React.FC<NavBarProps> = ({ role = 'none', isLoggedIn, usern
     >
       <Logo />
       {isMdUp ? (
-        <UserBar items={itemList} isLoggedIn={isLoggedIn} username={username} />
+        <Stack spacing={5} direction="row" alignItems="center" justifyContent="center">
+          {itemNavList.map((item) => (
+            <Link href={item.href} key={item.text} passHref>
+              <MuiLink variant="regular" color="ink.dark">
+                {item.text}
+              </MuiLink>
+            </Link>
+          ))}
+          <UserBar items={itemList} isLoggedIn={role !== 'none'} username={username} />
+        </Stack>
       ) : (
         <>
           <Tooltip title="Open menu">

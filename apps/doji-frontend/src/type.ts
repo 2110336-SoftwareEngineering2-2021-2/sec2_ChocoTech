@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 
 export type ExtendedNextPage = NextPage & {
-  showNavBar?: boolean
+  dontShowNavBar?: boolean
   shouldAuthenticated?: boolean
 }
 

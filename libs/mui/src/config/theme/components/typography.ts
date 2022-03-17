@@ -1,4 +1,4 @@
-import { Components, Theme } from '@mui/material'
+import { Components, Theme, alpha } from '@mui/material'
 
 export function overrideTypography(theme: Theme): Components['MuiTypography'] {
   return {
@@ -42,9 +42,12 @@ export function overrideLink(theme: Theme): Components['MuiLink'] {
   return {
     styleOverrides: {
       root: {
-        textDecoration: 'none',
+        textDecoration: `underline 0.15em ${alpha(theme.palette.ink.main, 0)}`,
+        color: theme.palette.ink.main,
+        transition: theme.transitions.create(['text-decoration-color', 'color']),
         '&:hover': {
-          textDecoration: 'underline',
+          color: theme.palette.primary.main,
+          textDecoration: `underline 0.15em ${alpha(theme.palette.primary.main, 1)}`,
         },
       },
     },
