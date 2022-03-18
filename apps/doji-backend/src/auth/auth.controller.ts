@@ -72,20 +72,25 @@ export class AuthController {
   }
 
   @Get('google')
+  @UseGuards(UserAuthGuard)
   @ApiOperation({ description: 'Log user in with Google oauth' })
-  loginWithGoogle(@Res() res: Response): void {
-    const url = this.authService.generateGoogleLoginURL()
+  async loginWithGoogle(
+    @Res() res: Response,
+    @CurrentUser() userRef: IUserReference,
+  ): Promise<void> {
+    const { username } = await userRef.getUser()
+    const url = await this.authService.generateGoogleLoginURL(username)
     res.redirect(url)
   }
 
   @Get('google/callback')
-  @UseGuards(UserAuthGuard)
   @ApiOperation({ description: 'Google oauth callback' })
   async loginWithGoogleCallback(
     @Res() res: Response,
     @Query('code') code: string,
-    @CurrentUser() userRef: IUserReference,
+    @Query('token') userToken: string,
   ): Promise<void> {
+    const userRef = await this.authService.validatePasswordLogin(userToken)
     const { username } = await userRef.getUser()
     const { accessToken, user } = await this.authService.loginWithGoogleOAuth(code, username)
     res

@@ -59,9 +59,10 @@ export class AuthService {
     @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
   ) {}
 
-  private async _storeAccessToken(token: string, key: RedisKeyType, user: User): Promise<string> {
+  private async _storeAccessToken(key: RedisKeyType, username: string): Promise<string> {
+    const token = await generateRandomUserToken()
     const redisKey = generateRedisKey(key, token)
-    await this.redis.set(redisKey, serializeUserReference({ username: user.username }))
+    await this.redis.set(redisKey, serializeUserReference({ username }))
     await this.redis.expire(redisKey, TOKEN_EXPIRE_DURATION_SECONDS)
     return token
   }
@@ -74,8 +75,7 @@ export class AuthService {
     if (!(await bcrypt.compare(password, user.passwordHash))) {
       throw new ForbiddenException('No user with such username or password is incorrect')
     }
-    const accessToken = await generateRandomUserToken()
-    await this._storeAccessToken(accessToken, RedisKeyType.USER_ACCESS_TOKEN, user)
+    const accessToken = await this._storeAccessToken(RedisKeyType.USER_ACCESS_TOKEN, username)
     return {
       accessToken: accessToken,
       user,
@@ -95,10 +95,12 @@ export class AuthService {
     }
   }
 
-  generateGoogleLoginURL(): string {
+  async generateGoogleLoginURL(username: string): Promise<string> {
+    const accessToken = await this._storeAccessToken(RedisKeyType.USER_ACCESS_TOKEN, username)
     return this.oauth2Client.generateAuthUrl({
       access_type: 'offline',
       scope: this.scopes,
+      redirect_uri: `${environment.domain}/api/auth/google/callback?token=${accessToken}`,
     })
   }
 
