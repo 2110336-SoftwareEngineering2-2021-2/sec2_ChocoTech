@@ -15,7 +15,7 @@ import { JwtService } from '@nestjs/jwt'
 import { MailgunService } from '@nextnm/nestjs-mailgun'
 import bcrypt from 'bcrypt'
 import fs from 'fs'
-import { google } from 'googleapis'
+import { Auth, google } from 'googleapis'
 import Handlebars from 'handlebars'
 import { Redis } from 'ioredis'
 import { Profile } from 'passport-google-oauth20'
@@ -95,13 +95,14 @@ export class AuthService {
     }
   }
 
-  async generateGoogleLoginURL(username: string): Promise<string> {
+  async generateGoogleLoginURL(username: string, rediectUrl: string = undefined): Promise<string> {
     const accessToken = await this._storeAccessToken(RedisKeyType.USER_ACCESS_TOKEN, username)
-    return this.oauth2Client.generateAuthUrl({
+    const urlOption: Auth.GenerateAuthUrlOpts = {
       access_type: 'offline',
       scope: this.scopes,
-      redirect_uri: `${environment.domain}/api/auth/google/callback?token=${accessToken}`,
-    })
+      state: JSON.stringify({ accessToken }),
+    }
+    return this.oauth2Client.generateAuthUrl(urlOption)
   }
 
   async loginWithGoogleOAuth(code: string, username: string): Promise<ILogin> {

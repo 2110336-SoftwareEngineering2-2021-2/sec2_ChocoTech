@@ -8,6 +8,7 @@ import { ILoginResponseDTO } from '@libs/api'
 import { TopBarActionType, TopBarProps } from '@libs/mui'
 import { Button, Link as MuiLink, Stack, TextField, Typography } from '@mui/material'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { InferType, object, string } from 'yup'
 
 import { useForm } from 'react-hook-form'
@@ -36,6 +37,7 @@ const LoginPage: ExtendedNextPage = () => {
   })
 
   const { setUser } = useAuthStore()
+  const router = useRouter()
 
   const loginMutation = useMutation(loginRequest, {
     onSuccess: ({ token, user }) => {
@@ -111,6 +113,23 @@ const LoginPage: ExtendedNextPage = () => {
           <Button type="submit">Log in</Button>
         </Stack>
       </Stack>
+      <Button
+        onClick={async () => {
+          try {
+            const { data } = await httpClient.get('/auth/google', {
+              params: {
+                rediectUrl: 'http://localhost:3000/login',
+              },
+            })
+            console.log(data)
+            await httpClient.get(data)
+          } catch (err) {
+            console.log(err)
+          }
+        }}
+      >
+        Login Google
+      </Button>
     </>
   )
 }

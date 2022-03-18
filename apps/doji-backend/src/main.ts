@@ -17,7 +17,9 @@ async function bootstrap() {
     credentials: true,
     origin: [
       'http://localhost:3000',
+      'http://localhost:3333',
       'https://dev.choco.saenyakorn.dev',
+      'https://accounts.google.com',
       'https://choco.saenyakorn.dev',
     ],
   })
