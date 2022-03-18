@@ -1,7 +1,7 @@
 import { LoginResponseDTO, MeResponseDTO } from '@backend/auth/auth.dto'
 import { AuthService } from '@backend/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
-import { IRequestResetPasswordBody, IUserReference } from '@libs/api'
+import { IResetPasswordBody, ISendResetPasswordEmailBody, IUserReference } from '@libs/api'
 import { Body, Controller, ForbiddenException, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
 import { ThrottlerGuard } from '@nestjs/throttler'
@@ -22,12 +22,17 @@ class DebugTokenResultBody {
   username: string
 }
 
-class RequestResetPasswordBody implements IRequestResetPasswordBody {
+class SendResetPasswordEmailBody implements ISendResetPasswordEmailBody {
   @ApiProperty()
   @IsEmail()
   email: string
 }
 
+class ResetPasswordBody implements IResetPasswordBody {
+  @ApiProperty()
+  @IsString()
+  newPassword: string
+}
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -72,14 +77,17 @@ export class AuthController {
   @Post('reset-password')
   @UseGuards(ThrottlerGuard)
   @ApiOperation({ description: 'User request to reset password by email' })
-  async requestResetPassword(@Body() body: RequestResetPasswordBody): Promise<void> {
-    await this.authService.requestResetPassword(body.email)
+  async requestResetPassword(@Body() body: SendResetPasswordEmailBody): Promise<void> {
+    await this.authService.sendResetPasswordEmail(body.email)
   }
 
   @Post('reset-password/:token')
   @UseGuards(ThrottlerGuard)
   @ApiOperation({ description: 'Log user in with username and password' })
-  async resetPassword(@Param('token') token: string): Promise<void> {
-    // TODO
+  async resetPassword(
+    @Param('token') token: string,
+    @Body() dto: ResetPasswordBody,
+  ): Promise<void> {
+    await this.authService.resetPassword(token, dto.newPassword)
   }
 }

@@ -67,7 +67,7 @@ export class AuthService {
     }
   }
 
-  async requestResetPassword(email: string): Promise<void> {
+  async sendResetPasswordEmail(email: string): Promise<void> {
     try {
       // Find user by email if exists
       const user = await this.userRepo.findOneOrFail({ email: email })

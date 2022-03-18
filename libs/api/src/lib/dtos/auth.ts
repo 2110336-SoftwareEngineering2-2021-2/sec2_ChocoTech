@@ -7,8 +7,12 @@ export interface ILoginResponseDTO {
 
 export interface IMeResponseDTO extends Omit<IUser, 'passwordHash'> {}
 
-export interface IRequestResetPasswordBody {
+export interface ISendResetPasswordEmailBody {
   email: string
+}
+
+export interface IResetPasswordBody {
+  newPassword: string
 }
 
 export interface IUserReference<T extends IUser = IUser> {
