@@ -14,4 +14,5 @@ export interface IUser {
   location?: string
   omiseCustomerToken?: string
   googleRefreshToken?: string
+  profilePictureURL?: string
 }

@@ -51,6 +51,9 @@ export class User implements IUser {
   @Property({ nullable: true })
   googleRefreshToken?: string
 
+  @Property({ nullable: true })
+  profilePictureURL?: string
+
   @ManyToMany(() => Session, (session) => session.participants)
   sessions = new Collection<Session>(this)
 

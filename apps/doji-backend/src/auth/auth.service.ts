@@ -7,7 +7,7 @@ import {
   generateRedisKey,
   serializeUserReference,
 } from '@backend/utils/redis'
-import { IUserReference } from '@libs/api'
+import { IGoogleUser, IUserReference } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
@@ -16,6 +16,7 @@ import bcrypt from 'bcrypt'
 import fs from 'fs'
 import Handlebars from 'handlebars'
 import { Redis } from 'ioredis'
+import { Profile } from 'passport-google-oauth20'
 import path from 'path'
 
 const TOKEN_EXPIRE_DURATION_SECONDS = 60 * 60 * 24 * 30 // 30 days
@@ -67,13 +68,33 @@ export class AuthService {
     }
   }
 
-  async validateGoogleOAuthLogin(email, refreshToken) {
+  async validateGoogleOAuthLogin(
+    accessToken: string,
+    refreshToken: string,
+    profile: Profile,
+  ): Promise<IGoogleUser> {
+    const { name, emails, photos } = profile
+    const email = emails[0].value
     const user = await this.userRepo.findOne({ email: email })
+
     if (!user) {
       throw new NotFoundException('User not found')
     }
+
     user.googleRefreshToken = refreshToken
+    user.firstName = user.firstName ?? name.givenName
+    user.lastName = user.lastName ?? name.familyName
+    user.profilePictureURL = user.profilePictureURL ?? photos[0].value
+
     await this.userRepo.persistAndFlush(user)
+
+    return {
+      email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      picture: user.profilePictureURL,
+      accessToken,
+    }
   }
 
   async sendResetPasswordEmail(email: string): Promise<void> {

@@ -1,7 +1,6 @@
 import { AuthService } from '@backend/auth/auth.service'
 import { environment } from '@backend/environments/environment'
-import { IUserReference } from '@libs/api'
-import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common'
+import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20'
 
@@ -36,15 +35,11 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     done: VerifyCallback,
   ) {
     try {
-      const { name, emails, photos } = profile
-      const user = {
-        email: emails[0].value,
-        firstName: name.givenName,
-        lastName: name.familyName,
-        picture: photos[0].value,
+      const user = await this.authService.validateGoogleOAuthLogin(
         accessToken,
-      }
-      await this.authService.validateGoogleOAuthLogin(user.email, refreshToken)
+        refreshToken,
+        profile,
+      )
       done(null, user)
     } catch (err) {
       throw new BadRequestException()
