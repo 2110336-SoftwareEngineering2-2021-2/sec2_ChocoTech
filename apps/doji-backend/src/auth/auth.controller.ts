@@ -1,8 +1,19 @@
 import { LoginResponseDTO, MeResponseDTO } from '@backend/auth/auth.dto'
 import { AuthService } from '@backend/auth/auth.service'
+import { GoogleAuthGuard } from '@backend/auth/google.guard'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
+import { User } from '@backend/entities/User'
 import { IResetPasswordBody, ISendResetPasswordEmailBody, IUserReference } from '@libs/api'
-import { Body, Controller, ForbiddenException, Get, Param, Post, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  ForbiddenException,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
 import { ThrottlerGuard } from '@nestjs/throttler'
 import { IsEmail, IsString } from 'class-validator'
@@ -60,6 +71,20 @@ export class AuthController {
       token: await this.authService.issueTokenForUser(user),
       user: user,
     }
+  }
+
+  @Get('google')
+  @UseGuards(GoogleAuthGuard)
+  @ApiOperation({ description: 'Log user in with Google oauth' })
+  async loginWithGoogle(): Promise<void> {
+    return
+  }
+
+  @Get('google/callback')
+  @UseGuards(GoogleAuthGuard)
+  @ApiOperation({ description: 'Google oauth callback' })
+  async loginWithGoogleCallback(@Req() req): Promise<User> {
+    return req.user
   }
 
   @Post('debug_token')

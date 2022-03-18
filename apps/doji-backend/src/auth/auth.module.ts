@@ -1,5 +1,6 @@
 import { AuthService } from '@backend/auth/auth.service'
 import { BearerStrategy } from '@backend/auth/bearer.strategy'
+import { GoogleStrategy } from '@backend/auth/google.strategy'
 import { User } from '@backend/entities/User'
 import { environment } from '@backend/environments/environment'
 import { ExternalModule } from '@backend/external/external.module'
@@ -26,7 +27,7 @@ import { AuthController } from './auth.controller'
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, BearerStrategy, ThrottlerGuard],
+  providers: [AuthService, BearerStrategy, GoogleStrategy, ThrottlerGuard],
   exports: [AuthService],
 })
 export class AuthModule {}

@@ -13,4 +13,5 @@ export interface IUser {
   lastName?: string
   location?: string
   omiseCustomerToken?: string
+  googleRefreshToken?: string
 }

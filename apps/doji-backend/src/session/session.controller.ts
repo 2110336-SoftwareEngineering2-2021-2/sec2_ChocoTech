@@ -19,7 +19,7 @@ export class SessionController {
     @Body() dto: ScheduleSessionDTO,
     @CurrentUser() user: IUserReference,
   ): Promise<void> {
-    await this.sessionService.schedule(dto, user)
+    await this.sessionService.schedule(dto, await user.getUser())
   }
   @Get('service/:expert_username/:service_name')
   async getService(

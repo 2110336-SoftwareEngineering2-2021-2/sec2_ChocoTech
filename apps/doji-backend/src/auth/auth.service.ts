@@ -67,6 +67,15 @@ export class AuthService {
     }
   }
 
+  async validateGoogleOAuthLogin(email, refreshToken) {
+    const user = await this.userRepo.findOne({ email: email })
+    if (!user) {
+      throw new NotFoundException('User not found')
+    }
+    user.googleRefreshToken = refreshToken
+    await this.userRepo.persistAndFlush(user)
+  }
+
   async sendResetPasswordEmail(email: string): Promise<void> {
     try {
       // Find user by email if exists
