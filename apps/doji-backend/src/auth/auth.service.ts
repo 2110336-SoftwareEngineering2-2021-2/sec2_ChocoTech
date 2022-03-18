@@ -95,8 +95,10 @@ export class AuthService {
     }
   }
 
-  async generateGoogleLoginURL(username: string, rediectUrl: string = undefined): Promise<string> {
-    const accessToken = await this._storeAccessToken(RedisKeyType.USER_ACCESS_TOKEN, username)
+  async generateGoogleLoginURL(
+    accessToken: string,
+    rediectUrl: string = undefined,
+  ): Promise<string> {
     const urlOption: Auth.GenerateAuthUrlOpts = {
       access_type: 'offline',
       scope: this.scopes,

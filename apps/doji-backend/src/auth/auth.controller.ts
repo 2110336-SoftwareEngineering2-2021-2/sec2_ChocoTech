@@ -1,18 +1,8 @@
 import { LoginResponseDTO, MeResponseDTO } from '@backend/auth/auth.dto'
 import { AuthService } from '@backend/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
-import { IResetPasswordBody, ISendResetPasswordEmailBody, IUser, IUserReference } from '@libs/api'
-import {
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Param,
-  Post,
-  Query,
-  Res,
-  UseGuards,
-} from '@nestjs/common'
+import { IResetPasswordBody, ISendResetPasswordEmailBody, IUserReference } from '@libs/api'
+import { Body, Controller, Get, Param, Post, Query, Res, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
 import { ThrottlerGuard } from '@nestjs/throttler'
 import { IsEmail, IsString } from 'class-validator'
@@ -56,51 +46,41 @@ export class AuthController {
   @Post('password')
   @UseGuards(ThrottlerGuard)
   @ApiOperation({ description: 'Log user in with username and password' })
-  async loginWithPassword(
-    @Res({ passthrough: true }) res: Response,
-    @Body() body: PasswordLoginBody,
-  ): Promise<void> {
+  async loginWithPassword(@Body() body: PasswordLoginBody): Promise<LoginResponseDTO> {
     const { username, password } = body
     const { accessToken, user } = await this.authService.loginWithPassword(username, password)
-    res
-      .cookie('accessToken', accessToken)
-      .status(HttpStatus.OK)
-      .json({
-        token: accessToken,
-        user,
-      } as LoginResponseDTO)
+    return {
+      token: accessToken,
+      user,
+    }
   }
 
   @Get('google')
-  @UseGuards(UserAuthGuard)
   @ApiOperation({ description: 'Log user in with Google oauth' })
   async loginWithGoogle(
-    @CurrentUser() userRef: IUserReference,
+    @Res() res: Response,
+    @Query('token') accessToken: string,
     @Query('rediectUrl') rediectUrl?: string,
-  ): Promise<string> {
-    const { username } = await userRef.getUser()
-    const url = await this.authService.generateGoogleLoginURL(username, rediectUrl)
-    return url
+  ): Promise<void> {
+    const url = await this.authService.generateGoogleLoginURL(accessToken, rediectUrl)
+    console.log(url)
+    res.redirect(url)
   }
 
   @Get('google/callback')
   @ApiOperation({ description: 'Google oauth callback' })
   async loginWithGoogleCallback(
-    @Res() res: Response,
     @Query('code') code: string,
     @Query('state') state: string,
-  ): Promise<void> {
+  ): Promise<LoginResponseDTO> {
     const { accessToken: userToken } = JSON.parse(state)
     const userRef = await this.authService.validatePasswordLogin(userToken)
     const { username } = await userRef.getUser()
     const { accessToken, user } = await this.authService.loginWithGoogleOAuth(code, username)
-    res
-      .cookie('googleAccessToken', accessToken)
-      .status(HttpStatus.OK)
-      .json({
-        token: accessToken,
-        user,
-      } as LoginResponseDTO)
+    return {
+      token: accessToken,
+      user,
+    }
   }
 
   @Post('reset-password')

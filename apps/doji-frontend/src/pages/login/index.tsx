@@ -118,11 +118,10 @@ const LoginPage: ExtendedNextPage = () => {
           try {
             const { data } = await httpClient.get('/auth/google', {
               params: {
-                rediectUrl: 'http://localhost:3000/login',
+                token: new Storage('localStorage').get<string>(StorageKey.TOKEN),
               },
             })
             console.log(data)
-            await httpClient.get(data)
           } catch (err) {
             console.log(err)
           }

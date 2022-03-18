@@ -8,22 +8,11 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
 import { AppModule } from './app/app.module'
 
-// eslint-disable-next-line
-const cookieParser = require('cookie-parser')
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   app.enableCors({
-    credentials: true,
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:3333',
-      'https://dev.choco.saenyakorn.dev',
-      'https://accounts.google.com',
-      'https://choco.saenyakorn.dev',
-    ],
+    origin: '*',
   })
-  app.use(cookieParser())
   const globalPrefix = 'api'
   app.setGlobalPrefix(globalPrefix)
   const port = process.env.PORT_NEST || 3333

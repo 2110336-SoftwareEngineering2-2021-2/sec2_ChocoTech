@@ -11,7 +11,6 @@ export const queryClient = new QueryClient()
 export const httpClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 10000,
-  withCredentials: true,
 })
 
 httpClient.interceptors.request.use((request) => {
