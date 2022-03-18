@@ -93,7 +93,7 @@ export class AuthService {
         from: 'Doji Support <noreply@doji.com>',
         to: email,
         subject: '[Doji] Reset Password Request',
-        html: template({ domain: environment.url, token, username: user.username }),
+        html: template({ domain: environment.domain, token, username: user.username }),
       })
 
       console.log(response)

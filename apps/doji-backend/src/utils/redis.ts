@@ -1,5 +1,5 @@
 import { User } from '@backend/entities/User'
-import { IUser, IUserReference } from '@libs/api'
+import { IUserReference } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { randomBytes } from 'crypto'
 
