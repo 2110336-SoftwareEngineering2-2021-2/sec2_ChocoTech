@@ -1,6 +1,6 @@
-import { UserReference } from '@backend/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
 import { WorkHistoryRequestDTO } from '@backend/work-history/work-history.dto'
+import { IUserReference } from '@libs/api'
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
@@ -15,7 +15,7 @@ export class WorkHistoryController {
   @ApiBearerAuth()
   @ApiOperation({ description: 'Get all my work history' })
   @ApiResponse({ status: 200, description: 'Given all my work history' })
-  async getAllWorkHistory(@CurrentUser() user: UserReference) {
+  async getAllWorkHistory(@CurrentUser() user: IUserReference) {
     return await this.workHistoryService.getAllWorkHistory(user)
   }
 
@@ -24,7 +24,7 @@ export class WorkHistoryController {
   @ApiBearerAuth()
   @ApiOperation({ description: 'Create my work history' })
   @ApiResponse({ status: 201, description: 'Create successful' })
-  async addWorkHistory(@Body() dto: WorkHistoryRequestDTO, @CurrentUser() user: UserReference) {
+  async addWorkHistory(@Body() dto: WorkHistoryRequestDTO, @CurrentUser() user: IUserReference) {
     await this.workHistoryService.addWorkHistory(dto, user)
     return
   }
@@ -38,7 +38,7 @@ export class WorkHistoryController {
   @ApiResponse({ status: 404, description: 'Work history ID is not founded' })
   async editWorkHistory(
     @Body() dto: WorkHistoryRequestDTO,
-    @CurrentUser() user: UserReference,
+    @CurrentUser() user: IUserReference,
     @Param('workId') workId: string,
   ) {
     await this.workHistoryService.editWorkHistory(dto, user, workId)
@@ -52,7 +52,7 @@ export class WorkHistoryController {
   @ApiResponse({ status: 200, description: 'Delete successful' })
   @ApiResponse({ status: 403, description: 'This is not your work history' })
   @ApiResponse({ status: 404, description: 'Work history ID is not founded' })
-  async deleteWorkHistory(@CurrentUser() user: UserReference, @Param('workId') workId: string) {
+  async deleteWorkHistory(@CurrentUser() user: IUserReference, @Param('workId') workId: string) {
     await this.workHistoryService.deleteWorkHistory(user, workId)
     return
   }

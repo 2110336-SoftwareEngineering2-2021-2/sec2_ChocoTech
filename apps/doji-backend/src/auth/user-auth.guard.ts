@@ -1,4 +1,4 @@
-import { UserReference } from '@backend/auth/auth.service'
+import { IUserReference } from '@libs/api'
 import { ExecutionContext, Injectable, createParamDecorator } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 
@@ -6,6 +6,6 @@ import { AuthGuard } from '@nestjs/passport'
 export class UserAuthGuard extends AuthGuard('bearer') {}
 
 export const CurrentUser = createParamDecorator(
-  (data: unknown, context: ExecutionContext): UserReference =>
+  (data: unknown, context: ExecutionContext): IUserReference =>
     context.switchToHttp().getRequest().user,
 )

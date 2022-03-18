@@ -1,9 +1,9 @@
-import { UserReference } from '@backend/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
 import {
   UserChangePasswordRequestDTO,
   UserRegistrationRequestDTO,
 } from '@backend/register/register.dto'
+import { IUserReference } from '@libs/api'
 import { Body, Controller, Post, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth } from '@nestjs/swagger'
 
@@ -22,7 +22,7 @@ export class RegisterController {
   @ApiBearerAuth()
   async changePassword(
     @Body() dto: UserChangePasswordRequestDTO,
-    @CurrentUser() user: UserReference,
+    @CurrentUser() user: IUserReference,
   ) {
     await this.registerService.changePassword(dto, user)
   }

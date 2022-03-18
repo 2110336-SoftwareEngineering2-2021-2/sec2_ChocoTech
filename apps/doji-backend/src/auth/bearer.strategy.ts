@@ -1,4 +1,5 @@
 import { AuthService } from '@backend/auth/auth.service'
+import { IUserReference } from '@libs/api'
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy } from 'passport-http-bearer'
@@ -11,9 +12,9 @@ export class BearerStrategy extends PassportStrategy(Strategy, 'bearer') {
     super()
   }
 
-  async validate(token: string) {
+  async validate(token: string): Promise<IUserReference> {
     try {
-      return await this.authService.retriveUserFromToken(token)
+      return await this.authService.retriveUserReferenceFromToken(token)
     } catch (e) {
       this.logger.log(`token authentication failed: ${JSON.stringify(Object.entries(e))}`)
       throw new UnauthorizedException('invalid token')

@@ -1,6 +1,6 @@
-import { UserReference } from '@backend/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
 import { UserEditProfileRequest } from '@backend/profile/profile.dto'
+import { IUserReference } from '@libs/api'
 import { Body, Controller, Put, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth } from '@nestjs/swagger'
 
@@ -13,7 +13,7 @@ export class ProfileController {
   @Put('edit')
   @UseGuards(UserAuthGuard)
   @ApiBearerAuth()
-  async editProfile(@Body() dto: UserEditProfileRequest, @CurrentUser() user: UserReference) {
+  async editProfile(@Body() dto: UserEditProfileRequest, @CurrentUser() user: IUserReference) {
     await this.profileService.editProfile(dto, user)
     return
   }

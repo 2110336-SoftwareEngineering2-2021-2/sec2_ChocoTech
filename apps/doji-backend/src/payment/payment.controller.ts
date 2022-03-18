@@ -1,5 +1,4 @@
 import { MeResponseDTO } from '@backend/auth/auth.dto'
-import { UserReference } from '@backend/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
 import { CoinTransactionService } from '@backend/payment/coin-transaction.service'
 import {
@@ -9,6 +8,7 @@ import {
   WithdrawalRequest,
 } from '@backend/payment/payment.dto'
 import { PaymentService } from '@backend/payment/payment.service'
+import { IUserReference } from '@libs/api'
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import Omise from 'omise'
@@ -26,9 +26,8 @@ export class PaymentController {
   @ApiOperation({ description: 'Get user credit cards' })
   @ApiResponse({ status: 403, description: 'The token is invalid' })
   @ApiResponse({ status: 200, description: 'The value associated with the given token' })
-  async getCreditCards(@CurrentUser() userRef: UserReference): Promise<Omise.Cards.ICard[]> {
-    const user = await userRef.getUser()
-    return await this.paymentService.retrieveCreditCards(user)
+  async getCreditCards(@CurrentUser() userRef: IUserReference): Promise<Omise.Cards.ICard[]> {
+    return await this.paymentService.retrieveCreditCards(await userRef.getUser())
   }
 
   @Post('cards')
@@ -37,11 +36,10 @@ export class PaymentController {
   @ApiResponse({ status: 200, description: 'The value associated with the given token' })
   async attachCreditCard(
     @Body() dto: AttachCardRequestDTO,
-    @CurrentUser() userRef: UserReference,
+    @CurrentUser() userRef: IUserReference,
   ): Promise<MeResponseDTO> {
-    const user = await userRef.getUser()
     const updatedUser = await this.paymentService.attachCreditCard(
-      user,
+      await userRef.getUser(),
       dto.cardToken,
       dto.isDefault,
     )
@@ -54,17 +52,16 @@ export class PaymentController {
   @ApiResponse({ status: 200, description: 'The value associated with the given token' })
   async deleteCreditCard(
     @Param('cardId') cardId: string,
-    @CurrentUser() userRef: UserReference,
+    @CurrentUser() userRef: IUserReference,
   ): Promise<void> {
-    const user = await userRef.getUser()
-    await this.paymentService.deleteCreditCard(user, cardId)
+    await this.paymentService.deleteCreditCard(await userRef.getUser(), cardId)
   }
 
   @Get('transaction')
   @ApiOperation({ description: "Retrieve user's transaction" })
   @ApiResponse({ status: 200, type: [UserTransactionLineResponseDTO] })
   async getUserTransactions(
-    @CurrentUser() userRef: UserReference,
+    @CurrentUser() userRef: IUserReference,
   ): Promise<UserTransactionLineResponseDTO[]> {
     return await this.coinTransactionService.getUserTransactions(await userRef.getUser())
   }
@@ -72,14 +69,14 @@ export class PaymentController {
   @Post('deposit')
   @ApiOperation({ description: 'Deposite doji coin' })
   @ApiResponse({ status: 422, description: 'Invalid Card' })
-  async deposit(@CurrentUser() userRef: UserReference, @Body() dto: DepositRequest) {
+  async deposit(@CurrentUser() userRef: IUserReference, @Body() dto: DepositRequest) {
     await this.paymentService.deposit(await userRef.getUser(), dto.amount, dto.cardId)
   }
 
   @Post('withdraw')
   @ApiOperation({ description: 'Withdraw Doji Coin' })
   @ApiResponse({ status: 422, description: 'Insufficient Fund' })
-  async withdraw(@CurrentUser() userRef: UserReference, @Body() dto: WithdrawalRequest) {
+  async withdraw(@CurrentUser() userRef: IUserReference, @Body() dto: WithdrawalRequest) {
     await this.paymentService.withdraw(await userRef.getUser(), dto.amount, dto.destinationAccount)
   }
 }

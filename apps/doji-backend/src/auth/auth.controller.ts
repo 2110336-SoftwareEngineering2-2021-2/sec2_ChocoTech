@@ -1,10 +1,11 @@
 import { LoginResponseDTO, MeResponseDTO } from '@backend/auth/auth.dto'
-import { AuthService, UserReference } from '@backend/auth/auth.service'
+import { AuthService } from '@backend/auth/auth.service'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
-import { Body, Controller, ForbiddenException, Get, Post, UseGuards } from '@nestjs/common'
+import { IRequestResetPasswordBody, IUserReference } from '@libs/api'
+import { Body, Controller, ForbiddenException, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
 import { ThrottlerGuard } from '@nestjs/throttler'
-import { IsString } from 'class-validator'
+import { IsEmail, IsString } from 'class-validator'
 
 class PasswordLoginBody {
   @ApiProperty()
@@ -21,6 +22,12 @@ class DebugTokenResultBody {
   username: string
 }
 
+class RequestResetPasswordBody implements IRequestResetPasswordBody {
+  @ApiProperty()
+  @IsEmail()
+  email: string
+}
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -31,7 +38,7 @@ export class AuthController {
   @ApiResponse({ status: 403, description: 'The token is invalid' })
   @ApiResponse({ status: 200, description: 'The value associated with the given token' })
   @ApiBearerAuth()
-  async getUserInformation(@CurrentUser() userRef: UserReference): Promise<MeResponseDTO> {
+  async getUserInformation(@CurrentUser() userRef: IUserReference): Promise<MeResponseDTO> {
     const user = await userRef.getUser()
     return user
   }
@@ -56,9 +63,23 @@ export class AuthController {
   @ApiResponse({ status: 403, description: 'The token is invalid' })
   @ApiResponse({ status: 200, description: 'The value associated with the given token' })
   @ApiBearerAuth()
-  getCurrentUserFromToken(@CurrentUser() user: UserReference): DebugTokenResultBody {
+  getCurrentUserFromToken(@CurrentUser() user: IUserReference): DebugTokenResultBody {
     return {
       username: user.username,
     }
+  }
+
+  @Post('reset-password')
+  @UseGuards(ThrottlerGuard)
+  @ApiOperation({ description: 'User request to reset password by email' })
+  async requestResetPassword(@Body() body: RequestResetPasswordBody): Promise<void> {
+    await this.authService.requestResetPassword(body.email)
+  }
+
+  @Post('reset-password/:token')
+  @UseGuards(ThrottlerGuard)
+  @ApiOperation({ description: 'Log user in with username and password' })
+  async resetPassword(@Param('token') token: string): Promise<void> {
+    // TODO
   }
 }
