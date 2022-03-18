@@ -4,8 +4,9 @@ import { EntityRepository } from '@mikro-orm/core'
 import { randomBytes } from 'crypto'
 
 export enum RedisKeyType {
-  USER_TOKEN = 'user_token',
-  RESET_TOKEN = 'reset_token',
+  USER_ACCESS_TOKEN = 'user_access_token',
+  RESET_PASSWORD_TOKEN = 'reset_access_token',
+  GOOGLE_ACCESS_TOKEN = 'google_access_token',
 }
 
 export function generateRandomUserToken(): Promise<string> {

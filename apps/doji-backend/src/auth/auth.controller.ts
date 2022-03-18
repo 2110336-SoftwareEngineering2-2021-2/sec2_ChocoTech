@@ -1,22 +1,22 @@
 import { LoginResponseDTO, MeResponseDTO } from '@backend/auth/auth.dto'
 import { AuthService } from '@backend/auth/auth.service'
-import { GoogleAuthGuard } from '@backend/auth/google.guard'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
-import { User } from '@backend/entities/User'
-import { IResetPasswordBody, ISendResetPasswordEmailBody, IUserReference } from '@libs/api'
+import { IResetPasswordBody, ISendResetPasswordEmailBody, IUser, IUserReference } from '@libs/api'
 import {
   Body,
   Controller,
-  ForbiddenException,
   Get,
+  HttpStatus,
   Param,
   Post,
-  Req,
+  Query,
+  Res,
   UseGuards,
 } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
 import { ThrottlerGuard } from '@nestjs/throttler'
 import { IsEmail, IsString } from 'class-validator'
+import { Response } from 'express'
 
 class PasswordLoginBody {
   @ApiProperty()
@@ -26,11 +26,6 @@ class PasswordLoginBody {
   @ApiProperty()
   @IsString()
   password: string
-}
-
-class DebugTokenResultBody {
-  @ApiProperty()
-  username: string
 }
 
 class SendResetPasswordEmailBody implements ISendResetPasswordEmailBody {
@@ -55,48 +50,51 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'The value associated with the given token' })
   @ApiBearerAuth()
   async getUserInformation(@CurrentUser() userRef: IUserReference): Promise<MeResponseDTO> {
-    const user = await userRef.getUser()
-    return user
+    return await userRef.getUser()
   }
 
   @Post('password')
   @UseGuards(ThrottlerGuard)
   @ApiOperation({ description: 'Log user in with username and password' })
-  async authWithPassword(@Body() body: PasswordLoginBody): Promise<LoginResponseDTO> {
-    const user = await this.authService.userFromUsernamePassword(body.username, body.password)
-    if (!user) {
-      throw new ForbiddenException('No user with such username or password is incorrect')
-    }
-    return {
-      token: await this.authService.issueTokenForUser(user),
-      user: user,
-    }
+  async loginWithPassword(
+    @Res({ passthrough: true }) res: Response,
+    @Body() body: PasswordLoginBody,
+  ): Promise<void> {
+    const { username, password } = body
+    const { accessToken, user } = await this.authService.loginWithPassword(username, password)
+    res
+      .cookie('accessToken', accessToken)
+      .status(HttpStatus.OK)
+      .json({
+        token: accessToken,
+        user,
+      } as LoginResponseDTO)
   }
 
   @Get('google')
-  @UseGuards(GoogleAuthGuard)
   @ApiOperation({ description: 'Log user in with Google oauth' })
-  async loginWithGoogle(): Promise<void> {
-    return
+  loginWithGoogle(@Res() res: Response): void {
+    const url = this.authService.generateGoogleLoginURL()
+    res.redirect(url)
   }
 
   @Get('google/callback')
-  @UseGuards(GoogleAuthGuard)
-  @ApiOperation({ description: 'Google oauth callback' })
-  async loginWithGoogleCallback(@Req() req): Promise<User> {
-    return req.user
-  }
-
-  @Post('debug_token')
   @UseGuards(UserAuthGuard)
-  @ApiOperation({ description: 'Inspect the token' })
-  @ApiResponse({ status: 403, description: 'The token is invalid' })
-  @ApiResponse({ status: 200, description: 'The value associated with the given token' })
-  @ApiBearerAuth()
-  getCurrentUserFromToken(@CurrentUser() user: IUserReference): DebugTokenResultBody {
-    return {
-      username: user.username,
-    }
+  @ApiOperation({ description: 'Google oauth callback' })
+  async loginWithGoogleCallback(
+    @Res() res: Response,
+    @Query('code') code: string,
+    @CurrentUser() userRef: IUserReference,
+  ): Promise<void> {
+    const { username } = await userRef.getUser()
+    const { accessToken, user } = await this.authService.loginWithGoogleOAuth(code, username)
+    res
+      .cookie('googleAccessToken', accessToken)
+      .status(HttpStatus.OK)
+      .json({
+        token: accessToken,
+        user,
+      } as LoginResponseDTO)
   }
 
   @Post('reset-password')
@@ -108,7 +106,7 @@ export class AuthController {
 
   @Post('reset-password/:token')
   @UseGuards(ThrottlerGuard)
-  @ApiOperation({ description: 'Log user in with username and password' })
+  @ApiOperation({ description: 'Reset user password' })
   async resetPassword(
     @Param('token') token: string,
     @Body() dto: ResetPasswordBody,

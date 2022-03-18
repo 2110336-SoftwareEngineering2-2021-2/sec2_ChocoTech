@@ -27,3 +27,9 @@ export interface IGoogleUser {
   picture: string
   accessToken: string
 }
+
+export interface IJwtPayload {
+  username: string
+  accessToken: string
+  googleAccessToken: string
+}

@@ -29,6 +29,9 @@ export const environment = {
     clientId: process.env.GOOGLE_OAUTH_CLIENT_ID ?? '',
     clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET ?? '',
   },
+  jwt: {
+    secret: process.env.JWT_SECRET ?? '',
+  },
 }
 
 console.log(process.env.NODE_ENV)

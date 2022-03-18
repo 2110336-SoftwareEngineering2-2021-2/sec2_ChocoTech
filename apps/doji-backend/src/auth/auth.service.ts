@@ -10,10 +10,12 @@ import {
 import { IGoogleUser, IUserReference } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { Inject, Injectable, NotFoundException } from '@nestjs/common'
+import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
 import { MailgunService } from '@nextnm/nestjs-mailgun'
 import bcrypt from 'bcrypt'
 import fs from 'fs'
+import { google } from 'googleapis'
 import Handlebars from 'handlebars'
 import { Redis } from 'ioredis'
 import { Profile } from 'passport-google-oauth20'
@@ -21,6 +23,11 @@ import path from 'path'
 
 const TOKEN_EXPIRE_DURATION_SECONDS = 60 * 60 * 24 * 30 // 30 days
 const RESET_TOKEN_EXPIRE_DURATION_SECONDS = 60 * 5 // 5 minutes
+
+interface ILogin {
+  accessToken: string
+  user: User
+}
 
 export class InvalidToken extends Error {
   constructor() {
@@ -30,18 +37,56 @@ export class InvalidToken extends Error {
 
 @Injectable()
 export class AuthService {
+  private readonly oauth2Client = new google.auth.OAuth2(
+    environment.googleOAuth.clientId,
+    environment.googleOAuth.clientSecret,
+    `${environment.domain}/api/auth/google/callback`,
+  )
+  private readonly oauth2 = google.oauth2({
+    version: 'v2',
+    auth: this.oauth2Client,
+  })
+  private readonly scopes = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/calendar.events',
+  ]
+
   constructor(
+    private readonly jwtService: JwtService,
     @Inject('Redis') private readonly redis: Redis,
     @Inject(MailgunService) private mailgunService: MailgunService,
     @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
   ) {}
 
-  async retriveUserReferenceFromToken(token: string): Promise<IUserReference> {
-    const redisKey = generateRedisKey(RedisKeyType.USER_TOKEN, token)
+  private async _storeAccessToken(token: string, key: RedisKeyType, user: User): Promise<string> {
+    const redisKey = generateRedisKey(key, token)
+    await this.redis.set(redisKey, serializeUserReference({ username: user.username }))
+    await this.redis.expire(redisKey, TOKEN_EXPIRE_DURATION_SECONDS)
+    return token
+  }
+
+  async loginWithPassword(username: string, password: string): Promise<ILogin> {
+    const user = await this.userRepo.findOne({ username: username })
+    if (!user) {
+      throw new ForbiddenException('No user with such username or password is incorrect')
+    }
+    if (!(await bcrypt.compare(password, user.passwordHash))) {
+      throw new ForbiddenException('No user with such username or password is incorrect')
+    }
+    const accessToken = await generateRandomUserToken()
+    await this._storeAccessToken(accessToken, RedisKeyType.USER_ACCESS_TOKEN, user)
+    return {
+      accessToken: accessToken,
+      user,
+    }
+  }
+
+  async validatePasswordLogin(token: string): Promise<IUserReference> {
+    const redisKey = generateRedisKey(RedisKeyType.USER_ACCESS_TOKEN, token)
     try {
       const userRefString = await this.redis.get(redisKey)
       const userRef = deserializeUserReference(userRefString, this.userRepo)
-
       // Extends expiration time
       await this.redis.expire(redisKey, TOKEN_EXPIRE_DURATION_SECONDS)
       return userRef
@@ -50,25 +95,52 @@ export class AuthService {
     }
   }
 
-  async issueTokenForUser(user: User): Promise<string> {
-    const token = await generateRandomUserToken()
-    const redisKey = generateRedisKey(RedisKeyType.USER_TOKEN, token)
-    await this.redis.set(redisKey, serializeUserReference({ username: user.username }))
-    await this.redis.expire(redisKey, TOKEN_EXPIRE_DURATION_SECONDS)
-    return token
+  generateGoogleLoginURL(): string {
+    return this.oauth2Client.generateAuthUrl({
+      access_type: 'offline',
+      scope: this.scopes,
+    })
   }
 
-  async userFromUsernamePassword(username: string, password: string): Promise<User | null> {
-    const user = await this.userRepo.findOne({ username: username })
-    if (!user) return null
-    if (await bcrypt.compare(password, user.passwordHash)) {
-      return user
-    } else {
-      return null
+  async loginWithGoogleOAuth(code: string, username: string): Promise<ILogin> {
+    const user = await this.userRepo.findOne({ username })
+    if (!user) {
+      throw new NotFoundException('No user with such email')
+    }
+
+    try {
+      const { tokens } = await this.oauth2Client.getToken(code)
+      console.log(tokens)
+      this.oauth2Client.setCredentials(tokens)
+      google.options({ auth: this.oauth2Client })
+
+      this.oauth2Client.on('tokens', async (tokens) => {
+        if (tokens.refresh_token) {
+          console.log('refresh tk', tokens.refresh_token)
+          user.googleRefreshToken = tokens.refresh_token
+          await this.userRepo.persistAndFlush(user)
+        }
+        console.log('access tk', tokens.access_token)
+      })
+
+      const { data } = await this.oauth2.userinfo.get()
+
+      user.firstName = user.firstName ?? data.given_name
+      user.lastName = user.lastName ?? data.family_name
+      user.profilePictureURL = user.profilePictureURL ?? data.picture
+      user.googleRefreshToken = tokens.refresh_token
+      await this.userRepo.persistAndFlush(user)
+
+      return {
+        accessToken: tokens.access_token,
+        user: user,
+      }
+    } catch (err) {
+      throw new InvalidToken()
     }
   }
 
-  async validateGoogleOAuthLogin(
+  async validateGoogleOAuthLoginV0(
     accessToken: string,
     refreshToken: string,
     profile: Profile,
@@ -88,6 +160,13 @@ export class AuthService {
 
     await this.userRepo.persistAndFlush(user)
 
+    const redisKey = generateRedisKey(
+      RedisKeyType.RESET_PASSWORD_TOKEN,
+      serializeUserReference({ username: user.username }),
+    )
+    await this.redis.set(redisKey, accessToken)
+    await this.redis.expire(redisKey, TOKEN_EXPIRE_DURATION_SECONDS)
+
     return {
       email,
       firstName: user.firstName,
@@ -105,7 +184,7 @@ export class AuthService {
 
       // Store reset password token in redis
       const redisKey = generateRedisKey(
-        RedisKeyType.RESET_TOKEN,
+        RedisKeyType.RESET_PASSWORD_TOKEN,
         serializeUserReference({ username: user.username }),
       )
       await this.redis.set(redisKey, token)
@@ -133,7 +212,7 @@ export class AuthService {
   }
 
   async resetPassword(token: string, newPassword: string): Promise<void> {
-    const redisKey = generateRedisKey(RedisKeyType.RESET_TOKEN, token)
+    const redisKey = generateRedisKey(RedisKeyType.RESET_PASSWORD_TOKEN, token)
     try {
       const userRefString = await this.redis.get(redisKey)
       const userRef = deserializeUserReference(userRefString, this.userRepo)

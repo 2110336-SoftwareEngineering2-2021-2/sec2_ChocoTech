@@ -25,6 +25,13 @@ export const environment = {
     apiKey: process.env.MAILGUN_API_KEY ?? '',
     domain: process.env.MAILGUN_DOMAIN ?? '',
   },
+  googleOAuth: {
+    clientId: process.env.GOOGLE_OAUTH_CLIENT_ID ?? '',
+    clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET ?? '',
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET ?? '',
+  },
 }
 
 console.log(process.env.NODE_ENV)

@@ -14,7 +14,7 @@ export class User implements IUser {
   @PrimaryKey()
   username: string
 
-  @PrimaryKey()
+  @Property({ unique: true })
   email: string
 
   @Property({ hidden: true })
@@ -47,6 +47,9 @@ export class User implements IUser {
 
   @Property({ nullable: true })
   omiseCustomerToken?: string
+
+  @Property({ nullable: true })
+  googleEmail?: string
 
   @Property({ nullable: true })
   googleRefreshToken?: string

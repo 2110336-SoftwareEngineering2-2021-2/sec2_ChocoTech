@@ -14,9 +14,9 @@ export class BearerStrategy extends PassportStrategy(Strategy, 'bearer') {
 
   async validate(token: string): Promise<IUserReference> {
     try {
-      return await this.authService.retriveUserReferenceFromToken(token)
+      return await this.authService.validatePasswordLogin(token)
     } catch (e) {
-      this.logger.log(`token authentication failed: ${JSON.stringify(Object.entries(e))}`)
+      this.logger.log(`Token authentication failed: ${JSON.stringify(Object.entries(e))}`)
       throw new UnauthorizedException('invalid token')
     }
   }
