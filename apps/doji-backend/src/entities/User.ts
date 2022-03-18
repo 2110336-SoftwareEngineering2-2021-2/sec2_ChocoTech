@@ -14,6 +14,9 @@ export class User implements IUser {
   @PrimaryKey()
   username: string
 
+  @PrimaryKey()
+  email: string
+
   @Property({ hidden: true })
   passwordHash: string
 
@@ -25,9 +28,6 @@ export class User implements IUser {
 
   @Property()
   onlineStatus: boolean = false
-
-  @Property({ unique: true })
-  email: string
 
   @Property()
   registerationDate: Date = new Date()

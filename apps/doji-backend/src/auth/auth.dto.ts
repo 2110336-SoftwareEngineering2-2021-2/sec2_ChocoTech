@@ -14,6 +14,9 @@ export class MeResponseDTO implements IMeResponseDTO {
   username: string
 
   @ApiProperty()
+  email: string
+
+  @ApiProperty()
   displayName: string
 
   @ApiProperty()
@@ -21,9 +24,6 @@ export class MeResponseDTO implements IMeResponseDTO {
 
   @ApiProperty()
   onlineStatus: boolean
-
-  @ApiProperty()
-  email: string
 
   @ApiProperty()
   registerationDate: Date
