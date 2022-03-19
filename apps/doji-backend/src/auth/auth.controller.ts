@@ -46,13 +46,11 @@ export class AuthController {
   }
 
   @Post('password')
-  @Redirect()
   @UseGuards(ThrottlerGuard)
   @ApiOperation({ description: 'Log user in with username and password' })
   async loginWithPassword(
     @Res({ passthrough: true }) res: Response,
     @Body() body: PasswordLoginBody,
-    @Query('rediectUrl') rediectUrl: string = environment.domain.frontend,
   ) {
     const { username, password } = body
     const { accessToken, maxAge } = await this.authService.loginWithPassword(username, password)
@@ -60,9 +58,6 @@ export class AuthController {
       httpOnly: true,
       maxAge: maxAge,
     })
-    return {
-      url: rediectUrl,
-    }
   }
 
   @Get('google')
@@ -72,12 +67,19 @@ export class AuthController {
     @Cookie('accessToken') accessToken,
     @Query('rediectUrl') rediectUrl: string = environment.domain.frontend,
   ) {
-    console.log(accessToken)
-    const googleUrl = await this.authService.generateGoogleLoginURL(accessToken, rediectUrl)
-    console.log(googleUrl)
-    return {
-      url: googleUrl,
-      statusCode: 302,
+    try {
+      console.log(accessToken)
+      const googleUrl = await this.authService.generateGoogleLoginURL(accessToken, rediectUrl)
+      console.log(googleUrl)
+      return {
+        url: googleUrl,
+        statusCode: 302,
+      }
+    } catch (err) {
+      return {
+        url: environment.domain.frontend,
+        statusCode: 401,
+      }
     }
   }
 

@@ -10,7 +10,13 @@ import {
 import { IGoogleUser, IUserReference } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { MailgunService } from '@nextnm/nestjs-mailgun'
 import bcrypt from 'bcrypt'
 import fs from 'fs'
@@ -94,6 +100,10 @@ export class AuthService {
   }
 
   async generateGoogleLoginURL(accessToken: string, rediectUrl: string): Promise<string> {
+    if (!accessToken) {
+      throw new UnauthorizedException('No access token provided')
+    }
+
     const urlOption: Auth.GenerateAuthUrlOpts = {
       access_type: 'offline',
       scope: this.scopes,
