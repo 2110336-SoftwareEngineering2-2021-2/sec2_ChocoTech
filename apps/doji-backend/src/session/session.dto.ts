@@ -51,12 +51,12 @@ export class ServiceInformationDTO implements IServiceInformationDTO {
 export class DeleteSessionParticipantRequest {
   @ApiProperty()
   @IsNumber()
-  SessionId: number
+  sessionId: number
 }
 
 export class SessionDTO implements ISession {
   @ApiProperty()
-  id!: number
+  id: number
 
   @ApiProperty()
   startTime: Date
@@ -71,7 +71,7 @@ export class SessionDTO implements ISession {
   fee: number
 
   @ApiProperty({ enum: Object.values(SessionStatus), default: SessionStatus.PENDING })
-  status: SessionStatus
+  status: SessionStatus = SessionStatus.PENDING
 
   @ApiProperty()
   coinOnHold: number
