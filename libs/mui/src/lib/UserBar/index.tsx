@@ -57,19 +57,7 @@ export const UserBar: React.FC<UserBarProps> = ({
     router.push(path)
   }
 
-  if (!isLoggedIn || !username) {
-    return (
-      <Stack p={2}>
-        <Stack py={1} pr={2} pl={1.5}>
-          <Link href="login" passHref>
-            <MuiLink variant="small" fontWeight={500}>
-              Login
-            </MuiLink>
-          </Link>
-        </Stack>
-      </Stack>
-    )
-  }
+  if (!isLoggedIn || !username) return null
 
   return (
     <Stack p={1}>

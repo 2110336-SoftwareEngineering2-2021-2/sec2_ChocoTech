@@ -22,8 +22,6 @@ const Template: Story<UserBarProps> = (args) => {
   return <UserBar {...args} />
 }
 
-export const Default = Template.bind({})
-
 export const WithAvatar = Template.bind({})
 WithAvatar.args = {
   isLoggedIn: true,
