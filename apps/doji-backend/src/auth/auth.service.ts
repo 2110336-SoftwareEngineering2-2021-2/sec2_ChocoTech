@@ -125,17 +125,18 @@ export class AuthService {
 
     try {
       const { tokens } = await this.oauth2Client.getToken(code)
-      console.log(tokens)
       this.oauth2Client.setCredentials(tokens)
       google.options({ auth: this.oauth2Client })
 
       this.oauth2Client.on('tokens', async (tokens) => {
         if (tokens.refresh_token) {
-          console.log('refresh tk', tokens.refresh_token)
+          this.logger.log(
+            `Refreshed Google OAuth2 token for user ${username}, refresh token: ${tokens.refresh_token}`,
+          )
           user.googleRefreshToken = tokens.refresh_token
           await this.userRepo.persistAndFlush(user)
         }
-        console.log('access tk', tokens.access_token)
+        this.logger.log(`Google OAuth2 token for user ${username} refreshed`)
       })
 
       const { data } = await this.oauth2.userinfo.get()

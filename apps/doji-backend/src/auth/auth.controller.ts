@@ -68,9 +68,7 @@ export class AuthController {
     @Query('rediectUrl') rediectUrl: string = environment.domain.frontend,
   ) {
     try {
-      console.log(accessToken)
       const googleUrl = await this.authService.generateGoogleLoginURL(accessToken, rediectUrl)
-      console.log(googleUrl)
       return {
         url: googleUrl,
         statusCode: 302,
