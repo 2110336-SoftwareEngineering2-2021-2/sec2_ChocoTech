@@ -1,4 +1,4 @@
-import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
+import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { ExpertApplicationRequest } from '@backend/expert/expert.dto'
 import { IUserReference } from '@libs/api'
 import { Body, Controller, Post, UseGuards } from '@nestjs/common'

@@ -1,8 +1,10 @@
-import { LoginResponseDTO, MeResponseDTO } from '@backend/auth/auth.dto'
+import { MeResponseDTO } from '@backend/auth/auth.dto'
 import { AuthService } from '@backend/auth/auth.service'
-import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
+import { Cookie } from '@backend/auth/cookie.decorator'
+import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
+import { environment } from '@backend/environments/environment'
 import { IResetPasswordBody, ISendResetPasswordEmailBody, IUserReference } from '@libs/api'
-import { Body, Controller, Get, Param, Post, Query, Res, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, Query, Redirect, Res, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
 import { ThrottlerGuard } from '@nestjs/throttler'
 import { IsEmail, IsString } from 'class-validator'
@@ -44,42 +46,62 @@ export class AuthController {
   }
 
   @Post('password')
+  @Redirect()
   @UseGuards(ThrottlerGuard)
   @ApiOperation({ description: 'Log user in with username and password' })
-  async loginWithPassword(@Body() body: PasswordLoginBody): Promise<LoginResponseDTO> {
+  async loginWithPassword(
+    @Res({ passthrough: true }) res: Response,
+    @Body() body: PasswordLoginBody,
+    @Query('rediectUrl') rediectUrl: string = environment.domain.frontend,
+  ) {
     const { username, password } = body
-    const { accessToken, user } = await this.authService.loginWithPassword(username, password)
+    const { accessToken, maxAge } = await this.authService.loginWithPassword(username, password)
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      maxAge: maxAge,
+    })
     return {
-      token: accessToken,
-      user,
+      url: rediectUrl,
     }
   }
 
   @Get('google')
+  @Redirect()
   @ApiOperation({ description: 'Log user in with Google oauth' })
   async loginWithGoogle(
-    @Res() res: Response,
-    @Query('token') accessToken: string,
-    @Query('rediectUrl') rediectUrl?: string,
-  ): Promise<void> {
-    const url = await this.authService.generateGoogleLoginURL(accessToken, rediectUrl)
-    console.log(url)
-    res.redirect(url)
+    @Cookie('accessToken') accessToken,
+    @Query('rediectUrl') rediectUrl: string = environment.domain.frontend,
+  ) {
+    console.log(accessToken)
+    const googleUrl = await this.authService.generateGoogleLoginURL(accessToken, rediectUrl)
+    console.log(googleUrl)
+    return {
+      url: googleUrl,
+      statusCode: 302,
+    }
   }
 
   @Get('google/callback')
+  @Redirect()
   @ApiOperation({ description: 'Google oauth callback' })
   async loginWithGoogleCallback(
+    @Res({ passthrough: true }) res: Response,
     @Query('code') code: string,
     @Query('state') state: string,
-  ): Promise<LoginResponseDTO> {
-    const { accessToken: userToken } = JSON.parse(state)
-    const userRef = await this.authService.validatePasswordLogin(userToken)
+  ) {
+    const { accessToken: userToken, rediectUrl } = JSON.parse(state)
+    const userRef = await this.authService.validateAccessToken(userToken)
     const { username } = await userRef.getUser()
-    const { accessToken, user } = await this.authService.loginWithGoogleOAuth(code, username)
+    const { access_token, expiry_date } = await this.authService.loginWithGoogleOAuth(
+      code,
+      username,
+    )
+    res.cookie('googleAccessToken', access_token, {
+      httpOnly: true,
+      maxAge: expiry_date,
+    })
     return {
-      token: accessToken,
-      user,
+      url: rediectUrl,
     }
   }
 

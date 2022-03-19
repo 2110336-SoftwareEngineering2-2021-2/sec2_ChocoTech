@@ -2,7 +2,10 @@ require('dotenv').config() // eslint-disable-line
 
 export const environment = {
   production: true,
-  domain: process.env.APP_DOMAIN ?? 'http://localhost:3333',
+  domain: {
+    frontend: process.env.FRONTEND_DOMAIN ?? 'http://localhost:3000',
+    backend: process.env.BACKEND_DOMAIN ?? 'http://localhost:3333/api',
+  },
   database: {
     user: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,

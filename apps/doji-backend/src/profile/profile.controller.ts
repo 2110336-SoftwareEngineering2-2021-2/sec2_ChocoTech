@@ -1,4 +1,4 @@
-import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
+import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { UserEditProfileRequest } from '@backend/profile/profile.dto'
 import { IUserReference } from '@libs/api'
 import { Body, Controller, Put, UseGuards } from '@nestjs/common'

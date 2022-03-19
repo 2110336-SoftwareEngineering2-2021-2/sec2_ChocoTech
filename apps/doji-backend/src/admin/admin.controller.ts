@@ -1,6 +1,6 @@
 import { AdminCreationRequestDTO } from '@backend/admin/admin.dto'
 import { AdminService } from '@backend/admin/admin.service'
-import { UserAuthGuard } from '@backend/auth/user-auth.guard'
+import { UserAuthGuard } from '@backend/auth/user.guard'
 import { Admin } from '@backend/entities/Admin'
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'

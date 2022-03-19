@@ -1,4 +1,4 @@
-import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
+import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { WorkHistoryRequestDTO } from '@backend/work-history/work-history.dto'
 import { IUserReference } from '@libs/api'
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common'

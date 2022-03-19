@@ -1,5 +1,5 @@
 import { MeResponseDTO } from '@backend/auth/auth.dto'
-import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
+import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { CoinTransactionService } from '@backend/payment/coin-transaction.service'
 import {
   AttachCardRequestDTO,

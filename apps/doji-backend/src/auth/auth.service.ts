@@ -11,7 +11,6 @@ import { IGoogleUser, IUserReference } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
 import { MailgunService } from '@nextnm/nestjs-mailgun'
 import bcrypt from 'bcrypt'
 import fs from 'fs'
@@ -26,7 +25,7 @@ const RESET_TOKEN_EXPIRE_DURATION_SECONDS = 60 * 5 // 5 minutes
 
 interface ILogin {
   accessToken: string
-  user: User
+  maxAge: number
 }
 
 export class InvalidToken extends Error {
@@ -40,7 +39,7 @@ export class AuthService {
   private readonly oauth2Client = new google.auth.OAuth2(
     environment.googleOAuth.clientId,
     environment.googleOAuth.clientSecret,
-    `${environment.domain}/api/auth/google/callback`,
+    `${environment.domain.backend}/auth/google/callback`,
   )
   private readonly oauth2 = google.oauth2({
     version: 'v2',
@@ -53,7 +52,6 @@ export class AuthService {
   ]
 
   constructor(
-    private readonly jwtService: JwtService,
     @Inject('Redis') private readonly redis: Redis,
     @Inject(MailgunService) private mailgunService: MailgunService,
     @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
@@ -78,11 +76,11 @@ export class AuthService {
     const accessToken = await this._storeAccessToken(RedisKeyType.USER_ACCESS_TOKEN, username)
     return {
       accessToken: accessToken,
-      user,
+      maxAge: TOKEN_EXPIRE_DURATION_SECONDS,
     }
   }
 
-  async validatePasswordLogin(token: string): Promise<IUserReference> {
+  async validateAccessToken(token: string): Promise<IUserReference> {
     const redisKey = generateRedisKey(RedisKeyType.USER_ACCESS_TOKEN, token)
     try {
       const userRefString = await this.redis.get(redisKey)
@@ -95,19 +93,19 @@ export class AuthService {
     }
   }
 
-  async generateGoogleLoginURL(
-    accessToken: string,
-    rediectUrl: string = undefined,
-  ): Promise<string> {
+  async generateGoogleLoginURL(accessToken: string, rediectUrl: string): Promise<string> {
     const urlOption: Auth.GenerateAuthUrlOpts = {
       access_type: 'offline',
       scope: this.scopes,
-      state: JSON.stringify({ accessToken }),
+      state: JSON.stringify({
+        accessToken,
+        rediectUrl,
+      }),
     }
     return this.oauth2Client.generateAuthUrl(urlOption)
   }
 
-  async loginWithGoogleOAuth(code: string, username: string): Promise<ILogin> {
+  async loginWithGoogleOAuth(code: string, username: string) {
     const user = await this.userRepo.findOne({ username })
     if (!user) {
       throw new NotFoundException('No user with such email')
@@ -136,10 +134,7 @@ export class AuthService {
       user.googleRefreshToken = tokens.refresh_token
       await this.userRepo.persistAndFlush(user)
 
-      return {
-        accessToken: tokens.access_token,
-        user: user,
-      }
+      return tokens
     } catch (err) {
       throw new InvalidToken()
     }
@@ -207,7 +202,7 @@ export class AuthService {
         from: 'Doji Support <noreply@doji.com>',
         to: email,
         subject: '[Doji] Reset Password Request',
-        html: template({ domain: environment.domain, token, username: user.username }),
+        html: template({ domain: environment.domain.frontend, token, username: user.username }),
       })
 
       console.log(response)

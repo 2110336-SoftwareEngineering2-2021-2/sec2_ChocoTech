@@ -1,13 +1,5 @@
-import { ILoginResponseDTO, IMeResponseDTO, UserRole } from '@libs/api'
+import { IMeResponseDTO, UserRole } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
-
-export class LoginResponseDTO implements ILoginResponseDTO {
-  @ApiProperty()
-  token: string
-
-  @ApiProperty()
-  user: IMeResponseDTO
-}
 
 export class MeResponseDTO implements IMeResponseDTO {
   @ApiProperty()
