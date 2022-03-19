@@ -19,7 +19,7 @@ const LoginSchema = object({
 type LoginModel = InferType<typeof LoginSchema>
 
 const loginRequest = async (loginData: LoginModel): Promise<void> => {
-  await httpClient.post('/auth/password', loginData)
+  await httpClient.post('/auth/login', loginData)
 }
 
 const LoginPage: ExtendedNextPage = () => {

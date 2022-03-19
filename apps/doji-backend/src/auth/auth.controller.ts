@@ -45,7 +45,7 @@ export class AuthController {
     return await userRef.getUser()
   }
 
-  @Post('password')
+  @Post('login')
   @UseGuards(ThrottlerGuard)
   @ApiOperation({ description: 'Log user in with username and password' })
   async loginWithPassword(
