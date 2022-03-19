@@ -4,7 +4,6 @@ import { httpClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { ILoginResponseDTO } from '@libs/api'
 import { TopBarActionType, TopBarProps } from '@libs/mui'
 import { Button, Link as MuiLink, Stack, TextField, Typography } from '@mui/material'
 import Cookies from 'js-cookie'
@@ -23,9 +22,8 @@ const LoginSchema = object({
 
 type LoginModel = InferType<typeof LoginSchema>
 
-const loginRequest = async (loginData: LoginModel): Promise<ILoginResponseDTO> => {
-  const { data } = await httpClient.post<ILoginResponseDTO>('/auth/password', loginData)
-  return data
+const loginRequest = async (loginData: LoginModel): Promise<void> => {
+  await httpClient.post('/auth/password', loginData)
 }
 
 const LoginPage: ExtendedNextPage = () => {
@@ -42,9 +40,9 @@ const LoginPage: ExtendedNextPage = () => {
 
   const loginMutation = useMutation(loginRequest, {
     onSuccess: ({ token, user }) => {
-      const localStorage = new Storage('localStorage')
-      localStorage.set<string>(StorageKey.TOKEN, token)
-      setUser(user)
+      // const localStorage = new Storage('localStorage')
+      // localStorage.set<string>(StorageKey.TOKEN, token)
+      // setUser(user)
     },
   })
 
