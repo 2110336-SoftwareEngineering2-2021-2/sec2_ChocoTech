@@ -54,7 +54,7 @@ export class SessionController {
     @Body() body: DeleteSessionParticipantRequest,
     @CurrentUser() user: UserReference,
   ) {
-    await this.sessionService.deleteSessionParticipant(body.SessionId, user)
+    await this.sessionService.deleteSessionParticipant(body.sessionId, user)
     return 'OK'
   }
 }
