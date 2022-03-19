@@ -34,9 +34,21 @@ function setupSwagger(app: INestApplication) {
     .setTitle('Doji Backend API')
     .setVersion('0.0.1')
     .addBearerAuth({ type: 'http' })
+    .addCookieAuth('accessToken', {
+      type: 'http',
+      in: 'Header',
+      scheme: 'Bearer',
+    })
     .build()
   const document = SwaggerModule.createDocument(app, config)
-  SwaggerModule.setup('/swagger', app, document)
+  SwaggerModule.setup('/swagger', app, document, {
+    swaggerOptions: {
+      requestInterceptor: (req) => {
+        req.credentials = 'include'
+        return req
+      },
+    },
+  })
 }
 
 bootstrap()

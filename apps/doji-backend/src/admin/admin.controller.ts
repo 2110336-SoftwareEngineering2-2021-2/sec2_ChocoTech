@@ -3,7 +3,7 @@ import { AdminService } from '@backend/admin/admin.service'
 import { UserAuthGuard } from '@backend/auth/user.guard'
 import { Admin } from '@backend/entities/Admin'
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 @Controller('admin')
 export class AdminController {
@@ -11,7 +11,7 @@ export class AdminController {
 
   @Get()
   @UseGuards(UserAuthGuard)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOperation({ description: 'Get all admin' })
   @ApiResponse({ status: 403, description: 'There is no admin' })
   @ApiResponse({ status: 200, description: 'Given all admin' })
@@ -21,7 +21,7 @@ export class AdminController {
 
   @Post()
   @UseGuards(UserAuthGuard)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOperation({ description: 'Regis new admin' })
   @ApiResponse({ status: 422, description: 'Admin with this username already exist.' })
   @ApiResponse({ status: 201, description: 'New admin is registered' })

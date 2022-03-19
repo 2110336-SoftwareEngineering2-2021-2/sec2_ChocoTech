@@ -2,7 +2,7 @@ import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { UserEditProfileRequest } from '@backend/profile/profile.dto'
 import { IUserReference } from '@libs/api'
 import { Body, Controller, Put, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth } from '@nestjs/swagger'
+import { ApiCookieAuth } from '@nestjs/swagger'
 
 import { ProfileService } from './profile.service'
 
@@ -12,7 +12,7 @@ export class ProfileController {
 
   @Put('edit')
   @UseGuards(UserAuthGuard)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   async editProfile(@Body() dto: UserEditProfileRequest, @CurrentUser() user: IUserReference) {
     await this.profileService.editProfile(dto, user)
     return

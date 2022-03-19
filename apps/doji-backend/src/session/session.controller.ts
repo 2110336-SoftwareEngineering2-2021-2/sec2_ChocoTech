@@ -7,14 +7,14 @@ import {
 import { SessionService } from '@backend/session/session.service'
 import { IUserReference } from '@libs/api'
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth } from '@nestjs/swagger'
+import { ApiCookieAuth } from '@nestjs/swagger'
 
 @Controller('session')
 export class SessionController {
   constructor(private readonly sessionService: SessionService) {}
   @Post('schedule')
   @UseGuards(UserAuthGuard)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   async schedule(
     @Body() dto: ScheduleSessionDTO,
     @CurrentUser() user: IUserReference,

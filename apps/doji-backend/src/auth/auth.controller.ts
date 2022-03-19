@@ -5,7 +5,7 @@ import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { environment } from '@backend/environments/environment'
 import { IResetPasswordBody, ISendResetPasswordEmailBody, IUserReference } from '@libs/api'
 import { Body, Controller, Get, Param, Post, Query, Redirect, Res, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
+import { ApiCookieAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
 import { ThrottlerGuard } from '@nestjs/throttler'
 import { IsEmail, IsString } from 'class-validator'
 import { Response } from 'express'
@@ -40,7 +40,7 @@ export class AuthController {
   @ApiOperation({ description: 'Get current user information' })
   @ApiResponse({ status: 403, description: 'The token is invalid' })
   @ApiResponse({ status: 200, description: 'The value associated with the given token' })
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   async getUserInformation(@CurrentUser() userRef: IUserReference): Promise<MeResponseDTO> {
     return await userRef.getUser()
   }

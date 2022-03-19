@@ -10,12 +10,12 @@ import {
 import { PaymentService } from '@backend/payment/payment.service'
 import { IUserReference } from '@libs/api'
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import Omise from 'omise'
 
 @Controller('payment')
 @UseGuards(UserAuthGuard)
-@ApiBearerAuth()
+@ApiCookieAuth()
 export class PaymentController {
   constructor(
     private readonly paymentService: PaymentService,
