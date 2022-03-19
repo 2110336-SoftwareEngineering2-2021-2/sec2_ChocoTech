@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { ILoginResponseDTO } from '@libs/api'
 import { TopBarActionType, TopBarProps } from '@libs/mui'
 import { Button, Link as MuiLink, Stack, TextField, Typography } from '@mui/material'
+import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { InferType, object, string } from 'yup'
@@ -113,22 +114,13 @@ const LoginPage: ExtendedNextPage = () => {
           <Button type="submit">Log in</Button>
         </Stack>
       </Stack>
-      <Button
-        onClick={async () => {
-          try {
-            const { data } = await httpClient.get('/auth/google', {
-              params: {
-                token: new Storage('localStorage').get<string>(StorageKey.TOKEN),
-              },
-            })
-            console.log(data)
-          } catch (err) {
-            console.log(err)
-          }
+      <button
+        onClick={() => {
+          router.push(`http://localhost:3333/api/auth/google`)
         }}
       >
         Login Google
-      </Button>
+      </button>
     </>
   )
 }
