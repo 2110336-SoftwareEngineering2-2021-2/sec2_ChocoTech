@@ -120,7 +120,7 @@ export class AuthService {
   async loginWithGoogleOAuth(code: string, username: string) {
     const user = await this.userRepo.findOne({ username })
     if (!user) {
-      throw new NotFoundException('No user with such email')
+      throw new NotFoundException('No user with such username')
     }
 
     try {
@@ -145,6 +145,7 @@ export class AuthService {
       user.lastName = user.lastName ?? data.family_name
       user.profilePictureURL = user.profilePictureURL ?? data.picture
       user.googleRefreshToken = tokens.refresh_token
+      user.googleEmail = data.email
       await this.userRepo.persistAndFlush(user)
 
       return tokens

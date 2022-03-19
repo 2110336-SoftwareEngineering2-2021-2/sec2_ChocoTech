@@ -48,7 +48,7 @@ export class User implements IUser {
   @Property({ nullable: true })
   omiseCustomerToken?: string
 
-  @Property({ nullable: true })
+  @Property({ unique: true, nullable: true })
   googleEmail?: string
 
   @Property({ nullable: true })
