@@ -15,7 +15,6 @@ export const Default = Template.bind({})
 
 export const LoggedIn = Template.bind({})
 LoggedIn.args = {
-  isLoggedIn: true,
   username: 'John Doe',
   role: 'user',
 }
