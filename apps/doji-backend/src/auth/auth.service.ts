@@ -7,13 +7,14 @@ import {
   generateRedisKey,
   serializeUserReference,
 } from '@backend/utils/redis'
-import { IGoogleUser, IUserReference } from '@libs/api'
+import { IUserReference } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import {
   ForbiddenException,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common'
@@ -56,6 +57,7 @@ export class AuthService {
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/calendar.events',
   ]
+  private readonly logger = new Logger(AuthService.name)
 
   constructor(
     @Inject('Redis') private readonly redis: Redis,
@@ -150,42 +152,6 @@ export class AuthService {
     }
   }
 
-  async validateGoogleOAuthLoginV0(
-    accessToken: string,
-    refreshToken: string,
-    profile: Profile,
-  ): Promise<IGoogleUser> {
-    const { name, emails, photos } = profile
-    const email = emails[0].value
-    const user = await this.userRepo.findOne({ email: email })
-
-    if (!user) {
-      throw new NotFoundException('User not found')
-    }
-
-    user.googleRefreshToken = refreshToken
-    user.firstName = user.firstName ?? name.givenName
-    user.lastName = user.lastName ?? name.familyName
-    user.profilePictureURL = user.profilePictureURL ?? photos[0].value
-
-    await this.userRepo.persistAndFlush(user)
-
-    const redisKey = generateRedisKey(
-      RedisKeyType.RESET_PASSWORD_TOKEN,
-      serializeUserReference({ username: user.username }),
-    )
-    await this.redis.set(redisKey, accessToken)
-    await this.redis.expire(redisKey, TOKEN_EXPIRE_DURATION_SECONDS)
-
-    return {
-      email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      picture: user.profilePictureURL,
-      accessToken,
-    }
-  }
-
   async sendResetPasswordEmail(email: string): Promise<void> {
     try {
       // Find user by email if exists
@@ -215,7 +181,7 @@ export class AuthService {
         html: template({ domain: environment.domain.frontend, token, username: user.username }),
       })
 
-      console.log(response)
+      this.logger.log(`Sent reset password email to ${email}`, { response })
     } catch (err) {
       throw new NotFoundException('User not found')
     }
