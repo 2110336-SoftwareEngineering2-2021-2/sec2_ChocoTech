@@ -1,12 +1,8 @@
-import Storage from '@frontend/common/storage'
-import { StorageKey } from '@frontend/common/storage/constants'
 import { httpClient } from '@frontend/services'
-import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { TopBarActionType, TopBarProps } from '@libs/mui'
 import { Button, Link as MuiLink, Stack, TextField, Typography } from '@mui/material'
-import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { InferType, object, string } from 'yup'
@@ -35,11 +31,10 @@ const LoginPage: ExtendedNextPage = () => {
     resolver: yupResolver(LoginSchema),
   })
 
-  const { setUser } = useAuthStore()
   const router = useRouter()
 
   const loginMutation = useMutation(loginRequest, {
-    onSuccess: ({ token, user }) => {
+    onSuccess: () => {
       // const localStorage = new Storage('localStorage')
       // localStorage.set<string>(StorageKey.TOKEN, token)
       // setUser(user)
