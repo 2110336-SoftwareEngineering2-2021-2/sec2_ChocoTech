@@ -10,7 +10,7 @@ import {
 import { IUserReference } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { Inject, Injectable, NotFoundException } from '@nestjs/common'
+import { Inject, Injectable, Logger } from '@nestjs/common'
 import { MailgunService } from '@nextnm/nestjs-mailgun'
 import bcrypt from 'bcrypt'
 import fs from 'fs'
@@ -29,6 +29,8 @@ export class InvalidToken extends Error {
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name)
+
   constructor(
     @Inject('Redis') private readonly redis: Redis,
     @Inject(MailgunService) private mailgunService: MailgunService,
@@ -98,7 +100,9 @@ export class AuthService {
 
       console.log(response)
     } catch (err) {
-      throw new NotFoundException('User not found')
+      // No throw an error, since the user might know the email is invalid
+      // So, the reset password request is always successful
+      this.logger.error(`Couldn't send reset password email, to ${email}`, err)
     }
   }
 
@@ -115,6 +119,9 @@ export class AuthService {
 
       // Save user
       await this.userRepo.persistAndFlush(user)
+
+      // Remove reset token
+      await this.redis.del(redisKey)
     } catch (err) {
       throw new InvalidToken()
     }
