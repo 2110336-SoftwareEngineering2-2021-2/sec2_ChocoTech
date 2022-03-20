@@ -1,6 +1,7 @@
-import { UserReference } from '@backend/auth/auth.service'
 import { ExpertApp } from '@backend/entities/ExpertApp'
+import { User } from '@backend/entities/User'
 import { ExpertApplicationRequest } from '@backend/expert/expert.dto'
+import { IUserReference } from '@libs/api'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
@@ -11,8 +12,8 @@ export class ExpertAppService {
     @InjectRepository(ExpertApp) private readonly expertAppRepo: EntityRepository<ExpertApp>,
   ) {}
 
-  async applicationRequest(dto: ExpertApplicationRequest, userRef: UserReference) {
-    const user = await userRef.getUser()
+  async applicationRequest(dto: ExpertApplicationRequest, userRef: IUserReference) {
+    const user = await userRef.getUser<User>()
     const application = new ExpertApp()
     application.user = user
     application.field = dto.field

@@ -1,11 +1,11 @@
-import { UserReference } from '@backend/auth/auth.service'
-import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
+import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import {
   UserChangePasswordRequestDTO,
   UserRegistrationRequestDTO,
 } from '@backend/register/register.dto'
+import { IUserReference } from '@libs/api'
 import { Body, Controller, Post, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth } from '@nestjs/swagger'
+import { ApiCookieAuth } from '@nestjs/swagger'
 
 import { RegisterService } from './register.service'
 
@@ -19,10 +19,10 @@ export class RegisterController {
 
   @Post('change_password')
   @UseGuards(UserAuthGuard)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   async changePassword(
     @Body() dto: UserChangePasswordRequestDTO,
-    @CurrentUser() user: UserReference,
+    @CurrentUser() user: IUserReference,
   ) {
     await this.registerService.changePassword(dto, user)
   }
