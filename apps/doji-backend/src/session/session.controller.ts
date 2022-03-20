@@ -1,4 +1,4 @@
-import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
+import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import {
   GetServiceByNameAndExpertUsernameDTO,
   ScheduleSessionDTO,
@@ -7,19 +7,19 @@ import {
 import { SessionService } from '@backend/session/session.service'
 import { IUserReference } from '@libs/api'
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth } from '@nestjs/swagger'
+import { ApiCookieAuth } from '@nestjs/swagger'
 
 @Controller('session')
 export class SessionController {
   constructor(private readonly sessionService: SessionService) {}
   @Post('schedule')
   @UseGuards(UserAuthGuard)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   async schedule(
     @Body() dto: ScheduleSessionDTO,
     @CurrentUser() user: IUserReference,
   ): Promise<void> {
-    await this.sessionService.schedule(dto, user)
+    await this.sessionService.schedule(dto, await user.getUser())
   }
   @Get('service/:expert_username/:service_name')
   async getService(

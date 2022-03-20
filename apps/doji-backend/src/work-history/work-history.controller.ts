@@ -1,8 +1,8 @@
-import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
+import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { WorkHistoryRequestDTO } from '@backend/work-history/work-history.dto'
 import { IUserReference } from '@libs/api'
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 import { WorkHistoryService } from './work-history.service'
 
@@ -12,7 +12,7 @@ export class WorkHistoryController {
 
   @Get()
   @UseGuards(UserAuthGuard)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOperation({ description: 'Get all my work history' })
   @ApiResponse({ status: 200, description: 'Given all my work history' })
   async getAllWorkHistory(@CurrentUser() user: IUserReference) {
@@ -21,7 +21,7 @@ export class WorkHistoryController {
 
   @Post()
   @UseGuards(UserAuthGuard)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOperation({ description: 'Create my work history' })
   @ApiResponse({ status: 201, description: 'Create successful' })
   async addWorkHistory(@Body() dto: WorkHistoryRequestDTO, @CurrentUser() user: IUserReference) {
@@ -31,7 +31,7 @@ export class WorkHistoryController {
 
   @Put(':workId')
   @UseGuards(UserAuthGuard)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOperation({ description: 'Edit my work history' })
   @ApiResponse({ status: 200, description: 'Edit successful' })
   @ApiResponse({ status: 403, description: 'This is not your work history' })
@@ -47,7 +47,7 @@ export class WorkHistoryController {
 
   @Delete(':workId')
   @UseGuards(UserAuthGuard)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOperation({ description: 'Delete my work history' })
   @ApiResponse({ status: 200, description: 'Delete successful' })
   @ApiResponse({ status: 403, description: 'This is not your work history' })

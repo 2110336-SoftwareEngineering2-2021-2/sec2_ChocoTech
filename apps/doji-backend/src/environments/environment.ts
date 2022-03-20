@@ -2,7 +2,10 @@ require('dotenv').config() // eslint-disable-line
 
 export const environment = {
   production: false,
-  domain: process.env.APP_DOMAIN ?? 'http://localhost:3333',
+  domain: {
+    frontend: process.env.FRONTEND_DOMAIN ?? 'http://localhost:3000',
+    backend: process.env.BACKEND_DOMAIN ?? 'http://localhost:3333/api',
+  },
   database: {
     user: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
@@ -24,6 +27,13 @@ export const environment = {
   mailgun: {
     apiKey: process.env.MAILGUN_API_KEY ?? '',
     domain: process.env.MAILGUN_DOMAIN ?? '',
+  },
+  googleOAuth: {
+    clientId: process.env.GOOGLE_OAUTH_CLIENT_ID ?? '',
+    clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET ?? '',
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET ?? '',
   },
 }
 
