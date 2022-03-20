@@ -24,7 +24,6 @@ import fs from 'fs'
 import { Auth, google } from 'googleapis'
 import Handlebars from 'handlebars'
 import { Redis } from 'ioredis'
-import { Profile } from 'passport-google-oauth20'
 import path from 'path'
 
 const TOKEN_EXPIRE_DURATION_SECONDS = 60 * 60 * 24 * 30 // 30 days
@@ -180,12 +179,18 @@ export class AuthService {
         from: 'Doji Support <noreply@doji.com>',
         to: email,
         subject: '[Doji] Reset Password Request',
-        html: template({ domain: environment.domain.frontend, token, username: user.username }),
+        html: template({
+          frontendDomian: environment.domain.frontend,
+          token,
+          username: user.username,
+        }),
       })
 
       this.logger.log(`Sent reset password email to ${email}`, { response })
     } catch (err) {
-      throw new NotFoundException('User not found')
+      // No throw an error, since the user might know the email is invalid
+      // So, the reset password request is always successful
+      this.logger.error(`Couldn't send reset password email, to ${email}`, err)
     }
   }
 
@@ -202,6 +207,9 @@ export class AuthService {
 
       // Save user
       await this.userRepo.persistAndFlush(user)
+
+      // Remove reset token
+      await this.redis.del(redisKey)
     } catch (err) {
       throw new InvalidToken()
     }
