@@ -160,11 +160,8 @@ export class AuthService {
       const token = await generateRandomUserToken()
 
       // Store reset password token in redis
-      const redisKey = generateRedisKey(
-        RedisKeyType.RESET_PASSWORD_TOKEN,
-        serializeUserReference({ username: user.username }),
-      )
-      await this.redis.set(redisKey, token)
+      const redisKey = generateRedisKey(RedisKeyType.RESET_PASSWORD_TOKEN, token)
+      await this.redis.set(redisKey, serializeUserReference({ username: user.username }))
       await this.redis.expire(redisKey, RESET_TOKEN_EXPIRE_DURATION_SECONDS)
 
       // Read reset email template file
@@ -210,6 +207,7 @@ export class AuthService {
 
       // Remove reset token
       await this.redis.del(redisKey)
+      this.logger.log(`Reset password for user [${user.username}] successfully`)
     } catch (err) {
       throw new InvalidToken()
     }
