@@ -91,14 +91,18 @@ export class AuthService {
       const template = Handlebars.compile(resetPasswordTemplate)
 
       // Send the email
-      const response = await this.mailgunService.createEmail(environment.mailgun.domain, {
+      await this.mailgunService.createEmail(environment.mailgun.domain, {
         from: 'Doji Support <noreply@doji.com>',
         to: email,
         subject: '[Doji] Reset Password Request',
-        html: template({ frontendDomian: environment.domain, token, username: user.username }),
+        html: template({
+          frontendDomian: environment.domain,
+          token,
+          username: user.username,
+        }),
       })
 
-      console.log(response)
+      this.logger.log(`Sent reset password email to ${email}`)
     } catch (err) {
       // No throw an error, since the user might know the email is invalid
       // So, the reset password request is always successful
