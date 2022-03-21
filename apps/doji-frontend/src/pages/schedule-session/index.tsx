@@ -1,4 +1,5 @@
 import ConfirmDialog from '@frontend/components/ExpertService/ConfirmDialog'
+import TimePickerController from '@frontend/components/ExpertService/TimePickerController'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IScheduleSessionDTO, IServiceInformationDTO } from '@libs/api'
 import { SearchBar, Tables, TopBar, TopBarActionType } from '@libs/mui'
@@ -166,48 +167,22 @@ function ScheduleSessionPage() {
             <br />
             <br />
             <Stack direction={'row'}>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Controller
-                  name="startTime"
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <TimePicker
-                      {...register('startTime')}
-                      label="Start Time"
-                      value={value}
-                      onChange={onChange}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          error={!!errors.startTime}
-                          helperText={errors.startTime?.message}
-                        />
-                      )}
-                    />
-                  )}
-                ></Controller>
-              </LocalizationProvider>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Controller
-                  name="endTime"
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <TimePicker
-                      {...register('endTime')}
-                      label="End Time"
-                      value={value}
-                      onChange={onChange}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          error={!!errors.endTime}
-                          helperText={errors.endTime?.message}
-                        />
-                      )}
-                    />
-                  )}
-                ></Controller>
-              </LocalizationProvider>
+              <TimePickerController
+                name="startTime"
+                control={control}
+                register={register}
+                registerName="startTime"
+                label="Start Time"
+                errors={errors}
+              ></TimePickerController>
+              <TimePickerController
+                name="endTime"
+                control={control}
+                register={register}
+                registerName="endTime"
+                label="End Time"
+                errors={errors}
+              ></TimePickerController>
             </Stack>
             <br />
             <br />
