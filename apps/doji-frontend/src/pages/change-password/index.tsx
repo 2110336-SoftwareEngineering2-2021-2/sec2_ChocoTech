@@ -89,4 +89,4 @@ const ChangePasswordPage: ExtendedNextPage = () => {
 
 export default ChangePasswordPage
 
-export const getServerSideProps = getServerSideUser
+export const getServerSideProps = getServerSideUser()

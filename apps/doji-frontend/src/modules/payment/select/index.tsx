@@ -167,6 +167,6 @@ const SelectPaymentPage: ExtendedNextPage = () => {
   )
 }
 
-export const getServerSideProps = getServerSideUser
+export const getServerSideProps = getServerSideUser()
 
 export default SelectPaymentPage

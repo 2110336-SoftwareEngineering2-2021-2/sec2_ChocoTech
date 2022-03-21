@@ -141,4 +141,4 @@ const MyBalancePage: ExtendedNextPage = () => {
 
 export default MyBalancePage
 
-export const getServerSideProps = getServerSideUser
+export const getServerSideProps = getServerSideUser()

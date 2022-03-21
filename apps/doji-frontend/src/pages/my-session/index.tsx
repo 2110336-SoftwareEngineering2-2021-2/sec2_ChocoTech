@@ -82,4 +82,4 @@ export default function MySessionPage() {
   )
 }
 
-export const getServerSideProps = getServerSideUser
+export const getServerSideProps = getServerSideUser()
