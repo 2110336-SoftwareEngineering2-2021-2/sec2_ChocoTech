@@ -1,3 +1,4 @@
+import { UserRegistrationRequestDTO } from '@backend/auth/auth.dto'
 import { User } from '@backend/entities/User'
 import { environment } from '@backend/environments/environment'
 import {
@@ -8,7 +9,7 @@ import {
   serializeUserReference,
 } from '@backend/utils/redis'
 import { IUserReference } from '@libs/api'
-import { EntityRepository } from '@mikro-orm/core'
+import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import {
   ForbiddenException,
@@ -17,6 +18,7 @@ import {
   Logger,
   NotFoundException,
   UnauthorizedException,
+  UnprocessableEntityException,
 } from '@nestjs/common'
 import { MailgunService } from '@nextnm/nestjs-mailgun'
 import bcrypt from 'bcrypt'
@@ -210,6 +212,35 @@ export class AuthService {
       this.logger.log(`Reset password for user [${user.username}] successfully`)
     } catch (err) {
       throw new InvalidToken()
+    }
+  }
+
+  async signup(dto: UserRegistrationRequestDTO) {
+    //create new user and hash password
+    const newUser = new User()
+    newUser.username = dto.username
+    newUser.email = dto.email
+    newUser.displayName = dto.displayName
+    newUser.passwordHash = await bcrypt.hash(dto.password, 10)
+    try {
+      await this.userRepo.persistAndFlush(newUser) //add to database
+    } catch (err) {
+      if (err instanceof UniqueConstraintViolationException) {
+        throw new UnprocessableEntityException('User with this username or email already exist.')
+      } else {
+        throw err
+      }
+    }
+    return
+  }
+
+  async changePassword(userRef: IUserReference, currentPassword: string, newPassword: string) {
+    const user = await userRef.getUser()
+    if (await bcrypt.compare(currentPassword, user.passwordHash)) {
+      user.passwordHash = await bcrypt.hash(newPassword, 10)
+      await this.userRepo.persistAndFlush(user)
+    } else {
+      throw new UnprocessableEntityException('Your current password is not correct.')
     }
   }
 }

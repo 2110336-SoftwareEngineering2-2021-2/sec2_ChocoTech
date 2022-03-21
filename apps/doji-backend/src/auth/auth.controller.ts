@@ -1,9 +1,17 @@
-import { MeResponseDTO } from '@backend/auth/auth.dto'
+import {
+  MeResponseDTO,
+  UserChangePasswordRequestDTO,
+  UserRegistrationRequestDTO,
+} from '@backend/auth/auth.dto'
 import { AuthService } from '@backend/auth/auth.service'
 import { Cookie } from '@backend/auth/cookie.decorator'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { environment } from '@backend/environments/environment'
-import { IResetPasswordBody, ISendResetPasswordEmailBody, IUserReference } from '@libs/api'
+import {
+  IUserReference,
+  IUserResetPasswordRequest,
+  IUserSendResetPasswordEmailRequest,
+} from '@libs/api'
 import { Body, Controller, Get, Param, Post, Query, Redirect, Res, UseGuards } from '@nestjs/common'
 import { ApiCookieAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
 import { ThrottlerGuard } from '@nestjs/throttler'
@@ -20,13 +28,13 @@ class PasswordLoginBody {
   password: string
 }
 
-class SendResetPasswordEmailBody implements ISendResetPasswordEmailBody {
+class SendResetPasswordEmailBody implements IUserSendResetPasswordEmailRequest {
   @ApiProperty()
   @IsEmail()
   email: string
 }
 
-class ResetPasswordBody implements IResetPasswordBody {
+class ResetPasswordBody implements IUserResetPasswordRequest {
   @ApiProperty()
   @IsString()
   newPassword: string
@@ -120,5 +128,20 @@ export class AuthController {
     @Body() dto: ResetPasswordBody,
   ): Promise<void> {
     await this.authService.resetPassword(token, dto.newPassword)
+  }
+
+  @Post('change-password')
+  @UseGuards(UserAuthGuard)
+  @ApiOperation({ description: 'Change user password' })
+  async changePassword(
+    @Body() dto: UserChangePasswordRequestDTO,
+    @CurrentUser() userRef: IUserReference,
+  ): Promise<void> {
+    await this.authService.changePassword(userRef, dto.currentPassword, dto.newPassword)
+  }
+
+  @Post('signup')
+  async create(@Body() dto: UserRegistrationRequestDTO) {
+    await this.authService.signup(dto)
   }
 }
