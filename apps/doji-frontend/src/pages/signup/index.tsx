@@ -2,13 +2,12 @@ import RegisteredTextfield from '@frontend/components/Register/registerTextfield
 import { httpClient } from '@frontend/services'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IUserRegistrationRequestDTO } from '@libs/api'
-import { TopBarActionType } from '@libs/mui'
-import { Button, Stack, Typography } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import { AxiosError } from 'axios'
 import router from 'next/router'
 import * as yup from 'yup'
 
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { useMutation } from 'react-query'
 
@@ -28,8 +27,8 @@ const registerValidation = yup.object({
 
 type RegisterModel = yup.InferType<typeof registerValidation>
 
-const registerRequest = async (formData: IUserRegistrationRequestDTO) => {
-  await httpClient.post<IUserRegistrationRequestDTO>('/register', formData)
+const signupRequest = async (formData: IUserRegistrationRequestDTO) => {
+  await httpClient.post<IUserRegistrationRequestDTO>('/signup', formData)
   return formData.username
 }
 
@@ -44,10 +43,10 @@ function RegisterPage() {
     resolver: yupResolver(registerValidation),
   })
 
-  const registerMutation = useMutation(registerRequest, {
+  const registerMutation = useMutation(signupRequest, {
     onSuccess: (username) => {
-      toast.success('Register successfully')
-      router.push(`/register/${username}`)
+      toast.success('Signup successfully')
+      router.push(`/signup/${username}`)
     },
     onError: (error: AxiosError) => {
       toast.error(error.response.data.message)

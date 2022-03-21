@@ -8,10 +8,10 @@ const ListPage: ExtendedNextPage = () => {
       <Link href="/" passHref>
         <MuiLink component="li">Main Page</MuiLink>
       </Link>
-      <Link href="/register" passHref>
+      <Link href="/signup" passHref>
         <MuiLink component="li">Register Page</MuiLink>
       </Link>
-      <Link href="/register/expert" passHref>
+      <Link href="/signup/expert" passHref>
         <MuiLink component="li">Expert Register Page</MuiLink>
       </Link>
       <Link href="/login" passHref>

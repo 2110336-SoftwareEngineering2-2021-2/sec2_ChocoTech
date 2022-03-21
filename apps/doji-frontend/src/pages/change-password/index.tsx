@@ -24,7 +24,7 @@ export type ChangePasswordModel = InferType<typeof ChangePasswordSchema>
 
 const changePasswordRequest = async (formData: IUserChangePasswordRequestDTO) => {
   await httpClient.post<unknown, unknown, IUserChangePasswordRequestDTO>(
-    '/register/change_password',
+    '/auth/change-password',
     formData,
   )
 }
