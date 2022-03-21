@@ -119,8 +119,3 @@ const LoginPage: ExtendedNextPage = () => {
 }
 
 export default LoginPage
-
-LoginPage.topBarProps = {
-  title: 'Log in',
-  action: TopBarActionType.Back,
-} as TopBarProps

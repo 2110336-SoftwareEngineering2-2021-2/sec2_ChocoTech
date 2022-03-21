@@ -94,8 +94,3 @@ function RegisterPage() {
   )
 }
 export default RegisterPage
-
-RegisterPage.topBarProps = {
-  title: 'Register',
-  action: TopBarActionType.Back,
-}

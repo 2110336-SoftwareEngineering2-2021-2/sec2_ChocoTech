@@ -13,8 +13,3 @@ const AddNewBankAccountPage: ExtendedNextPage = () => {
 }
 
 export default AddNewBankAccountPage
-
-AddNewBankAccountPage.topBarProps = {
-  title: 'Add bank account',
-  action: TopBarActionType.Back,
-}
