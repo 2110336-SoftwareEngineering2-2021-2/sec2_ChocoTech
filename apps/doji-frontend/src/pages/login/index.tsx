@@ -1,13 +1,10 @@
-import Storage from '@frontend/common/storage'
-import { StorageKey } from '@frontend/common/storage/constants'
 import { httpClient } from '@frontend/services'
-import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { ILoginResponseDTO } from '@libs/api'
 import { TopBarActionType, TopBarProps } from '@libs/mui'
 import { Button, Link as MuiLink, Stack, TextField, Typography } from '@mui/material'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { InferType, object, string } from 'yup'
 
 import { useForm } from 'react-hook-form'
@@ -21,9 +18,8 @@ const LoginSchema = object({
 
 type LoginModel = InferType<typeof LoginSchema>
 
-const loginRequest = async (loginData: LoginModel): Promise<ILoginResponseDTO> => {
-  const { data } = await httpClient.post<ILoginResponseDTO>('/auth/password', loginData)
-  return data
+const loginRequest = async (loginData: LoginModel): Promise<void> => {
+  await httpClient.post('/auth/login', loginData)
 }
 
 const LoginPage: ExtendedNextPage = () => {
@@ -35,13 +31,13 @@ const LoginPage: ExtendedNextPage = () => {
     resolver: yupResolver(LoginSchema),
   })
 
-  const { setUser } = useAuthStore()
+  const router = useRouter()
 
   const loginMutation = useMutation(loginRequest, {
-    onSuccess: ({ token, user }) => {
-      const localStorage = new Storage('localStorage')
-      localStorage.set<string>(StorageKey.TOKEN, token)
-      setUser(user)
+    onSuccess: () => {
+      // const localStorage = new Storage('localStorage')
+      // localStorage.set<string>(StorageKey.TOKEN, token)
+      // setUser(user)
     },
   })
 
@@ -111,6 +107,13 @@ const LoginPage: ExtendedNextPage = () => {
           <Button type="submit">Log in</Button>
         </Stack>
       </Stack>
+      <button
+        onClick={() => {
+          router.push(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`)
+        }}
+      >
+        Login Google
+      </button>
     </>
   )
 }

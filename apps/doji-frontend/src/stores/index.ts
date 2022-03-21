@@ -1,6 +1,7 @@
 import Storage from '@frontend/common/storage'
 import { StorageKey } from '@frontend/common/storage/constants'
 import { IMeResponseDTO } from '@libs/api'
+import Cookies from 'js-cookie'
 import create from 'zustand'
 
 const localStorage = new Storage('localStorage')
@@ -12,7 +13,7 @@ export interface AuthStore {
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
-  isAuthenticated: () => !!localStorage.get<string>(StorageKey.TOKEN),
+  isAuthenticated: () => !!Cookies.get('accessToken'),
   userInfo: undefined,
   setUser: (user) => set((state) => ({ ...state, userInfo: user })),
 }))
