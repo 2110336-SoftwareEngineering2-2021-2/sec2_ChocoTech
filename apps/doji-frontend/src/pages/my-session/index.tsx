@@ -1,9 +1,9 @@
+import { getServerSideUser } from '@frontend/common/auth'
 import NotiDialog from '@frontend/components/NotiDialog/NotiDialog'
 import { Box, Stack, Tab, Tabs, Typography } from '@mui/material'
 import router from 'next/router'
 
 import React from 'react'
-import { BiPlus } from 'react-icons/bi'
 
 interface TabPanelProps {
   index: number
@@ -81,4 +81,5 @@ export default function MySessionPage() {
     </Stack>
   )
 }
-MySessionPage.shouldAuthenticated = true
+
+export const getServerSideProps = getServerSideUser

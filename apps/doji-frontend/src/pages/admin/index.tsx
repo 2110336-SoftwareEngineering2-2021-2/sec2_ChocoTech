@@ -1,3 +1,4 @@
+import { getServerSideUser } from '@frontend/common/auth'
 import { SearchBar } from '@libs/mui'
 import { Stack } from '@mui/material'
 import router from 'next/router'
@@ -16,4 +17,5 @@ function AdminPage() {
 }
 
 export default AdminPage
-AdminPage.shouldAuthenticated = true
+
+export const getServerSideProps = getServerSideUser

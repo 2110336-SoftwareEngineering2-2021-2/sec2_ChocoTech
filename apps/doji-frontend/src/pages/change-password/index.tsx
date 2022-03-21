@@ -1,3 +1,4 @@
+import { getServerSideUser } from '@frontend/common/auth'
 import { httpClient } from '@frontend/services'
 import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -88,4 +89,4 @@ const ChangePasswordPage: ExtendedNextPage = () => {
 
 export default ChangePasswordPage
 
-ChangePasswordPage.shouldAuthenticated = true
+export const getServerSideProps = getServerSideUser

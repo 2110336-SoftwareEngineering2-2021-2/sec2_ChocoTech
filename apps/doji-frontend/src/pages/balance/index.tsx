@@ -1,3 +1,4 @@
+import { getServerSideUser } from '@frontend/common/auth'
 import { DialogState, TopUpDialog } from '@frontend/components/TopUpDialog'
 import { WalletCard } from '@frontend/components/WalletCard'
 import { httpClient } from '@frontend/services'
@@ -138,6 +139,6 @@ const MyBalancePage: ExtendedNextPage = () => {
   )
 }
 
-MyBalancePage.shouldAuthenticated = true
-
 export default MyBalancePage
+
+export const getServerSideProps = getServerSideUser

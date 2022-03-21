@@ -1,3 +1,4 @@
+import { getServerSideUser } from '@frontend/common/auth'
 import { DialogState, TopUpDialog } from '@frontend/components/TopUpDialog'
 import { httpClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
@@ -166,6 +167,6 @@ const SelectPaymentPage: ExtendedNextPage = () => {
   )
 }
 
-SelectPaymentPage.shouldAuthenticated = true
+export const getServerSideProps = getServerSideUser
 
 export default SelectPaymentPage

@@ -1,5 +1,5 @@
 import { AuthService } from '@backend/auth/auth.service'
-import { AuthStrategy } from '@backend/auth/cookie.strategy'
+import { AuthStrategy } from '@backend/auth/auth.strategy'
 import { User } from '@backend/entities/User'
 import { environment } from '@backend/environments/environment'
 import { ExternalModule } from '@backend/external/external.module'

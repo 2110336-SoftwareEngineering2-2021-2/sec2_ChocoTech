@@ -2,7 +2,10 @@ import { Session } from '@backend/entities/Session'
 import {
   IMeResponseDTO,
   IUserChangePasswordRequestDTO,
+  IUserLoginRequestDTO,
   IUserRegistrationRequestDTO,
+  IUserResetPasswordRequest,
+  IUserSendResetPasswordEmailRequest,
   UserRole,
 } from '@libs/api'
 import { Collection } from '@mikro-orm/core'
@@ -83,4 +86,26 @@ export class UserChangePasswordRequestDTO implements IUserChangePasswordRequestD
   @ApiProperty()
   @IsString()
   newPassword: string
+}
+
+export class UserSendResetPasswordEmailRequest implements IUserSendResetPasswordEmailRequest {
+  @ApiProperty()
+  @IsEmail()
+  email: string
+}
+
+export class UserResetPasswordRequest implements IUserResetPasswordRequest {
+  @ApiProperty()
+  @IsString()
+  newPassword: string
+}
+
+export class UserLoginRequestDTO implements IUserLoginRequestDTO {
+  @ApiProperty()
+  @IsString()
+  username: string
+
+  @ApiProperty()
+  @IsString()
+  password: string
 }

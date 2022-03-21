@@ -1,6 +1,7 @@
+import { InvalidToken } from '@backend/auth/auth.exception'
 import { AuthService } from '@backend/auth/auth.service'
 import { CookieKey, IUserReference } from '@libs/api'
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy } from 'passport-cookie'
 
@@ -19,7 +20,7 @@ export class AuthStrategy extends PassportStrategy(Strategy, 'auth') {
       return await this.authService.validateAccessToken(token)
     } catch (err) {
       this.logger.log(`Cookie failed: ${JSON.stringify(Object.entries(err))}`)
-      throw new UnauthorizedException('invalid cookie')
+      throw new InvalidToken()
     }
   }
 }

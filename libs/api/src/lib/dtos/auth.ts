@@ -36,3 +36,8 @@ export interface IAdminCreationRequestDTO {
   username: string
   password: string
 }
+
+export interface IUserLoginRequestDTO {
+  username: string
+  password: string
+}
