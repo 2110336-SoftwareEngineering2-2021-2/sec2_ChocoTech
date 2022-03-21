@@ -1,7 +1,7 @@
 import { IUser } from '../entities/User'
 
 export enum CookieKey {
-  ACESS_TOKEN = 'ACESS_TOKEN',
+  ACCESS_TOKEN = 'ACCESS_TOKEN',
   GOOGLE_ACCESS_TOKEN = 'GOOGLE_ACCESS_TOKEN',
 }
 

@@ -11,7 +11,7 @@ export class AuthStrategy extends PassportStrategy(Strategy, 'auth') {
 
   constructor(private readonly authService: AuthService) {
     super({
-      cookieName: CookieKey.ACESS_TOKEN,
+      cookieName: CookieKey.ACCESS_TOKEN,
     })
   }
 

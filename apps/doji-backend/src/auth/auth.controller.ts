@@ -39,7 +39,7 @@ export class AuthController {
   ) {
     const { username, password } = body
     const { accessToken, maxAge } = await this.authService.loginWithPassword(username, password)
-    res.cookie(CookieKey.ACESS_TOKEN, accessToken, {
+    res.cookie(CookieKey.ACCESS_TOKEN, accessToken, {
       httpOnly: true,
       maxAge: maxAge,
     })
@@ -49,7 +49,7 @@ export class AuthController {
   @Redirect()
   @ApiOperation({ description: 'Log user in with Google oauth' })
   async loginWithGoogle(
-    @Cookie(CookieKey.ACESS_TOKEN) accessToken,
+    @Cookie(CookieKey.ACCESS_TOKEN) accessToken,
     @Query('rediectUrl') rediectUrl: string = environment.domain.frontend,
   ) {
     try {
