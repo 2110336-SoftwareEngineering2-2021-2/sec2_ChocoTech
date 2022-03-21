@@ -3,15 +3,15 @@ import TimePickerController from '@frontend/components/ExpertService/TimePickerC
 import { httpClient } from '@frontend/services'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IScheduleSessionDTO, IServiceInformationDTO } from '@libs/api'
-import { SearchBar, Tables, TopBar, TopBarActionType } from '@libs/mui'
-import { DatePicker, TimePicker } from '@mui/lab'
+import { Tables } from '@libs/mui'
+import { DatePicker } from '@mui/lab'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
-import { Avatar, Box, Button, Container, Grid, Stack, TextField, Typography } from '@mui/material'
-import axios from 'axios'
+import { Avatar, Button, Stack, TextField, Typography } from '@mui/material'
+import { GetServerSideProps } from 'next'
 import * as yup from 'yup'
 
-import React, { useEffect } from 'react'
+import { useState } from 'react'
 import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import { useQuery } from 'react-query'
 
@@ -39,12 +39,50 @@ const CreateScheduleValidation = yup.object({
 
 type ScheduleModel = yup.InferType<typeof CreateScheduleValidation>
 
-function ScheduleSessionPage() {
-  const [openDialog, setOpenDialog] = React.useState(false)
-  const [scheduleSessionData, setscheduleSessionData] = React.useState<IScheduleSessionDTO>({
+const TotalPrice = ({ control, fee }) => {
+  const watchAll = useWatch({ control })
+
+  function calculateTotal() {
+    const timeDiff = watchAll.endTime.getTime() - watchAll.startTime.getTime()
+    const duration = Math.round((timeDiff * 10) / 36e5) / 10
+    const total = duration * fee * (watchAll.participants.length + 1)
+    if (total < 0) {
+      return 0
+    }
+    return total
+  }
+
+  return (
+    <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+      <Typography variant="large" fontWeight={700}>
+        Total Price
+      </Typography>
+      <Stack direction={'row'}>
+        <Typography variant="large" fontWeight={700} color="primary.dark">
+          {calculateTotal()}
+        </Typography>
+        <Typography variant="regular" fontWeight={400} color="primary.dark">
+          &nbsp; Doji coins
+        </Typography>
+      </Stack>
+    </Stack>
+  )
+}
+
+interface ScheduleSessionPageProps {
+  expertUsername: string
+  serviceName: string
+}
+
+export default function ScheduleSessionPage({
+  expertUsername,
+  serviceName,
+}: ScheduleSessionPageProps) {
+  const [openDialog, setOpenDialog] = useState(false)
+  const [scheduleSessionData, setscheduleSessionData] = useState<IScheduleSessionDTO>({
     fee: 0,
-    expertUsername: '',
-    serviceName: '',
+    expertUsername: expertUsername,
+    serviceName: serviceName,
     duration: 0,
     startTime: new Date(),
     participantsUsername: [],
@@ -63,24 +101,15 @@ function ScheduleSessionPage() {
       participants: [],
     },
   })
-  let expertUsername: string = ''
-  let serviceName: string = ''
-  const watchAll = useWatch({ control })
-  const { data: serviceData, isLoading } = useQuery(
+
+  const { data: serviceData, isLoading } = useQuery<IServiceInformationDTO>(
     ['createSchedule', expertUsername, serviceName],
     async () => {
-      const param = new URLSearchParams(window.location.search)
-      expertUsername = param.get('expert_username')
-      serviceName = param.get('service_name')
-      scheduleSessionData.expertUsername = expertUsername
-      scheduleSessionData.serviceName = serviceName
-      const { data } = await httpClient.get(
-        `http://localhost:3333/api/session/service/${expertUsername}/${serviceName}`,
-      )
-      // Other stuff
+      const { data } = await httpClient.get(`session/service/${expertUsername}/${serviceName}`)
       return data
     },
   )
+
   function handleOpenDialog() {
     setOpenDialog(true)
   }
@@ -91,15 +120,7 @@ function ScheduleSessionPage() {
       console.log(scheduleSessionData)
     }
   }
-  function calculateTotal() {
-    const timeDiff = watchAll.endTime.getTime() - watchAll.startTime.getTime()
-    const duration = Math.round((timeDiff * 10) / 36e5) / 10
-    const total = duration * serviceData.fee * (watchAll.participants.length + 1)
-    if (total < 0) {
-      return 0
-    }
-    return total
-  }
+
   const onSubmit: SubmitHandler<ScheduleModel> = async (data) => {
     handleOpenDialog()
     const timeDiff = data.endTime.getTime() - data.startTime.getTime()
@@ -117,119 +138,102 @@ function ScheduleSessionPage() {
       return element.value
     })
   }
-  if (!serviceData) {
+
+  if (isLoading) {
     return null
   }
+
   return (
-    <Stack display="flex" flexDirection="column" position="relative" minHeight="sm">
-      <TopBar title="New session" action={TopBarActionType.Back}></TopBar>
-      <div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Stack direction={'column'}>
-            <Typography fontWeight={700} variant="title3">
-              {serviceData.title}
-            </Typography>
-            <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
-              <Tables
-                content={'by ' + serviceData.firstname + ' ' + serviceData.lastname}
-                avatar={<Avatar></Avatar>}
-              ></Tables>
-              <Stack direction={'row'}>
-                <Typography variant="large" fontWeight={700} color="primary.dark">
-                  {serviceData.fee}
-                </Typography>
-                <Typography variant="regular" fontWeight={400} color="primary.dark">
-                  /hr/person
-                </Typography>
-              </Stack>
-            </Stack>
-            <br />
-            <Typography variant="regular" fontWeight={400}>
-              {serviceData.description}
-            </Typography>
-            <br />
-            <br />
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <Controller
-                name="date"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <DatePicker
-                    {...register('date')}
-                    disablePast
-                    label="Date"
-                    value={value}
-                    onChange={onChange}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        error={!!errors.date}
-                        helperText={errors.date?.message}
-                        fullWidth
-                      />
-                    )}
-                  />
-                )}
-              ></Controller>
-            </LocalizationProvider>
-            <br />
-            <br />
+    <Stack flexDirection="column" position="relative" minHeight="sm">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Stack direction={'column'}>
+          <Typography fontWeight={700} variant="title3">
+            {serviceData.title}
+          </Typography>
+          <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+            <Tables
+              content={'by ' + serviceData.firstname + ' ' + serviceData.lastname}
+              avatar={<Avatar></Avatar>}
+            ></Tables>
             <Stack direction={'row'}>
-              <TimePickerController
-                name="startTime"
-                control={control}
-                register={register}
-                registerName="startTime"
-                label="Start Time"
-                errors={errors.startTime}
-              ></TimePickerController>
-              <TimePickerController
-                name="endTime"
-                control={control}
-                register={register}
-                registerName="endTime"
-                label="End Time"
-                errors={errors.endTime}
-              ></TimePickerController>
+              <Typography variant="large" fontWeight={700} color="primary.dark">
+                {serviceData.fee}
+              </Typography>
+              <Typography variant="regular" fontWeight={400} color="primary.dark">
+                /hr/person
+              </Typography>
             </Stack>
-            <br />
-            <br />
-            <Typography variant="large" fontWeight={700}>
-              Participants
-            </Typography>
-            <br />
-            <Controller
-              name="participants"
-              control={control}
-              render={({ field: { onChange, value } }) => <TagsInput onChange={onChange} />}
-            ></Controller>
-            <br />
           </Stack>
-          <Container sx={{ padding: 2, backgroundColor: 'white' }}>
-            <Stack alignItems="center" display="flex" direction={'column'}>
-              <Container>
-                <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
-                  <Typography variant="large" fontWeight={700}>
-                    Total Price
-                  </Typography>
-                  <Stack direction={'row'}>
-                    <Typography variant="large" fontWeight={700} color="primary.dark">
-                      {calculateTotal()}
-                    </Typography>
-                    <Typography variant="regular" fontWeight={400} color="primary.dark">
-                      &nbsp; Doji coins
-                    </Typography>
-                  </Stack>
-                </Stack>
-              </Container>
-              <br />
-              <Button fullWidth type="submit">
-                Schedule
-              </Button>
-            </Stack>
-          </Container>
-        </form>
-      </div>
+          <br />
+          <Typography variant="regular" fontWeight={400}>
+            {serviceData.description}
+          </Typography>
+          <br />
+          <br />
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <Controller
+              name="date"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <DatePicker
+                  {...register('date')}
+                  disablePast
+                  label="Date"
+                  value={value}
+                  onChange={onChange}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      error={!!errors.date}
+                      helperText={errors.date?.message}
+                      fullWidth
+                    />
+                  )}
+                />
+              )}
+            ></Controller>
+          </LocalizationProvider>
+          <br />
+          <br />
+          <Stack direction={'row'}>
+            <TimePickerController
+              name="startTime"
+              control={control}
+              register={register}
+              registerName="startTime"
+              label="Start Time"
+              errors={errors.startTime}
+            ></TimePickerController>
+            <TimePickerController
+              name="endTime"
+              control={control}
+              register={register}
+              registerName="endTime"
+              label="End Time"
+              errors={errors.endTime}
+            ></TimePickerController>
+          </Stack>
+          <br />
+          <br />
+          <Typography variant="large" fontWeight={700}>
+            Participants
+          </Typography>
+          <br />
+          <Controller
+            name="participants"
+            control={control}
+            render={({ field: { onChange, value } }) => <TagsInput onChange={onChange} />}
+          ></Controller>
+          <br />
+        </Stack>
+        <Stack alignItems="center" display="flex" direction={'column'} p={2} sx={{ bg: 'white' }}>
+          <TotalPrice control={control} fee={serviceData.fee} />
+          <br />
+          <Button fullWidth type="submit">
+            Schedule
+          </Button>
+        </Stack>
+      </form>
       <ConfirmDialog
         isOpen={openDialog}
         onClose={handleCloseDialog}
@@ -238,4 +242,13 @@ function ScheduleSessionPage() {
     </Stack>
   )
 }
-export default ScheduleSessionPage
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const query = context.query
+  return {
+    props: {
+      expertUsername: query.expert_username,
+      serviceName: query.service_name,
+    },
+  }
+}
