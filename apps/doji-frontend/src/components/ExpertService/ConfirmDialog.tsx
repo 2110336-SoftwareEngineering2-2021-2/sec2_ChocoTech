@@ -22,7 +22,7 @@ export function ConfirmDialog(props) {
           <br />
           <Typography variant="regular" fontWeight={400} sx={{ margin: 1 }}>
             Are you sure you want to create this session? You will be deducted{' '}
-            <Typography variant="large" fontWeight={700} color="#367D7F">
+            <Typography variant="large" fontWeight={700} color="primary.dark">
               {props.coinAmount}
             </Typography>{' '}
             Doji coins

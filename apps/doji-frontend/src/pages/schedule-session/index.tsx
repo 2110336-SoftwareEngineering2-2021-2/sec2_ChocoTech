@@ -5,18 +5,19 @@ import { SearchBar, Tables, TopBar, TopBarActionType } from '@libs/mui'
 import { DatePicker, TimePicker } from '@mui/lab'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
-import { Avatar, Box, Button, Container, Grid, TextField, Typography } from '@mui/material'
+import { Avatar, Box, Button, Container, Grid, Stack, TextField, Typography } from '@mui/material'
 import axios from 'axios'
 import * as yup from 'yup'
 
 import React, { useEffect } from 'react'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form'
+import { useQuery } from 'react-query'
 
 import TagsInput from '../../components/ExpertService/TagInput'
 
 const today = new Date()
 today.setHours(0, 0, 0, 0)
-const createScheduleValidation = yup.object({
+const CreateScheduleValidation = yup.object({
   date: yup
     .date()
     .typeError('This date is invalid')
@@ -34,7 +35,7 @@ const createScheduleValidation = yup.object({
   participants: yup.array(),
 })
 
-type scheduleModel = yup.InferType<typeof createScheduleValidation>
+type ScheduleModel = yup.InferType<typeof CreateScheduleValidation>
 
 export function Index() {
   const [openDialog, setOpenDialog] = React.useState(false)
@@ -54,8 +55,8 @@ export function Index() {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<scheduleModel>({
-    resolver: yupResolver(createScheduleValidation),
+  } = useForm<ScheduleModel>({
+    resolver: yupResolver(CreateScheduleValidation),
     defaultValues: {
       date: new Date(),
       startTime: new Date(),
@@ -63,8 +64,8 @@ export function Index() {
       participants: [],
     },
   })
-  const watchAll = watch()
-  useEffect(() => {
+  const watchAll = useWatch({ control })
+  useQuery('createSchedule', () => {
     const param = new URLSearchParams(window.location.search)
     scheduleSessionData.expertUsername = param.get('expert_username')
     scheduleSessionData.serviceName = param.get('service_name')
@@ -76,7 +77,7 @@ export function Index() {
     axios.get(url).then((res) => {
       setServiceData(res.data)
     })
-  }, [])
+  })
   function handleOpenDialog() {
     setOpenDialog(true)
   }
@@ -96,7 +97,7 @@ export function Index() {
     const duration = Math.round((timeDiff * 10) / 36e5) / 10
     return duration * serviceData.fee * (watchAll.participants.length + 1)
   }
-  const onSubmit: SubmitHandler<scheduleModel> = async (data) => {
+  const onSubmit: SubmitHandler<ScheduleModel> = async (data) => {
     handleOpenDialog()
     const timeDiff = data.endTime.getTime() - data.startTime.getTime()
     scheduleSessionData.duration = Math.round((timeDiff * 10) / 36e5) / 10
@@ -117,7 +118,7 @@ export function Index() {
     return null
   }
   return (
-    <Box display="flex" flexDirection="column" position="relative" minHeight="sm">
+    <Stack display="flex" flexDirection="column" position="relative" minHeight="sm">
       <TopBar title="New session" action={TopBarActionType.Back}></TopBar>
       <Box>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -134,10 +135,10 @@ export function Index() {
               ></Tables>
             </Grid>
             <Grid item xs={4} marginBottom={2} textAlign="right">
-              <Typography variant="large" fontWeight={700} color="#367D7F">
+              <Typography variant="large" fontWeight={700} color="primary.dark">
                 {serviceData.fee}
               </Typography>
-              <Typography variant="regular" fontWeight={400} color="#367D7F">
+              <Typography variant="regular" fontWeight={400} color="primary.dark">
                 /hr/person
               </Typography>
             </Grid>
@@ -239,10 +240,10 @@ export function Index() {
                   </Typography>
                 </Grid>
                 <Grid item xs={6} textAlign="right">
-                  <Typography variant="large" fontWeight={700} color="#367D7F">
+                  <Typography variant="large" fontWeight={700} color="primary.dark">
                     {calculateTotal()}
                   </Typography>
-                  <Typography variant="regular" fontWeight={400} color="#367D7F">
+                  <Typography variant="regular" fontWeight={400} color="primary.dark">
                     &nbsp; Doji coins
                   </Typography>
                 </Grid>
@@ -262,7 +263,7 @@ export function Index() {
         onClose={handleCloseDialog}
         coinAmount={scheduleSessionData.fee}
       />
-    </Box>
+    </Stack>
   )
 }
 export default Index

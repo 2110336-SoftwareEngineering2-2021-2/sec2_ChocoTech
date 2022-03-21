@@ -14,8 +14,8 @@ export function Index() {
           price={250}
           expertName="Rick Astley"
           description="Are you sure you want to create this session? You will be deducted 500 Doji coins"
-          expertUsername="testExpert"
-          serviceName="testService"
+          expertUsername="newUser"
+          serviceName="How to read indicator"
         ></SessionCard>
       </Box>
     </Box>
