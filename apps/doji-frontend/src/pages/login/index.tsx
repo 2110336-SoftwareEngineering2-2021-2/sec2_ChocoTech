@@ -1,7 +1,6 @@
 import { httpClient } from '@frontend/services'
 import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { TopBarActionType, TopBarProps } from '@libs/mui'
 import { Button, Link as MuiLink, Stack, TextField, Typography } from '@mui/material'
 import Link from 'next/link'
 import { useRouter } from 'next/router'

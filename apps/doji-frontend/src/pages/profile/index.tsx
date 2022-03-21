@@ -1,6 +1,5 @@
 import BottomNav from '@frontend/components/NavigationBar/BottomNav'
 import ProfileTextfield from '@frontend/components/TextField/ProfileTextfield'
-import { TopBarActionType, TopBarProps } from '@libs/mui'
 import { Avatar, Button, Stack, Typography, styled } from '@mui/material'
 
 import { useState } from 'react'

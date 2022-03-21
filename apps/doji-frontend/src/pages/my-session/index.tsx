@@ -1,5 +1,4 @@
 import NotiDialog from '@frontend/components/NotiDialog/NotiDialog'
-import { TopBar, TopBarModeType } from '@libs/mui'
 import { Box, Stack, Tab, Tabs, Typography } from '@mui/material'
 import router from 'next/router'
 
@@ -57,15 +56,6 @@ export default function MySessionPage() {
 
   return (
     <Stack>
-      <TopBar
-        button={{
-          endIcon: <BiPlus />,
-          label: 'New',
-          onClick: handleClickOpen,
-        }}
-        mode={TopBarModeType.Heading}
-        title="My Session"
-      />
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} variant="fullWidth">

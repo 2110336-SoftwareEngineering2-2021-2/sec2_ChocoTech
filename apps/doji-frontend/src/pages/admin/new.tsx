@@ -2,7 +2,6 @@ import RegisteredTextfield from '@frontend/components/Register/registerTextfield
 import { httpClient } from '@frontend/services'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IAdminCreationRequestDTO } from '@libs/api'
-import { TopBarActionType } from '@libs/mui'
 import { Button, Stack, Typography } from '@mui/material'
 import { AxiosError } from 'axios'
 import router from 'next/router'
