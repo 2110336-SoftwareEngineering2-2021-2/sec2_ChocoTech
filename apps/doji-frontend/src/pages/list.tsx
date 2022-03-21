@@ -46,7 +46,3 @@ const ListPage: ExtendedNextPage = () => {
 }
 
 export default ListPage
-
-ListPage.topBarProps = {
-  title: 'List of all pages',
-}

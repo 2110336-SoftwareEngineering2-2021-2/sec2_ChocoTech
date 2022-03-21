@@ -31,7 +31,6 @@ import { useMutation, useQuery } from 'react-query'
 
 const SelectPaymentPage: ExtendedNextPage = () => {
   const theme = useTheme()
-  const { userInfo, setUser } = useAuthStore()
   const [targetCard, setTargetCard] = useState<string | null>(null)
 
   const { data, isLoading, isError } = useQuery<Omise.Cards.ICard[], AxiosError>(
@@ -64,27 +63,20 @@ const SelectPaymentPage: ExtendedNextPage = () => {
     }
   }
 
-  const userInfoQuery = useQuery<IMeResponseDTO>('/auth/me', () =>
-    httpClient.get('/auth/me').then((res) => res.data),
-  )
+  const {
+    data: user,
+    isLoading: isUserLoading,
+    isError: isUserError,
+  } = useQuery<IMeResponseDTO>('/auth/me', () => httpClient.get('/auth/me').then((res) => res.data))
 
   const depositMutation = useMutation<unknown, AxiosError<IErrorMessage>, IDepositRequest>(
-    `/payment/deposit/${userInfo.username}`,
-    (d) => httpClient.post('/payment/deposit', d),
-    {
-      onSuccess: () => {
-        userInfoQuery.refetch().then((res) => setUser(res.data))
-      },
-    },
+    `/payment/deposit`,
+    (data) => httpClient.post('/payment/deposit', data),
   )
+
   const deleteCreditCardMutation = useMutation<void, AxiosError<IErrorMessage>, { cardId: string }>(
     `/payment/cards`,
     (data) => httpClient.delete(`/payment/cards/${data.cardId}`),
-    {
-      onSuccess: () => {
-        userInfoQuery.refetch().then((res) => setUser(res.data))
-      },
-    },
   )
 
   const handleDeleteCreditCard = async (targetCardId: string) => {
@@ -101,9 +93,9 @@ const SelectPaymentPage: ExtendedNextPage = () => {
     formState: { errors },
   } = useForm()
 
-  if (isLoading || userInfoQuery.isLoading) return null
+  if (isLoading || isUserLoading) return null
 
-  if (isError || userInfoQuery.isError) return <div>Error</div>
+  if (isError || isUserError) return <div>Error</div>
 
   return (
     <Stack spacing={1}>
@@ -166,20 +158,12 @@ const SelectPaymentPage: ExtendedNextPage = () => {
             <Typography variant="title2">THB</Typography>
           </Stack>
           <Typography variant="regular">
-            Current Balance: {stangToBathString(userInfoQuery.data.coinBalance)} THB
+            Current Balance: {stangToBathString(user.coinBalance)} THB
           </Typography>
         </TopUpDialog>
       </Drawer>
     </Stack>
   )
-}
-
-SelectPaymentPage.topBarProps = {
-  title: 'Choose a payment method',
-  action: TopBarActionType.Close,
-  onClose: (_, router) => {
-    router.back()
-  },
 }
 
 SelectPaymentPage.shouldAuthenticated = true

@@ -2,7 +2,6 @@ import { httpClient } from '@frontend/services'
 import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IUserChangePasswordRequestDTO } from '@libs/api'
-import { TopBarActionType } from '@libs/mui'
 import { Button, Stack, TextField, Typography } from '@mui/material'
 import { AxiosError } from 'axios'
 import { InferType, object, ref, string } from 'yup'
@@ -90,7 +89,3 @@ const ChangePasswordPage: ExtendedNextPage = () => {
 export default ChangePasswordPage
 
 ChangePasswordPage.shouldAuthenticated = true
-ChangePasswordPage.topBarProps = {
-  title: 'Choose a secure password',
-  action: TopBarActionType.Back,
-}

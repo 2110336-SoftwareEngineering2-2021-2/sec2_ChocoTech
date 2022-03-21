@@ -1,8 +1,8 @@
-import { UserReference } from '@backend/auth/auth.service'
-import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
+import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { ExpertApplicationRequest } from '@backend/expert/expert.dto'
+import { IUserReference } from '@libs/api'
 import { Body, Controller, Post, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth } from '@nestjs/swagger'
+import { ApiCookieAuth } from '@nestjs/swagger'
 
 import { ExpertAppService } from './expert.service'
 
@@ -12,10 +12,10 @@ export class ExpertAppController {
 
   @Post('application')
   @UseGuards(UserAuthGuard)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   async applicationRequest(
     @Body() dto: ExpertApplicationRequest,
-    @CurrentUser() user: UserReference,
+    @CurrentUser() user: IUserReference,
   ) {
     await this.expertAppService.applicationRequest(dto, user)
     return
