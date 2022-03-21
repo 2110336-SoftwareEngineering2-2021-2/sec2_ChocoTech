@@ -1,4 +1,3 @@
-import BottomNav from '@frontend/components/NavigationBar/BottomNav'
 import ProfileTextfield from '@frontend/components/TextField/ProfileTextfield'
 import { Avatar, Button, Stack, Typography, styled } from '@mui/material'
 
@@ -153,7 +152,6 @@ export function Index() {
           />
         </ProfileTextForm>
       </ProfileContainer>
-      <BottomNav />
     </>
   )
 }
