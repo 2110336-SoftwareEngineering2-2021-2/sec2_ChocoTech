@@ -3,9 +3,19 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import { TextField } from '@mui/material'
 import { type } from 'os'
 
-import { Controller } from 'react-hook-form'
+import { useEffect, useState } from 'react'
+import { Control, Controller, UseFormRegister } from 'react-hook-form'
 
-function TimePickerController(props) {
+export type TimePickerControllerProps = {
+  name: string
+  control: Control<any>
+  register: UseFormRegister<any>
+  registerName: string
+  label: string
+  errors: any
+}
+
+function TimePickerController(props: TimePickerControllerProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Controller
@@ -18,11 +28,7 @@ function TimePickerController(props) {
             value={value}
             onChange={onChange}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                error={!!props.errors.startTime}
-                helperText={props.errors.startTime?.message}
-              />
+              <TextField {...params} error={!!props.errors} helperText={props.errors?.message} />
             )}
           />
         )}

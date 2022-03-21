@@ -1,5 +1,6 @@
 import ConfirmDialog from '@frontend/components/ExpertService/ConfirmDialog'
 import TimePickerController from '@frontend/components/ExpertService/TimePickerController'
+import { httpClient } from '@frontend/services'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IScheduleSessionDTO, IServiceInformationDTO } from '@libs/api'
 import { SearchBar, Tables, TopBar, TopBarActionType } from '@libs/mui'
@@ -40,7 +41,6 @@ type ScheduleModel = yup.InferType<typeof CreateScheduleValidation>
 
 function ScheduleSessionPage() {
   const [openDialog, setOpenDialog] = React.useState(false)
-  const [serviceData, setServiceData] = React.useState<IServiceInformationDTO>(null)
   const [scheduleSessionData, setscheduleSessionData] = React.useState<IScheduleSessionDTO>({
     fee: 0,
     expertUsername: '',
@@ -63,20 +63,24 @@ function ScheduleSessionPage() {
       participants: [],
     },
   })
+  let expertUsername: string = ''
+  let serviceName: string = ''
   const watchAll = useWatch({ control })
-  useQuery('createSchedule', () => {
-    const param = new URLSearchParams(window.location.search)
-    scheduleSessionData.expertUsername = param.get('expert_username')
-    scheduleSessionData.serviceName = param.get('service_name')
-    const url =
-      'http://localhost:3333/api/session/service/' +
-      param.get('expert_username') +
-      '/' +
-      param.get('service_name')
-    axios.get(url).then((res) => {
-      setServiceData(res.data)
-    })
-  })
+  const { data: serviceData, isLoading } = useQuery(
+    ['createSchedule', expertUsername, serviceName],
+    async () => {
+      const param = new URLSearchParams(window.location.search)
+      expertUsername = param.get('expert_username')
+      serviceName = param.get('service_name')
+      scheduleSessionData.expertUsername = expertUsername
+      scheduleSessionData.serviceName = serviceName
+      const { data } = await httpClient.get(
+        `http://localhost:3333/api/session/service/${expertUsername}/${serviceName}`,
+      )
+      // Other stuff
+      return data
+    },
+  )
   function handleOpenDialog() {
     setOpenDialog(true)
   }
@@ -90,7 +94,11 @@ function ScheduleSessionPage() {
   function calculateTotal() {
     const timeDiff = watchAll.endTime.getTime() - watchAll.startTime.getTime()
     const duration = Math.round((timeDiff * 10) / 36e5) / 10
-    return duration * serviceData.fee * (watchAll.participants.length + 1)
+    const total = duration * serviceData.fee * (watchAll.participants.length + 1)
+    if (total < 0) {
+      return 0
+    }
+    return total
   }
   const onSubmit: SubmitHandler<ScheduleModel> = async (data) => {
     handleOpenDialog()
@@ -173,7 +181,7 @@ function ScheduleSessionPage() {
                 register={register}
                 registerName="startTime"
                 label="Start Time"
-                errors={errors}
+                errors={errors.startTime}
               ></TimePickerController>
               <TimePickerController
                 name="endTime"
@@ -181,7 +189,7 @@ function ScheduleSessionPage() {
                 register={register}
                 registerName="endTime"
                 label="End Time"
-                errors={errors}
+                errors={errors.endTime}
               ></TimePickerController>
             </Stack>
             <br />

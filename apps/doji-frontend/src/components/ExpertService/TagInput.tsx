@@ -1,7 +1,13 @@
 import { Tables } from '@libs/mui'
 import { Autocomplete, Avatar, Chip, TextField } from '@mui/material'
+import { type } from 'os'
 
-const friendList = [
+export type FriendSuggestion = {
+  value: string
+  text: string
+}
+
+const friendList: FriendSuggestion[] = [
   {
     value: 'incredible',
     text: 'Mr.Incredible',
@@ -19,7 +25,12 @@ const friendList = [
     text: 'Jonathan Dessner',
   },
 ]
-export default function TagsInput(props) {
+
+export type TagInputProps = {
+  onChange: (value: (string | FriendSuggestion)[]) => void
+}
+
+export default function TagsInput(props: TagInputProps) {
   return (
     <div>
       <Autocomplete
