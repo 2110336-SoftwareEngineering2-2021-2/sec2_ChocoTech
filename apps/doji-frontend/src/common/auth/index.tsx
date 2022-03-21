@@ -6,19 +6,12 @@ interface GetServerSideUserProps {
   user: IMeResponseDTO
 }
 
-function isPromise(promise) {
-  return !!promise && typeof promise.then === 'function'
-}
-
 export const getServerSideUser =
-  (fetcher?: (() => any) | (() => Promise<any>)): GetServerSideProps<GetServerSideUserProps> =>
+  (fetcher?: () => any): GetServerSideProps<GetServerSideUserProps> =>
   async (context) => {
     try {
       const data = await fetchUserInformation()
-      let otherProps = {}
-      if (fetcher) {
-        otherProps = isPromise(fetcher) ? await fetcher() : fetcher()
-      }
+      const otherProps = fetcher ? await fetcher() : {}
       return {
         props: {
           ...otherProps,
