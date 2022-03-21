@@ -1,5 +1,5 @@
 import { AuthService } from '@backend/auth/auth.service'
-import { IUserReference } from '@libs/api'
+import { CookieKey, IUserReference } from '@libs/api'
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy } from 'passport-cookie'
@@ -10,7 +10,7 @@ export class AuthStrategy extends PassportStrategy(Strategy, 'auth') {
 
   constructor(private readonly authService: AuthService) {
     super({
-      cookieName: 'accessToken',
+      cookieName: CookieKey.ACESS_TOKEN,
     })
   }
 

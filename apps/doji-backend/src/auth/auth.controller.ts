@@ -8,6 +8,7 @@ import { Cookie } from '@backend/auth/cookie.decorator'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { environment } from '@backend/environments/environment'
 import {
+  CookieKey,
   IUserReference,
   IUserResetPasswordRequest,
   IUserSendResetPasswordEmailRequest,
@@ -62,7 +63,7 @@ export class AuthController {
   ) {
     const { username, password } = body
     const { accessToken, maxAge } = await this.authService.loginWithPassword(username, password)
-    res.cookie('accessToken', accessToken, {
+    res.cookie(CookieKey.ACESS_TOKEN, accessToken, {
       httpOnly: true,
       maxAge: maxAge,
     })
@@ -72,7 +73,7 @@ export class AuthController {
   @Redirect()
   @ApiOperation({ description: 'Log user in with Google oauth' })
   async loginWithGoogle(
-    @Cookie('accessToken') accessToken,
+    @Cookie(CookieKey.ACESS_TOKEN) accessToken,
     @Query('rediectUrl') rediectUrl: string = environment.domain.frontend,
   ) {
     try {
@@ -104,7 +105,7 @@ export class AuthController {
       code,
       username,
     )
-    res.cookie('googleAccessToken', access_token, {
+    res.cookie(CookieKey.GOOGLE_ACCESS_TOKEN, access_token, {
       httpOnly: true,
       maxAge: expiry_date,
     })

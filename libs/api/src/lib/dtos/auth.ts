@@ -1,5 +1,10 @@
 import { IUser } from '../entities/User'
 
+export enum CookieKey {
+  ACESS_TOKEN = 'ACESS_TOKEN',
+  GOOGLE_ACCESS_TOKEN = 'GOOGLE_ACCESS_TOKEN',
+}
+
 export interface IUserReference<T extends IUser = IUser> {
   username: string
   getUser: <K extends T = T>() => Promise<K>
