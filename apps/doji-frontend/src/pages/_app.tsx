@@ -23,12 +23,14 @@ type ExtendedAppProps = AppProps & {
   Component: ExtendedNextPage
 }
 
-const MainNavBar: React.FC<{ user?: IMeResponseDTO }> = ({ user }) => {
+const MainNavBar: React.FC<{ user?: IMeResponseDTO; show?: boolean }> = ({ user, show }) => {
+  if (!show) return null
   return <NavBar role={user?.role ? user.role : 'none'} username={user?.username ?? 'username'} />
 }
 
 function CustomApp(props: ExtendedAppProps) {
   const { Component, pageProps } = props
+  const showNavbar = !Component.dontShowNavBar
 
   const [queryClient] = useState(() => new QueryClient())
 
@@ -38,7 +40,7 @@ function CustomApp(props: ExtendedAppProps) {
         <Head>
           <title>Welcome to doji-frontend!</title>
         </Head>
-        <MainNavBar user={pageProps.user} />
+        <MainNavBar user={pageProps.user} show={showNavbar} />
         <StyledContainer maxWidth="sm">
           <Component {...pageProps} />
         </StyledContainer>
