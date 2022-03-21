@@ -50,5 +50,3 @@ function Index() {
 }
 
 export default Index
-
-Index.topBar = 'Hello'

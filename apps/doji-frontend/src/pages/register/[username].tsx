@@ -29,7 +29,3 @@ function Complete() {
 }
 
 export default Complete
-
-Complete.topBarProps = {
-  title: 'Register complete',
-}

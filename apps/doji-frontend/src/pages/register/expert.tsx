@@ -91,8 +91,3 @@ function RegisterPage() {
   )
 }
 export default RegisterPage
-
-RegisterPage.topBarProps = {
-  title: 'Apply for an expert',
-  action: TopBarActionType.Back,
-}
