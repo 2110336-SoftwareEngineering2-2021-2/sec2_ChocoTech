@@ -37,9 +37,8 @@ const CreateScheduleValidation = yup.object({
 
 type ScheduleModel = yup.InferType<typeof CreateScheduleValidation>
 
-export function Index() {
+function ScheduleSessionPage() {
   const [openDialog, setOpenDialog] = React.useState(false)
-  const [confirm, setConfirm] = React.useState(false)
   const [serviceData, setServiceData] = React.useState<IServiceInformationDTO>(null)
   const [scheduleSessionData, setscheduleSessionData] = React.useState<IScheduleSessionDTO>({
     fee: 0,
@@ -51,7 +50,6 @@ export function Index() {
   })
   const {
     register,
-    watch,
     handleSubmit,
     formState: { errors },
     control,
@@ -84,13 +82,9 @@ export function Index() {
 
   function handleCloseDialog(value) {
     setOpenDialog(false)
-    setConfirm(value)
     if (value) {
       console.log(scheduleSessionData)
     }
-  }
-  function selectedTagsHandler(items) {
-    console.log(items)
   }
   function calculateTotal() {
     const timeDiff = watchAll.endTime.getTime() - watchAll.startTime.getTime()
@@ -114,65 +108,64 @@ export function Index() {
       return element.value
     })
   }
-  if (serviceData === null) {
+  if (!serviceData) {
     return null
   }
   return (
     <Stack display="flex" flexDirection="column" position="relative" minHeight="sm">
       <TopBar title="New session" action={TopBarActionType.Back}></TopBar>
-      <Box>
+      <div>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container alignItems="center">
-            <Grid item xs={12}>
-              <Typography fontWeight={700} variant="title3">
-                {serviceData.title}
-              </Typography>
-            </Grid>
-            <Grid item xs={8} marginBottom={2}>
+          <Stack direction={'column'}>
+            <Typography fontWeight={700} variant="title3">
+              {serviceData.title}
+            </Typography>
+            <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
               <Tables
                 content={'by ' + serviceData.firstname + ' ' + serviceData.lastname}
                 avatar={<Avatar></Avatar>}
               ></Tables>
-            </Grid>
-            <Grid item xs={4} marginBottom={2} textAlign="right">
-              <Typography variant="large" fontWeight={700} color="primary.dark">
-                {serviceData.fee}
-              </Typography>
-              <Typography variant="regular" fontWeight={400} color="primary.dark">
-                /hr/person
-              </Typography>
-            </Grid>
-            <Grid item xs={12} marginBottom={3}>
-              <Typography variant="regular" fontWeight={400}>
-                {serviceData.description}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} marginBottom={3}>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Controller
-                  name="date"
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <DatePicker
-                      {...register('date')}
-                      disablePast
-                      label="Date"
-                      value={value}
-                      onChange={onChange}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          error={!!errors.date}
-                          helperText={errors.date?.message}
-                          fullWidth
-                        />
-                      )}
-                    />
-                  )}
-                ></Controller>
-              </LocalizationProvider>
-            </Grid>
-            <Grid item xs={6} marginBottom={3}>
+              <Stack direction={'row'}>
+                <Typography variant="large" fontWeight={700} color="primary.dark">
+                  {serviceData.fee}
+                </Typography>
+                <Typography variant="regular" fontWeight={400} color="primary.dark">
+                  /hr/person
+                </Typography>
+              </Stack>
+            </Stack>
+            <br />
+            <Typography variant="regular" fontWeight={400}>
+              {serviceData.description}
+            </Typography>
+            <br />
+            <br />
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <Controller
+                name="date"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <DatePicker
+                    {...register('date')}
+                    disablePast
+                    label="Date"
+                    value={value}
+                    onChange={onChange}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        error={!!errors.date}
+                        helperText={errors.date?.message}
+                        fullWidth
+                      />
+                    )}
+                  />
+                )}
+              ></Controller>
+            </LocalizationProvider>
+            <br />
+            <br />
+            <Stack direction={'row'}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Controller
                   name="startTime"
@@ -194,8 +187,6 @@ export function Index() {
                   )}
                 ></Controller>
               </LocalizationProvider>
-            </Grid>
-            <Grid item xs={6} marginBottom={3}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Controller
                   name="endTime"
@@ -217,48 +208,46 @@ export function Index() {
                   )}
                 ></Controller>
               </LocalizationProvider>
-            </Grid>
-            <Grid item xs={12} marginBottom={2}>
-              <Typography variant="large" fontWeight={700}>
-                Participants
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Controller
-                name="participants"
-                control={control}
-                render={({ field: { onChange, value } }) => <TagsInput onChange={onChange} />}
-              ></Controller>
-            </Grid>
-          </Grid>
-          <Box position="relative" bottom={0} left={0} right={0} marginTop={3}>
-            <Container sx={{ padding: 2, backgroundColor: 'white' }} maxWidth="sm">
-              <Grid container alignItems="center">
-                <Grid item xs={6}>
+            </Stack>
+            <br />
+            <br />
+            <Typography variant="large" fontWeight={700}>
+              Participants
+            </Typography>
+            <br />
+            <Controller
+              name="participants"
+              control={control}
+              render={({ field: { onChange, value } }) => <TagsInput onChange={onChange} />}
+            ></Controller>
+            <br />
+          </Stack>
+          <Container sx={{ padding: 2, backgroundColor: 'white' }}>
+            <Stack alignItems="center" display="flex" direction={'column'}>
+              <Container>
+                <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
                   <Typography variant="large" fontWeight={700}>
                     Total Price
                   </Typography>
-                </Grid>
-                <Grid item xs={6} textAlign="right">
-                  <Typography variant="large" fontWeight={700} color="primary.dark">
-                    {calculateTotal()}
-                  </Typography>
-                  <Typography variant="regular" fontWeight={400} color="primary.dark">
-                    &nbsp; Doji coins
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} marginTop={2} marginBottom={1}>
-                  <Button fullWidth type="submit">
-                    Schedule
-                  </Button>
-                </Grid>
-              </Grid>
-            </Container>
-          </Box>
+                  <Stack direction={'row'}>
+                    <Typography variant="large" fontWeight={700} color="primary.dark">
+                      {calculateTotal()}
+                    </Typography>
+                    <Typography variant="regular" fontWeight={400} color="primary.dark">
+                      &nbsp; Doji coins
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </Container>
+              <br />
+              <Button fullWidth type="submit">
+                Schedule
+              </Button>
+            </Stack>
+          </Container>
         </form>
-      </Box>
+      </div>
       <ConfirmDialog
-        confirm={confirm}
         isOpen={openDialog}
         onClose={handleCloseDialog}
         coinAmount={scheduleSessionData.fee}
@@ -266,4 +255,4 @@ export function Index() {
     </Stack>
   )
 }
-export default Index
+export default ScheduleSessionPage

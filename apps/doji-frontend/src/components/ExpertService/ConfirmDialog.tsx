@@ -2,7 +2,6 @@ import { Box, Button, Dialog, DialogTitle, Typography } from '@mui/material'
 
 export function ConfirmDialog(props) {
   const onClose = props.onClose
-  const confirm = props.confirm
   const isOpen = props.isOpen
   const handleClose = (value) => {
     onClose(value)
