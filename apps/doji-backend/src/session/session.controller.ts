@@ -1,13 +1,15 @@
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
+import { Session } from '@backend/entities/Session'
 import {
+  DeleteSessionParticipantRequest,
   GetServiceByNameAndExpertUsernameDTO,
   ScheduleSessionDTO,
   ServiceInformationDTO,
 } from '@backend/session/session.dto'
 import { SessionService } from '@backend/session/session.service'
 import { IUserReference } from '@libs/api'
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
-import { ApiCookieAuth } from '@nestjs/swagger'
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, UseGuards } from '@nestjs/common'
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 @Controller('session')
 export class SessionController {
@@ -30,5 +32,29 @@ export class SessionController {
     dto.expertUsername = expertUsername
     dto.serviceName = serviceName
     return await this.sessionService.getServiceByNameAndExpertUsername(dto)
+  }
+  @Get()
+  @UseGuards(UserAuthGuard)
+  @HttpCode(200)
+  @ApiCookieAuth()
+  @ApiOperation({ description: 'Get all session of current user information' })
+  @ApiResponse({ status: 200, description: 'All sessions of user have benn listed' })
+  async findAll(@CurrentUser() user: IUserReference): Promise<Session[]> {
+    return await this.sessionService.getAllSession(user)
+  }
+
+  @Delete('participant')
+  @UseGuards(UserAuthGuard)
+  @HttpCode(200)
+  @ApiCookieAuth()
+  @ApiOperation({ description: 'Cancle session of current user by SessionId' })
+  @ApiResponse({ status: 200, description: 'Session is cancled' })
+  @ApiResponse({ status: 404, description: 'Session not found or you are not in the shcedule' })
+  async deleteSession(
+    @Body() body: DeleteSessionParticipantRequest,
+    @CurrentUser() user: IUserReference,
+  ) {
+    await this.sessionService.deleteSessionParticipant(body.sessionId, user)
+    return 'OK'
   }
 }
