@@ -79,7 +79,7 @@ export default function ScheduleSessionPage({
   serviceName,
 }: ScheduleSessionPageProps) {
   const [openDialog, setOpenDialog] = useState(false)
-  const [scheduleSessionData, setscheduleSessionData] = useState<IScheduleSessionDTO>({
+  const [scheduleSessionData, setScheduleSessionData] = useState<IScheduleSessionDTO>({
     fee: 0,
     expertUsername: expertUsername,
     serviceName: serviceName,
@@ -105,7 +105,7 @@ export default function ScheduleSessionPage({
   const { data: serviceData, isLoading } = useQuery<IServiceInformationDTO>(
     ['createSchedule', expertUsername, serviceName],
     async () => {
-      const { data } = await httpClient.get(`session/service/${expertUsername}/${serviceName}`)
+      const { data } = await httpClient.get(`/session/service/${expertUsername}/${serviceName}`)
       return data
     },
   )
@@ -124,18 +124,20 @@ export default function ScheduleSessionPage({
   const onSubmit: SubmitHandler<ScheduleModel> = async (data) => {
     handleOpenDialog()
     const timeDiff = data.endTime.getTime() - data.startTime.getTime()
-    scheduleSessionData.duration = Math.round((timeDiff * 10) / 36e5) / 10
+    const duration = Math.round((timeDiff * 10) / 36e5) / 10
     const startDate = new Date(data.date)
     startDate.setHours(
       data.startTime.getHours(),
       data.startTime.getMinutes(),
       data.startTime.getSeconds(),
     )
-    scheduleSessionData.startTime = startDate
-    scheduleSessionData.fee =
-      scheduleSessionData.duration * serviceData.fee * (data.participants.length + 1)
-    scheduleSessionData.participantsUsername = data.participants.map((element) => {
-      return element.value
+    setScheduleSessionData({
+      fee: duration * serviceData.fee * (data.participants.length + 1),
+      expertUsername: scheduleSessionData.expertUsername,
+      serviceName: scheduleSessionData.serviceName,
+      duration: duration,
+      startTime: startDate,
+      participantsUsername: data.participants.map((element) => element.value),
     })
   }
 
