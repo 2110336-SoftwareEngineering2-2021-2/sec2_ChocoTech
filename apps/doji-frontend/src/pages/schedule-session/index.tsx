@@ -80,9 +80,7 @@ function ScheduleSessionPage() {
         participantsUsername: [],
       }
       setscheduleSessionData(temp)
-      const { data } = await httpClient.get(
-        `http://localhost:3333/api/session/service/${expertUsername}/${serviceName}`,
-      )
+      const { data } = await httpClient.get(`session/service/${expertUsername}/${serviceName}`)
       // Other stuff
       return data
     },
