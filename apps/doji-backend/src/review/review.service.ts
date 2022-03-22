@@ -33,4 +33,16 @@ export class ReviewService {
     }
     return
   }
+
+  async getReviewAverageRatingById(sessionId: number) {
+    const session = await this.sessionRepo.findOne({ id: sessionId })
+    if (!session) return null
+    const reviewList = await this.reviewRepo.find({ session: session })
+    const count = reviewList.length
+    let sum = 0
+    reviewList.forEach((value) => (sum += value.rating))
+    const avgRating = new ReviewAverageRatingDTO()
+    avgRating.avgRating = sum / count
+    return avgRating
+  }
 }

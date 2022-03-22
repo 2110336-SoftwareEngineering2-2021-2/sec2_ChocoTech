@@ -15,4 +15,9 @@ export class ReviewController {
   async create(@Body() dto: ReviewCreationRequestDTO, @CurrentUser() user: IUserReference) {
     await this.reviewService.createReview(dto, user)
   }
+
+  @Get('/:sessionId')
+  async getService(@Param('sessionId') sessionId: number): Promise<ReviewAverageRatingDTO> {
+    return await this.reviewService.getReviewAverageRatingById(sessionId)
+  }
 }
