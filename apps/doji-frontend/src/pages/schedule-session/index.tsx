@@ -65,15 +65,21 @@ function ScheduleSessionPage() {
   })
   let expertUsername: string = ''
   let serviceName: string = ''
-  const watchAll = useWatch({ control })
   const { data: serviceData, isLoading } = useQuery(
     ['createSchedule', expertUsername, serviceName],
     async () => {
       const param = new URLSearchParams(window.location.search)
       expertUsername = param.get('expert_username')
       serviceName = param.get('service_name')
-      scheduleSessionData.expertUsername = expertUsername
-      scheduleSessionData.serviceName = serviceName
+      const temp: IScheduleSessionDTO = {
+        fee: 0,
+        expertUsername: expertUsername,
+        serviceName: serviceName,
+        duration: 0,
+        startTime: new Date(),
+        participantsUsername: [],
+      }
+      setscheduleSessionData(temp)
       const { data } = await httpClient.get(
         `http://localhost:3333/api/session/service/${expertUsername}/${serviceName}`,
       )
@@ -91,31 +97,27 @@ function ScheduleSessionPage() {
       console.log(scheduleSessionData)
     }
   }
-  function calculateTotal() {
-    const timeDiff = watchAll.endTime.getTime() - watchAll.startTime.getTime()
-    const duration = Math.round((timeDiff * 10) / 36e5) / 10
-    const total = duration * serviceData.fee * (watchAll.participants.length + 1)
-    if (total < 0) {
-      return 0
-    }
-    return total
-  }
   const onSubmit: SubmitHandler<ScheduleModel> = async (data) => {
     handleOpenDialog()
     const timeDiff = data.endTime.getTime() - data.startTime.getTime()
-    scheduleSessionData.duration = Math.round((timeDiff * 10) / 36e5) / 10
+    const duration = Math.round((timeDiff * 10) / 36e5) / 10
     const startDate = new Date(data.date)
     startDate.setHours(
       data.startTime.getHours(),
       data.startTime.getMinutes(),
       data.startTime.getSeconds(),
     )
-    scheduleSessionData.startTime = startDate
-    scheduleSessionData.fee =
-      scheduleSessionData.duration * serviceData.fee * (data.participants.length + 1)
-    scheduleSessionData.participantsUsername = data.participants.map((element) => {
-      return element.value
-    })
+    const temp: IScheduleSessionDTO = {
+      fee: duration * serviceData.fee * (data.participants.length + 1),
+      expertUsername: scheduleSessionData.expertUsername,
+      serviceName: scheduleSessionData.serviceName,
+      duration: duration,
+      startTime: startDate,
+      participantsUsername: data.participants.map((element) => {
+        return element.value
+      }),
+    }
+    setscheduleSessionData(temp)
   }
   if (!serviceData) {
     return null
@@ -205,29 +207,7 @@ function ScheduleSessionPage() {
             ></Controller>
             <br />
           </Stack>
-          <Container sx={{ padding: 2, backgroundColor: 'white' }}>
-            <Stack alignItems="center" display="flex" direction={'column'}>
-              <Container>
-                <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
-                  <Typography variant="large" fontWeight={700}>
-                    Total Price
-                  </Typography>
-                  <Stack direction={'row'}>
-                    <Typography variant="large" fontWeight={700} color="primary.dark">
-                      {calculateTotal()}
-                    </Typography>
-                    <Typography variant="regular" fontWeight={400} color="primary.dark">
-                      &nbsp; Doji coins
-                    </Typography>
-                  </Stack>
-                </Stack>
-              </Container>
-              <br />
-              <Button fullWidth type="submit">
-                Schedule
-              </Button>
-            </Stack>
-          </Container>
+          <SubmitBar control={control} serviceData={serviceData} />
         </form>
       </div>
       <ConfirmDialog
@@ -239,3 +219,41 @@ function ScheduleSessionPage() {
   )
 }
 export default ScheduleSessionPage
+
+function SubmitBar({ control, serviceData }) {
+  const watchAll = useWatch({ control })
+  function calculateTotal() {
+    const timeDiff = watchAll.endTime.getTime() - watchAll.startTime.getTime()
+    const duration = Math.round((timeDiff * 10) / 36e5) / 10
+    const total = duration * serviceData.fee * (watchAll.participants.length + 1)
+    if (total < 0) {
+      return 0
+    }
+    return total
+  }
+  return (
+    <Container sx={{ padding: 2, backgroundColor: 'white' }}>
+      <Stack alignItems="center" display="flex" direction={'column'}>
+        <Container>
+          <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+            <Typography variant="large" fontWeight={700}>
+              Total Price
+            </Typography>
+            <Stack direction={'row'}>
+              <Typography variant="large" fontWeight={700} color="primary.dark">
+                {calculateTotal()}
+              </Typography>
+              <Typography variant="regular" fontWeight={400} color="primary.dark">
+                &nbsp; Doji coins
+              </Typography>
+            </Stack>
+          </Stack>
+        </Container>
+        <br />
+        <Button fullWidth type="submit">
+          Schedule
+        </Button>
+      </Stack>
+    </Container>
+  )
+}
