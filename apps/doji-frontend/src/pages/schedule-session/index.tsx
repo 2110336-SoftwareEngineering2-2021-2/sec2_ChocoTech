@@ -12,7 +12,7 @@ import { GetServerSideProps } from 'next'
 import * as yup from 'yup'
 
 import { useState } from 'react'
-import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form'
+import { Control, Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import { useQuery } from 'react-query'
 
 import TagsInput from '../../components/ExpertService/TagInput'
@@ -39,13 +39,13 @@ const CreateScheduleValidation = yup.object({
 
 type ScheduleModel = yup.InferType<typeof CreateScheduleValidation>
 
-const TotalPrice = ({ control, fee }) => {
-  const watchAll = useWatch({ control })
+const TotalPrice = ({ control, fee }: { control: Control<ScheduleModel>; fee: number }) => {
+  const { endTime, startTime, participants } = useWatch({ control })
 
   function calculateTotal() {
-    const timeDiff = watchAll.endTime.getTime() - watchAll.startTime.getTime()
+    const timeDiff = endTime.getTime() - startTime.getTime()
     const duration = Math.round((timeDiff * 10) / 36e5) / 10
-    const total = duration * fee * (watchAll.participants.length + 1)
+    const total = duration * fee * (participants.length + 1)
     if (total < 0) {
       return 0
     }
