@@ -13,6 +13,9 @@ export class User implements IUser {
   @PrimaryKey()
   username: string
 
+  @Property({ unique: true })
+  email: string
+
   @Property({ hidden: true })
   passwordHash: string
 
@@ -24,9 +27,6 @@ export class User implements IUser {
 
   @Property()
   onlineStatus: boolean = false
-
-  @Property({ unique: true })
-  email: string
 
   @Property()
   registerationDate: Date = new Date()
@@ -46,6 +46,15 @@ export class User implements IUser {
 
   @Property({ nullable: true })
   omiseCustomerToken?: string
+
+  @Property({ unique: true, nullable: true })
+  googleEmail?: string
+
+  @Property({ nullable: true })
+  googleRefreshToken?: string
+
+  @Property({ nullable: true })
+  profilePictureURL?: string
 
   @ManyToMany(() => Session, (session) => session.participants)
   sessions = new Collection<Session>(this)

@@ -1,6 +1,8 @@
 import { Components, Theme } from '@mui/material'
+import { overrideListItemText } from 'libs/mui/src/config/theme/components/list'
 
 import { overrideButton, overrideButtonBase } from './button'
+import { overrideMenu } from './menu'
 import { overrideSwitch } from './switch'
 import { overrideFilledInput, overrideOutlinedInput, overrideTextField } from './textfield'
 import { overrideLink, overrideTypography } from './typography'
@@ -15,5 +17,7 @@ export default function overrideComponents(theme: Theme): Components {
     MuiFilledInput: overrideFilledInput(theme),
     MuiLink: overrideLink(theme),
     MuiSwitch: overrideSwitch(theme),
+    MuiListItemText: overrideListItemText(theme),
+    MuiMenu: overrideMenu(theme),
   }
 }

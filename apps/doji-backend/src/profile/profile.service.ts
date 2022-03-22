@@ -1,6 +1,6 @@
-import { UserReference } from '@backend/auth/auth.service'
 import { User } from '@backend/entities/User'
 import { UserEditProfileRequest } from '@backend/profile/profile.dto'
+import { IUserReference } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable } from '@nestjs/common'
@@ -9,7 +9,7 @@ import { Injectable } from '@nestjs/common'
 export class ProfileService {
   constructor(@InjectRepository(User) private readonly userRepo: EntityRepository<User>) {}
 
-  async editProfile(dto: UserEditProfileRequest, userRef: UserReference) {
+  async editProfile(dto: UserEditProfileRequest, userRef: IUserReference) {
     const user = await userRef.getUser()
     user.email = dto.email
     user.displayName = dto.displayName

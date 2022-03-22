@@ -58,9 +58,4 @@ const AddNewPaymentPage: ExtendedNextPage = () => {
   )
 }
 
-AddNewPaymentPage.topBarProps = {
-  title: 'Add a payment method',
-  action: TopBarActionType.Back,
-}
-
 export default AddNewPaymentPage

@@ -72,11 +72,11 @@ export class MessagingGateway implements OnGatewayConnection, OnGatewayDisconnec
   async handleConnection(client: Socket) {
     try {
       const auth = this.validateDto(AuthHandshake, client.handshake.auth)
-      const user = await this.authService.retriveUserFromToken(auth.token)
-      client.data.username = user.username
+      const userRef = await this.authService.validateAccessToken(auth.token)
+      client.data.username = userRef.username
       client.data.subscribed = new Set()
-      await this.msgService.adjustOnlineSessionCount(user.username, 1)
-      this.logger.log('Connected to ' + client.id + ' with user ' + user.username)
+      await this.msgService.adjustOnlineSessionCount(userRef.username, 1)
+      this.logger.log('Connected to ' + client.id + ' with user ' + userRef.username)
     } catch (e) {
       client.disconnect()
       this.logger.warn('Error while connecting: ' + e)

@@ -8,20 +8,21 @@ import {
   ServiceInformationDTO,
 } from '@backend/session/session.dto'
 import { SessionService } from '@backend/session/session.service'
+import { IUserReference } from '@libs/api'
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 @Controller('session')
 export class SessionController {
   constructor(private readonly sessionService: SessionService) {}
   @Post('schedule')
   @UseGuards(UserAuthGuard)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   async schedule(
     @Body() dto: ScheduleSessionDTO,
-    @CurrentUser() user: UserReference,
+    @CurrentUser() user: IUserReference,
   ): Promise<void> {
-    await this.sessionService.schedule(dto, user)
+    await this.sessionService.schedule(dto, await user.getUser())
   }
   @Get('service/:expert_username/:service_name')
   async getService(
@@ -46,7 +47,7 @@ export class SessionController {
   @Delete('participant')
   @UseGuards(UserAuthGuard)
   @HttpCode(200)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOperation({ description: 'Cancle session of current user by SessionId' })
   @ApiResponse({ status: 200, description: 'Session is cancled' })
   @ApiResponse({ status: 404, description: 'Session not found or you are not in the shcedule' })

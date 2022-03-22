@@ -55,9 +55,3 @@ const Index: ExtendedNextPage = () => {
   )
 }
 export default Index
-
-Index.shouldAuthenticated = true
-Index.topBarProps = {
-  title: 'Work History',
-  action: TopBarActionType.Back,
-}

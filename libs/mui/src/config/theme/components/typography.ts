@@ -1,4 +1,4 @@
-import { Components, Theme } from '@mui/material'
+import { Components, Theme, alpha } from '@mui/material'
 
 export function overrideTypography(theme: Theme): Components['MuiTypography'] {
   return {
@@ -8,15 +8,15 @@ export function overrideTypography(theme: Theme): Components['MuiTypography'] {
     variants: [
       {
         props: { variant: 'title1' },
-        style: { fontSize: '48px', lineHeight: '56px', fontFamily: 'Inter' },
+        style: { fontSize: '48px', lineHeight: '56px', fontFamily: 'Inter', fontWeight: 700 },
       },
       {
         props: { variant: 'title2' },
-        style: { fontSize: '32px', lineHeight: '36px', fontFamily: 'Inter' },
+        style: { fontSize: '32px', lineHeight: '36px', fontFamily: 'Inter', fontWeight: 700 },
       },
       {
         props: { variant: 'title3' },
-        style: { fontSize: '24px', lineHeight: '28px', fontFamily: 'Inter' },
+        style: { fontSize: '24px', lineHeight: '28px', fontFamily: 'Inter', fontWeight: 700 },
       },
       {
         props: { variant: 'large' },
@@ -42,9 +42,12 @@ export function overrideLink(theme: Theme): Components['MuiLink'] {
   return {
     styleOverrides: {
       root: {
-        textDecoration: 'none',
+        textDecoration: `underline 0.15em ${alpha(theme.palette.ink.main, 0)}`,
+        color: theme.palette.ink.main,
+        transition: theme.transitions.create(['text-decoration-color', 'color']),
         '&:hover': {
-          textDecoration: 'underline',
+          color: theme.palette.primary.main,
+          textDecoration: `underline 0.15em ${alpha(theme.palette.primary.main, 1)}`,
         },
       },
     },

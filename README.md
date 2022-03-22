@@ -38,7 +38,7 @@ This project base on Doji requirement that we have learned in SE II.
     cp .env .env.local
     ```
 
-    Don't forget to fill `OMISE_PUBLIC_KEY` and `OMISE_SECRET_KEY` in `.env.local`
+    Don't forget to fill `OMISE_PUBLIC_KEY`, `OMISE_SECRET_KEY` , `MAILGUN_API_KEY` and `MAILGUN_DOMAIN` in `.env.local`
 
 4.  This project requires Node.js version 16. To check your node version. Try
 

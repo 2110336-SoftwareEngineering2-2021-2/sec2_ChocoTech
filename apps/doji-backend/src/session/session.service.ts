@@ -1,4 +1,3 @@
-import { UserReference } from '@backend/auth/auth.service'
 import { Service } from '@backend/entities/Service'
 import { Session } from '@backend/entities/Session'
 import { User } from '@backend/entities/User'
@@ -7,6 +6,7 @@ import {
   ScheduleSessionDTO,
   ServiceInformationDTO,
 } from '@backend/session/session.dto'
+import { IUserReference } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common'
@@ -18,12 +18,11 @@ export class SessionService {
     @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
     @InjectRepository(Service) private readonly serviceRepo: EntityRepository<Service>,
   ) {}
-  async schedule(dto: ScheduleSessionDTO, userRef: UserReference) {
+  async schedule(dto: ScheduleSessionDTO, creator: User) {
     const service = await this.serviceRepo.findOne({
       name: dto.serviceName,
       expert: { username: dto.expertUsername },
     })
-    const creator = await userRef.getUser()
     const session = new Session()
     session.meetingProviderId = 'unknown'
     session.fee = dto.fee
@@ -40,6 +39,7 @@ export class SessionService {
         session.participants.add(user)
       })
     })
+
     await this.sessionRepo.persistAndFlush(session)
   }
   async getServiceByNameAndExpertUsername(dto: GetServiceByNameAndExpertUsernameDTO) {
