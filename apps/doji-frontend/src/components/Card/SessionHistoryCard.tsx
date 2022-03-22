@@ -6,12 +6,14 @@ export interface SessionHistoryCardProps {
   avatarURL: string
   title: string
   date: string
-  is_pending: boolean
-  is_accepted: boolean
-  is_cancel: boolean
-  has_penalty: boolean
-  refund_amount: number
-  session_id: number
+  isPending: boolean
+  isAccepted: boolean
+  isCancel: boolean
+  hasPenalty: boolean
+  deductAmount: number
+  refundAmount: number
+  sessionId: number
+  expertName: string
 }
 function SessionHistoryCard(props: SessionHistoryCardProps) {
   return (
@@ -30,18 +32,25 @@ function SessionHistoryCard(props: SessionHistoryCardProps) {
                 </Typography>
               </Stack>
               <SessionStatusCard
-                is_pending={props.is_pending}
-                is_accepted={props.is_accepted}
-                is_cancel={props.is_cancel}
+                is_pending={props.isPending}
+                is_accepted={props.isAccepted}
+                is_cancel={props.isCancel}
               />
-              {props.is_accepted && (
+              {props.isAccepted && (
                 <Button variant="outlined" size="small">
                   Join Session
                 </Button>
               )}
             </Stack>
           </Stack>
-          <SessionHistoryCardMenu />
+          <SessionHistoryCardMenu
+            sessionId={props.sessionId}
+            expertName={props.expertName}
+            title={props.title}
+            hasPenalty={props.hasPenalty}
+            deductAmount={props.deductAmount}
+            refundAmount={props.refundAmount}
+          />
         </Box>
       </Box>
       <Divider />

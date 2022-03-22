@@ -7,15 +7,15 @@ import MenuItem from '@mui/material/MenuItem'
 import * as React from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 
-export interface SessionHistoryCardMenuProps {
-  session_id: number
+export interface SessionInfo {
+  sessionId: number
   expertName: string
   title: string
-  refund_amount: number
-  has_penalty: boolean
-  deduct_amount: number
+  hasPenalty: boolean
+  deductAmount: number
+  refundAmount: number
 }
-export default function SessionHistoryCardMenu() {
+export default function SessionHistoryCardMenu(props: SessionInfo) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -48,7 +48,7 @@ export default function SessionHistoryCardMenu() {
         }}
       >
         <MenuItem>
-          <SessionHistoryCancelButton />
+          <SessionHistoryCancelButton {...props} />
         </MenuItem>
       </Menu>
     </div>

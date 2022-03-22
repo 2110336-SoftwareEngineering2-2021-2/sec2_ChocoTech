@@ -1,3 +1,4 @@
+import { SessionInfo } from '@frontend/components/Card/SessionHistoryCardMenu'
 import { Stack } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -18,7 +19,7 @@ const style = {
   borderRadius: 2,
 }
 
-export default function SessionHistoryCancelButton() {
+export default function SessionHistoryCancelButton(props: SessionInfo) {
   const [open, setOpen] = React.useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -33,10 +34,6 @@ export default function SessionHistoryCancelButton() {
     })
   return (
     <div>
-      <div>
-        <Toaster />
-      </div>
-
       <Typography onClick={handleOpen}>Cancel</Typography>
       <Modal
         open={open}
@@ -56,24 +53,29 @@ export default function SessionHistoryCancelButton() {
               >
                 Are you sure you want to cancel{' '}
                 <Typography display="inline" variant="regular" fontWeight={700} color="ink.lighter">
-                  How to read indicators{' '}
+                  {props.title}{' '}
                 </Typography>
                 by
                 <Typography display="inline" variant="regular" fontWeight={700} color="ink.lighter">
                   {' '}
-                  Rick Astley?{' '}
+                  {props.expertName}
                 </Typography>
-                You will be deducted{' '}
-                <Typography
-                  display="inline"
-                  variant="regular"
-                  fontWeight={700}
-                  color="primary.main"
-                >
-                  {' '}
-                  10{' '}
-                </Typography>{' '}
-                coins for cancelling within 7 days of the session date.
+                ?{' '}
+                {props.hasPenalty && (
+                  <>
+                    You will be deducted{' '}
+                    <Typography
+                      display="inline"
+                      variant="regular"
+                      fontWeight={700}
+                      color="primary.main"
+                    >
+                      {' '}
+                      {props.deductAmount}{' '}
+                    </Typography>{' '}
+                    coins for cancelling within 7 days of the session date.
+                  </>
+                )}
               </Typography>
               <Typography
                 variant="regular"
@@ -89,7 +91,7 @@ export default function SessionHistoryCancelButton() {
                   color="primary.main"
                 >
                   {' '}
-                  490{' '}
+                  {props.refundAmount}{' '}
                 </Typography>{' '}
                 Doji coins.
               </Typography>
