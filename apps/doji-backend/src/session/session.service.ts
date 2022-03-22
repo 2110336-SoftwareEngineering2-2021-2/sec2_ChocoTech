@@ -59,14 +59,14 @@ export class SessionService {
     serviceInfo.fee = service.fee
     return serviceInfo
   }
-  async getAllSession(userRef: UserReference): Promise<Session[]> {
+  async getAllSession(userRef: IUserReference): Promise<Session[]> {
     const user = await userRef.getUser()
     await user.sessions.init()
     const userSession = user.sessions.getItems()
     return userSession
   }
 
-  async deleteSessionParticipant(sessionId: number, userRef: UserReference) {
+  async deleteSessionParticipant(sessionId: number, userRef: IUserReference) {
     const session = await this.sessionRepo.findOne({ id: sessionId })
     if (!session) {
       throw new NotFoundException('Session not found or you are not in the shcedule')

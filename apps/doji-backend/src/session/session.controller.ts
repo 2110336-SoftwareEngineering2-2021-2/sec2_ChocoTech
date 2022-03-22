@@ -1,5 +1,4 @@
-import { UserReference } from '@backend/auth/auth.service'
-import { CurrentUser, UserAuthGuard } from '@backend/auth/user-auth.guard'
+import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { Session } from '@backend/entities/Session'
 import {
   DeleteSessionParticipantRequest,
@@ -37,10 +36,10 @@ export class SessionController {
   @Get()
   @UseGuards(UserAuthGuard)
   @HttpCode(200)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOperation({ description: 'Get all session of current user information' })
   @ApiResponse({ status: 200, description: 'All sessions of user have benn listed' })
-  async findAll(@CurrentUser() user: UserReference): Promise<Session[]> {
+  async findAll(@CurrentUser() user: IUserReference): Promise<Session[]> {
     return await this.sessionService.getAllSession(user)
   }
 
@@ -53,7 +52,7 @@ export class SessionController {
   @ApiResponse({ status: 404, description: 'Session not found or you are not in the shcedule' })
   async deleteSession(
     @Body() body: DeleteSessionParticipantRequest,
-    @CurrentUser() user: UserReference,
+    @CurrentUser() user: IUserReference,
   ) {
     await this.sessionService.deleteSessionParticipant(body.sessionId, user)
     return 'OK'
