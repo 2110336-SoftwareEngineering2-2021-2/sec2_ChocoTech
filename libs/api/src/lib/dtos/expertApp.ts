@@ -4,6 +4,11 @@ export interface IExpertRegistrationRequestDTO {
 }
 
 export interface IExpertApplicationListItemDTO {
-  fullname: string
+  firstname: string
+  lastname: string
   username: string
+}
+
+export interface IExpertApplicationQueryDTO {
+  keyword?: string
 }
