@@ -33,6 +33,7 @@ import { AppService } from './app.service'
     }),
     AuthModule,
     AdminModule,
+    RegisterModule,
     ProfileModule,
     MessagingModule,
     PaymentModule,
