@@ -7,7 +7,7 @@ import { QueryClient } from 'react-query'
 export const queryClient = new QueryClient()
 
 export const httpClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3333/api',
   timeout: 10000,
   withCredentials: true,
 })
