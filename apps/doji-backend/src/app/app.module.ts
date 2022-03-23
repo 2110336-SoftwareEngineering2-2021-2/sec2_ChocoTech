@@ -34,6 +34,7 @@ import { AppService } from './app.service'
     AuthModule,
     AdminModule,
     RegisterModule,
+    ReviewModule,
     ProfileModule,
     MessagingModule,
     PaymentModule,
