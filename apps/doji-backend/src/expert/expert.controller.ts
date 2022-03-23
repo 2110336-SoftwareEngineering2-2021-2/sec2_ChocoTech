@@ -1,7 +1,7 @@
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { ExpertApplicationRequest } from '@backend/expert/expert.dto'
 import { IUserReference } from '@libs/api'
-import { Body, Controller, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { ApiCookieAuth } from '@nestjs/swagger'
 
 import { ExpertAppService } from './expert.service'
@@ -19,5 +19,13 @@ export class ExpertAppController {
   ) {
     await this.expertAppService.applicationRequest(dto, user)
     return
+  }
+  @Get('get-applications/')
+  async getAllApplicationList() {
+    return await this.expertAppService.getAllApplicationList()
+  }
+  @Get('get-applications/:keyword')
+  async getApplicationList(@Param('keyword') keyword: string) {
+    return await this.expertAppService.getExpertApplicationList(keyword)
   }
 }
