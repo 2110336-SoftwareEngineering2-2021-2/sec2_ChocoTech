@@ -1,5 +1,5 @@
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
-import { ReviewCreationRequestDTO } from '@backend/review/review.dto'
+import { ReviewAverageRatingDTO, ReviewCreationRequestDTO } from '@backend/review/review.dto'
 import { ReviewService } from '@backend/review/review.service'
 import { IUserReference } from '@libs/api'
 import { Body, Controller, Post, UseGuards } from '@nestjs/common'
@@ -11,9 +11,9 @@ export class ReviewController {
 
   @Post()
   @UseGuards(UserAuthGuard)
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   async create(@Body() dto: ReviewCreationRequestDTO, @CurrentUser() user: IUserReference) {
-    await this.reviewService.createReview(dto, user)
+    return await this.reviewService.createReview(dto, user)
   }
 
   @Get('/:sessionId')

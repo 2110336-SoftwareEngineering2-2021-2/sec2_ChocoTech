@@ -1,10 +1,10 @@
 import { Review } from '@backend/entities/Review'
 import { Session } from '@backend/entities/Session'
-import { ReviewCreationRequestDTO } from '@backend/review/review.dto'
+import { ReviewAverageRatingDTO, ReviewCreationRequestDTO } from '@backend/review/review.dto'
 import { IUserReference } from '@libs/api'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { Injectable, UnprocessableEntityException } from '@nestjs/common'
+import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common'
 
 @Injectable()
 export class ReviewService {
@@ -16,7 +16,9 @@ export class ReviewService {
   async createReview(dto: ReviewCreationRequestDTO, userRef: IUserReference) {
     const user = await userRef.getUser()
     const session = await this.sessionRepo.findOne({ id: dto.sessionId })
-    if (!session) return null
+    if (!session) {
+      throw new NotFoundException('Session not found')
+    }
     const newReview = new Review()
     newReview.user = user
     newReview.session = session
@@ -36,7 +38,9 @@ export class ReviewService {
 
   async getReviewAverageRatingById(sessionId: number) {
     const session = await this.sessionRepo.findOne({ id: sessionId })
-    if (!session) return null
+    if (!session) {
+      throw new NotFoundException('Session not found')
+    }
     const reviewList = await this.reviewRepo.find({ session: session })
     const count = reviewList.length
     let sum = 0
