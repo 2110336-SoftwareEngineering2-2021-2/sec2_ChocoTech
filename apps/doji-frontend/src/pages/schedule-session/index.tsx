@@ -7,7 +7,7 @@ import { Tables } from '@libs/mui'
 import { DatePicker } from '@mui/lab'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
-import { Avatar, Button, Stack, TextField, Typography } from '@mui/material'
+import { Avatar, Button, Container, Stack, TextField, Typography } from '@mui/material'
 import { GetServerSideProps } from 'next'
 import * as yup from 'yup'
 
@@ -53,19 +53,21 @@ const TotalPrice = ({ control, fee }: { control: Control<ScheduleModel>; fee: nu
   }
 
   return (
-    <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
-      <Typography variant="large" fontWeight={700}>
-        Total Price
-      </Typography>
-      <Stack direction={'row'}>
-        <Typography variant="large" fontWeight={700} color="primary.dark">
-          {calculateTotal()}
+    <Container>
+      <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+        <Typography variant="large" fontWeight={700}>
+          Total Price
         </Typography>
-        <Typography variant="regular" fontWeight={400} color="primary.dark">
-          &nbsp; Doji coins
-        </Typography>
+        <Stack direction={'row'}>
+          <Typography variant="large" fontWeight={700} color="primary.dark">
+            {calculateTotal()}
+          </Typography>
+          <Typography variant="regular" fontWeight={400} color="primary.dark">
+            &nbsp; Doji coins
+          </Typography>
+        </Stack>
       </Stack>
-    </Stack>
+    </Container>
   )
 }
 
