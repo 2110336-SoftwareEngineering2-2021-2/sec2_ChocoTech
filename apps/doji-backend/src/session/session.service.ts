@@ -9,7 +9,7 @@ import {
 import { IUserReference } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common'
 
 @Injectable()
 export class SessionService {
@@ -58,5 +58,31 @@ export class SessionService {
     serviceInfo.description = service.description
     serviceInfo.fee = service.fee
     return serviceInfo
+  }
+  async getAllSession(userRef: IUserReference): Promise<Session[]> {
+    const user = await userRef.getUser()
+    await user.sessions.init()
+    const userSession = user.sessions.getItems()
+    return userSession
+  }
+
+  async deleteSessionParticipant(sessionId: number, userRef: IUserReference) {
+    const session = await this.sessionRepo.findOne({ id: sessionId })
+    if (!session) {
+      throw new NotFoundException('Session not found or you are not in the shcedule')
+    }
+    await session.participants.init()
+
+    const user = await userRef.getUser()
+    await user.sessions.init()
+
+    const found = user.sessions.contains(session)
+    if (!found) {
+      throw new NotFoundException('Session not found or you are not in the shcedule')
+    }
+    user.sessions.remove(session)
+    session.participants.remove(user)
+    this.sessionRepo.flush()
+    return
   }
 }

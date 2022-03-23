@@ -1,4 +1,6 @@
+import { Session } from '@backend/entities/Session'
 import { IMeResponseDTO, UserRole } from '@libs/api'
+import { Collection } from '@mikro-orm/core'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class MeResponseDTO implements IMeResponseDTO {
@@ -34,4 +36,7 @@ export class MeResponseDTO implements IMeResponseDTO {
 
   @ApiProperty()
   omiseCustomerToken?: string
+
+  @ApiProperty()
+  sessions: Collection<Session>
 }
