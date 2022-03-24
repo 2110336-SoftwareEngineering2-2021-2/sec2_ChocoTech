@@ -7,8 +7,20 @@ import {
   ServiceInformationDTO,
 } from '@backend/session/session.dto'
 import { SessionService } from '@backend/session/session.service'
-import { IUserReference } from '@libs/api'
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, UseGuards } from '@nestjs/common'
+import { ISessionInformationDTO, IUserReference } from '@libs/api'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common'
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 @Controller('session')
@@ -56,5 +68,26 @@ export class SessionController {
   ) {
     await this.sessionService.deleteSessionParticipant(body.sessionId, user)
     return 'OK'
+  }
+
+  @Get('/session/:id')
+  @ApiOperation({ description: 'Retrieve session info' })
+  async getSession(@Param('id', ParseIntPipe) id: number): Promise<ISessionInformationDTO> {
+    const session = await this.sessionService.getSessionInfo(id)
+    if (!session) {
+      throw new NotFoundException('No such session id')
+    }
+    //TODO Populate Value
+    return {
+      id: session.id,
+      reviews: session.reviews.getItems().map((review) => ({
+        id: review.id,
+        rating: review.rating,
+        content: review.content,
+        authorName: `${review.user.firstName} ${review.user.lastName}`,
+        createdAt: review.createdAt,
+      })),
+      reviewStat: await this.sessionService.calculateReviewStatForSession(session),
+    }
   }
 }

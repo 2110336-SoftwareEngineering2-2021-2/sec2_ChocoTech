@@ -6,9 +6,10 @@ import {
   ScheduleSessionDTO,
   ServiceInformationDTO,
 } from '@backend/session/session.dto'
-import { IUserReference } from '@libs/api'
+import { IReviewStat, IUserReference } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
+import { EntityManager } from '@mikro-orm/postgresql'
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common'
 
 @Injectable()
@@ -17,6 +18,7 @@ export class SessionService {
     @InjectRepository(Session) private readonly sessionRepo: EntityRepository<Session>,
     @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
     @InjectRepository(Service) private readonly serviceRepo: EntityRepository<Service>,
+    private readonly em: EntityManager,
   ) {}
   async schedule(dto: ScheduleSessionDTO, creator: User) {
     const service = await this.serviceRepo.findOne({
@@ -86,5 +88,36 @@ export class SessionService {
     session.participants.remove(user as User)
     this.sessionRepo.flush()
     return
+  }
+
+  async getSessionInfo(id: number): Promise<Session | null> {
+    return this.sessionRepo.findOne({ id: id }, ['reviews', 'reviews.user'])
+  }
+
+  async calculateReviewStatForSession(session: Session): Promise<IReviewStat> {
+    const counts: { rating: number; count: string }[] = await this.em
+      .createQueryBuilder(Session, 's')
+      .select(['r.rating', 'count(*)'])
+      .leftJoin('s.reviews', 'r')
+      .groupBy('r.rating')
+      .where({ id: session.id })
+      .execute()
+    const result: IReviewStat = {
+      '1': 0,
+      '2': 0,
+      '3': 0,
+      '4': 0,
+      '5': 0,
+      avg: 0.0,
+      count: 0,
+    }
+    counts.forEach((entry) => {
+      const count = parseInt(entry.count)
+      result[String(entry.rating)] = count
+      result.avg += entry.rating * count
+      result.count += count
+    })
+    if (result.count > 0) result.avg /= result.count
+    return result
   }
 }
