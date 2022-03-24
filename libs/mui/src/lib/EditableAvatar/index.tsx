@@ -8,7 +8,7 @@ const ContainerBox = styled('div')`
   width: fit-content;
   height: fit-content;
 `
-const Overlay = styled('label')`
+const Overlay = styled('label')<{ editable?: boolean }>`
   position: absolute;
   top: 0;
   left: 0;
@@ -23,7 +23,7 @@ const Overlay = styled('label')`
   overflow: visible;
   border-radius: 100px;
   &:hover {
-    opacity: 1;
+    opacity: ${({ editable }) => (editable ? 1 : 0)};
   }
 `
 const Badge = styled(RiMedalFill)`
@@ -36,21 +36,29 @@ const Input = styled('input')`
   opacity: 0;
 `
 export interface EditableAvatarProps extends MuiAvatarProps {
+  editable?: boolean
   isExpert?: boolean
   onUpload?: React.ChangeEventHandler<HTMLInputElement>
 }
 
-export const EditableAvatar: React.FC<EditableAvatarProps> = ({ isExpert, onUpload, ...props }) => {
+export const EditableAvatar: React.FC<EditableAvatarProps> = ({
+  editable,
+  isExpert,
+  onUpload,
+  ...props
+}) => {
   return (
     <>
       <ContainerBox>
         <MuiAvatar src="https://mui.com/static/images/avatar/1.jpg" {...props} />
-        <Overlay htmlFor="myfile">
+        <Overlay htmlFor="profile" editable={editable}>
           <AiOutlineCamera style={{ color: 'white' }} />
         </Overlay>
         {isExpert && <Badge />}
       </ContainerBox>
-      <Input type="file" id="myfile" style={{ display: 'none' }} onChange={onUpload} />
+      {editable && (
+        <Input type="file" id="profile" style={{ display: 'none' }} onChange={onUpload} />
+      )}
     </>
   )
 }

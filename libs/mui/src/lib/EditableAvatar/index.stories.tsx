@@ -11,4 +11,17 @@ const Template: Story<EditableAvatarProps> = (args) => {
   return <EditableAvatar {...args} />
 }
 
-export const Default = Template.bind({})
+export const Ediable = Template.bind({})
+Ediable.args = {
+  editable: true,
+}
+
+export const NotEdiable = Template.bind({})
+NotEdiable.args = {
+  editable: false,
+}
+
+export const Expert = Template.bind({})
+Expert.args = {
+  isExpert: true,
+}
