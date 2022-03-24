@@ -6,6 +6,7 @@ import { MessagingModule } from '@backend/messaging/messaging.module'
 import { PaymentModule } from '@backend/payment/payment.module'
 import { ProfileModule } from '@backend/profile/profile.module'
 import { RegisterModule } from '@backend/register/register.module'
+import { ReviewModule } from '@backend/review/review.module'
 import { SessionModule } from '@backend/session/session.module'
 import { WorkHistoryModule } from '@backend/work-history/work-history.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
@@ -40,6 +41,7 @@ import { AppService } from './app.service'
     WorkHistoryModule,
     SessionModule,
     ExpertAppModule,
+    ReviewModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,3 +1,4 @@
+import { Review } from '@backend/entities/Review'
 import { ISession } from '@libs/api'
 import {
   Collection,
@@ -5,6 +6,7 @@ import {
   Enum,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryKey,
   Property,
 } from '@mikro-orm/core'
@@ -58,4 +60,7 @@ export class Session implements ISession {
 
   @ManyToMany(() => User, 'sessions', { owner: true })
   participants = new Collection<User>(this)
+
+  @OneToMany(() => Review, (review) => review.session)
+  reviews = new Collection<Review>(this)
 }

@@ -23,6 +23,8 @@ export class SessionService {
       name: dto.serviceName,
       expert: { username: dto.expertUsername },
     })
+
+    // WARN: No NULL CHECK
     const session = new Session()
     session.meetingProviderId = 'unknown'
     session.fee = dto.fee
