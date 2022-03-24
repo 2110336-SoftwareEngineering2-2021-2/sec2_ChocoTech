@@ -7,7 +7,7 @@ export type SearchBarProps = TextFieldProps
 
 export interface SearchBarRef {
   clear: () => void
-  getValue: () => string | undefined
+  getRef: () => HTMLInputElement | null
 }
 
 export const SearchBar = forwardRef<SearchBarRef, SearchBarProps>((props, ref) => {
@@ -20,15 +20,15 @@ export const SearchBar = forwardRef<SearchBarRef, SearchBarProps>((props, ref) =
     if (inputRef.current) inputRef.current.value = ''
   }
 
-  const getValue = () => {
-    return inputRef.current?.value
+  const getRef = () => {
+    return inputRef.current
   }
 
   useImperativeHandle(
     ref,
     () => ({
       clear: handleClearText,
-      getValue: getValue,
+      getRef: getRef,
     }),
     [],
   )
