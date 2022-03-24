@@ -170,11 +170,6 @@ const SessionPage: ExtendedNextPage = () => {
       {data.reviews.map((review) => (
         <ReviewEntry key={review.id} data={review} />
       ))}
-      <Link component="button" onClick={() => console.log('hi')}>
-        <Typography fontWeight={500} color="primary.main" textAlign="center">
-          view more
-        </Typography>
-      </Link>
     </Stack>
   )
 }
