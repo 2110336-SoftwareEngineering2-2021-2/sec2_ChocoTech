@@ -1,1 +1,1 @@
-export { default } from '@frontend/modules/settings'
+export { default, getServerSideProps } from '@frontend/modules/settings'

@@ -9,14 +9,14 @@ export const ExpertCard = styled('div')`
 `
 
 export const ExpertCardHeader = styled(Typography)``
-ExpertCardHeader.arguments = {
+ExpertCardHeader.defaultProps = {
   variant: 'large',
   fontWeight: 700,
   color: 'white',
 }
 
 export const ExpertCardBody = styled(Typography)``
-ExpertCardHeader.arguments = {
+ExpertCardHeader.defaultProps = {
   variant: 'small',
   fontWeight: 400,
   color: 'white',

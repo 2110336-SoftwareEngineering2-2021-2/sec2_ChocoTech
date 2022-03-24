@@ -1,3 +1,4 @@
+import { getServerSideUser } from '@frontend/common/auth'
 import NotiDialog from '@frontend/components/NotiDialog/NotiDialog'
 import { ExtendedNextPage } from '@frontend/type'
 import { IMeResponseDTO } from '@libs/api'
@@ -74,3 +75,5 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ user }) => {
 }
 
 export default SettingsPage
+
+export const getServerSideProps = getServerSideUser()
