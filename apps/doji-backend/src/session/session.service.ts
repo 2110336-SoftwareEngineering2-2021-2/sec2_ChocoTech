@@ -81,7 +81,7 @@ export class SessionService {
       throw new NotFoundException('Session not found or you are not in the shcedule')
     }
     user.sessions.remove(session)
-    session.participants.remove(user)
+    session.participants.remove(user as User)
     this.sessionRepo.flush()
     return
   }

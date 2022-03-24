@@ -1,6 +1,6 @@
-import { UserReference } from '@backend/auth/auth.service'
 import { Review } from '@backend/entities/Review'
 import { ReviewCreationRequestDTO } from '@backend/review/review.dto'
+import { IUserReference } from '@libs/api'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable, UnprocessableEntityException } from '@nestjs/common'
@@ -9,7 +9,7 @@ import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 export class ReviewService {
   constructor(@InjectRepository(Review) private readonly reviewRepo: EntityRepository<Review>) {}
 
-  async createReview(dto: ReviewCreationRequestDTO, userRef: UserReference) {
+  async createReview(dto: ReviewCreationRequestDTO, userRef: IUserReference) {
     const user = await userRef.getUser()
     const newReview = new Review()
     newReview.content = dto.content
