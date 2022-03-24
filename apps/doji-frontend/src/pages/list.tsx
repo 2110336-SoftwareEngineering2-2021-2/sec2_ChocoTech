@@ -1,8 +1,20 @@
 import { ExtendedNextPage } from '@frontend/type'
-import { Button, Link as MuiLink, Stack, Typography } from '@mui/material'
+import { SearchBar, SearchBarRef } from '@libs/mui'
+import { Link as MuiLink, Stack, TextField } from '@mui/material'
 import Link from 'next/link'
 
+import { FormEventHandler, createRef, useRef } from 'react'
+import { useForm } from 'react-hook-form'
+
 const ListPage: ExtendedNextPage = () => {
+  const ref = useRef(null)
+  const ref1 = useRef<SearchBarRef>(null)
+
+  const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault()
+    console.log(ref1.current.getValue())
+  }
+
   return (
     <Stack direction="column" gap={4} flexGrow={1} component="ul">
       <Link href="/" passHref>
@@ -41,6 +53,15 @@ const ListPage: ExtendedNextPage = () => {
       {/* <Link href="/view-requests/expert-detail" passHref>
         <MuiLink component="li">View Request Page</MuiLink>
       </Link> */}
+      <SearchBar
+        ref={ref}
+        onChange={(e) => {
+          console.log(e.target.value)
+        }}
+      />
+      <form onSubmit={onSubmit}>
+        <SearchBar ref={ref1} />
+      </form>
     </Stack>
   )
 }
