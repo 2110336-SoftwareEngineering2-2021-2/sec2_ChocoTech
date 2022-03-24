@@ -14,6 +14,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { Box } from '@mui/system'
+import { formatDistanceToNow } from 'date-fns'
 import { useRouter } from 'next/router'
 
 import React from 'react'
@@ -133,7 +134,7 @@ function ReviewEntry(props: { data: IPublicSessionReviewDTO }) {
             )}
         </Stack>
         <Typography variant="tiny" fontWeight={400} color="ink.light">
-          17 hours ago
+          {formatDistanceToNow(new Date(props.data.createdAt))}
         </Typography>
       </Stack>
       <Typography variant="small" fontWeight={400}>
