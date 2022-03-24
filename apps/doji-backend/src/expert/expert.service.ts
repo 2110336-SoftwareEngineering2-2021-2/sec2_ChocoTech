@@ -1,6 +1,6 @@
 import { ExpertApp } from '@backend/entities/ExpertApp'
 import { User } from '@backend/entities/User'
-import { ExpertApplicationRequest } from '@backend/expert/expert.dto'
+import { ExpertApplicationListItemDTO, ExpertApplicationRequest } from '@backend/expert/expert.dto'
 import {
   IExpertApplicationListItemDTO,
   IExpertApplicationQueryDTO,
@@ -34,31 +34,30 @@ export class ExpertAppService {
       }
     }
   }
-  async getExpertApplicationListByKeyword(query: IExpertApplicationQueryDTO) {
-    let allApplication
-    if (query.keyword) {
-      allApplication = await this.expertAppRepo.find({
+  async getExpertApplicationListByKeyword({
+    keyword = '%',
+  }: IExpertApplicationQueryDTO): Promise<ExpertApplicationListItemDTO[]> {
+    const allApplication = await this.expertAppRepo.find(
+      {
         user: {
           $or: [
-            { firstName: { $ilike: `%${query.keyword}%` } },
-            { lastName: { $ilike: `%${query.keyword}%` } },
+            { firstName: { $ilike: `%${keyword}%` } },
+            { lastName: { $ilike: `%${keyword}%` } },
           ],
         },
-      })
-    } else {
-      allApplication = await this.expertAppRepo.findAll()
-    }
-    const outputList = await Promise.all(
-      allApplication.map(async (val, index) => {
-        const userData = await this.userRepo.findOne({ username: val.user.username })
-        const output: IExpertApplicationListItemDTO = {
-          firstname: userData.firstName,
-          lastname: userData.lastName,
-          username: val.user.username,
-        }
-        return output
-      }),
+      },
+      {
+        populate: ['user'],
+      },
     )
+    const outputList: ExpertApplicationListItemDTO[] = allApplication.map((value, index) => {
+      const output: ExpertApplicationListItemDTO = {
+        firstname: value.user.firstName,
+        lastname: value.user.lastName,
+        username: value.user.username,
+      }
+      return output
+    })
     return outputList
   }
 }
