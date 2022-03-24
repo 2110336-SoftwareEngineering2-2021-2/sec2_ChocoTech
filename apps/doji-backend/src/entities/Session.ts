@@ -1,4 +1,3 @@
-import { Review } from '@backend/entities/Review'
 import { ISession } from '@libs/api'
 import {
   Collection,
@@ -13,6 +12,7 @@ import {
 
 import { Service } from '../entities/Service'
 import { User } from '../entities/User'
+import { Review } from './Review'
 
 export enum SessionStatus {
   PENDING = 'pending',

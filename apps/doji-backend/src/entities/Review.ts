@@ -23,4 +23,7 @@ export class Review implements IReview {
 
   @ManyToMany(() => User, 'reviews', { owner: true })
   reportByUser = new Collection<User>(this)
+
+  @Property({ default: new Date().toISOString() })
+  createdAt: Date = new Date()
 }
