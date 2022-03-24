@@ -14,6 +14,7 @@ export interface IUser {
   location?: string
   omiseCustomerToken?: string
   googleRefreshToken?: string
+  googleEmail?: string
   profilePictureURL?: string
   sessions: any
 }

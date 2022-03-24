@@ -1,3 +1,5 @@
+import { UserRegistrationRequestDTO } from '@backend/auth/auth.dto'
+import { InvalidToken } from '@backend/auth/auth.exception'
 import { User } from '@backend/entities/User'
 import { environment } from '@backend/environments/environment'
 import {
@@ -8,7 +10,7 @@ import {
   serializeUserReference,
 } from '@backend/utils/redis'
 import { IUserReference } from '@libs/api'
-import { EntityRepository } from '@mikro-orm/core'
+import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import {
   ForbiddenException,
@@ -16,7 +18,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
-  UnauthorizedException,
+  UnprocessableEntityException,
 } from '@nestjs/common'
 import { MailgunService } from '@nextnm/nestjs-mailgun'
 import bcrypt from 'bcrypt'
@@ -32,12 +34,6 @@ const RESET_TOKEN_EXPIRE_DURATION_SECONDS = 60 * 5 // 5 minutes
 interface ILogin {
   accessToken: string
   maxAge: number
-}
-
-export class InvalidToken extends Error {
-  constructor() {
-    super('Token is invalid or expired.')
-  }
 }
 
 @Injectable()
@@ -72,6 +68,17 @@ export class AuthService {
     return token
   }
 
+  async getKeyAndUserRefFromToken(key: RedisKeyType, token: string) {
+    try {
+      const redisKey = generateRedisKey(key, token)
+      const userRefString = await this.redis.get(redisKey)
+      const userRef = deserializeUserReference(userRefString, this.userRepo)
+      return { redisKey, userRef }
+    } catch (e) {
+      throw new InvalidToken()
+    }
+  }
+
   async loginWithPassword(username: string, password: string): Promise<ILogin> {
     const user = await this.userRepo.findOne({ username: username })
     if (!user) {
@@ -88,10 +95,11 @@ export class AuthService {
   }
 
   async validateAccessToken(token: string): Promise<IUserReference> {
-    const redisKey = generateRedisKey(RedisKeyType.USER_ACCESS_TOKEN, token)
     try {
-      const userRefString = await this.redis.get(redisKey)
-      const userRef = deserializeUserReference(userRefString, this.userRepo)
+      const { redisKey, userRef } = await this.getKeyAndUserRefFromToken(
+        RedisKeyType.USER_ACCESS_TOKEN,
+        token,
+      )
       // Extends expiration time
       await this.redis.expire(redisKey, TOKEN_EXPIRE_DURATION_SECONDS)
       return userRef
@@ -102,7 +110,7 @@ export class AuthService {
 
   async generateGoogleLoginURL(accessToken: string, rediectUrl: string): Promise<string> {
     if (!accessToken) {
-      throw new UnauthorizedException('No access token provided')
+      throw new InvalidToken()
     }
 
     const urlOption: Auth.GenerateAuthUrlOpts = {
@@ -210,6 +218,45 @@ export class AuthService {
       this.logger.log(`Reset password for user [${user.username}] successfully`)
     } catch (err) {
       throw new InvalidToken()
+    }
+  }
+
+  async signup(dto: UserRegistrationRequestDTO) {
+    //create new user and hash password
+    const newUser = new User()
+    newUser.username = dto.username
+    newUser.email = dto.email
+    newUser.displayName = dto.displayName
+    newUser.passwordHash = await bcrypt.hash(dto.password, 10)
+    try {
+      await this.userRepo.persistAndFlush(newUser) //add to database
+    } catch (err) {
+      if (err instanceof UniqueConstraintViolationException) {
+        throw new UnprocessableEntityException('User with this username or email already exist.')
+      } else {
+        throw err
+      }
+    }
+    return
+  }
+
+  async changePassword(userRef: IUserReference, currentPassword: string, newPassword: string) {
+    const user = await userRef.getUser()
+    if (await bcrypt.compare(currentPassword, user.passwordHash)) {
+      user.passwordHash = await bcrypt.hash(newPassword, 10)
+      await this.userRepo.persistAndFlush(user)
+    } else {
+      throw new UnprocessableEntityException('Your current password is not correct.')
+    }
+  }
+
+  async getUserInformation(userRef: IUserReference) {
+    const user = await userRef.getUser()
+    return {
+      username: user.username,
+      email: user.email,
+      displayName: user.displayName,
+      profilePictureURL: user.profilePictureURL,
     }
   }
 }

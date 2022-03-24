@@ -1,36 +1,21 @@
-import { MeResponseDTO } from '@backend/auth/auth.dto'
+import {
+  MeResponseDTO,
+  UserChangePasswordRequestDTO,
+  UserLoginRequestDTO,
+  UserRegistrationRequestDTO,
+  UserResetPasswordRequest,
+  UserSendResetPasswordEmailRequest,
+} from '@backend/auth/auth.dto'
 import { AuthService } from '@backend/auth/auth.service'
 import { Cookie } from '@backend/auth/cookie.decorator'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { environment } from '@backend/environments/environment'
-import { IResetPasswordBody, ISendResetPasswordEmailBody, IUserReference } from '@libs/api'
+import { CookieKey, IUserReference } from '@libs/api'
 import { Body, Controller, Get, Param, Post, Query, Redirect, Res, UseGuards } from '@nestjs/common'
-import { ApiCookieAuth, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ThrottlerGuard } from '@nestjs/throttler'
-import { IsEmail, IsString } from 'class-validator'
 import { Response } from 'express'
 
-class PasswordLoginBody {
-  @ApiProperty()
-  @IsString()
-  username: string
-
-  @ApiProperty()
-  @IsString()
-  password: string
-}
-
-class SendResetPasswordEmailBody implements ISendResetPasswordEmailBody {
-  @ApiProperty()
-  @IsEmail()
-  email: string
-}
-
-class ResetPasswordBody implements IResetPasswordBody {
-  @ApiProperty()
-  @IsString()
-  newPassword: string
-}
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -50,11 +35,11 @@ export class AuthController {
   @ApiOperation({ description: 'Log user in with username and password' })
   async loginWithPassword(
     @Res({ passthrough: true }) res: Response,
-    @Body() body: PasswordLoginBody,
+    @Body() body: UserLoginRequestDTO,
   ) {
     const { username, password } = body
     const { accessToken, maxAge } = await this.authService.loginWithPassword(username, password)
-    res.cookie('accessToken', accessToken, {
+    res.cookie(CookieKey.ACCESS_TOKEN, accessToken, {
       httpOnly: true,
       maxAge: maxAge,
     })
@@ -64,7 +49,7 @@ export class AuthController {
   @Redirect()
   @ApiOperation({ description: 'Log user in with Google oauth' })
   async loginWithGoogle(
-    @Cookie('accessToken') accessToken,
+    @Cookie(CookieKey.ACCESS_TOKEN) accessToken,
     @Query('rediectUrl') rediectUrl: string = environment.domain.frontend,
   ) {
     try {
@@ -96,7 +81,7 @@ export class AuthController {
       code,
       username,
     )
-    res.cookie('googleAccessToken', access_token, {
+    res.cookie(CookieKey.GOOGLE_ACCESS_TOKEN, access_token, {
       httpOnly: true,
       maxAge: expiry_date,
     })
@@ -108,7 +93,7 @@ export class AuthController {
   @Post('reset-password')
   @UseGuards(ThrottlerGuard)
   @ApiOperation({ description: 'User request to reset password by email' })
-  async requestResetPassword(@Body() body: SendResetPasswordEmailBody): Promise<void> {
+  async requestResetPassword(@Body() body: UserSendResetPasswordEmailRequest): Promise<void> {
     await this.authService.sendResetPasswordEmail(body.email)
   }
 
@@ -117,8 +102,23 @@ export class AuthController {
   @ApiOperation({ description: 'Reset user password' })
   async resetPassword(
     @Param('token') token: string,
-    @Body() dto: ResetPasswordBody,
+    @Body() dto: UserResetPasswordRequest,
   ): Promise<void> {
     await this.authService.resetPassword(token, dto.newPassword)
+  }
+
+  @Post('change-password')
+  @UseGuards(UserAuthGuard)
+  @ApiOperation({ description: 'Change user password' })
+  async changePassword(
+    @Body() dto: UserChangePasswordRequestDTO,
+    @CurrentUser() userRef: IUserReference,
+  ): Promise<void> {
+    await this.authService.changePassword(userRef, dto.currentPassword, dto.newPassword)
+  }
+
+  @Post('signup')
+  async create(@Body() dto: UserRegistrationRequestDTO) {
+    await this.authService.signup(dto)
   }
 }

@@ -45,6 +45,7 @@
     "@nextnm/nestjs-mailgun": "^2.0.0",
     "@nrwl/next": "13.4.6",
     "axios": "^0.26.0",
+    "axios-cache-adapter": "^2.7.3",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",

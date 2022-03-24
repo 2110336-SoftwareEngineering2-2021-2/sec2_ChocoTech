@@ -1,12 +1,11 @@
-import { SearchBar, TopBar, TopBarActionType } from '@libs/mui'
+import { SearchBar } from '@libs/mui'
 import { Box } from '@mui/material'
 
 import SessionCard from '../../components/ExpertService/SessionCard'
 
 export function Index() {
   return (
-    <Box>
-      <TopBar title="New session" action={TopBarActionType.Back}></TopBar>
+    <div>
       <SearchBar margin="none"></SearchBar>
       <Box marginTop={3}>
         <SessionCard
@@ -18,7 +17,7 @@ export function Index() {
           serviceName="How to read indicator"
         ></SessionCard>
       </Box>
-    </Box>
+    </div>
   )
 }
 export default Index
