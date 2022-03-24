@@ -1,18 +1,16 @@
 import { ExtendedNextPage } from '@frontend/type'
 import { SearchBar, SearchBarRef } from '@libs/mui'
-import { Link as MuiLink, Stack, TextField } from '@mui/material'
+import { Link as MuiLink, Stack } from '@mui/material'
 import Link from 'next/link'
 
-import { FormEventHandler, createRef, useRef } from 'react'
-import { useForm } from 'react-hook-form'
+import { FormEventHandler, useRef } from 'react'
 
 const ListPage: ExtendedNextPage = () => {
-  const ref = useRef(null)
-  const ref1 = useRef<SearchBarRef>(null)
+  const ref = useRef<SearchBarRef>(null)
 
   const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
-    console.log(ref1.current.getValue())
+    console.log(ref.current.get<string | undefined>('value'))
   }
 
   return (
@@ -54,13 +52,12 @@ const ListPage: ExtendedNextPage = () => {
         <MuiLink component="li">View Request Page</MuiLink>
       </Link> */}
       <SearchBar
-        ref={ref}
         onChange={(e) => {
           console.log(e.target.value)
         }}
       />
       <form onSubmit={onSubmit}>
-        <SearchBar ref={ref1} />
+        <SearchBar ref={ref} />
       </form>
     </Stack>
   )
