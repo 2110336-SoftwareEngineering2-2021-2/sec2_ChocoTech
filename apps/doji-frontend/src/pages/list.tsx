@@ -12,7 +12,7 @@ const ListPage: ExtendedNextPage = () => {
 
   const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
-    console.log(ref1.current.getRef().value)
+    console.log(ref1.current.getValue())
   }
 
   return (
