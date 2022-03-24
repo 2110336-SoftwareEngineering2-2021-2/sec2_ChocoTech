@@ -1,25 +1,13 @@
 import { getServerSideUser } from '@frontend/common/auth'
-import NotiDialog from '@frontend/components/NotiDialog/NotiDialog'
-import { ExtendedNextPage } from '@frontend/type'
 import { IMeResponseDTO } from '@libs/api'
 import { CompactPrpfile } from '@libs/mui'
-import {
-  Box,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Stack,
-  Tab,
-  Tabs,
-  Typography,
-} from '@mui/material'
+import { List, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material'
 import Link from 'next/link'
 
 import { ReactNode, useMemo } from 'react'
 import { FiDollarSign, FiEdit2, FiLayers, FiLock, FiLogOut } from 'react-icons/fi'
 
-import { ExpertCard, ExpertCardBody, ExpertCardHeader } from './styled'
+import { ExpertCard } from './styled'
 
 interface ListItemProps {
   href: string
@@ -51,7 +39,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ user }) => {
 
   return (
     <Stack direction="column">
-      <Typography variant="title3" py={2} px={3}>
+      <Typography variant="title3" py={2} px={3} mt={2}>
         Settings
       </Typography>
       <CompactPrpfile
@@ -59,16 +47,24 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ user }) => {
         displayName={displayName}
         profileUrl={user.profilePictureURL}
       />
-      <ExpertCard>
-        <ExpertCardHeader>Become expert</ExpertCardHeader>
-        <ExpertCardBody>To create your own sessions and make an income</ExpertCardBody>
-      </ExpertCard>
-      <List component="nav">
-        <ListItem href="/settings/profile" text="Edit Profiel" icon={<FiEdit2 />} />
-        <ListItem href="/settings/change-password" text="Change password" icon={<FiLock />} />
-        <ListItem href="/settings/wallet" text="Wallet" icon={<FiDollarSign />} />
-        <ListItem href="/settings/experience" text="Experience" icon={<FiLayers />} />
-        <ListItem href="/logout" text="Logout" icon={<FiLogOut />} />
+      <Link href="/expert/apply" passHref>
+        <ExpertCard>
+          <Typography variant="regular" fontWeight={700} color="white">
+            Become expert
+          </Typography>
+          <Typography variant="small" fontWeight={400} color="white">
+            To create your own sessions and make an income
+          </Typography>
+        </ExpertCard>
+      </Link>
+      <List component="nav" sx={{ mt: 2 }}>
+        <Stack direction="column" spacing={1}>
+          <ListItem href="/settings/profile" text="Edit Profiel" icon={<FiEdit2 />} />
+          <ListItem href="/settings/change-password" text="Change password" icon={<FiLock />} />
+          <ListItem href="/settings/wallet" text="Wallet" icon={<FiDollarSign />} />
+          <ListItem href="/settings/experience" text="Experience" icon={<FiLayers />} />
+          <ListItem href="/logout" text="Logout" icon={<FiLogOut />} />
+        </Stack>
       </List>
     </Stack>
   )

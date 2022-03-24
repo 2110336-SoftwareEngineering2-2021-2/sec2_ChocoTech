@@ -3,21 +3,12 @@ import { Typography, styled } from '@mui/material'
 export const ExpertCard = styled('div')`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing(1)};
-  padding: ${({ theme }) => theme.spacing(2.5, 2)};
+  gap: ${({ theme }) => theme.spacing(2)};
+  padding: ${({ theme }) => theme.spacing(2.5, 3)};
   background: ${({ theme }) => theme.palette.primary.main};
+  border-radius: 12px;
+  transition: ${({ theme }) => theme.transitions.create('background')};
+  &:hover {
+    background: ${({ theme }) => theme.palette.primary.dark};
+  }
 `
-
-export const ExpertCardHeader = styled(Typography)``
-ExpertCardHeader.defaultProps = {
-  variant: 'large',
-  fontWeight: 700,
-  color: 'white',
-}
-
-export const ExpertCardBody = styled(Typography)``
-ExpertCardHeader.defaultProps = {
-  variant: 'small',
-  fontWeight: 400,
-  color: 'white',
-}
