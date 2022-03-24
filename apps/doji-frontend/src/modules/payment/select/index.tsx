@@ -1,10 +1,11 @@
+import { getServerSideUser } from '@frontend/common/auth'
 import { DialogState, TopUpDialog } from '@frontend/components/TopUpDialog'
 import { httpClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage, PaymentType } from '@frontend/type'
 import { stangToBathString } from '@frontend/utils/stangBathToString'
 import { IDepositRequest, IErrorMessage, IMeResponseDTO, IUser } from '@libs/api'
-import { Tables, TablesActionType, TopBarActionType } from '@libs/mui'
+import { Tables, TablesActionType } from '@libs/mui'
 import {
   AvatarProps,
   Button,
@@ -166,6 +167,6 @@ const SelectPaymentPage: ExtendedNextPage = () => {
   )
 }
 
-SelectPaymentPage.shouldAuthenticated = true
+export const getServerSideProps = getServerSideUser()
 
 export default SelectPaymentPage

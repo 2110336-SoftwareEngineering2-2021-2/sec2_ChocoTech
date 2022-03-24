@@ -2,7 +2,6 @@ import SessionCard, { SessionCardProps } from '@frontend/components/Card/Session
 import { ExtendedNextPage } from '@frontend/type'
 import { SearchBar } from '@libs/mui'
 import { Container, Divider, Stack, styled } from '@mui/material'
-import { TopBarActionType } from 'libs/mui/src/lib/TopBar'
 
 const mockDatas: SessionCardProps[] = [
   {

@@ -33,7 +33,7 @@ function Index() {
         </Typography>
       </Stack>
       <Stack direction="column" spacing={2} mb={5}>
-        <Link href="/register" passHref>
+        <Link href="/signup" passHref>
           <Button>Create Account</Button>
         </Link>
         <Typography variant="regular">

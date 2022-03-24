@@ -1,15 +1,14 @@
-import { queryClient } from '@frontend/services'
-import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
+import { IMeResponseDTO } from '@libs/api'
 import { NavBar, theme } from '@libs/mui'
 import { Container, ThemeProvider, styled } from '@mui/material'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import Script from 'next/script'
 
-import { useCallback, useEffect } from 'react'
+import { useState } from 'react'
 import { Toaster } from 'react-hot-toast'
-import { QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 import './style.css'
 
@@ -24,46 +23,26 @@ type ExtendedAppProps = AppProps & {
   Component: ExtendedNextPage
 }
 
-const MainNavBar: React.FC<ExtendedAppProps> = ({ Component, router }) => {
-  const { isAuthenticated, userInfo } = useAuthStore()
-
-  const shouldAuthenticated = Component.shouldAuthenticated
-
-  const shouldRedirect = useCallback(() => {
-    return !((shouldAuthenticated && isAuthenticated()) || !shouldAuthenticated)
-  }, [shouldAuthenticated, isAuthenticated])
-
-  useEffect(() => {
-    if (shouldRedirect()) {
-      router.replace('/login')
-    }
-  }, [router, shouldRedirect])
-
-  if (shouldRedirect()) {
-    return null
-  }
-
-  if (Component.dontShowNavBar) return null
-
-  return (
-    <NavBar
-      role={isAuthenticated() ? 'user' : 'none'}
-      username={userInfo?.username ?? 'username'}
-    />
-  )
+const MainNavBar: React.FC<{ user?: IMeResponseDTO; show?: boolean }> = ({ user, show }) => {
+  if (!show) return null
+  return <NavBar role={user?.role ? user.role : 'none'} username={user?.username ?? 'username'} />
 }
 
 function CustomApp(props: ExtendedAppProps) {
-  const { Component } = props
+  const { Component, pageProps } = props
+  const showNavbar = !Component.dontShowNavBar
+
+  const [queryClient] = useState(() => new QueryClient())
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <Head>
           <title>Welcome to doji-frontend!</title>
         </Head>
-        <MainNavBar {...props} />
+        <MainNavBar user={pageProps.user} show={showNavbar} />
         <StyledContainer maxWidth="sm">
-          <Component {...props.pageProps} />
+          <Component {...pageProps} />
         </StyledContainer>
         <Toaster
           position="bottom-center"
