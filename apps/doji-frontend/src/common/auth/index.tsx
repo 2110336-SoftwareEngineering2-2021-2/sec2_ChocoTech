@@ -9,7 +9,6 @@ interface GetServerSideUserProps {
 export const getServerSideUser =
   (fetcher?: () => any): GetServerSideProps<GetServerSideUserProps> =>
   async (context) => {
-    console.log(context.req.headers)
     try {
       const data = await fetchUserInformation({
         headers: context.req ? { cookie: context.req.headers.cookie } : undefined,
