@@ -1,13 +1,19 @@
-import { AdminCreationRequestDTO } from '@backend/admin/admin.dto'
+import { AdminCreationRequestDTO, ApproveExpertDetailDTO } from '@backend/admin/admin.dto'
 import { Admin } from '@backend/entities/Admin'
+import { User, UserRole } from '@backend/entities/User'
+import { WorkHistory } from '@backend/entities/WorkHistory'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { Injectable, UnprocessableEntityException } from '@nestjs/common'
+import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common'
 import bcrypt from 'bcrypt'
 
 @Injectable()
 export class AdminService {
-  constructor(@InjectRepository(Admin) private readonly adminRepo: EntityRepository<Admin>) {}
+  constructor(
+    @InjectRepository(Admin) private readonly adminRepo: EntityRepository<Admin>,
+    @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
+    @InjectRepository(WorkHistory) private readonly workHistoryRepo: EntityRepository<WorkHistory>,
+  ) {}
 
   async adminCreation(dto: AdminCreationRequestDTO) {
     const newAdmin = new Admin()
@@ -28,5 +34,28 @@ export class AdminService {
   async getAllAdmin(): Promise<Admin[]> {
     const admin = await this.adminRepo.findAll()
     return admin
+  }
+
+  async getWorkHistoryByUsername(username: string): Promise<ApproveExpertDetailDTO> {
+    const user = await this.userRepo.findOne({ username: username })
+    const workHistory = await this.workHistoryRepo.findOne({ expert: user })
+    if (!workHistory || !user) {
+      throw new NotFoundException('User not found')
+    }
+    const detail = new ApproveExpertDetailDTO()
+    detail.username = user.username
+    detail.firstname = user.firstName
+    detail.lastname = user.lastName
+    detail.workHistory = workHistory
+    return detail
+  }
+
+  async approveExpert(username: string) {
+    const user = await this.userRepo.findOne({ username: username })
+    if (!user) {
+      throw new NotFoundException('User not found')
+    }
+    user.role = UserRole.EXPERT
+    return
   }
 }
