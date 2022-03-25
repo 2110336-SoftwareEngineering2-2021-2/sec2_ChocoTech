@@ -36,6 +36,15 @@ export class ReviewService {
     return
   }
 
+  async getAllReview(sessionId: number) {
+    const session = await this.sessionRepo.findOne({ id: sessionId })
+    if (!session) {
+      throw new NotFoundException('Session not found')
+    }
+    const reviewList = await this.reviewRepo.find({ session: session })
+    return reviewList
+  }
+
   async getReviewAverageRatingById(sessionId: number) {
     const session = await this.sessionRepo.findOne({ id: sessionId })
     if (!session) {

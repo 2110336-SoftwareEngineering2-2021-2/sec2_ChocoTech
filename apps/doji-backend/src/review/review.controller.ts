@@ -1,4 +1,5 @@
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
+import { Review } from '@backend/entities/Review'
 import { ReviewAverageRatingDTO, ReviewCreationRequestDTO } from '@backend/review/review.dto'
 import { ReviewService } from '@backend/review/review.service'
 import { IUserReference } from '@libs/api'
@@ -16,8 +17,17 @@ export class ReviewController {
     return await this.reviewService.createReview(dto, user)
   }
 
-  @Get('/:sessionId')
-  async getService(@Param('sessionId') sessionId: number): Promise<ReviewAverageRatingDTO> {
+  @Get('avg/:sessionId')
+  @UseGuards(UserAuthGuard)
+  @ApiCookieAuth()
+  async getAverageRating(@Param('sessionId') sessionId: number): Promise<ReviewAverageRatingDTO> {
     return await this.reviewService.getReviewAverageRatingById(sessionId)
+  }
+
+  @Get('all/:sessionId')
+  @UseGuards(UserAuthGuard)
+  @ApiCookieAuth()
+  async getAllReview(@Param('sessionId') sessionId: number): Promise<Review[]> {
+    return await this.reviewService.getAllReview(sessionId)
   }
 }
