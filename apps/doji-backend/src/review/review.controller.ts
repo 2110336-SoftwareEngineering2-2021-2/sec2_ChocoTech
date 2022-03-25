@@ -17,7 +17,7 @@ export class ReviewController {
     return await this.reviewService.createReview(dto, user)
   }
 
-  @Get('avg/:sessionId')
+  @Get('avgRating/:sessionId')
   @UseGuards(UserAuthGuard)
   @ApiCookieAuth()
   async getAverageRating(@Param('sessionId') sessionId: number): Promise<ReviewAverageRatingDTO> {
