@@ -18,3 +18,14 @@ export function overrideListItemText(theme: Theme): Components['MuiListItemText'
     },
   }
 }
+
+export function overrideListItemButton(theme: Theme): Components['MuiListItemButton'] {
+  return {
+    styleOverrides: {
+      root: {
+        padding: theme.spacing(2, 2),
+        borderRadius: theme.shape.borderRadius,
+      },
+    },
+  }
+}

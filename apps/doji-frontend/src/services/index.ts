@@ -2,8 +2,6 @@ import axios from 'axios'
 import { setupCache } from 'axios-cache-adapter'
 import type { Omise } from 'omise-js-typed'
 
-import toast from 'react-hot-toast'
-
 const cache = setupCache({
   maxAge: 15 * 60 * 1000,
 })
@@ -15,16 +13,22 @@ export const httpClient = axios.create({
   adapter: cache.adapter,
 })
 
-httpClient.interceptors.response.use((response) => {
-  if (response.status === 401) {
-    console.log('Token expiredor invalid')
-    toast.error('Your session has expired. Please log in again.')
-    setTimeout(() => {
-      window.location.href = '/login'
-    }, 1500)
-  }
-  return response
+httpClient.interceptors.request.use((request) => {
+  return request
 })
+
+httpClient.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  (error) => {
+    if (error.response.status === 401) {
+      console.log('Token expired or invalid')
+      window.location.href = '/login'
+    }
+    return Promise.reject(error)
+  },
+)
 
 export const createOmiseClient = (): Omise | undefined => {
   if (typeof window !== 'undefined') {
