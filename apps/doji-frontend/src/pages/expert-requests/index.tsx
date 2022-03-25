@@ -1,38 +1,15 @@
+import { httpClient } from '@frontend/services'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { IExpertApplicationListItemDTO } from '@libs/api'
 import { SearchBar, Tables, TablesActionType } from '@libs/mui'
 import { Stack, Typography } from '@mui/material'
+import { GetServerSideProps } from 'next/types'
+import * as yup from 'yup'
 
-const tempMockData = [
-  {
-    firstname: 'Yeltsa',
-    lastname: 'Kcir',
-    username: 'newUser',
-  },
-  {
-    firstname: 'Rick',
-    lastname: 'Astley',
-    username: 'rick',
-  },
-  {
-    firstname: 'Incredible',
-    lastname: 'Uncanny',
-    username: 'incredible',
-  },
-  {
-    firstname: 'Gawr',
-    lastname: 'Gura',
-    username: 'gura',
-  },
-  {
-    firstname: 'Usada',
-    lastname: 'Pekora',
-    username: 'usada',
-  },
-  {
-    firstname: 'Oozora',
-    lastname: 'Subaru',
-    username: 'oozora',
-  },
-]
+import { useState } from 'react'
+import { Control, useForm, useWatch } from 'react-hook-form'
+import { useQuery } from 'react-query'
+
 interface IExpertCardProp {
   fullname: string
   username: string
@@ -56,7 +33,23 @@ function ExpertCard(props: IExpertCardProp) {
     />
   )
 }
+function ExpertResult({ control }: { control: Control }) {
+  const query = useWatch({ control })
+  return <Stack>{query.keyword}</Stack>
+}
+
 function ExpertRequest() {
+  const { data, isLoading } = useQuery<IExpertApplicationListItemDTO[]>(
+    ['getApplications'],
+    async () => {
+      const { data } = await httpClient.get(`/expert/applications/`)
+      return data
+    },
+  )
+  const { register, control } = useForm()
+  if (isLoading) {
+    return null
+  }
   return (
     <Stack>
       <br />
@@ -64,19 +57,11 @@ function ExpertRequest() {
         Expert Requests
       </Typography>
       <br />
-      <SearchBar />
+      <form>
+        <SearchBar {...register('keyword')} />
+      </form>
       <br />
-      <Stack>
-        {tempMockData.map((value) => {
-          return (
-            <ExpertCard
-              key={value.username}
-              fullname={`${value.firstname} ${value.lastname}`}
-              username={value.username}
-            />
-          )
-        })}
-      </Stack>
+      <ExpertResult control={control} />
     </Stack>
   )
 }
