@@ -10,7 +10,9 @@ export const getServerSideUser =
   (fetcher?: () => any): GetServerSideProps<GetServerSideUserProps> =>
   async (context) => {
     try {
-      const data = await fetchUserInformation()
+      const data = await fetchUserInformation({
+        headers: context.req ? { cookie: context.req.headers.cookie } : undefined,
+      })
       const otherProps = fetcher ? await fetcher() : {}
       return {
         props: {
