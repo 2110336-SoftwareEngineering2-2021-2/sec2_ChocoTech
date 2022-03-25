@@ -1,5 +1,5 @@
 import { ExtendedNextPage } from '@frontend/type'
-import { Tables, TopBarActionType } from '@libs/mui'
+import { Tables } from '@libs/mui'
 import { AvatarProps, Stack, SxProps, Theme, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
 

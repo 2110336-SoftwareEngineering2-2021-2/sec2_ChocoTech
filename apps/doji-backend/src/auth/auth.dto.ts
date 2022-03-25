@@ -1,19 +1,32 @@
 import { Session } from '@backend/entities/Session'
-import { IMeResponseDTO, UserRole } from '@libs/api'
+import {
+  IMeResponseDTO,
+  IUserChangePasswordRequestDTO,
+  IUserLoginRequestDTO,
+  IUserRegistrationRequestDTO,
+  IUserResetPasswordRequest,
+  IUserSendResetPasswordEmailRequest,
+  UserRole,
+} from '@libs/api'
 import { Collection } from '@mikro-orm/core'
 import { ApiProperty } from '@nestjs/swagger'
+import { IsEmail, IsNumber, IsString } from 'class-validator'
 
 export class MeResponseDTO implements IMeResponseDTO {
   @ApiProperty()
+  @IsString()
   username: string
 
   @ApiProperty()
+  @IsEmail()
   email: string
 
   @ApiProperty()
+  @IsString()
   displayName: string
 
   @ApiProperty()
+  @IsNumber()
   coinBalance: number
 
   @ApiProperty()
@@ -39,4 +52,60 @@ export class MeResponseDTO implements IMeResponseDTO {
 
   @ApiProperty()
   sessions: Collection<Session>
+
+  @ApiProperty()
+  googleRefreshToken?: string
+
+  @ApiProperty()
+  googleEmail?: string
+}
+
+export class UserRegistrationRequestDTO implements IUserRegistrationRequestDTO {
+  @ApiProperty()
+  @IsString()
+  username: string
+
+  @ApiProperty()
+  @IsString()
+  password: string
+
+  @ApiProperty()
+  @IsString()
+  displayName: string
+
+  @ApiProperty()
+  @IsEmail()
+  email: string
+}
+
+export class UserChangePasswordRequestDTO implements IUserChangePasswordRequestDTO {
+  @ApiProperty()
+  @IsString()
+  currentPassword: string
+
+  @ApiProperty()
+  @IsString()
+  newPassword: string
+}
+
+export class UserSendResetPasswordEmailRequest implements IUserSendResetPasswordEmailRequest {
+  @ApiProperty()
+  @IsEmail()
+  email: string
+}
+
+export class UserResetPasswordRequest implements IUserResetPasswordRequest {
+  @ApiProperty()
+  @IsString()
+  newPassword: string
+}
+
+export class UserLoginRequestDTO implements IUserLoginRequestDTO {
+  @ApiProperty()
+  @IsString()
+  username: string
+
+  @ApiProperty()
+  @IsString()
+  password: string
 }

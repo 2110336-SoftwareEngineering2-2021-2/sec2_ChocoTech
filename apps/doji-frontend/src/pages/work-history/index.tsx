@@ -1,7 +1,6 @@
 import WorkHistoryCard, { WorkHistoryCardProps } from '@frontend/components/Card/WorkHistoryCard'
 import { ExtendedNextPage } from '@frontend/type'
 import { Avatar, Button, Divider, Stack, Typography, styled } from '@mui/material'
-import { TopBarActionType } from 'libs/mui/src/lib/TopBar'
 
 const mockDatas: WorkHistoryCardProps[] = [
   {

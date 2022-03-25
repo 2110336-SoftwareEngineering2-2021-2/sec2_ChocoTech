@@ -1,12 +1,15 @@
-import { Button, InputAdornment, Stack, TextField, TextFieldProps, useTheme } from '@mui/material'
+import { InputAdornment, Stack, TextField, TextFieldProps, useTheme } from '@mui/material'
 
 import { forwardRef, useImperativeHandle, useRef } from 'react'
 import { FiSearch, FiX } from 'react-icons/fi'
 
 export type SearchBarProps = TextFieldProps
 
-export interface SearchBarRef extends HTMLInputElement {
+type GetFunction = <T = any>(x: keyof HTMLInputElement) => T
+
+export interface SearchBarRef {
   clear: () => void
+  get: GetFunction
 }
 
 export const SearchBar = forwardRef<SearchBarRef, SearchBarProps>((props, ref) => {
@@ -19,10 +22,18 @@ export const SearchBar = forwardRef<SearchBarRef, SearchBarProps>((props, ref) =
     if (inputRef.current) inputRef.current.value = ''
   }
 
-  useImperativeHandle(ref, () => ({
-    clear: handleClearText,
-    ...(inputRef.current as HTMLInputElement),
-  }))
+  const get: GetFunction = (key) => {
+    return inputRef?.current?.[key] as any
+  }
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      clear: handleClearText,
+      get,
+    }),
+    [],
+  )
 
   return (
     <Stack direction="row" spacing={1} justifyContent="space-between">
@@ -40,11 +51,9 @@ export const SearchBar = forwardRef<SearchBarRef, SearchBarProps>((props, ref) =
             </InputAdornment>
           ),
         }}
+        fullWidth
         {...props}
       />
-      <Button variant="text" color="inherit">
-        Cancel
-      </Button>
     </Stack>
   )
 })

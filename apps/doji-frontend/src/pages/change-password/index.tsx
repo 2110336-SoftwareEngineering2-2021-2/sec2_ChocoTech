@@ -1,3 +1,4 @@
+import { getServerSideUser } from '@frontend/common/auth'
 import { httpClient } from '@frontend/services'
 import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -24,7 +25,7 @@ export type ChangePasswordModel = InferType<typeof ChangePasswordSchema>
 
 const changePasswordRequest = async (formData: IUserChangePasswordRequestDTO) => {
   await httpClient.post<unknown, unknown, IUserChangePasswordRequestDTO>(
-    '/register/change_password',
+    '/auth/change-password',
     formData,
   )
 }
@@ -88,4 +89,4 @@ const ChangePasswordPage: ExtendedNextPage = () => {
 
 export default ChangePasswordPage
 
-ChangePasswordPage.shouldAuthenticated = true
+export const getServerSideProps = getServerSideUser()
