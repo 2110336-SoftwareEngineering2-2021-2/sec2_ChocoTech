@@ -1,5 +1,5 @@
 import { CompactProfile } from '@libs/mui'
-import { Stack, Typography } from '@mui/material'
+import { Dialog, Stack, Typography } from '@mui/material'
 
 import { AiOutlineColumnHeight } from 'react-icons/ai'
 
