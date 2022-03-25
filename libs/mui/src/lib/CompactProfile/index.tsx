@@ -1,7 +1,7 @@
 import { Stack, Typography } from '@mui/material'
 import { EditableAvatar } from 'libs/mui/src/lib/EditableAvatar'
 
-export interface CompactPrpfileProps {
+export interface CompactProfileProps {
   username: string
   displayName: string
   profileUrl?: string
@@ -10,7 +10,7 @@ export interface CompactPrpfileProps {
   onUpload?: React.ChangeEventHandler<HTMLInputElement>
 }
 
-export const CompactPrpfile: React.FC<CompactPrpfileProps> = ({
+export const CompactProfile: React.FC<CompactProfileProps> = ({
   username,
   displayName,
   profileUrl,

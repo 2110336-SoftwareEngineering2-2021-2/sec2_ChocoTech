@@ -1,14 +1,14 @@
 import { Meta, Story } from '@storybook/react'
 
-import { CompactPrpfile, CompactPrpfileProps } from '.'
+import { CompactProfile, CompactProfileProps } from '.'
 
 export default {
-  component: CompactPrpfile,
-  title: 'lib/CompactPrpfile',
-} as Meta<CompactPrpfileProps>
+  component: CompactProfile,
+  title: 'lib/CompactProfile',
+} as Meta<CompactProfileProps>
 
-const Template: Story<CompactPrpfileProps> = (args) => {
-  return <CompactPrpfile {...args} />
+const Template: Story<CompactProfileProps> = (args) => {
+  return <CompactProfile {...args} />
 }
 
 export const Default = Template.bind({})
