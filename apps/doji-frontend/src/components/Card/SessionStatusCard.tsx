@@ -10,7 +10,8 @@ export interface SessionStatusProps {
   is_cancel: boolean
 }
 function SessionStatusCard(props: SessionStatusProps) {
-  const StyleStack = styled(Box)`
+  const StyleStack = styled('div')`
+    width: fit-content;
     display: flex;
     flex-direction: row;
     gap: ${({ theme }) => theme.spacing(1)};

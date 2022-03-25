@@ -20,10 +20,10 @@ function SessionHistoryCard(props: SessionHistoryCardProps) {
     <>
       <Box px={3} py={2.75}>
         <Box display="flex" flexDirection="row" justifyContent="space-between">
-          <Stack direction="row" spacing={1} alignItems="flex-start">
+          <Stack direction="row" spacing={1} alignItems="flex-start" sx={{ width: '100%' }}>
             <Avatar src={props.avatarURL} />
-            <Stack direction="column" spacing={1.5}>
-              <Stack direction="column" spacing={0.5}>
+            <Stack direction="column" spacing={1.5} sx={{ width: '100%' }}>
+              <Stack direction="column" spacing={0.5} sx={{ width: '100%' }}>
                 <Typography variant="regular" fontWeight={500} color="ink.darkest">
                   {props.title}
                 </Typography>
@@ -31,13 +31,15 @@ function SessionHistoryCard(props: SessionHistoryCardProps) {
                   {props.date}
                 </Typography>
               </Stack>
-              <SessionStatusCard
-                is_pending={props.isPending}
-                is_accepted={props.isAccepted}
-                is_cancel={props.isCancel}
-              />
+              <div>
+                <SessionStatusCard
+                  is_pending={props.isPending}
+                  is_accepted={props.isAccepted}
+                  is_cancel={props.isCancel}
+                />
+              </div>
               {props.isAccepted && (
-                <Button variant="outlined" size="small">
+                <Button variant="outlined" size="small" fullWidth>
                   Join Session
                 </Button>
               )}
