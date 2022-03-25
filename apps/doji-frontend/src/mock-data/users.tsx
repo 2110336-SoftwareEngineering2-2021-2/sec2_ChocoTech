@@ -1,4 +1,5 @@
 import { IUser, UserRole } from '@libs/api'
+import { Collection } from '@mikro-orm/core'
 
 export const mockUserData: IUser[] = [
   {
@@ -17,6 +18,6 @@ export const mockUserData: IUser[] = [
     googleRefreshToken: 'x',
     googleEmail: 'John.D@gmail.com',
     profilePictureURL: '',
-    sessions: [],
+    sessions: [] as any,
   },
 ]
