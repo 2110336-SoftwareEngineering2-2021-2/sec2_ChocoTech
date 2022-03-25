@@ -1,13 +1,9 @@
 import { httpClient } from '@frontend/services'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { IExpertApplicationListItemDTO } from '@libs/api'
-import { SearchBar, Tables, TablesActionType } from '@libs/mui'
+import { SearchBar, SearchBarRef, Tables, TablesActionType } from '@libs/mui'
 import { Stack, Typography } from '@mui/material'
-import { GetServerSideProps } from 'next/types'
-import * as yup from 'yup'
 
-import { useState } from 'react'
-import { Control, useForm, useWatch } from 'react-hook-form'
+import { useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 
 interface IExpertCardProp {
@@ -33,22 +29,22 @@ function ExpertCard(props: IExpertCardProp) {
     />
   )
 }
-function ExpertResult({ control }: { control: Control }) {
-  const query = useWatch({ control })
-  return <Stack>{query.keyword}</Stack>
-}
 
 function ExpertRequest() {
+  const ref = useRef<SearchBarRef>(null)
+  const [requestList, setRequestList] = useState([])
   const { data, isLoading } = useQuery<IExpertApplicationListItemDTO[]>(
     ['getApplications'],
     async () => {
       const { data } = await httpClient.get(`/expert/applications/`)
+      setRequestList(data)
       return data
     },
   )
-  const { register, control } = useForm()
-  if (isLoading) {
-    return null
+  function getData(e) {
+    httpClient.get(`/expert/applications/?keyword=${e.target.value}`).then((value) => {
+      setRequestList(value.data)
+    })
   }
   return (
     <Stack>
@@ -57,11 +53,19 @@ function ExpertRequest() {
         Expert Requests
       </Typography>
       <br />
-      <form>
-        <SearchBar {...register('keyword')} />
-      </form>
+      <SearchBar onChange={getData} ref={ref} />
       <br />
-      <ExpertResult control={control} />
+      <Stack>
+        {requestList.map((value: IExpertApplicationListItemDTO) => {
+          return (
+            <ExpertCard
+              key={value.username}
+              fullname={`${value.firstname} ${value.lastname}`}
+              username={value.username}
+            />
+          )
+        })}
+      </Stack>
     </Stack>
   )
 }
