@@ -32,6 +32,7 @@ function ExpertCard(props: IExpertCardProp) {
 
 function ExpertRequest() {
   const ref = useRef<SearchBarRef>(null)
+  const lastInput = useRef<string>('')
   const [requestList, setRequestList] = useState([])
   const { data, isLoading } = useQuery<IExpertApplicationListItemDTO[]>(
     ['getApplications'],
@@ -41,8 +42,15 @@ function ExpertRequest() {
       return data
     },
   )
-  function getData(e) {
-    httpClient.get(`/expert/applications/?keyword=${e.target.value}`).then((value) => {
+  setInterval(() => {
+    const currentInput = ref.current?.get<string | undefined>('value')
+    if (lastInput.current != currentInput) {
+      lastInput.current = currentInput
+      getData(currentInput)
+    }
+  }, 2000)
+  function getData(keyword: string) {
+    httpClient.get(`/expert/applications/?keyword=${keyword}`).then((value) => {
       setRequestList(value.data)
     })
   }
@@ -53,7 +61,7 @@ function ExpertRequest() {
         Expert Requests
       </Typography>
       <br />
-      <SearchBar onChange={getData} ref={ref} />
+      <SearchBar ref={ref} />
       <br />
       <Stack>
         {requestList.map((value: IExpertApplicationListItemDTO) => {
