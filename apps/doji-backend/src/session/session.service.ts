@@ -34,12 +34,14 @@ export class SessionService {
     session.creator = creator
     session.service = service
     session.participants.add(creator)
-    await dto.participantsUsername.forEach((value) => {
-      this.userRepo.findOne({ username: value }).then((user) => {
-        session.participants.add(user)
-      })
-    })
-
+    for (const value of dto.participantsUsername) {
+      const participant = await this.userRepo.findOne({ username: value })
+      try {
+        session.participants.add(participant)
+      } catch (e) {
+        throw new NotFoundException('Users not found')
+      }
+    }
     await this.sessionRepo.persistAndFlush(session)
   }
   async getServiceByNameAndExpertUsername(dto: GetServiceByNameAndExpertUsernameDTO) {
