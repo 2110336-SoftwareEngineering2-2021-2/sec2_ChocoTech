@@ -1,51 +1,52 @@
-import { Box, Typography, styled } from '@mui/material'
+import { SessionStatus } from '@libs/api'
+import { Box, Theme, Typography, styled, useTheme } from '@mui/material'
 
 import { AiOutlineCalendar } from 'react-icons/ai'
 import { BiLoader } from 'react-icons/bi'
 import { IoMdClose } from 'react-icons/io'
 
 export interface SessionStatusProps {
-  is_pending: boolean
-  is_accepted: boolean
-  is_cancel: boolean
+  status: SessionStatus
 }
-function SessionStatusCard(props: SessionStatusProps) {
-  const StyleStack = styled('div')`
-    width: fit-content;
-    display: flex;
-    flex-direction: row;
-    gap: ${({ theme }) => theme.spacing(1)};
-    align-items: 'center';
-    background-color: ${({ theme }) =>
-      props.is_pending
-        ? theme.palette.sky.lightest
-        : props.is_accepted
-        ? theme.palette.green.lightest
-        : theme.palette.red.lightest};
-    padding: ${({ theme }) => theme.spacing(0.75)} ${({ theme }) => theme.spacing(1.5)};
-    border-radius: 8px;
-  `
+function getColor(status: SessionStatus, theme: Theme) {
+  if (status === SessionStatus.PENDING) return theme.palette.sky.lightest
+  else if (status === SessionStatus.ACCEPTED) return theme.palette.green.lightest
+  return theme.palette.red.lightest
+}
+function getColor2(status: SessionStatus, theme: Theme) {
+  if (status === SessionStatus.PENDING) return theme.palette.sky.dark
+  else if (status === SessionStatus.ACCEPTED) return theme.palette.green.dark
+  return theme.palette.red.dark
+}
+function getIcon(status: SessionStatus, theme: Theme) {
+  if (status === SessionStatus.PENDING) return <BiLoader color={theme.palette.sky.dark} />
+  else if (status === SessionStatus.ACCEPTED)
+    return <AiOutlineCalendar color={theme.palette.green.dark} />
+  return <IoMdClose color={theme.palette.red.dark} />
+}
+function getText(status: SessionStatus, theme: Theme) {
+  if (status === SessionStatus.PENDING) return 'Expert is pending'
+  else if (status === SessionStatus.ACCEPTED) return 'Expert has accepted'
+  else if (status === SessionStatus.CANCELED) return 'You cancelled'
+  return 'Expert has declined'
+}
+const StyleStack = styled('div')<SessionStatusProps>`
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  gap: ${({ theme }) => theme.spacing(1)};
+  align-items: 'center';
+  background-color: ${({ theme, status }) => getColor(status, theme)};
+  padding: ${({ theme }) => theme.spacing(0.75)} ${({ theme }) => theme.spacing(1.5)};
+  border-radius: 8px;
+`
+function SessionStatusCard({ status }: SessionStatusProps) {
+  const theme = useTheme()
   return (
-    <StyleStack>
-      {props.is_pending ? (
-        <BiLoader color="#979C9E" />
-      ) : props.is_accepted ? (
-        <AiOutlineCalendar color="#198155" />
-      ) : (
-        <IoMdClose color="#D3180C" />
-      )}
-      <Typography
-        color={props.is_pending ? '#979C9E' : props.is_accepted ? '#198155' : '#D3180C'}
-        variant="small"
-        fontWeight={400}
-      >
-        {props.is_pending
-          ? 'Expert is pending'
-          : props.is_accepted
-          ? 'Expert has accepted'
-          : props.is_cancel
-          ? 'You cancelled'
-          : 'Expert has declined'}
+    <StyleStack status={status}>
+      {getIcon(status, theme)}
+      <Typography color={getColor2(status, theme)} variant="small" fontWeight={400}>
+        {getText(status, theme)}
       </Typography>
     </StyleStack>
   )
