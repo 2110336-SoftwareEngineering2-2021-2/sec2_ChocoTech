@@ -24,13 +24,13 @@ export class SessionService {
       expert: { username: dto.expertUsername },
     })
     const session = new Session()
-    session.meetingProviderId = 'unknown'
+    session.meetingProviderId = ''
     session.fee = dto.fee
     session.coinOnHold = dto.fee
     session.topic = service.name
     session.duration = dto.duration
     session.startTime = dto.startTime
-    session.sourceId = 'unknown'
+    session.sourceId = ''
     session.creator = creator
     session.service = service
     session.participants.add(creator)
