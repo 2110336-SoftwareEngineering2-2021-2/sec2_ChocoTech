@@ -48,7 +48,7 @@ export const Achievement: React.FC<AchievementProps> = ({ title, desc, src, edit
           </Typography>
         </Stack>
       </Stack>
-      <Button>tmp</Button>
+      {editable && <Button>tmp</Button>}
     </Stack>
   )
 }
