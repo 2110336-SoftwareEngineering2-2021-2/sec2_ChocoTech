@@ -15,6 +15,6 @@ export interface IExpertApplicationQueryDTO {
   keyword?: string
 }
 
-export interface IExpertInfoDTO {
+export interface IExpertInfoResponseDTO {
   reviewStat: IReviewStat
 }

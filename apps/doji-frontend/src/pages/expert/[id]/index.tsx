@@ -1,7 +1,7 @@
 import RatingPanel from '@frontend/components/Review/RatingPanel'
 import { httpClient } from '@frontend/services'
 import { ExtendedNextPage } from '@frontend/type'
-import { IExpertInfoDTO } from '@libs/api'
+import { IExpertInfoResponseDTO } from '@libs/api'
 import { Avatar, CircularProgress, Stack, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 import { useRouter } from 'next/router'
@@ -12,8 +12,9 @@ const ExpertPage: ExtendedNextPage = () => {
   //TODO This Entire Page
   const router = useRouter()
   const { id } = router.query
-  const { isError, error, isLoading, data } = useQuery<IExpertInfoDTO>(['/expert/info', id], () =>
-    httpClient.get('/expert/info/' + encodeURIComponent(id as string)).then((res) => res.data),
+  const { isError, error, isLoading, data } = useQuery<IExpertInfoResponseDTO>(
+    ['/expert/info', id],
+    () => httpClient.get('/expert/info/' + id).then((res) => res.data),
   )
 
   if (isError) return <div>{`Error: ${error}`}</div>

@@ -1,8 +1,8 @@
-import { ReviewStatDTO } from '@backend/review/review.dto'
+import { ReviewStatResponseDTO } from '@backend/review/review.dto'
 import {
   IExpertApplicationListItemDTO,
   IExpertApplicationQueryDTO,
-  IExpertInfoDTO,
+  IExpertInfoDTO as IExpertInfoResponseDTO,
   IReviewStat,
 } from '@libs/api'
 import { ApiBody, ApiProperty } from '@nestjs/swagger'
@@ -30,7 +30,7 @@ export class ExpertApplicationListItemDTO implements IExpertApplicationListItemD
   username: string
 }
 
-export class ExpertInfoDTO implements IExpertInfoDTO {
+export class ExpertInfoResponseDTO implements IExpertInfoResponseDTO {
   @ApiProperty()
-  reviewStat: ReviewStatDTO
+  reviewStat: ReviewStatResponseDTO
 }

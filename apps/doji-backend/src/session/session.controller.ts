@@ -4,7 +4,7 @@ import {
   GetServiceByNameAndExpertUsernameDTO,
   ScheduleSessionDTO,
   ServiceInformationDTO,
-  SessionInformationDTO,
+  SessionInformationResponseDTO,
 } from '@backend/session/session.dto'
 import { SessionService } from '@backend/session/session.service'
 import { ISession, ISessionInformationDTO, IUserReference } from '@libs/api'
@@ -71,8 +71,8 @@ export class SessionController {
 
   @Get('/session/:id')
   @ApiOperation({ description: 'Retrieve session info' })
-  @ApiOkResponse({ type: SessionInformationDTO })
-  async getSession(@Param('id', ParseIntPipe) id: number): Promise<SessionInformationDTO> {
+  @ApiOkResponse({ type: SessionInformationResponseDTO })
+  async getSession(@Param('id', ParseIntPipe) id: number): Promise<SessionInformationResponseDTO> {
     const session = await this.sessionService.getSessionInfo(id)
     if (!session) {
       throw new NotFoundException('No such session id')

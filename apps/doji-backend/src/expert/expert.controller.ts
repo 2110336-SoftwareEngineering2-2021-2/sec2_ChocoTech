@@ -14,7 +14,7 @@ import {
 import { ApiCookieAuth, ApiOkResponse, ApiOperation, ApiQuery } from '@nestjs/swagger'
 import { query } from 'express'
 
-import { ExpertInfoDTO } from './expert.dto'
+import { ExpertInfoResponseDTO } from './expert.dto'
 import { ExpertAppService } from './expert.service'
 
 @Controller('expert')
@@ -43,8 +43,8 @@ export class ExpertAppController {
 
   @Get('info/:id')
   @ApiOperation({ description: "Retrieve an expert's information" })
-  @ApiOkResponse({ type: ExpertInfoDTO })
-  async getExpertInfo(@Param('id') expertId: string): Promise<ExpertInfoDTO> {
+  @ApiOkResponse({ type: ExpertInfoResponseDTO })
+  async getExpertInfo(@Param('id') expertId: string): Promise<ExpertInfoResponseDTO> {
     const info = await this.expertAppService.getExpertInfo(expertId)
     if (!info) throw new NotFoundException('No expert with such id')
     return info

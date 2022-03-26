@@ -4,7 +4,7 @@ import { User } from '@backend/entities/User'
 import {
   ExpertApplicationListItemDTO,
   ExpertApplicationRequest,
-  ExpertInfoDTO,
+  ExpertInfoResponseDTO,
 } from '@backend/expert/expert.dto'
 import { parseReviewStatFromAggreationResult } from '@backend/utils/review'
 import {
@@ -80,7 +80,7 @@ export class ExpertAppService {
     return parseReviewStatFromAggreationResult(await query.execute())
   }
 
-  async getExpertInfo(expertId: string): Promise<null | ExpertInfoDTO> {
+  async getExpertInfo(expertId: string): Promise<null | ExpertInfoResponseDTO> {
     //TODO Populate This
     const expert = await this.userRepo.findOne({ username: expertId })
     if (!expert) return null
