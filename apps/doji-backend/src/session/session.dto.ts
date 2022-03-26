@@ -1,11 +1,15 @@
 import { SessionStatus } from '@backend/entities/Session'
 import { User } from '@backend/entities/User'
+import { ReviewStatDTO } from '@backend/review/review.dto'
 import {
   IGetServiceByNameAndExpertUsernameDTO,
+  IPublicSessionReviewDTO,
+  IReviewStat,
   IScheduleSessionDTO,
   IService,
   IServiceInformationDTO,
   ISession,
+  ISessionInformationDTO,
 } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
@@ -90,4 +94,26 @@ export class SessionDTO implements ISession {
 
   @ApiProperty()
   service: IService
+}
+
+export class SessionInformationDTO implements ISessionInformationDTO {
+  @ApiProperty()
+  id: number
+  @ApiProperty()
+  reviews: IPublicSessionReviewDTO[]
+  @ApiProperty()
+  reviewStat: ReviewStatDTO
+}
+
+export class PublicSessionReviewDTO implements IPublicSessionReviewDTO {
+  @ApiProperty()
+  id: number
+  @ApiProperty()
+  rating: number
+  @ApiProperty()
+  authorName: string
+  @ApiProperty()
+  content: string
+  @ApiProperty()
+  createdAt: Date
 }

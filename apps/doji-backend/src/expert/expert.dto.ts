@@ -1,5 +1,11 @@
-import { IExpertApplicationListItemDTO, IExpertApplicationQueryDTO } from '@libs/api'
-import { ApiProperty } from '@nestjs/swagger'
+import { ReviewStatDTO } from '@backend/review/review.dto'
+import {
+  IExpertApplicationListItemDTO,
+  IExpertApplicationQueryDTO,
+  IExpertInfoDTO,
+  IReviewStat,
+} from '@libs/api'
+import { ApiBody, ApiProperty } from '@nestjs/swagger'
 import { IsString } from 'class-validator'
 
 export class ExpertApplicationRequest {
@@ -22,4 +28,9 @@ export class ExpertApplicationListItemDTO implements IExpertApplicationListItemD
   @ApiProperty()
   @IsString()
   username: string
+}
+
+export class ExpertInfoDTO implements IExpertInfoDTO {
+  @ApiProperty()
+  reviewStat: ReviewStatDTO
 }

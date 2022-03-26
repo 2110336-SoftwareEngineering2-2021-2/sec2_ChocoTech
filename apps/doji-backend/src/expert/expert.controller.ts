@@ -1,10 +1,20 @@
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { ExpertApplicationListItemDTO, ExpertApplicationRequest } from '@backend/expert/expert.dto'
-import { IExpertApplicationQueryDTO, IUserReference } from '@libs/api'
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common'
-import { ApiCookieAuth, ApiOperation, ApiQuery } from '@nestjs/swagger'
+import { IExpertApplicationQueryDTO, IExpertInfoDTO, IUserReference } from '@libs/api'
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common'
+import { ApiCookieAuth, ApiOkResponse, ApiOperation, ApiQuery } from '@nestjs/swagger'
 import { query } from 'express'
 
+import { ExpertInfoDTO } from './expert.dto'
 import { ExpertAppService } from './expert.service'
 
 @Controller('expert')
@@ -29,5 +39,14 @@ export class ExpertAppController {
     @Query() query: IExpertApplicationQueryDTO,
   ): Promise<ExpertApplicationListItemDTO[]> {
     return await this.expertAppService.getExpertApplicationListByKeyword(query)
+  }
+
+  @Get('info/:id')
+  @ApiOperation({ description: "Retrieve an expert's information" })
+  @ApiOkResponse({ type: ExpertInfoDTO })
+  async getExpertInfo(@Param('id') expertId: string): Promise<ExpertInfoDTO> {
+    const info = await this.expertAppService.getExpertInfo(expertId)
+    if (!info) throw new NotFoundException('No expert with such id')
+    return info
   }
 }
