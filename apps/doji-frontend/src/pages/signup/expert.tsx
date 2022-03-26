@@ -3,7 +3,6 @@ import RegisteredTextfield from '@frontend/components/Register/registerTextfield
 import { httpClient } from '@frontend/services'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IExpertRegistrationRequestDTO } from '@libs/api'
-import { TopBarActionType } from '@libs/mui'
 import { Button, Stack } from '@mui/material'
 import { AxiosError } from 'axios'
 import router from 'next/router'

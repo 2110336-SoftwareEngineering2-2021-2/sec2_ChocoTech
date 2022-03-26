@@ -1,5 +1,4 @@
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
-import { Session } from '@backend/entities/Session'
 import {
   DeleteSessionParticipantRequest,
   GetServiceByNameAndExpertUsernameDTO,
@@ -7,7 +6,7 @@ import {
   ServiceInformationDTO,
 } from '@backend/session/session.dto'
 import { SessionService } from '@backend/session/session.service'
-import { ISessionInformationDTO, IUserReference } from '@libs/api'
+import { ISession, ISessionInformationDTO, IUserReference } from '@libs/api'
 import {
   Body,
   Controller,
@@ -18,7 +17,6 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common'
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
@@ -51,7 +49,7 @@ export class SessionController {
   @ApiCookieAuth()
   @ApiOperation({ description: 'Get all session of current user information' })
   @ApiResponse({ status: 200, description: 'All sessions of user have benn listed' })
-  async findAll(@CurrentUser() user: IUserReference): Promise<Session[]> {
+  async findAll(@CurrentUser() user: IUserReference): Promise<ISession[]> {
     return await this.sessionService.getAllSession(user)
   }
 

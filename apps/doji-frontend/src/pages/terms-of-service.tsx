@@ -1,4 +1,3 @@
-import { TopBarActionType, TopBarProps } from '@libs/mui'
 import { Container, Stack, Typography } from '@mui/material'
 
 export function TermsOfService() {

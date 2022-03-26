@@ -1,5 +1,4 @@
 import { ExtendedNextPage } from '@frontend/type'
-import { TopBarActionType } from '@libs/mui'
 import { Typography } from '@mui/material'
 
 const AddNewBankAccountPage: ExtendedNextPage = () => {

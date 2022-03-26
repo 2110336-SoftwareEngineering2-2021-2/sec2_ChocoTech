@@ -1,3 +1,6 @@
+import { Collection } from '@mikro-orm/core'
+import { ISession } from 'libs/api/src/lib/entities/Session'
+
 import { UserRole } from '../constants/userRole'
 
 export interface IUser {
@@ -14,6 +17,7 @@ export interface IUser {
   location?: string
   omiseCustomerToken?: string
   googleRefreshToken?: string
+  googleEmail?: string
   profilePictureURL?: string
-  sessions: any
+  sessions: Collection<ISession>
 }

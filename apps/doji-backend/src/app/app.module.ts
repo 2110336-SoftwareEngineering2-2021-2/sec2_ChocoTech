@@ -5,7 +5,6 @@ import { ExpertAppModule } from '@backend/expert/expert.module'
 import { MessagingModule } from '@backend/messaging/messaging.module'
 import { PaymentModule } from '@backend/payment/payment.module'
 import { ProfileModule } from '@backend/profile/profile.module'
-import { RegisterModule } from '@backend/register/register.module'
 import { ReviewModule } from '@backend/review/review.module'
 import { SessionModule } from '@backend/session/session.module'
 import { WorkHistoryModule } from '@backend/work-history/work-history.module'
@@ -34,7 +33,6 @@ import { AppService } from './app.service'
     }),
     AuthModule,
     AdminModule,
-    RegisterModule,
     ProfileModule,
     MessagingModule,
     PaymentModule,
