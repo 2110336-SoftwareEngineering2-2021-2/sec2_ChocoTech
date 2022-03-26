@@ -1,5 +1,6 @@
-import { mockUserData } from '@frontend/mock-data/users'
 import { IService } from '@libs/api'
+
+import { mockUserData } from './users'
 
 export const mockServiceData: IService[] = [
   {

@@ -1,21 +1,20 @@
-import SessionCard, { SessionCardProps } from '@frontend/components/Card/SessionCard'
 import { ExtendedNextPage } from '@frontend/type'
-import { SearchBar } from '@libs/mui'
-import { Container, Divider, Stack, styled } from '@mui/material'
+import { SearchBar, SessionCard, SessionCardProps } from '@libs/mui'
+import { Divider, Stack } from '@mui/material'
 
 const mockDatas: SessionCardProps[] = [
   {
     topic: 'hello',
     expertName: 'Poravee',
     price: 250,
-    profileImageURL: '/static/images/avatar/1.jpg',
+    profileImageURL: 'https://mui.com/static/images/avatar/1.jpg',
     sessionDetail: 'OS Session',
   },
   {
     topic: 'Poravee2',
     expertName: 'Poravee',
     price: 875,
-    profileImageURL: '/static/images/avatar/1.jpg',
+    profileImageURL: 'https://mui.com/static/images/avatar/1.jpg',
     sessionDetail: 'SE MOCKUP DATA',
   },
 ]

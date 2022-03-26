@@ -70,7 +70,7 @@ export function Index() {
     <>
       <ProfileContainer spacing={4} alignItems="center">
         <Stack display="flex" flexDirection="row" alignItems="flex-end">
-          <StyleAvatar alt="Ree" src="/static/images/avatar/1.jpg" />
+          <StyleAvatar alt="Ree" src="https://mui.com/static/images/avatar/1.jpg" />
           {/* <StyleCircleAdd /> */}
         </Stack>
         {!isEditProfile && (

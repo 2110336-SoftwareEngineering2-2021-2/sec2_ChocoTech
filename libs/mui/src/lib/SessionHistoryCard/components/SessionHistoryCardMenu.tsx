@@ -1,10 +1,11 @@
-import SessionHistoryCancelButton from '@frontend/components/Card/SessionHistoryCancelButton'
 import { IconButton } from '@mui/material'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 
 import * as React from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
+
+import SessionHistoryCancelButton from './SessionHistoryCancelButton'
 
 export interface SessionInfo {
   sessionId: number
@@ -14,7 +15,7 @@ export interface SessionInfo {
   deductAmount: number
   refundAmount: number
 }
-export default function SessionHistoryCardMenu(props: SessionInfo) {
+export function SessionHistoryCardMenu(props: SessionInfo) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
