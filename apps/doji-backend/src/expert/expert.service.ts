@@ -10,7 +10,7 @@ import { parseReviewStatFromAggreationResult } from '@backend/utils/review'
 import {
   IExpertApplicationListItemDTO,
   IExpertApplicationQueryDTO,
-  IExpertInfoDTO,
+  IExpertInfoResponseDTO,
   IUserReference,
 } from '@libs/api'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'

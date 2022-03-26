@@ -1,6 +1,6 @@
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { ExpertApplicationListItemDTO, ExpertApplicationRequest } from '@backend/expert/expert.dto'
-import { IExpertApplicationQueryDTO, IExpertInfoDTO, IUserReference } from '@libs/api'
+import { IExpertApplicationQueryDTO, IExpertInfoResponseDTO, IUserReference } from '@libs/api'
 import {
   Body,
   Controller,
