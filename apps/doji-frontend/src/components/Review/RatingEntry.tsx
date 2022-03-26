@@ -11,7 +11,8 @@ function ReviewEntry(props: { data: IPublicSessionReviewDTO }) {
     <Stack py="1em" spacing="0.75em">
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" spacing="0.5em" alignItems="center">
-          <Avatar src="https://mui.com/static/images/avatar/1.jpg" sx={{ width: 24, height: 24 }} />
+          //TODO Avatar
+          <Avatar src="https://mui.com/static/images/avatar/2.jpg" sx={{ width: 24, height: 24 }} />
           <Typography variant="small" fontWeight={400}>
             {props.data.authorName}
           </Typography>
