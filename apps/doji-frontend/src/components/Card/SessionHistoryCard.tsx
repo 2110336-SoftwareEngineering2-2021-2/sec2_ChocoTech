@@ -5,6 +5,7 @@ import { Avatar, Box, Button, Divider, Stack, Typography, styled } from '@mui/ma
 
 export interface SessionHistoryCardProps extends ISession {}
 function SessionHistoryCard(props: SessionHistoryCardProps) {
+  //TODO
   function refundAmount() {
     return 500
   }
@@ -14,6 +15,7 @@ function SessionHistoryCard(props: SessionHistoryCardProps) {
   function hasPenalty() {
     return true
   }
+  //
   return (
     <>
       <Box px={3} py={2.75}>

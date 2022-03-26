@@ -1,5 +1,5 @@
 import { SessionInfo } from '@frontend/components/Card/SessionHistoryCardMenu'
-import { Stack } from '@mui/material'
+import { Stack, styled } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
@@ -8,22 +8,22 @@ import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import toast from 'react-hot-toast'
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 327,
-  bgcolor: 'background.paper',
-  p: 3,
-  borderRadius: 2,
-}
+const BoxStyled = styled(Box)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: ${({ theme }) => theme.spacing(41)};
+  background-color: white;
+  padding: ${({ theme }) => theme.spacing(3)};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+`
 
 export default function SessionHistoryCancelButton(props: SessionInfo) {
   const [open, setOpen] = React.useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-  const CreateToast = () =>
+  const showCancelToast = () =>
     toast('Your session has been cancelled.', {
       position: 'bottom-center',
       icon: '🗑️',
@@ -35,15 +35,10 @@ export default function SessionHistoryCancelButton(props: SessionInfo) {
   return (
     <div>
       <Typography onClick={handleOpen}>Cancel</Typography>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Box display="flex" flexDirection="column" alignItems="center" gap="24px">
-            <Box display="flex" flexDirection="column" alignItems="center" gap="8px">
+      <Modal open={open} onClose={handleClose}>
+        <BoxStyled>
+          <Stack display="flex" flexDirection="column" alignItems="center" gap="24px">
+            <Stack display="flex" flexDirection="column" alignItems="center" gap="8px">
               <Typography variant="title3">Cancel session?</Typography>
               <Typography
                 variant="regular"
@@ -95,22 +90,22 @@ export default function SessionHistoryCancelButton(props: SessionInfo) {
                 </Typography>{' '}
                 Doji coins.
               </Typography>
-            </Box>
+            </Stack>
             <Stack spacing={1.5}>
               <Button
                 onClick={() => {
                   handleClose()
-                  CreateToast()
+                  showCancelToast()
                 }}
               >
                 Yes, cancel session
               </Button>
-              <Button variant="text" onClick={() => handleClose()}>
+              <Button variant="text" onClick={handleClose}>
                 No, thanks
               </Button>
             </Stack>
-          </Box>
-        </Box>
+          </Stack>
+        </BoxStyled>
       </Modal>
     </div>
   )
