@@ -1,8 +1,8 @@
-import { IReviewStat } from '@libs/api'
+import { IReviewStatResponseDTO } from '@libs/api'
 
 function parseReviewStatFromAggreationResult(
   queryResult: { rating: number; count: string }[],
-): IReviewStat {
+): IReviewStatResponseDTO {
   /**
    * The queryResult should look like this table
    * _____________________
@@ -12,7 +12,7 @@ function parseReviewStatFromAggreationResult(
    * |    5     |    9   |
    * ---------------------
    */
-  const result: IReviewStat = {
+  const result: IReviewStatResponseDTO = {
     '1': 0,
     '2': 0,
     '3': 0,

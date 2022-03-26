@@ -7,7 +7,7 @@ import {
   ServiceInformationDTO,
 } from '@backend/session/session.dto'
 import { parseReviewStatFromAggreationResult } from '@backend/utils/review'
-import { IReviewStat, ISession, IUserReference } from '@libs/api'
+import { IReviewStatResponseDTO, ISession, IUserReference } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { EntityManager } from '@mikro-orm/postgresql'
@@ -95,7 +95,7 @@ export class SessionService {
     return this.sessionRepo.findOne({ id: id }, ['reviews', 'reviews.user'])
   }
 
-  async calculateReviewStatForSession(session: Session): Promise<IReviewStat> {
+  async calculateReviewStatForSession(session: Session): Promise<IReviewStatResponseDTO> {
     const counts: { rating: number; count: string }[] = await this.em
       .createQueryBuilder(Session, 's')
       .select(['r.rating', 'count(*)'])

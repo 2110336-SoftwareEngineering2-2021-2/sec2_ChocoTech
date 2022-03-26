@@ -1,11 +1,11 @@
-import { IPublicSessionReviewDTO } from '@libs/api'
+import { IPublicSessionReviewResponseDTO } from '@libs/api'
 import { Avatar, Stack, Typography, useTheme } from '@mui/material'
 import { formatDistanceToNow } from 'date-fns'
 
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 
-function ReviewEntry(props: { data: IPublicSessionReviewDTO }) {
+function ReviewEntry(props: { data: IPublicSessionReviewResponseDTO }) {
   const theme = useTheme()
   return (
     <Stack py="1em" spacing="0.75em">

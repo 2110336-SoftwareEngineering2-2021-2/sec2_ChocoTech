@@ -3,13 +3,13 @@ import { User } from '@backend/entities/User'
 import { ReviewStatResponseDTO } from '@backend/review/review.dto'
 import {
   IGetServiceByNameAndExpertUsernameDTO,
-  IPublicSessionReviewDTO as IPublicSessionReviewResponseDTO,
-  IReviewStat,
+  IPublicSessionReviewResponseDTO,
+  IReviewStatResponseDTO,
   IScheduleSessionDTO,
   IService,
   IServiceInformationDTO,
   ISession,
-  ISessionInformationDTO as ISessionInformationResponseDTO,
+  ISessionInformationResponseDTO,
 } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'

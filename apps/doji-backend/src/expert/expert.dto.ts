@@ -3,7 +3,7 @@ import {
   IExpertApplicationListItemDTO,
   IExpertApplicationQueryDTO,
   IExpertInfoResponseDTO,
-  IReviewStat,
+  IReviewStatResponseDTO,
 } from '@libs/api'
 import { ApiBody, ApiProperty } from '@nestjs/swagger'
 import { IsString } from 'class-validator'

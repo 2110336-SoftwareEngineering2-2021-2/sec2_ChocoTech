@@ -20,13 +20,13 @@ export interface IServiceInformationDTO {
   fee: number
 }
 
-export interface ISessionInformationDTO {
+export interface ISessionInformationResponseDTO {
   id: number
-  reviews: IPublicSessionReviewDTO[]
-  reviewStat: IReviewStat
+  reviews: IPublicSessionReviewResponseDTO[]
+  reviewStat: IReviewStatResponseDTO
 }
 
-export interface IReviewStat {
+export interface IReviewStatResponseDTO {
   '1': number
   '2': number
   '3': number
@@ -36,7 +36,7 @@ export interface IReviewStat {
   count: number
 }
 
-export interface IPublicSessionReviewDTO {
+export interface IPublicSessionReviewResponseDTO {
   id: number
   rating: number
   authorName: string

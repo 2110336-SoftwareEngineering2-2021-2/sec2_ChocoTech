@@ -4,7 +4,7 @@ import ReviewInput from '@frontend/components/Review/ReviewInput'
 import SessionDetail from '@frontend/components/Session/SessionDetail'
 import { httpClient } from '@frontend/services'
 import { ExtendedNextPage } from '@frontend/type'
-import { ISessionInformationDTO } from '@libs/api'
+import { ISessionInformationResponseDTO } from '@libs/api'
 import { Button, CircularProgress, Stack, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 
@@ -13,7 +13,7 @@ import { useQuery } from 'react-query'
 const SessionPage: ExtendedNextPage = () => {
   const router = useRouter()
   const { id } = router.query
-  const { data, isError, isLoading, error } = useQuery<ISessionInformationDTO>(
+  const { data, isError, isLoading, error } = useQuery<ISessionInformationResponseDTO>(
     ['/session/session/', id],
     () =>
       httpClient
