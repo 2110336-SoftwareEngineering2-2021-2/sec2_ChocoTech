@@ -6,7 +6,8 @@ import {
   ScheduleSessionDTO,
   ServiceInformationDTO,
 } from '@backend/session/session.dto'
-import { IReviewStat, ISession, IUserReference } from '@libs/api'
+import { parseReviewStatFromAggreationResult } from '@backend/utils/review'
+import { IReviewStatResponseDTO, ISession, IUserReference } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { EntityManager } from '@mikro-orm/postgresql'
@@ -94,7 +95,7 @@ export class SessionService {
     return this.sessionRepo.findOne({ id: id }, ['reviews', 'reviews.user'])
   }
 
-  async calculateReviewStatForSession(session: Session): Promise<IReviewStat> {
+  async calculateReviewStatForSession(session: Session): Promise<IReviewStatResponseDTO> {
     const counts: { rating: number; count: string }[] = await this.em
       .createQueryBuilder(Session, 's')
       .select(['r.rating', 'count(*)'])
@@ -102,22 +103,6 @@ export class SessionService {
       .groupBy('r.rating')
       .where({ id: session.id })
       .execute()
-    const result: IReviewStat = {
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      avg: 0.0,
-      count: 0,
-    }
-    counts.forEach((entry) => {
-      const count = parseInt(entry.count)
-      result[String(entry.rating)] = count
-      result.avg += entry.rating * count
-      result.count += count
-    })
-    if (result.count > 0) result.avg /= result.count
-    return result
+    return parseReviewStatFromAggreationResult(counts)
   }
 }

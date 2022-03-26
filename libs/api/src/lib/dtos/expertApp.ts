@@ -1,3 +1,5 @@
+import { IReviewStatResponseDTO } from 'libs/api/src/lib/dtos/session'
+
 export interface IExpertRegistrationRequestDTO {
   field: string
   desc: string
@@ -11,4 +13,8 @@ export interface IExpertApplicationListItemDTO {
 
 export interface IExpertApplicationQueryDTO {
   keyword?: string
+}
+
+export interface IExpertInfoResponseDTO {
+  reviewStat: IReviewStatResponseDTO
 }

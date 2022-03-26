@@ -1,10 +1,10 @@
-import { IReviewStat } from '@libs/api'
+import { IReviewStatResponseDTO } from '@libs/api'
 import { Grid, LinearProgress, Stack, Typography, useTheme } from '@mui/material'
 
 import { Fragment } from 'react'
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
 
-function RatingPanel(props: { reviewStat: IReviewStat }) {
+function RatingPanel(props: { reviewStat: IReviewStatResponseDTO }) {
   const theme = useTheme()
 
   return (

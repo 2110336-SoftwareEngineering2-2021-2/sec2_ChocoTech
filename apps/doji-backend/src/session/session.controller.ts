@@ -4,9 +4,10 @@ import {
   GetServiceByNameAndExpertUsernameDTO,
   ScheduleSessionDTO,
   ServiceInformationDTO,
+  SessionInformationResponseDTO,
 } from '@backend/session/session.dto'
 import { SessionService } from '@backend/session/session.service'
-import { ISession, ISessionInformationDTO, IUserReference } from '@libs/api'
+import { ISession, ISessionInformationResponseDTO, IUserReference } from '@libs/api'
 import {
   Body,
   Controller,
@@ -19,7 +20,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common'
-import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { ApiCookieAuth, ApiOkResponse, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 @Controller('session')
 export class SessionController {
@@ -70,7 +71,8 @@ export class SessionController {
 
   @Get('/session/:id')
   @ApiOperation({ description: 'Retrieve session info' })
-  async getSession(@Param('id', ParseIntPipe) id: number): Promise<ISessionInformationDTO> {
+  @ApiOkResponse({ type: SessionInformationResponseDTO })
+  async getSession(@Param('id', ParseIntPipe) id: number): Promise<SessionInformationResponseDTO> {
     const session = await this.sessionService.getSessionInfo(id)
     if (!session) {
       throw new NotFoundException('No such session id')
