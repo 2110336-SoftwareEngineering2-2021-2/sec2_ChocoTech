@@ -28,6 +28,6 @@ export class ReviewController {
   @UseGuards(UserAuthGuard)
   @ApiCookieAuth()
   async getAllReview(@Param('sessionId') sessionId: number): Promise<Review[]> {
-    return await this.reviewService.getAllReview(sessionId)
+    return await this.reviewService.getAllReviews(sessionId)
   }
 }

@@ -36,26 +36,26 @@ export class ReviewService {
     return
   }
 
-  async getAllReview(sessionId: number) {
-    const session = await this.sessionRepo.findOne({ id: sessionId })
-    if (!session) {
-      throw new NotFoundException('Session not found')
-    }
-    const reviewList = await this.reviewRepo.find({ session: session })
+  async getAllReviews(sessionId: number) {
+    const reviewList = await this.reviewRepo.find(
+      {
+        session: { id: sessionId },
+      },
+      {
+        populate: ['session'],
+      },
+    )
     return reviewList
   }
 
   async getReviewAverageRatingById(sessionId: number) {
-    const session = await this.sessionRepo.findOne({ id: sessionId })
-    if (!session) {
-      throw new NotFoundException('Session not found')
-    }
-    const reviewList = await this.reviewRepo.find({ session: session })
-    const count = reviewList.length
-    let sum = 0
-    reviewList.forEach((value) => (sum += value.rating))
-    const avgRating = new ReviewAverageRatingDTO()
-    avgRating.avgRating = sum / count
-    return avgRating
+    const reviewList = await this.getAllReviews(sessionId)
+    const avgRating =
+      reviewList.reduce(function (sum, review) {
+        return sum + review.rating
+      }, 0) / reviewList.length
+    const result = new ReviewAverageRatingDTO()
+    result.avgRating = avgRating
+    return result
   }
 }

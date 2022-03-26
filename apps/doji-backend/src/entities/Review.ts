@@ -1,5 +1,6 @@
 import { IReview } from '@libs/api'
 import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
+import { uuid } from 'uuidv4'
 
 import { Session } from '../entities/Session'
 import { User } from '../entities/User'
@@ -7,7 +8,7 @@ import { User } from '../entities/User'
 @Entity()
 export class Review implements IReview {
   @PrimaryKey()
-  id: number
+  id: string = uuid()
 
   @Property()
   rating: number
