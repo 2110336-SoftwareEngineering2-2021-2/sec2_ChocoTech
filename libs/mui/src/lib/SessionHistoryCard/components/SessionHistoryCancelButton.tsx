@@ -1,6 +1,4 @@
-import { SessionInfo } from '@frontend/components/Card/SessionHistoryCardMenu'
 import { Stack, styled } from '@mui/material'
-import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
 import Typography from '@mui/material/Typography'
@@ -8,7 +6,9 @@ import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import toast from 'react-hot-toast'
 
-const BoxStyled = styled(Box)`
+import { SessionInfo } from './SessionHistoryCardMenu'
+
+const BoxStyled = styled('div')`
   position: absolute;
   top: 50%;
   left: 50%;

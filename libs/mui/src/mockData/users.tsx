@@ -1,10 +1,9 @@
 import { IUser, UserRole } from '@libs/api'
-import { Collection } from '@mikro-orm/core'
 
 export const mockUserData: IUser[] = [
   {
     username: 'John',
-    passwordHash: 'x',
+    passwordHash: '',
     displayName: 'John Doe',
     coinBalance: 450,
     onlineStatus: true,
@@ -14,10 +13,8 @@ export const mockUserData: IUser[] = [
     firstName: 'John',
     lastName: 'Doe',
     location: 'Bangkok',
-    omiseCustomerToken: 'x',
-    googleRefreshToken: 'x',
     googleEmail: 'John.D@gmail.com',
-    profilePictureURL: '',
+    profilePictureURL: 'https://mui.com/static/images/avatar/3.jpg',
     sessions: [] as any,
   },
 ]

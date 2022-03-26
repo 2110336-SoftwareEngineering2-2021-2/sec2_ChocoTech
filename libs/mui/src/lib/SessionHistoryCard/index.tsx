@@ -1,10 +1,12 @@
-import SessionHistoryCardMenu from '@frontend/components/Card/SessionHistoryCardMenu'
-import SessionStatusCard from '@frontend/components/Card/SessionStatusCard'
 import { ISession, SessionStatus } from '@libs/api'
-import { Avatar, Box, Button, Divider, Stack, Typography, styled } from '@mui/material'
+import { Avatar, Box, Button, Divider, Stack, Typography } from '@mui/material'
+
+import { SessionHistoryCardMenu } from './components/SessionHistoryCardMenu'
+import { SessionStatusCard } from './components/SessionStatusCard'
 
 export interface SessionHistoryCardProps extends ISession {}
-function SessionHistoryCard(props: SessionHistoryCardProps) {
+
+export function SessionHistoryCard(props: SessionHistoryCardProps) {
   //TODO
   function refundAmount() {
     return 500
@@ -55,4 +57,3 @@ function SessionHistoryCard(props: SessionHistoryCardProps) {
     </>
   )
 }
-export default SessionHistoryCard

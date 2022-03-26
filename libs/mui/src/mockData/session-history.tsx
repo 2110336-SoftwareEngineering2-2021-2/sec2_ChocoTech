@@ -1,9 +1,9 @@
-import { SessionHistoryCardProps } from '@frontend/components/Card/SessionHistoryCard'
-import { mockServiceData } from '@frontend/mock-data/services'
-import { mockUserData } from '@frontend/mock-data/users'
-import { SessionStatus } from '@libs/api'
+import { ISession, SessionStatus } from '@libs/api'
 
-export const mockSessionHistoryData: SessionHistoryCardProps[] = [
+import { mockServiceData } from './services'
+import { mockUserData } from './users'
+
+export const mockSessionHistoryData: ISession[] = [
   {
     id: 0,
     meetingProviderId: '0',
