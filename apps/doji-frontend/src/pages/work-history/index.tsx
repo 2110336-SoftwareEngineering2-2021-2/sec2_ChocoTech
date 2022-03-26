@@ -27,7 +27,7 @@ const Index: ExtendedNextPage = () => {
     <>
       <Stack direction={'column'} justifyContent="space-between" spacing={4}>
         <Stack direction={'row'} justifyContent="space-between" bgcolor="sky.lighter" p={4}>
-          <StyleAvatar src="/static/images/avatar/1.jpg" />
+          <StyleAvatar src="https://mui.com/static/images/avatar/1.jpg" />
           <Stack direction={'column'} alignItems={'end'}>
             <Typography variant="title3" fontWeight={700}>
               Thanin Sawetkititham

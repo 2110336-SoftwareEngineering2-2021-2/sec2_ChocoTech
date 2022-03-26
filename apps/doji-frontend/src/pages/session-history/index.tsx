@@ -1,7 +1,4 @@
-import SessionHistoryCard, {
-  SessionHistoryCardProps,
-} from '@frontend/components/Card/SessionHistoryCard'
-import { mockSessionHistoryData } from '@frontend/mock-data/session-history'
+import { SessionHistoryCard, mockSessionHistoryData } from '@libs/mui'
 import { Stack, Typography } from '@mui/material'
 
 function SessionHistory() {
