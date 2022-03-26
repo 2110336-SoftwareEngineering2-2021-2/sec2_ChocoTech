@@ -6,7 +6,7 @@ import {
   ScheduleSessionDTO,
   ServiceInformationDTO,
 } from '@backend/session/session.dto'
-import { IUserReference } from '@libs/api'
+import { ISession, IUserReference } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common'
@@ -59,7 +59,7 @@ export class SessionService {
     serviceInfo.fee = service.fee
     return serviceInfo
   }
-  async getAllSession(userRef: IUserReference): Promise<Session[]> {
+  async getAllSession(userRef: IUserReference): Promise<ISession[]> {
     const user = await userRef.getUser()
     await user.sessions.init()
     const userSession = user.sessions.getItems()

@@ -1,4 +1,4 @@
-import { IUser } from '@libs/api'
+import { ISession, IUser } from '@libs/api'
 import { Collection, Entity, Enum, ManyToMany, PrimaryKey, Property } from '@mikro-orm/core'
 
 import { Session } from '../entities/Session'
@@ -57,7 +57,7 @@ export class User implements IUser {
   profilePictureURL?: string
 
   @ManyToMany(() => Session, (session) => session.participants)
-  sessions = new Collection<Session>(this)
+  sessions = new Collection<ISession>(this)
 
   // @ManyToOne({ nullable: true })
   // verifiedByAdmin!: Admin
