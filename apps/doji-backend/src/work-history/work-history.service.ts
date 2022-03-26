@@ -1,3 +1,4 @@
+import { User } from '@backend/entities/User'
 import { WorkHistory } from '@backend/entities/WorkHistory'
 import { WorkHistoryRequestDTO } from '@backend/work-history/work-history.dto'
 import { IUserReference } from '@libs/api'
@@ -13,7 +14,7 @@ export class WorkHistoryService {
 
   async getAllWorkHistory(userRef: IUserReference) {
     return await this.workHistoryRepo.find({
-      expert: await userRef.getUser(),
+      expert: (await userRef.getUser()) as User,
     })
   }
 
