@@ -40,7 +40,7 @@ export class AdminService {
     const user = await this.userRepo.findOne({ username: username })
     const workHistory = await this.workHistoryRepo.findOne({ expert: user })
     if (!workHistory || !user) {
-      throw new NotFoundException('User not found')
+      throw new NotFoundException('User not found or do not have work history')
     }
     const detail = new ApproveExpertDetailDTO()
     detail.username = user.username
@@ -55,7 +55,13 @@ export class AdminService {
     if (!user) {
       throw new NotFoundException('User not found')
     }
-    user.role = UserRole.EXPERT
+    if (user.role == UserRole.USER) {
+      user.role = UserRole.EXPERT
+      await this.userRepo.persistAndFlush(user)
+    } else {
+      throw new UnprocessableEntityException('User is already an expert')
+    }
+
     return
   }
 }
