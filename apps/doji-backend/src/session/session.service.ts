@@ -29,22 +29,24 @@ export class SessionService {
 
     // WARN: No NULL CHECK
     const session = new Session()
-    session.meetingProviderId = 'unknown'
+    session.meetingProviderId = ''
     session.fee = dto.fee
-    session.coinOnHold = dto.fee
+    session.coinOnHold = 0
     session.topic = service.name
     session.duration = dto.duration
     session.startTime = dto.startTime
-    session.sourceId = 'unknown'
+    session.sourceId = ''
     session.creator = creator
     session.service = service
     session.participants.add(creator)
-    await dto.participantsUsername.forEach((value) => {
-      this.userRepo.findOne({ username: value }).then((user) => {
-        session.participants.add(user)
-      })
-    })
-
+    for (const username of dto.participantsUsername) {
+      const participant = await this.userRepo.findOne({ username })
+      try {
+        session.participants.add(participant)
+      } catch (e) {
+        throw new NotFoundException('Users not found')
+      }
+    }
     await this.sessionRepo.persistAndFlush(session)
   }
   async getServiceByNameAndExpertUsername(dto: GetServiceByNameAndExpertUsernameDTO) {

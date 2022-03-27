@@ -13,6 +13,7 @@ import * as yup from 'yup'
 
 import { useState } from 'react'
 import { Control, Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { useQuery } from 'react-query'
 
 import TagsInput from '../../components/ExpertService/TagInput'
@@ -116,10 +117,14 @@ export default function ScheduleSessionPage({
     setOpenDialog(true)
   }
 
-  function handleCloseDialog(value) {
+  async function handleCloseDialog(value) {
     setOpenDialog(false)
     if (value) {
-      console.log(scheduleSessionData)
+      await toast.promise(httpClient.post('session/schedule', scheduleSessionData), {
+        loading: 'Loading...',
+        success: 'Your session has been scheduled.',
+        error: 'An error occur',
+      })
     }
   }
 
@@ -151,6 +156,8 @@ export default function ScheduleSessionPage({
     <Stack flexDirection="column" position="relative" minHeight="sm">
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack direction={'column'}>
+          <br />
+
           <Typography fontWeight={700} variant="title3">
             {serviceData.title}
           </Typography>
