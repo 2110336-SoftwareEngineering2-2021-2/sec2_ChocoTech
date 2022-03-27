@@ -16,7 +16,7 @@ const ForgotPasswordSchema = yup.object({
 type ForgotPasswordModel = yup.InferType<typeof ForgotPasswordSchema>
 
 const forgotPasswordRequest = async (forgotPasswordData: ForgotPasswordModel): Promise<void> => {
-  await httpClient.post('/auth', forgotPasswordData)
+  await httpClient.post<ForgotPasswordModel>('/auth/reset-password', forgotPasswordData)
 }
 
 const ForgotPasswordPage: ExtendedNextPage = () => {
