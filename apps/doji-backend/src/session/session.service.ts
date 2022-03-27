@@ -26,7 +26,7 @@ export class SessionService {
     const session = new Session()
     session.meetingProviderId = ''
     session.fee = dto.fee
-    session.coinOnHold = dto.fee
+    session.coinOnHold = 0
     session.topic = service.name
     session.duration = dto.duration
     session.startTime = dto.startTime
@@ -34,8 +34,8 @@ export class SessionService {
     session.creator = creator
     session.service = service
     session.participants.add(creator)
-    for (const value of dto.participantsUsername) {
-      const participant = await this.userRepo.findOne({ username: value })
+    for (const username of dto.participantsUsername) {
+      const participant = await this.userRepo.findOne({ username })
       try {
         session.participants.add(participant)
       } catch (e) {
