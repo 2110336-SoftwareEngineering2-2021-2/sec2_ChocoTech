@@ -46,6 +46,7 @@ export class AdminService {
     detail.username = user.username
     detail.firstname = user.firstName
     detail.lastname = user.lastName
+    detail.profilePictureURL = user.profilePictureURL
     detail.workHistory = workHistory
     return detail
   }

@@ -18,3 +18,10 @@ export interface IExpertApplicationQueryDTO {
 export interface IExpertInfoResponseDTO {
   reviewStat: IReviewStatResponseDTO
 }
+
+export interface IApproveExpertDetailDTO {
+  firstname: string
+  lastname: string
+  username: string
+  profilePictureURL: string
+}

@@ -1,5 +1,5 @@
 import { WorkHistory } from '@backend/entities/WorkHistory'
-import { IAdminCreationRequestDTO, IExpertApplicationListItemDTO } from '@libs/api'
+import { IAdminCreationRequestDTO, IApproveExpertDetailDTO } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsString } from 'class-validator'
 
@@ -13,7 +13,7 @@ export class AdminCreationRequestDTO implements IAdminCreationRequestDTO {
   password: string
 }
 
-export class ApproveExpertDetailDTO implements IExpertApplicationListItemDTO {
+export class ApproveExpertDetailDTO implements IApproveExpertDetailDTO {
   @ApiProperty()
   @IsString()
   username: string
@@ -28,5 +28,8 @@ export class ApproveExpertDetailDTO implements IExpertApplicationListItemDTO {
 
   @ApiProperty()
   @IsString()
+  profilePictureURL: string
+
+  @ApiProperty()
   workHistory: WorkHistory
 }
