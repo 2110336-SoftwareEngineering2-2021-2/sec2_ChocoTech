@@ -1,15 +1,26 @@
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
-import { Session } from '@backend/entities/Session'
 import {
   DeleteSessionParticipantRequest,
   GetServiceByNameAndExpertUsernameDTO,
   ScheduleSessionDTO,
   ServiceInformationDTO,
+  SessionInformationResponseDTO,
 } from '@backend/session/session.dto'
 import { SessionService } from '@backend/session/session.service'
-import { IUserReference } from '@libs/api'
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, UseGuards } from '@nestjs/common'
-import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { ISession, ISessionInformationResponseDTO, IUserReference } from '@libs/api'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common'
+import { ApiCookieAuth, ApiOkResponse, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 @Controller('session')
 export class SessionController {
@@ -39,7 +50,7 @@ export class SessionController {
   @ApiCookieAuth()
   @ApiOperation({ description: 'Get all session of current user information' })
   @ApiResponse({ status: 200, description: 'All sessions of user have benn listed' })
-  async findAll(@CurrentUser() user: IUserReference): Promise<Session[]> {
+  async findAll(@CurrentUser() user: IUserReference): Promise<ISession[]> {
     return await this.sessionService.getAllSession(user)
   }
 
@@ -56,5 +67,27 @@ export class SessionController {
   ) {
     await this.sessionService.deleteSessionParticipant(body.sessionId, user)
     return 'OK'
+  }
+
+  @Get('/session/:id')
+  @ApiOperation({ description: 'Retrieve session info' })
+  @ApiOkResponse({ type: SessionInformationResponseDTO })
+  async getSession(@Param('id', ParseIntPipe) id: number): Promise<SessionInformationResponseDTO> {
+    const session = await this.sessionService.getSessionInfo(id)
+    if (!session) {
+      throw new NotFoundException('No such session id')
+    }
+    //TODO Populate Value
+    return {
+      id: session.id,
+      reviews: session.reviews.getItems().map((review) => ({
+        id: review.id,
+        rating: review.rating,
+        content: review.content,
+        authorName: `${review.user.firstName} ${review.user.lastName}`,
+        createdAt: review.createdAt,
+      })),
+      reviewStat: await this.sessionService.calculateReviewStatForSession(session),
+    }
   }
 }

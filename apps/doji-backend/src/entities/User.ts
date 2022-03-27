@@ -1,6 +1,7 @@
-import { IUser } from '@libs/api'
+import { ISession, IUser } from '@libs/api'
 import { Collection, Entity, Enum, ManyToMany, PrimaryKey, Property } from '@mikro-orm/core'
 
+import { Review } from '../entities/Review'
 import { Session } from '../entities/Session'
 
 export enum UserRole {
@@ -57,7 +58,10 @@ export class User implements IUser {
   profilePictureURL?: string
 
   @ManyToMany(() => Session, (session) => session.participants)
-  sessions = new Collection<Session>(this)
+  sessions = new Collection<ISession>(this)
+
+  @ManyToMany(() => Review, (review) => review.reportByUser)
+  reviews = new Collection<Review>(this)
 
   // @ManyToOne({ nullable: true })
   // verifiedByAdmin!: Admin

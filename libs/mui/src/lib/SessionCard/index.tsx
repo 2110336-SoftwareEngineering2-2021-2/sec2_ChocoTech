@@ -1,5 +1,4 @@
-import { Avatar, Divider, Stack, Typography, styled } from '@mui/material'
-import { Box } from '@mui/system'
+import { Avatar, Stack, Typography, styled } from '@mui/material'
 
 const StyleAvatar = styled(Avatar)`
   width: ${({ theme }) => theme.spacing(3)};
@@ -12,11 +11,11 @@ export type SessionCardProps = {
   profileImageURL: string
   sessionDetail?: string
 }
-function SessionCard(props: SessionCardProps) {
+export function SessionCard(props: SessionCardProps) {
   return (
     <Stack py={2} spacing={1.5}>
       <Stack direction="row" justifyContent="space-between">
-        <Box>
+        <div>
           <Typography variant="large" fontWeight={700}>
             {props.topic}
           </Typography>
@@ -29,7 +28,7 @@ function SessionCard(props: SessionCardProps) {
               {props.expertName}
             </Typography>
           </Stack>
-        </Box>
+        </div>
         <Stack alignItems="flex-end">
           <Typography color="primary.dark" variant="large" fontWeight={700}>
             {`${props.price} DC`}
@@ -45,4 +44,3 @@ function SessionCard(props: SessionCardProps) {
     </Stack>
   )
 }
-export default SessionCard

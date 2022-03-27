@@ -142,6 +142,7 @@ export const NavBar: React.FC<NavBarProps> = ({ role = 'none', username }) => {
       px={[2, 4.5]}
       alignItems="center"
       justifyContent="space-between"
+      sx={{ boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.16)' }}
     >
       <Logo />
       {isMdUp ? (
