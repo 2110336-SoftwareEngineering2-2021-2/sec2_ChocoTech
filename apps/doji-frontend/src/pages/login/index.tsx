@@ -2,6 +2,7 @@ import { httpClient } from '@frontend/services'
 import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Link as MuiLink, Stack, TextField, Typography } from '@mui/material'
+import { bgcolor } from '@mui/system'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { InferType, object, string } from 'yup'
@@ -65,6 +66,9 @@ const LoginPage: ExtendedNextPage = () => {
         noValidate
       >
         <Stack direction="column" spacing={2}>
+          <Typography variant="large" fontWeight={500} align="center" lineHeight={4}>
+            Log in
+          </Typography>
           <TextField
             fullWidth
             label="username"
@@ -104,15 +108,52 @@ const LoginPage: ExtendedNextPage = () => {
           </Typography>
 
           <Button type="submit">Log in</Button>
+
+          <Typography color="ink.lighter" margin={0}>
+            <div
+              style={{
+                width: '100%',
+                height: '0px',
+                borderBottom: '1px solid #72777A',
+                textAlign: 'center',
+                margin: '16px 0px',
+              }}
+            >
+              <span
+                style={{
+                  backgroundColor: '#ffffff',
+                  padding: '0 10px',
+                  position: 'relative',
+                  top: '-11px',
+                }}
+              >
+                or
+              </span>
+            </div>
+          </Typography>
+
+          <Button
+            variant="outlined"
+            onClick={() => {
+              router.push(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`)
+            }}
+          >
+            <img
+              src="https://freesvg.org/img/1534129544.png"
+              height="24"
+              style={{ marginRight: 8 }}
+            />
+            Login with Google
+          </Button>
+
+          <Typography align="center" pt={4}>
+            Don’t have an account yet?{' '}
+            <Link href="signup" passHref>
+              <MuiLink color="primary">Sign up</MuiLink>
+            </Link>
+          </Typography>
         </Stack>
       </Stack>
-      <button
-        onClick={() => {
-          router.push(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`)
-        }}
-      >
-        Login Google
-      </button>
     </>
   )
 }
