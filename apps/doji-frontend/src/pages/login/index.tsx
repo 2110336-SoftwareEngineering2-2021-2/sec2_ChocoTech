@@ -90,23 +90,8 @@ const LoginPage: ExtendedNextPage = () => {
             </MuiLink>
           </Link>
         </Stack>
-        <Stack direction="column" spacing={2} pb={10}>
-          <Typography variant="tiny" lineHeight={1.2}>
-            By continuing, you agree to our{' '}
-            <Link href="terms-of-service" passHref>
-              <MuiLink variant="tiny" color="primary">
-                Terms of Service{' '}
-              </MuiLink>
-            </Link>
-            and{' '}
-            <Link href="privacy-policy" passHref>
-              <MuiLink variant="tiny" color="primary">
-                Privacy Policy
-              </MuiLink>
-            </Link>
-            .
-          </Typography>
 
+        <Stack direction="column" spacing={2} pb={10}>
           <Button type="submit">Log in</Button>
 
           <Typography color="ink.lighter" margin={0}>
@@ -132,26 +117,31 @@ const LoginPage: ExtendedNextPage = () => {
             </div>
           </Typography>
 
-          <Button
-            variant="outlined"
-            onClick={() => {
-              router.push(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`)
-            }}
-          >
-            <img
-              src="https://freesvg.org/img/1534129544.png"
-              height="24"
-              style={{ marginRight: 8 }}
-            />
-            Login with Google
-          </Button>
+          <Link href="/signup" passHref>
+            <Button variant="outlined">Sign up</Button>
+          </Link>
 
-          <Typography align="center" pt={4}>
+          <Typography variant="tiny" lineHeight={1.2}>
+            By continuing, you agree to our{' '}
+            <Link href="terms-of-service" passHref>
+              <MuiLink variant="tiny" color="primary">
+                Terms of Service{' '}
+              </MuiLink>
+            </Link>
+            and{' '}
+            <Link href="privacy-policy" passHref>
+              <MuiLink variant="tiny" color="primary">
+                Privacy Policy
+              </MuiLink>
+            </Link>
+            .
+          </Typography>
+          {/* <Typography align="center" pt={4}>
             Don’t have an account yet?{' '}
             <Link href="signup" passHref>
               <MuiLink color="primary">Sign up</MuiLink>
             </Link>
-          </Typography>
+          </Typography> */}
         </Stack>
       </Stack>
     </>
