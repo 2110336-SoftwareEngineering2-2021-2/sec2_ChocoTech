@@ -1,12 +1,14 @@
-import { IService } from '@libs/api'
+import { ISession } from '@libs/api'
 
 import { mockUserData } from './users'
 
-export const mockServiceData: IService[] = [
+export const mockServiceData: ISession[] = [
   {
-    expert: mockUserData[0],
-    name: 'x',
+    id: '1',
+    owner: mockUserData[0],
+    topic: 'Hello World',
+    description: 'Nice to meet you',
     fee: 500,
-    description: 'desc',
+    reviews: [] as any,
   },
 ]

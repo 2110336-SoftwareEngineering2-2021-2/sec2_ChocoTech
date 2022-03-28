@@ -2,13 +2,13 @@ import ConfirmDialog from '@frontend/components/ExpertService/ConfirmDialog'
 import TimePickerController from '@frontend/components/ExpertService/TimePickerController'
 import { httpClient } from '@frontend/services'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IScheduleSessionDTO, IServiceInformationDTO } from '@libs/api'
+import { IScheduleSessionDTO, ISessionResponseDTO } from '@libs/api'
 import { Tables } from '@libs/mui'
 import { DatePicker } from '@mui/lab'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import { Avatar, Button, Container, Stack, TextField, Typography } from '@mui/material'
-import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
 import * as yup from 'yup'
 
 import { useState } from 'react'
@@ -16,7 +16,7 @@ import { Control, Controller, SubmitHandler, useForm, useWatch } from 'react-hoo
 import toast from 'react-hot-toast'
 import { useQuery } from 'react-query'
 
-import TagsInput from '../../components/ExpertService/TagInput'
+import TagsInput from '../../../components/ExpertService/TagInput'
 
 const today = new Date()
 today.setHours(0, 0, 0, 0)
@@ -72,20 +72,13 @@ const TotalPrice = ({ control, fee }: { control: Control<ScheduleModel>; fee: nu
   )
 }
 
-interface ScheduleSessionPageProps {
-  expertUsername: string
-  serviceName: string
-}
+export default function ScheduleSessionPage() {
+  const router = useRouter()
+  const sessionId = router.query.sessionId as string
 
-export default function ScheduleSessionPage({
-  expertUsername,
-  serviceName,
-}: ScheduleSessionPageProps) {
   const [openDialog, setOpenDialog] = useState(false)
   const [scheduleSessionData, setScheduleSessionData] = useState<IScheduleSessionDTO>({
-    fee: 0,
-    expertUsername: expertUsername,
-    serviceName: serviceName,
+    sessionId: sessionId,
     duration: 0,
     startTime: new Date(),
     participantsUsername: [],
@@ -105,10 +98,10 @@ export default function ScheduleSessionPage({
     },
   })
 
-  const { data: serviceData, isLoading } = useQuery<IServiceInformationDTO>(
-    ['createSchedule', expertUsername, serviceName],
+  const { data: sessionData, isLoading } = useQuery<ISessionResponseDTO>(
+    ['createSchedule', sessionId],
     async () => {
-      const { data } = await httpClient.get(`/session/service/${expertUsername}/${serviceName}`)
+      const { data } = await httpClient.get(`/session/${sessionId}`)
       return data
     },
   )
@@ -139,9 +132,7 @@ export default function ScheduleSessionPage({
       data.startTime.getSeconds(),
     )
     setScheduleSessionData({
-      fee: duration * serviceData.fee * (data.participants.length + 1),
-      expertUsername: scheduleSessionData.expertUsername,
-      serviceName: scheduleSessionData.serviceName,
+      sessionId: sessionId,
       duration: duration,
       startTime: startDate,
       participantsUsername: data.participants.map((element) => element.value),
@@ -159,16 +150,16 @@ export default function ScheduleSessionPage({
           <br />
 
           <Typography fontWeight={700} variant="title3">
-            {serviceData.title}
+            {sessionData.topic}
           </Typography>
           <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
             <Tables
-              content={'by ' + serviceData.firstname + ' ' + serviceData.lastname}
+              content={'by ' + sessionData.owner.firstName + ' ' + sessionData.owner.lastName}
               avatar={<Avatar></Avatar>}
             ></Tables>
             <Stack direction={'row'}>
               <Typography variant="large" fontWeight={700} color="primary.dark">
-                {serviceData.fee}
+                {sessionData.fee}
               </Typography>
               <Typography variant="regular" fontWeight={400} color="primary.dark">
                 /hr/person
@@ -177,7 +168,7 @@ export default function ScheduleSessionPage({
           </Stack>
           <br />
           <Typography variant="regular" fontWeight={400}>
-            {serviceData.description}
+            {sessionData.description}
           </Typography>
           <br />
           <br />
@@ -238,28 +229,14 @@ export default function ScheduleSessionPage({
           <br />
         </Stack>
         <Stack alignItems="center" display="flex" direction={'column'} p={2} sx={{ bg: 'white' }}>
-          <TotalPrice control={control} fee={serviceData.fee} />
+          <TotalPrice control={control} fee={sessionData.fee} />
           <br />
           <Button fullWidth type="submit">
             Schedule
           </Button>
         </Stack>
       </form>
-      <ConfirmDialog
-        isOpen={openDialog}
-        onClose={handleCloseDialog}
-        coinAmount={scheduleSessionData.fee}
-      />
+      <ConfirmDialog isOpen={openDialog} onClose={handleCloseDialog} coinAmount={sessionData.fee} />
     </Stack>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const query = context.query
-  return {
-    props: {
-      expertUsername: query.expert_username,
-      serviceName: query.service_name,
-    },
-  }
 }

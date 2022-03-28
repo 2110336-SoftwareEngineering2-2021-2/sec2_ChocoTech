@@ -35,7 +35,7 @@ export class ReviewService {
     return
   }
 
-  async getAllReviews(sessionId: number) {
+  async getAllReviews(sessionId: string) {
     const reviewList = await this.reviewRepo.find(
       {
         session: { id: sessionId },
