@@ -15,6 +15,16 @@ export function SessionHistoryCard(props: SessionHistoryCardProps) {
     return 10
   }
   function hasPenalty() {
+    const date1 = new Date('06/30/2019')
+    const date2 = new Date('07/30/2019')
+
+    const Difference_In_Time = date2.getTime() - date1.getTime()
+
+    const Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24)
+
+    if (Difference_In_Days > 3) {
+      return false
+    }
     return true
   }
   //
