@@ -1,3 +1,11 @@
+import { ISession } from 'libs/api/src/lib/entities/Session'
+
+export interface ICreateSessionRequestDTO {
+  topic: string
+  description: string
+  fee: number
+}
+
 export interface IScheduleSessionDTO {
   fee: number
   expertUsername: string
@@ -5,25 +13,6 @@ export interface IScheduleSessionDTO {
   duration: number
   startTime: Date
   participantsUsername: string[]
-}
-
-export interface IGetServiceByNameAndExpertUsernameDTO {
-  expertUsername: string
-  serviceName: string
-}
-
-export interface IServiceInformationResponseDTO {
-  firstname: string
-  lastname: string
-  title: string
-  description: string
-  fee: number
-}
-
-export interface ISessionInformationResponseDTO {
-  id: string
-  reviews: IPublicSessionReviewResponseDTO[]
-  reviewStat: IReviewStatResponseDTO
 }
 
 export interface IReviewStatResponseDTO {
@@ -42,4 +31,8 @@ export interface IPublicSessionReviewResponseDTO {
   authorName: string
   content: string
   createdAt: Date
+}
+
+export interface ISessionResponseDTO extends ISession {
+  reviewStat: IReviewStatResponseDTO
 }

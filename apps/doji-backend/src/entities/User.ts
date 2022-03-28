@@ -1,8 +1,8 @@
-import { ISession, IUser } from '@libs/api'
+import { ISchedule, IUser } from '@libs/api'
 import { Collection, Entity, Enum, ManyToMany, PrimaryKey, Property } from '@mikro-orm/core'
 
 import { Review } from '../entities/Review'
-import { Session } from '../entities/Session'
+import { Schedule } from './Schedule'
 
 export enum UserRole {
   EXPERT = 'expert',
@@ -57,8 +57,8 @@ export class User implements IUser {
   @Property({ nullable: true })
   profilePictureURL?: string
 
-  @ManyToMany(() => Session, (session) => session.participants)
-  sessions = new Collection<ISession>(this)
+  @ManyToMany(() => Schedule, (schedule) => schedule.participants)
+  schedules = new Collection<ISchedule>(this)
 
   @ManyToMany(() => Review, (review) => review.reportByUser)
   reviews = new Collection<Review>(this)

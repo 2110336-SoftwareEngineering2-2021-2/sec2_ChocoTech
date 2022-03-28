@@ -1,20 +1,11 @@
-import { IUser } from '@libs/api'
-import { IService } from 'libs/api/src/lib/entities/Service'
-
-import { SessionStatus } from '../constants/sessionStatus'
+import { IReview, IUser } from '@libs/api'
+import { Collection } from '@mikro-orm/core'
 
 export interface ISession {
   id: string
-  meetUrl: string
   fee: number
-  coinOnHold: number
-  status: SessionStatus
+  owner: IUser
   topic: string
-  /**
-   * Duration in hours
-   */
-  duration: number
-  startTime: Date
-  creator: IUser
-  service: IService
+  description: string
+  reviews: Collection<IReview>
 }

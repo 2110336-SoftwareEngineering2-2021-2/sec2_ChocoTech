@@ -1,7 +1,7 @@
-import { Session } from '@backend/entities/Session'
+import { Session } from '@backend/entities/Schedule'
 import {
   IMeResponseDTO,
-  ISession,
+  ISchedule,
   IUserChangePasswordRequestDTO,
   IUserLoginRequestDTO,
   IUserRegistrationRequestDTO,
@@ -52,7 +52,7 @@ export class MeResponseDTO implements IMeResponseDTO {
   omiseCustomerToken?: string
 
   @ApiProperty()
-  sessions: Collection<ISession>
+  sessions: Collection<ISchedule>
 
   @ApiProperty()
   googleRefreshToken?: string
