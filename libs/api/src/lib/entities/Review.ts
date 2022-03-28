@@ -2,7 +2,7 @@ import { IUser } from '@libs/api'
 import { ISession } from '@libs/api'
 
 export interface IReview {
-  id: number
+  id: string
   session: ISession
   user: IUser
   content: string
