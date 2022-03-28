@@ -1,7 +1,19 @@
-import { Button, Dialog, Stack, Typography, styled } from '@mui/material'
+import {
+  Dialog,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Stack,
+  Typography,
+  styled,
+} from '@mui/material'
 import Image from 'next/image'
 
 import React from 'react'
+import { BsThreeDotsVertical } from 'react-icons/bs'
+import { FiDelete, FiEdit2 } from 'react-icons/fi'
 
 export interface AchievementProps {
   title: string
@@ -17,11 +29,20 @@ const StyledImg = styled(Image)`
 `
 export const Achievement: React.FC<AchievementProps> = ({ title, desc, src, editable = false }) => {
   const [open, setOpen] = React.useState(false)
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const openMenu = Boolean(anchorEl)
   const handleOpen = () => {
     setOpen(true)
   }
   const handleClose = () => {
     setOpen(false)
+  }
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleMenuClose = () => {
+    setAnchorEl(null)
   }
   return (
     <Stack
@@ -48,7 +69,39 @@ export const Achievement: React.FC<AchievementProps> = ({ title, desc, src, edit
           </Typography>
         </Stack>
       </Stack>
-      {editable && <Button>tmp</Button>}
+      {editable && (
+        <div>
+          <IconButton onClick={handleMenuOpen}>
+            <BsThreeDotsVertical />
+          </IconButton>
+        </div>
+      )}
+      <Menu
+        anchorEl={anchorEl}
+        open={openMenu}
+        onClose={handleMenuClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 91,
+        }}
+      >
+        <MenuItem>
+          <ListItemIcon>
+            <FiEdit2 />
+          </ListItemIcon>
+          <ListItemText>Edit</ListItemText>
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <FiDelete />
+          </ListItemIcon>
+          <ListItemText>Delete</ListItemText>
+        </MenuItem>
+      </Menu>
     </Stack>
   )
 }
