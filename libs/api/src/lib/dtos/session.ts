@@ -12,7 +12,7 @@ export interface IGetServiceByNameAndExpertUsernameDTO {
   serviceName: string
 }
 
-export interface IServiceInformationDTO {
+export interface IServiceInformationResponseDTO {
   firstname: string
   lastname: string
   title: string
@@ -21,7 +21,7 @@ export interface IServiceInformationDTO {
 }
 
 export interface ISessionInformationResponseDTO {
-  id: number
+  id: string
   reviews: IPublicSessionReviewResponseDTO[]
   reviewStat: IReviewStatResponseDTO
 }

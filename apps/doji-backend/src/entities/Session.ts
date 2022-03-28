@@ -9,6 +9,7 @@ import {
   PrimaryKey,
   Property,
 } from '@mikro-orm/core'
+import { randomUUID } from 'crypto'
 
 import { Service } from '../entities/Service'
 import { User } from '../entities/User'
@@ -25,10 +26,10 @@ export enum SessionStatus {
 @Entity()
 export class Session implements ISession {
   @PrimaryKey()
-  id!: number
+  id: string = randomUUID()
 
   @Property()
-  meetingProviderId: string
+  meetUrl: string
 
   @Property()
   fee: number
@@ -38,19 +39,19 @@ export class Session implements ISession {
 
   @Enum(() => SessionStatus)
   @Property({ default: SessionStatus.PENDING, nullable: true })
-  status?: SessionStatus = SessionStatus.PENDING
+  status: SessionStatus = SessionStatus.PENDING
 
   @Property()
   topic: string
 
+  /**
+   * Duration in hours
+   */
   @Property()
   duration: number
 
   @Property()
   startTime: Date
-
-  @Property()
-  sourceId: string
 
   @ManyToOne(() => User)
   creator: User

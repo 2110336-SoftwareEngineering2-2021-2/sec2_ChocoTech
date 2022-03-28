@@ -1,6 +1,7 @@
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
+import { User } from '@backend/entities/User'
 import {
-  DeleteSessionParticipantRequest,
+  DeleteSessionParticipantRequestDTO,
   GetServiceByNameAndExpertUsernameDTO,
   ScheduleSessionDTO,
   ServiceInformationDTO,
@@ -16,7 +17,6 @@ import {
   HttpCode,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Post,
   UseGuards,
 } from '@nestjs/common'
@@ -25,15 +25,18 @@ import { ApiCookieAuth, ApiOkResponse, ApiOperation, ApiResponse } from '@nestjs
 @Controller('session')
 export class SessionController {
   constructor(private readonly sessionService: SessionService) {}
+
   @Post('schedule')
   @UseGuards(UserAuthGuard)
   @ApiCookieAuth()
   async schedule(
     @Body() dto: ScheduleSessionDTO,
-    @CurrentUser() user: IUserReference,
-  ): Promise<void> {
-    await this.sessionService.schedule(dto, await user.getUser())
+    @CurrentUser() userRef: IUserReference,
+  ): Promise<ISession> {
+    const user = await userRef.getUser<User>()
+    return await this.sessionService.schedule(dto, user)
   }
+
   @Get('service/:expert_username/:service_name')
   async getService(
     @Param('expert_username') expertUsername: string,
@@ -44,6 +47,7 @@ export class SessionController {
     dto.serviceName = serviceName
     return await this.sessionService.getServiceByNameAndExpertUsername(dto)
   }
+
   @Get()
   @UseGuards(UserAuthGuard)
   @HttpCode(200)
@@ -58,21 +62,21 @@ export class SessionController {
   @UseGuards(UserAuthGuard)
   @HttpCode(200)
   @ApiCookieAuth()
-  @ApiOperation({ description: 'Cancle session of current user by SessionId' })
+  @ApiOperation({ description: 'Cancel session of current user by SessionId' })
   @ApiResponse({ status: 200, description: 'Session is cancled' })
   @ApiResponse({ status: 404, description: 'Session not found or you are not in the shcedule' })
   async deleteSession(
-    @Body() body: DeleteSessionParticipantRequest,
+    @Body() body: DeleteSessionParticipantRequestDTO,
     @CurrentUser() user: IUserReference,
   ) {
     await this.sessionService.deleteSessionParticipant(body.sessionId, user)
     return 'OK'
   }
 
-  @Get('/session/:id')
+  @Get(':id')
   @ApiOperation({ description: 'Retrieve session info' })
   @ApiOkResponse({ type: SessionInformationResponseDTO })
-  async getSession(@Param('id', ParseIntPipe) id: number): Promise<SessionInformationResponseDTO> {
+  async getSession(@Param('id') id: string): Promise<SessionInformationResponseDTO> {
     const session = await this.sessionService.getSessionInfo(id)
     if (!session) {
       throw new NotFoundException('No such session id')

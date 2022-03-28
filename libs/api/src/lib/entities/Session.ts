@@ -4,15 +4,17 @@ import { IService } from 'libs/api/src/lib/entities/Service'
 import { SessionStatus } from '../constants/sessionStatus'
 
 export interface ISession {
-  id: number
-  meetingProviderId: string
+  id: string
+  meetUrl: string
   fee: number
   coinOnHold: number
-  status?: SessionStatus
+  status: SessionStatus
   topic: string
+  /**
+   * Duration in hours
+   */
   duration: number
   startTime: Date
-  sourceId: string
   creator: IUser
   service: IService
 }
