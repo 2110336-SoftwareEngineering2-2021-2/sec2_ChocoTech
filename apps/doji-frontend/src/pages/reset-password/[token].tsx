@@ -24,7 +24,7 @@ const ResetPasswordSchema = yup.object({
 
 type ResetPasswordModel = yup.InferType<typeof ResetPasswordSchema>
 
-const ResetPassword: ExtendedNextPage = () => {
+const ResetPassword = () => {
   const router = useRouter()
   const token = router.query.token
 
