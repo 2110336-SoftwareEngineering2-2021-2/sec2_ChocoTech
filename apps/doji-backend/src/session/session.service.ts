@@ -99,7 +99,11 @@ export class SessionService {
   }
 
   async acceptSchedule(scheduleId: string): Promise<ISchedule> {
-    const schedule = await this.scheduleRepo.findOne({ id: scheduleId }, ['session'])
+    const schedule = await this.scheduleRepo.findOne({ id: scheduleId }, [
+      'session',
+      'participants',
+      'session.owner',
+    ])
     schedule.status = ScheduleStatus.ACCEPTED
     const { session, participants, creator } = schedule
 
