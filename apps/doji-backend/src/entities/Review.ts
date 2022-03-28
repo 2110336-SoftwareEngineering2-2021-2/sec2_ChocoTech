@@ -1,5 +1,5 @@
 import { IReview } from '@libs/api'
-import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
+import { Collection, Entity, ManyToMany, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
 import { uuid } from 'uuidv4'
 
 import { Session } from '../entities/Session'

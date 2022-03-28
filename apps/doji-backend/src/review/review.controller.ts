@@ -1,10 +1,10 @@
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { Review } from '@backend/entities/Review'
-import { ReviewAverageRatingDTO, ReviewCreationRequestDTO } from '@backend/review/review.dto'
+import { ReviewCreationRequestDTO } from '@backend/review/review.dto'
 import { ReviewService } from '@backend/review/review.service'
 import { IUserReference } from '@libs/api'
-import { Body, Controller, Post, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth } from '@nestjs/swagger'
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
+import { ApiCookieAuth } from '@nestjs/swagger'
 
 @Controller('review')
 export class ReviewController {
@@ -17,14 +17,7 @@ export class ReviewController {
     return await this.reviewService.createReview(dto, user)
   }
 
-  @Get('avgRating/:sessionId')
-  @UseGuards(UserAuthGuard)
-  @ApiCookieAuth()
-  async getAverageRating(@Param('sessionId') sessionId: number): Promise<ReviewAverageRatingDTO> {
-    return await this.reviewService.getReviewAverageRatingById(sessionId)
-  }
-
-  @Get('all/:sessionId')
+  @Get('/:sessionId')
   @UseGuards(UserAuthGuard)
   @ApiCookieAuth()
   async getAllReview(@Param('sessionId') sessionId: number): Promise<Review[]> {
