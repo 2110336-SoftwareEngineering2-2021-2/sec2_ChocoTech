@@ -39,13 +39,19 @@ const ResetPassword = () => {
     resolver: yupResolver(ResetPasswordSchema),
   })
 
+  const resetPasswordMutation = useMutation(resetPasswordRequest, {
+    onSuccess: () => {
+      toast.success('Reset Password Success')
+      router.push('/reset-password/success')
+    },
+    onError: () => {
+      toast.error('Reset Password Failed')
+    },
+  })
+
   const onSubmit: SubmitHandler<ResetPasswordModel> = async (formData) => {
     delete formData.confirmPassword
-    try {
-      resetPasswordRequest(formData)
-    } catch (err) {
-      console.error(err)
-    }
+    resetPasswordMutation.mutate(formData)
   }
 
   return (
