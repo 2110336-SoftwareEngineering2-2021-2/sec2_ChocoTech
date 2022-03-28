@@ -1,7 +1,8 @@
+import { IUserEditProfileRequestDTO } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsEmail, IsString } from 'class-validator'
 
-export class UserEditProfileRequest {
+export class UserEditProfileRequest implements IUserEditProfileRequestDTO {
   @ApiProperty()
   @IsString()
   displayName: string
