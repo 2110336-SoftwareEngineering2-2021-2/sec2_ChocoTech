@@ -15,7 +15,7 @@ const ResetPasswordSchema = yup.object({
     .string()
     .required('enter new password')
     .min(8, 'Must have at least 8 characters'),
-  confirmation: yup
+  confirmPassword: yup
     .string()
     .required('confirm new password')
     .oneOf([yup.ref('newPassword'), null], 'Passwords must match'),
@@ -40,7 +40,7 @@ const ResetPassword = () => {
   })
 
   const onSubmit: SubmitHandler<ResetPasswordModel> = async (formData) => {
-    delete formData.confirmation
+    delete formData.confirmPassword
     try {
       resetPasswordRequest(formData)
     } catch (err) {
@@ -65,8 +65,8 @@ const ResetPassword = () => {
         <RegisteredTextfield
           type="password"
           label="confirm new password"
-          errors={errors.confirmation}
-          {...register('confirmation')}
+          errors={errors.confirmPassword}
+          {...register('confirmPassword')}
         />
         <Button fullWidth size="large" type="submit" color="primary" variant="contained">
           reset password
