@@ -25,6 +25,14 @@ export interface IUserChangePasswordRequestDTO {
   newPassword: string
 }
 
+export interface IUserEditProfileRequestDTO {
+  displayName: string
+  email: string
+  firstName: string
+  lastName: string
+  location: string
+}
+
 export interface IUserRegistrationRequestDTO {
   username: string
   displayName: string
