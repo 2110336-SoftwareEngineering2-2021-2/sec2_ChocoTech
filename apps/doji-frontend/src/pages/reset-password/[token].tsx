@@ -1,5 +1,6 @@
 import RegisteredTextfield from '@frontend/components/Register/registerTextfield'
 import { httpClient } from '@frontend/services'
+import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IUserResetPasswordRequest } from '@libs/api'
 import { Button, Stack } from '@mui/material'
@@ -23,7 +24,7 @@ const ResetPasswordSchema = yup.object({
 
 type ResetPasswordModel = yup.InferType<typeof ResetPasswordSchema>
 
-const ResetPassword = () => {
+const ResetPassword: ExtendedNextPage = () => {
   const router = useRouter()
   const token = router.query.token
 
