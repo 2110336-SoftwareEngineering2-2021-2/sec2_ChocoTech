@@ -31,5 +31,5 @@ export class ApproveExpertDetailDTO implements IApproveExpertDetailDTO {
   profilePictureURL: string
 
   @ApiProperty()
-  workHistory: WorkHistory
+  workHistory: WorkHistory[]
 }
