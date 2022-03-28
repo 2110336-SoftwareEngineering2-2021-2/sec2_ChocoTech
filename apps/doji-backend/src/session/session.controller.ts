@@ -7,7 +7,7 @@ import {
   SessionInformationResponseDTO,
 } from '@backend/session/session.dto'
 import { SessionService } from '@backend/session/session.service'
-import { ISession, IUserReference } from '@libs/api'
+import { ISession, ISessionInformationResponseDTO, IUserReference } from '@libs/api'
 import {
   Body,
   Controller,

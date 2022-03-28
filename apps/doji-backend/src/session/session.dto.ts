@@ -4,6 +4,7 @@ import { ReviewStatResponseDTO } from '@backend/review/review.dto'
 import {
   IGetServiceByNameAndExpertUsernameDTO,
   IPublicSessionReviewResponseDTO,
+  IReviewStatResponseDTO,
   IScheduleSessionDTO,
   IService,
   IServiceInformationDTO,
@@ -108,7 +109,7 @@ export class SessionInformationResponseDTO implements ISessionInformationRespons
 
 export class PublicSessionReviewDTO implements IPublicSessionReviewResponseDTO {
   @ApiProperty()
-  id: string
+  id: number
 
   @ApiProperty()
   rating: number

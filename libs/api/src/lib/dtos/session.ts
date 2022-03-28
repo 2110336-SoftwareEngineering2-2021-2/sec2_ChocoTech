@@ -37,7 +37,7 @@ export interface IReviewStatResponseDTO {
 }
 
 export interface IPublicSessionReviewResponseDTO {
-  id: string
+  id: number
   rating: number
   authorName: string
   content: string
