@@ -53,13 +53,10 @@ export class SessionService {
 
   async create(dto: CreateSessionRequestDTO, owner: User): Promise<ISession> {
     const session = new Session()
-    console.log('1', session)
     session.owner = owner
-    console.log('2', session)
     session.topic = dto.topic
     session.description = dto.description
     session.fee = dto.fee
-    console.log('3', session)
 
     await this.sessionRepo.persistAndFlush(session)
     return session
@@ -89,8 +86,6 @@ export class SessionService {
       participants.forEach((participant) => {
         schedule.participants.add(participant)
       })
-      console.log('PART', participants)
-      console.log('SCHE', schedule)
       await this.scheduleRepo.persistAndFlush(schedule)
       return schedule
     } catch (e) {
