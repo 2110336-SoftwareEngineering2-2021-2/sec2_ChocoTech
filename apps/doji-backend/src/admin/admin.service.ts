@@ -38,8 +38,8 @@ export class AdminService {
 
   async getWorkHistoryByUsername(username: string): Promise<ApproveExpertDetailDTO> {
     const user = await this.userRepo.findOne({ username: username })
-    const workHistory = await this.workHistoryRepo.findOne({ expert: user })
-    if (!workHistory || !user) {
+    const workHistory = await this.workHistoryRepo.find({ expert: user })
+    if (!user) {
       throw new NotFoundException('User not found or do not have work history')
     }
     const detail = new ApproveExpertDetailDTO()
