@@ -9,16 +9,11 @@ import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { EntityManager } from '@mikro-orm/postgresql'
 import { Injectable, NotFoundException } from '@nestjs/common'
+import { randomUUID } from 'crypto'
 import { google } from 'googleapis'
 
 @Injectable()
 export class SessionService {
-  private readonly oauth2Client = createGoogleOAuth2Client()
-  private readonly googleCalendar = google.calendar({
-    version: 'v3',
-    auth: this.oauth2Client,
-  })
-
   constructor(
     @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
     @InjectRepository(Session) private readonly sessionRepo: EntityRepository<Session>,
@@ -58,25 +53,24 @@ export class SessionService {
 
   async create(dto: CreateSessionRequestDTO, owner: User): Promise<ISession> {
     const session = new Session()
+    console.log('1', session)
     session.owner = owner
+    console.log('2', session)
     session.topic = dto.topic
     session.description = dto.description
     session.fee = dto.fee
+    console.log('3', session)
+
     await this.sessionRepo.persistAndFlush(session)
     return session
   }
 
   async schedule(dto: ScheduleSessionDTO, creator: User): Promise<ISchedule> {
-    const session = await this.sessionRepo.findOne(
-      {
-        topic: dto.serviceName,
-        owner: { username: dto.expertUsername },
-      },
-      ['owner'],
-    )
+    const session = await this.sessionRepo.findOne({ id: dto.sessionId }, ['owner'])
 
     // WARN: No NULL CHECK
     const schedule = new Schedule()
+    schedule.creator = creator
     schedule.session = session
     schedule.coinOnHold = 0
     schedule.duration = dto.duration
@@ -84,16 +78,23 @@ export class SessionService {
     schedule.participants.add(creator)
 
     try {
-      const usenameFilter = dto.participantsUsername.map((u) => ({ username: u }))
+      const usenameFilter = [
+        ...dto.participantsUsername.map((u) => ({ username: u })),
+        { username: creator.username },
+      ]
       const participants = await this.userRepo.find({
         $or: usenameFilter,
       })
+
       participants.forEach((participant) => {
         schedule.participants.add(participant)
       })
+      console.log('PART', participants)
+      console.log('SCHE', schedule)
       await this.scheduleRepo.persistAndFlush(schedule)
       return schedule
     } catch (e) {
+      console.error(e)
       throw new NotFoundException('Users not found')
     }
   }
@@ -108,11 +109,22 @@ export class SessionService {
     const { session, participants, creator } = schedule
 
     /**
+     * Prepare Google Oauth2 client and calendar
+     */
+    const oauth2Client = createGoogleOAuth2Client()
+    oauth2Client.credentials = {
+      refresh_token: creator.googleRefreshToken,
+    }
+    const googleCalendar = google.calendar({
+      version: 'v3',
+      auth: oauth2Client,
+    })
+
+    /**
      * Data preparation for creating google calendar event
      */
-    const endTime = new Date(
-      schedule.startTime.getMilliseconds() + schedule.duration * 60 * 60 * 1000,
-    )
+    const endTime = new Date(schedule.startTime)
+    endTime.setHours(endTime.getHours() + schedule.duration)
     const attendeeEmails = [
       ...participants.getItems().map((p) => ({ email: p.email })),
       { email: creator.email },
@@ -121,7 +133,7 @@ export class SessionService {
     /**
      * Add Google Calendar event to get google meet link
      */
-    const response = await this.googleCalendar.events.insert({
+    const response = await googleCalendar.events.insert({
       calendarId: 'primary',
       requestBody: {
         summary: session.topic,
@@ -146,15 +158,18 @@ export class SessionService {
           email: creator.email,
         },
         conferenceData: {
-          conferenceSolution: {
-            key: {
+          createRequest: {
+            requestId: randomUUID(),
+            conferenceSolutionKey: {
               type: 'hangoutsMeet',
             },
           },
         },
       },
+      conferenceDataVersion: 1,
     })
-    schedule.meetUrl = response.data.conferenceData.entryPoints[0].uri
+    schedule.meetId = response.data.id
+    schedule.meetUrl = response.data.hangoutLink
 
     await this.scheduleRepo.persistAndFlush(schedule)
     return schedule

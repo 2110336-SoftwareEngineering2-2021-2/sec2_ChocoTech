@@ -1,8 +1,8 @@
-import { Review } from '@backend/entities/Review'
 import { IReview, ISession } from '@libs/api'
 import { Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Property } from '@mikro-orm/core'
 import { randomUUID } from 'crypto'
 
+import { Review } from './Review'
 import { User } from './User'
 
 @Entity()

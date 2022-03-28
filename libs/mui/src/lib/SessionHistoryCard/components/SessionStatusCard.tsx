@@ -1,33 +1,33 @@
-import { SessionStatus } from '@libs/api'
-import { Box, Theme, Typography, styled, useTheme } from '@mui/material'
+import { ScheduleStatus } from '@libs/api'
+import { Theme, Typography, styled, useTheme } from '@mui/material'
 
 import { AiOutlineCalendar } from 'react-icons/ai'
 import { BiLoader } from 'react-icons/bi'
 import { IoMdClose } from 'react-icons/io'
 
 export interface SessionStatusProps {
-  status?: SessionStatus
+  status?: ScheduleStatus
 }
-function getColor(status: SessionStatus | undefined, theme: Theme) {
-  if (status === SessionStatus.PENDING) return theme.palette.sky.lightest
-  else if (status === SessionStatus.ACCEPTED) return theme.palette.green.lightest
+function getColor(status: ScheduleStatus | undefined, theme: Theme) {
+  if (status === ScheduleStatus.PENDING) return theme.palette.sky.lightest
+  else if (status === ScheduleStatus.ACCEPTED) return theme.palette.green.lightest
   return theme.palette.red.lightest
 }
-function getColor2(status: SessionStatus | undefined, theme: Theme) {
-  if (status === SessionStatus.PENDING) return theme.palette.sky.dark
-  else if (status === SessionStatus.ACCEPTED) return theme.palette.green.dark
+function getColor2(status: ScheduleStatus | undefined, theme: Theme) {
+  if (status === ScheduleStatus.PENDING) return theme.palette.sky.dark
+  else if (status === ScheduleStatus.ACCEPTED) return theme.palette.green.dark
   return theme.palette.red.dark
 }
-function getIcon(status: SessionStatus | undefined, theme: Theme) {
-  if (status === SessionStatus.PENDING) return <BiLoader color={theme.palette.sky.dark} />
-  else if (status === SessionStatus.ACCEPTED)
+function getIcon(status: ScheduleStatus | undefined, theme: Theme) {
+  if (status === ScheduleStatus.PENDING) return <BiLoader color={theme.palette.sky.dark} />
+  else if (status === ScheduleStatus.ACCEPTED)
     return <AiOutlineCalendar color={theme.palette.green.dark} />
   return <IoMdClose color={theme.palette.red.dark} />
 }
-function getText(status: SessionStatus | undefined) {
-  if (status === SessionStatus.PENDING) return 'Expert is pending'
-  else if (status === SessionStatus.ACCEPTED) return 'Expert has accepted'
-  else if (status === SessionStatus.CANCELED) return 'You cancelled'
+function getText(status: ScheduleStatus | undefined) {
+  if (status === ScheduleStatus.PENDING) return 'Expert is pending'
+  else if (status === ScheduleStatus.ACCEPTED) return 'Expert has accepted'
+  else if (status === ScheduleStatus.CANCELED) return 'You cancelled'
   return 'Expert has declined'
 }
 const StyleStack = styled('div')<SessionStatusProps>`

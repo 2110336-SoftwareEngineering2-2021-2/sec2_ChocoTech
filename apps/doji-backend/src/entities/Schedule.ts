@@ -1,4 +1,3 @@
-import { Session } from '@backend/entities/Session'
 import { ISchedule } from '@libs/api'
 import {
   Collection,
@@ -11,6 +10,7 @@ import {
 } from '@mikro-orm/core'
 import { randomUUID } from 'crypto'
 
+import { Session } from './Session'
 import { User } from './User'
 
 export enum ScheduleStatus {
@@ -50,6 +50,9 @@ export class Schedule implements ISchedule {
 
   @ManyToMany(() => User, 'schedules', { owner: true })
   participants = new Collection<User>(this)
+
+  @Property({ nullable: true })
+  meetId?: string
 
   @Property({ nullable: true })
   meetUrl?: string

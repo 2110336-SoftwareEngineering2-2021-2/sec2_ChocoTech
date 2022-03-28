@@ -28,7 +28,7 @@ const registerValidation = yup.object({
 type RegisterModel = yup.InferType<typeof registerValidation>
 
 const signupRequest = async (formData: IUserRegistrationRequestDTO) => {
-  await httpClient.post<IUserRegistrationRequestDTO>('/signup', formData)
+  await httpClient.post<IUserRegistrationRequestDTO>('/auth/signup', formData)
   return formData.username
 }
 

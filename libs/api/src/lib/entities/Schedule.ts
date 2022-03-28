@@ -14,5 +14,6 @@ export interface ISchedule {
    */
   duration: number
   startTime: Date
+  meetId?: string
   meetUrl?: string
 }

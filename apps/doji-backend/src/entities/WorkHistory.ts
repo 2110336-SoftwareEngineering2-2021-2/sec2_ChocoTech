@@ -2,7 +2,7 @@ import { IWorkHistory } from '@libs/api'
 import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
 import { randomUUID } from 'crypto'
 
-import { User } from '../entities/User'
+import { User } from './User'
 
 @Entity()
 export class WorkHistory implements IWorkHistory {

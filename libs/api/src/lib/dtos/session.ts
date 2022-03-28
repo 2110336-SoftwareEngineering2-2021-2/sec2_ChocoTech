@@ -7,9 +7,7 @@ export interface ICreateSessionRequestDTO {
 }
 
 export interface IScheduleSessionDTO {
-  fee: number
-  expertUsername: string
-  serviceName: string
+  sessionId: string
   duration: number
   startTime: Date
   participantsUsername: string[]

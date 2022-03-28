@@ -61,11 +61,11 @@ export class SessionController {
     return await this.sessionService.schedule(dto, user)
   }
 
-  @Post('schedule/:scheduleId')
+  @Post('accept/schedule/:scheduleId')
   @UseGuards(ExpertAuthGuard)
   @ApiCookieAuth()
-  async acceptSchedule(@Param('sessionId') sessionId: string): Promise<ISchedule> {
-    return await this.sessionService.acceptSchedule(sessionId)
+  async acceptSchedule(@Param('scheduleId') scheduleId: string): Promise<ISchedule> {
+    return await this.sessionService.acceptSchedule(scheduleId)
   }
 
   @Delete(':sessionId/participant')

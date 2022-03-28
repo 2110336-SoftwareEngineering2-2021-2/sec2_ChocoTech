@@ -6,10 +6,18 @@ import { AuthGuard } from '@nestjs/passport'
 @Injectable()
 export class UserAuthGuard extends AuthGuard('auth') {}
 
-export class ExpertAuthGuard extends AuthGuard('auth') {
-  canActivate(context: ExecutionContext) {
+@Injectable()
+export class ExpertAuthGuard extends UserAuthGuard {
+  async canActivate(context: ExecutionContext) {
+    const canActivate = await super.canActivate(context)
+    if (!canActivate) {
+      return false
+    }
+
     const request = context.switchToHttp().getRequest()
-    const user = request.user as User
+    const userRef = request.user as IUserReference
+    const user = await userRef.getUser<User>()
+
     if (user && user.role === UserRole.EXPERT) {
       return true
     }

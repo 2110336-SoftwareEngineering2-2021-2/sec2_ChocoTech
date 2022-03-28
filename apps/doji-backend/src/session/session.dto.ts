@@ -20,11 +20,7 @@ export class CreateSessionRequestDTO implements ICreateSessionRequestDTO {
 export class ScheduleSessionDTO implements IScheduleSessionDTO {
   @ApiProperty()
   @IsString()
-  expertUsername: string
-
-  @ApiProperty()
-  @IsString()
-  serviceName: string
+  sessionId: string
 
   @ApiProperty()
   @IsNumber()
@@ -34,10 +30,6 @@ export class ScheduleSessionDTO implements IScheduleSessionDTO {
   @IsDate()
   @Type(() => Date)
   startTime: Date
-
-  @ApiProperty()
-  @IsNumber()
-  fee: number
 
   @ApiProperty()
   @IsArray()
