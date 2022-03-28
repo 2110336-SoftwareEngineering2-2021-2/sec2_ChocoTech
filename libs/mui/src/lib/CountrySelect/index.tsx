@@ -50,7 +50,7 @@ export const CountrySelect: React.FC<CountrySelectProps> = (props) => {
           {...params}
           {...props.textFieldProps}
           {...props.register}
-          label="Choose a country"
+          // label="Choose a country"
           inputRef={inputRef}
           inputProps={{
             ...params.inputProps,
