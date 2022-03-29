@@ -18,14 +18,14 @@ export function SessionHistoryCard(props: SessionHistoryCardProps) {
     return props.fee * 0.3
   }
   function hasPenalty() {
-    const date_start = props.startTime
-    const date_current = new Date()
+    const dateStart = props.startTime
+    const dateCurrent = new Date()
 
-    const Difference_In_Time = date_current.getTime() - date_start.getTime()
+    const DifferenceInTime = date_current.getTime() - date_start.getTime()
 
-    const Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24)
+    const DifferenceInDays = DifferenceInTime / (1000 * 3600 * 24)
 
-    if (Difference_In_Days > 3) {
+    if (DifferenceInDays > 3) {
       return false
     }
     return true
