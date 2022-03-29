@@ -57,6 +57,14 @@ export class SessionController {
     return await this.sessionService.create(dto, user)
   }
 
+  @Get('schedule/me')
+  @UseGuards(UserAuthGuard)
+  @ApiCookieAuth()
+  async getMySchedule(@CurrentUser() userRef: IUserReference): Promise<ISchedule[]> {
+    const user = await userRef.getUser<User>()
+    return await this.sessionService.getMySchedules(user)
+  }
+
   @Post('schedule')
   @UseGuards(UserAuthGuard)
   @ApiCookieAuth()
