@@ -67,7 +67,7 @@ const MainNavBar: React.FC<{ user?: IMeResponseDTO; show?: boolean }> = ({ show 
     <NavBar
       role={user?.role ? user.role : 'none'}
       username={user?.username ?? 'username'}
-      avartarSrc={user.profilePictureURL}
+      avartarSrc={user?.profilePictureURL}
     />
   )
 }
