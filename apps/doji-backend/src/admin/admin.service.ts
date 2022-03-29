@@ -1,5 +1,6 @@
 import { AdminCreationRequestDTO, ApproveExpertDetailDTO } from '@backend/admin/admin.dto'
 import { Admin } from '@backend/entities/Admin'
+import { ExpertApp } from '@backend/entities/ExpertApp'
 import { User, UserRole } from '@backend/entities/User'
 import { WorkHistory } from '@backend/entities/WorkHistory'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
@@ -13,6 +14,7 @@ export class AdminService {
     @InjectRepository(Admin) private readonly adminRepo: EntityRepository<Admin>,
     @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
     @InjectRepository(WorkHistory) private readonly workHistoryRepo: EntityRepository<WorkHistory>,
+    @InjectRepository(ExpertApp) private readonly expertAppRepo: EntityRepository<ExpertApp>,
   ) {}
 
   async adminCreation(dto: AdminCreationRequestDTO) {
@@ -53,8 +55,9 @@ export class AdminService {
 
   async approveExpert(username: string) {
     const user = await this.userRepo.findOne({ username: username })
-    if (!user) {
-      throw new NotFoundException('User not found')
+    const expertApp = await this.expertAppRepo.findOne({ user: user })
+    if (!user || !expertApp) {
+      throw new NotFoundException('User not found or user did not send application')
     }
     if (user.role == UserRole.USER) {
       user.role = UserRole.EXPERT
@@ -62,7 +65,7 @@ export class AdminService {
     } else {
       throw new UnprocessableEntityException('User is already an expert')
     }
-
+    await this.expertAppRepo.removeAndFlush(expertApp)
     return
   }
 }

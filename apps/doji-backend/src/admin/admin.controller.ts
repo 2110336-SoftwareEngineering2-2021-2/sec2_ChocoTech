@@ -28,7 +28,7 @@ export class AdminController {
 
   @Put('approveExpert/:username')
   @ApiOperation({ description: 'Edit role to approve user to be expert by username' })
-  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 404, description: 'User not found or user did not send application' })
   @ApiResponse({ status: 200, description: 'Edited users role to expert' })
   async appoveExpert(@Param('username') username: string) {
     return await this.adminService.approveExpert(username)
