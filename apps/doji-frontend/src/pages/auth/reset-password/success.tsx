@@ -7,7 +7,7 @@ const resetPasswordSuccess: ExtendedNextPage = () => {
       <Typography variant="title3" fontWeight={700} p={[2, 8]} align="center">
         Reset Password Success
       </Typography>
-      <Button size="large" type="submit" color="primary" variant="contained">
+      <Button href="\login" size="large" type="submit" color="primary" variant="contained">
         go to login
       </Button>
     </Stack>
