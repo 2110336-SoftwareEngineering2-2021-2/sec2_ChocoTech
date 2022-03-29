@@ -14,12 +14,12 @@ interface SettingsPageProps {
 }
 
 type UpdateProfileModel = {
-  username: String
-  email: String
-  displayName: String
-  firstName: String
-  lastName: String
-  location: String
+  username: string
+  email: string
+  displayName: string
+  firstName: string
+  lastName: string
+  location: string
 }
 
 const Index: React.FC<SettingsPageProps> = ({ user }) => {
