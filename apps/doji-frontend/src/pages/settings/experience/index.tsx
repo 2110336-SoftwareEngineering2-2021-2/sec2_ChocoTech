@@ -24,7 +24,7 @@ const Index: React.FC<SettingsPageProps> = ({ user }) => {
         My Experiences
       </Typography>
 
-      {data.map((data, index) => {
+      {(data as any).map((data, index) => {
         return <Achievement editable title={data.topic} desc={data.description} key={index} />
       })}
 
