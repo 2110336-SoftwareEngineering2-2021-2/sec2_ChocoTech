@@ -1,4 +1,5 @@
 import { IReviewStatResponseDTO } from 'libs/api/src/lib/dtos/session'
+import { IWorkHistory } from 'libs/api/src/lib/entities/WorkHistory'
 
 export interface IExpertRegistrationRequestDTO {
   field: string
@@ -24,4 +25,5 @@ export interface IApproveExpertDetailDTO {
   lastname: string
   username: string
   profilePictureURL: string
+  workHistory: IWorkHistory[]
 }
