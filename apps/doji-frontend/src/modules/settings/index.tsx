@@ -82,6 +82,11 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ user }) => {
           <ListItem href="change-password" text="Change password" icon={<FiLock />} />
           <ListItem href="/balance" text="Wallet" icon={<FiDollarSign />} />
           <ListItem href="settings/experience" text="Experience" icon={<FiLayers />} />
+          <ListItem
+            href={`${process.env.NEXT_PUBLIC_API_URL}/auth/google`}
+            text="Link with Google"
+            icon={<FiLogOut />}
+          />
           <ListItem href="/logout" text="Logout" icon={<FiLogOut />} />
         </Stack>
       </List>
