@@ -1,7 +1,7 @@
 import { getServerSideUser } from '@frontend/common/auth'
 import { httpClient } from '@frontend/services'
 import { IMeResponseDTO } from '@libs/api'
-import { Button, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, Stack, TextField, Typography } from '@mui/material'
 import router from 'next/router'
 
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -37,6 +37,8 @@ const Index: React.FC<SettingsPageProps> = ({ user }) => {
         <Typography variant="title3" mt={4}>
           Add Experience
         </Typography>
+
+        <Box width="maxWidth" height={300} bgcolor="sky.light" borderRadius={1} />
 
         <Typography variant="regular" fontWeight={500} pt={1}>
           Title
