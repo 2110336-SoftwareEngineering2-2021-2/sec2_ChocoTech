@@ -1,44 +1,54 @@
 import { httpClient } from '@frontend/services'
-import { IApproveExpertDetailDTO } from '@libs/api'
+import { IApproveExpertDetailDTO, IChangeUserRoleDTO } from '@libs/api'
 import { Achievement, CompactProfile } from '@libs/mui'
 import { Button, Stack, Typography } from '@mui/material'
+import { AxiosError } from 'axios'
 import { useRouter } from 'next/router'
 
+import toast from 'react-hot-toast'
 import { useMutation, useQuery } from 'react-query'
 
 function Index() {
   const router = useRouter()
   const username = router.query.username as string
-
-  const changeRole = async () => {
-    return await httpClient.put<void>(`admin/role/${username}`)
-  }
-  const changeRoleMutation = useMutation<void, AxiosError, ICha>(changeRole, {
-    onSuccess: () => {
-      toast.success('Password changed successfully')
-    },
-    onError: (error: AxiosError) => {
-      toast.error(error.response.data.message)
-    },
+  const changeRoleMutation = useMutation<void, AxiosError, IChangeUserRoleDTO>(async (data) => {
+    return await httpClient.put(`admin/role/${username}`, data)
   })
 
-  const handleDecline = () => {
-    return null
+  const handleDecline = async () => {
+    try {
+      await toast.promise(changeRoleMutation.mutateAsync({ status: 'rejected' }), {
+        loading: 'rejecting user...',
+        success: 'Successfully reject',
+        error: 'Failed to reject user',
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
-  const handleAccept = () => {
-    return null
+  const handleAccept = async () => {
+    try {
+      await toast.promise(changeRoleMutation.mutateAsync({ status: 'approved' }), {
+        loading: 'approving user...',
+        success: 'Successfully approve',
+        error: 'Failed to approve user',
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
-  const { data, isLoading } = useQuery<IApproveExpertDetailDTO>(
+  const { data, isLoading, isIdle } = useQuery<IApproveExpertDetailDTO>(
     ['getWorkHistory', username],
     async () => {
       const { data } = await httpClient.get(`/admin/workHistory/${username}`)
       return data
     },
+    { enabled: !!username },
   )
 
-  if (isLoading) {
+  if (isLoading || isIdle) {
     return null
   }
 
