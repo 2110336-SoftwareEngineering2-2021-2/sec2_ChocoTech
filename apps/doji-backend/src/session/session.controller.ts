@@ -16,6 +16,7 @@ import {
   Get,
   HttpCode,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -67,7 +68,7 @@ export class SessionController {
     return await this.sessionService.schedule(dto, user)
   }
 
-  @Post('schedule/:scheduleId')
+  @Patch('schedule/:scheduleId')
   @UseGuards(ExpertAuthGuard)
   @ApiCookieAuth()
   async changeScheduleStatus(
