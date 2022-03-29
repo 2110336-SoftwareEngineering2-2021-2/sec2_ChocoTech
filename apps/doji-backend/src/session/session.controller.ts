@@ -30,7 +30,7 @@ export class SessionController {
   @Get()
   @HttpCode(200)
   @ApiCookieAuth()
-  @ApiOperation({ description: 'Get all session of current user information' })
+  @ApiOperation({ description: 'Get all sessions filtered by an expert' })
   @ApiResponse({ status: 200, description: 'All sessions of user have benn listed' })
   async findAll(@Query('expert_username') expertUsername?: string): Promise<ISession[]> {
     return await this.sessionService.getAllSessionsByExpert(expertUsername)
@@ -55,6 +55,15 @@ export class SessionController {
   ): Promise<ISession> {
     const user = await userRef.getUser<User>()
     return await this.sessionService.create(dto, user)
+  }
+
+  @Get('schedule/me')
+  @UseGuards(UserAuthGuard)
+  @ApiOperation({ description: 'Get all schedules of current user' })
+  @ApiCookieAuth()
+  async getMySchedule(@CurrentUser() userRef: IUserReference): Promise<ISchedule[]> {
+    const user = await userRef.getUser<User>()
+    return await this.sessionService.getMySchedules(user)
   }
 
   @Post('schedule')
