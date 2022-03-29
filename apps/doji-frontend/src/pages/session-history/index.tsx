@@ -1,7 +1,6 @@
 import { httpClient } from '@frontend/services'
 import { SessionHistoryCard, SessionHistoryCardProps, mockSessionHistoryData } from '@libs/mui'
 import { Stack, Typography } from '@mui/material'
-import axios from 'axios'
 
 import { useEffect, useState } from 'react'
 
@@ -19,7 +18,7 @@ function SessionHistory() {
       <Typography variant="title3" py={2} mt={2}>
         History
       </Typography>
-      {mockSessionHistoryData.map((data, key) => {
+      {currentData.map((data, key) => {
         return <SessionHistoryCard {...data} key={key} />
       })}
     </Stack>
