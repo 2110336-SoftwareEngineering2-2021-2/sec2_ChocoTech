@@ -7,6 +7,8 @@ import { GetServerSideProps } from 'next'
 import { useQuery } from 'react-query'
 
 export function Index({ username }) {
+  const HandleDecline = () => {}
+  const HandleAccept = () => {}
   const { data, isLoading } = useQuery<IApproveExpertDetailDTO>(
     ['getWorkHistory', username],
     async () => {
@@ -32,9 +34,13 @@ export function Index({ username }) {
           <Achievement title={data.topic} desc={data.description} src={data.imageUrl} key={key} />
         )
       })}
-      <Stack>
-        <Button variant="">Decline</Button>
-        <Button>Accept</Button>
+      <Stack m={3} direction="row" justifyContent="space-between" spacing={3.5}>
+        <Button fullWidth onClick={HandleDecline} variant="outlined" size="large">
+          Decline
+        </Button>
+        <Button fullWidth onClick={HandleAccept} size="large">
+          Accept
+        </Button>
       </Stack>
     </Stack>
   )
