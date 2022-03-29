@@ -59,7 +59,7 @@ export const Achievement: React.FC<AchievementProps> = ({ title, desc, src, edit
         {src ? (
           <StyledImg src={src} width={102} height={102} onClick={handleOpen} />
         ) : (
-          <Box width={102} height={102} />
+          <Box width={102} height={102} bgcolor="sky.light" borderRadius={1} />
         )}
 
         <Dialog onClose={handleClose} open={open} fullScreen>

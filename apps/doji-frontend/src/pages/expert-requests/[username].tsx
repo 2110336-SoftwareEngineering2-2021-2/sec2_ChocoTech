@@ -17,8 +17,6 @@ export function Index({ username }) {
     ['getWorkHistory', username],
     async () => {
       const { data } = await httpClient.get(`/admin/workHistory/${username}`)
-
-      console.log(data)
       return data
     },
   )
@@ -29,14 +27,17 @@ export function Index({ username }) {
 
   return (
     <Stack>
-      <CompactProfile username={username} displayName="Anonymous" profileUrl="" isExpert />
+      <CompactProfile
+        username={username}
+        displayName={data.firstname + ' ' + data.lastname}
+        profileUrl=""
+        isExpert
+      />
       <Typography variant="regular" color="sky.main" pl={3}>
         Working history and Acheivement
       </Typography>
       {data.workHistory.map((data, key) => {
-        return (
-          <Achievement title={data.topic} desc={data.description} src={data.imageUrl} key={key} />
-        )
+        return <Achievement title={data.topic} desc={data.description} key={key} />
       })}
       <Stack m={3} direction="row" justifyContent="space-between" spacing={3.5}>
         <Button fullWidth onClick={HandleDecline} variant="outlined" size="large">
