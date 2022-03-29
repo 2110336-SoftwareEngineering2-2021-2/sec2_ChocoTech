@@ -43,7 +43,7 @@ const ResetPassword: ExtendedNextPage = () => {
   const resetPasswordMutation = useMutation(resetPasswordRequest, {
     onSuccess: () => {
       toast.success('Reset Password Success')
-      router.push('/reset-password/success')
+      router.push('auth/reset-password/success')
     },
     onError: () => {
       toast.error('Reset Password Failed')
