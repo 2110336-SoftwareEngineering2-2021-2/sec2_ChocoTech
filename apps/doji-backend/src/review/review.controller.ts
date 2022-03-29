@@ -27,7 +27,7 @@ export class ReviewController {
   @Post('report/:rid')
   @UseGuards(UserAuthGuard)
   @ApiCookieAuth()
-  async report(@Param('rid') rid: number, @CurrentUser() user: IUserReference) {
+  async report(@Param('rid') rid: string, @CurrentUser() user: IUserReference) {
     await this.reviewService.reportReview(rid, user)
   }
 }

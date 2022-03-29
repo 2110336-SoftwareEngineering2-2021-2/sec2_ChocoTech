@@ -1,6 +1,6 @@
 import { Review } from '@backend/entities/Review'
-import { User } from '@backend/entities/User'
 import { Session } from '@backend/entities/Session'
+import { User } from '@backend/entities/User'
 import { ReviewCreationRequestDTO } from '@backend/review/review.dto'
 import { IUserReference } from '@libs/api'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
@@ -47,7 +47,7 @@ export class ReviewService {
     )
     return reviewList
   }
-  async reportReview(rid: number, userRef: IUserReference) {
+  async reportReview(rid: string, userRef: IUserReference) {
     const user = await userRef.getUser()
     const review = await this.reviewRepo.findOne({ id: rid })
     if (!review) {
