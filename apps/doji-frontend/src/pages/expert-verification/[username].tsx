@@ -7,8 +7,12 @@ import { GetServerSideProps } from 'next'
 import { useQuery } from 'react-query'
 
 export function Index({ username }) {
-  const HandleDecline = () => {}
-  const HandleAccept = () => {}
+  const HandleDecline = () => {
+    return null
+  }
+  const HandleAccept = () => {
+    return null
+  }
   const { data, isLoading } = useQuery<IApproveExpertDetailDTO>(
     ['getWorkHistory', username],
     async () => {
