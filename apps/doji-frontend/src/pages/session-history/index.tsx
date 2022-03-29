@@ -1,26 +1,26 @@
 import { httpClient } from '@frontend/services'
-import { SessionHistoryCard, SessionHistoryCardProps, mockSessionHistoryData } from '@libs/mui'
+import { ISchedule } from '@libs/api'
+import { SessionHistoryCard } from '@libs/mui'
 import { Stack, Typography } from '@mui/material'
 
-import { useEffect, useState } from 'react'
+import { useQuery } from 'react-query'
 
 function SessionHistory() {
-  const [currentData, setData] = useState<Array<SessionHistoryCardProps>>([])
-  async function getAllSession() {
-    const response = await httpClient.get(`session`)
-    setData(response.data)
-  }
-  useEffect(() => {
-    getAllSession()
-  }, [])
+  const { data, isLoading } = useQuery<ISchedule[]>('/session', () =>
+    httpClient.get('/session').then((res) => res.data),
+  )
   return (
     <Stack>
       <Typography variant="title3" py={2} mt={2}>
         History
       </Typography>
-      {currentData.map((data, key) => {
-        return <SessionHistoryCard {...data} key={key} />
-      })}
+      {!isLoading && (
+        <>
+          {data.map((element, key) => {
+            return <SessionHistoryCard {...element} key={key} />
+          })}
+        </>
+      )}
     </Stack>
   )
 }
