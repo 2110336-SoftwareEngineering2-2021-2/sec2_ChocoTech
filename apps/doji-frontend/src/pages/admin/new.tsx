@@ -56,35 +56,40 @@ function NewAdminPage() {
   }
 
   return (
-    <Stack>
+    <Stack
+      sx={{ minHeight: '100%' }}
+      direction="column"
+      justifyContent="space-between"
+      flexGrow={1}
+      mt={2}
+      spacing={2}
+    >
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Typography variant="large" fontWeight={500}>
-          Username
-        </Typography>
-        <RegisteredTextfield label="Username" errors={errors.username} {...register('username')} />
-        <Typography variant="large" fontWeight={500}>
-          Password
-        </Typography>
-        <RegisteredTextfield
-          type="password"
-          label="Password"
-          errors={errors.password}
-          {...register('password')}
-        />
-        <Typography variant="large" fontWeight={500}>
-          Confirm Password
-        </Typography>
-        <RegisteredTextfield
-          type="password"
-          label="Confirm Password"
-          errors={errors.confirmPassword}
-          {...register('confirmPassword')}
-        />
-        <br />
-        <br />
-        <Button fullWidth type="submit">
-          Create new admin
-        </Button>
+        <Stack direction="column" spacing={2}>
+          <Typography variant="large" fontWeight={500} align="center" lineHeight={4}>
+            New admin
+          </Typography>
+          <RegisteredTextfield
+            label="Username"
+            errors={errors.username}
+            {...register('username')}
+          />
+          <RegisteredTextfield
+            type="password"
+            label="Password"
+            errors={errors.password}
+            {...register('password')}
+          />
+          <RegisteredTextfield
+            type="password"
+            label="Confirm Password"
+            errors={errors.confirmPassword}
+            {...register('confirmPassword')}
+          />
+          <Button fullWidth type="submit">
+            Create new admin
+          </Button>
+        </Stack>
       </form>
     </Stack>
   )
