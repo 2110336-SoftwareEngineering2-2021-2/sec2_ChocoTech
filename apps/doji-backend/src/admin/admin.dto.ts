@@ -1,8 +1,12 @@
 import { WorkHistory } from '@backend/entities/WorkHistory'
-import { IAdminCreationRequestDTO, IApproveExpertDetailDTO } from '@libs/api'
+import { IAdminCreationRequestDTO, IApproveExpertDetailDTO, IChangeUserRoleDTO } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString } from 'class-validator'
+import { IsEnum, IsString } from 'class-validator'
 
+export enum ChangeUserRole {
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+}
 export class AdminCreationRequestDTO implements IAdminCreationRequestDTO {
   @ApiProperty()
   @IsString()
@@ -32,4 +36,10 @@ export class ApproveExpertDetailDTO implements IApproveExpertDetailDTO {
 
   @ApiProperty()
   workHistory: WorkHistory[]
+}
+
+export class ChangeUserRoleDTO implements IChangeUserRoleDTO {
+  @ApiProperty()
+  @IsEnum(ChangeUserRole)
+  status: ChangeUserRole
 }

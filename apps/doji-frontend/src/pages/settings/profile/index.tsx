@@ -1,8 +1,8 @@
 import { getServerSideUser } from '@frontend/common/auth'
 import { httpClient } from '@frontend/services'
 import { fetchUserInformation } from '@frontend/services/fetcher'
-import { IMeResponseDTO, IUserEditProfileRequestDTO } from '@libs/api'
-import { CompactPrpfile, CountrySelect } from '@libs/mui'
+import { IMeResponseDTO } from '@libs/api'
+import { CompactProfile, CountrySelect } from '@libs/mui'
 import { Button, Stack, TextField, Typography } from '@mui/material'
 
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -14,12 +14,12 @@ interface SettingsPageProps {
 }
 
 type UpdateProfileModel = {
-  username: String
-  email: String
-  displayName: String
-  firstName: String
-  lastName: String
-  location: String
+  username: string
+  email: string
+  displayName: string
+  firstName: string
+  lastName: string
+  location: string
 }
 
 const Index: React.FC<SettingsPageProps> = ({ user }) => {
@@ -54,7 +54,7 @@ const Index: React.FC<SettingsPageProps> = ({ user }) => {
           Edit profile
         </Typography>
 
-        <CompactPrpfile
+        <CompactProfile
           username={user.username}
           displayName={user.displayName}
           // profileUrl={profilePictureURL}
