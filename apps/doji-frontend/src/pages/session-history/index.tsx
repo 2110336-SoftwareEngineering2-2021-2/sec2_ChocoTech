@@ -1,4 +1,4 @@
-import { SessionHistoryCard, mockSessionHistoryData } from '@libs/mui'
+import { SessionHistoryCard, SessionHistoryCardProps, mockSessionHistoryData } from '@libs/mui'
 import { Stack, Typography } from '@mui/material'
 import axios from 'axios'
 

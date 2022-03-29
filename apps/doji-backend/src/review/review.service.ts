@@ -1,4 +1,5 @@
 import { Review } from '@backend/entities/Review'
+import { User } from '@backend/entities/User'
 import { Session } from '@backend/entities/Session'
 import { ReviewCreationRequestDTO } from '@backend/review/review.dto'
 import { IUserReference } from '@libs/api'
@@ -45,5 +46,17 @@ export class ReviewService {
       },
     )
     return reviewList
+  }
+  async reportReview(rid: number, userRef: IUserReference) {
+    const user = await userRef.getUser()
+    const review = await this.reviewRepo.findOne({ id: rid })
+    if (!review) {
+      throw new NotFoundException('Review not found')
+    }
+    await review.reportByUser.init()
+    review.reportByUser.add(user as User)
+    this.reviewRepo.flush()
+
+    return
   }
 }
