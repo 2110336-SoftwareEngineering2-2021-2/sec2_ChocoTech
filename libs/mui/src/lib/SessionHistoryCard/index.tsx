@@ -7,7 +7,6 @@ import { SessionStatusCard } from './components/SessionStatusCard'
 export interface SessionHistoryCardProps extends ISchedule {}
 
 export function SessionHistoryCard(props: SessionHistoryCardProps) {
-  //TODO
   function refundAmount() {
     if (hasPenalty()) {
       return props.fee - deductAmount()
