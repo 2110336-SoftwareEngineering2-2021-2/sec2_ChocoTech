@@ -1,3 +1,4 @@
+import { httpClient } from '@frontend/services'
 import { SessionHistoryCard, SessionHistoryCardProps, mockSessionHistoryData } from '@libs/mui'
 import { Stack, Typography } from '@mui/material'
 import axios from 'axios'
@@ -7,17 +8,11 @@ import { useEffect, useState } from 'react'
 function SessionHistory() {
   const [currentData, setData] = useState<Array<SessionHistoryCardProps>>([])
   async function getAllSession() {
-    await axios
-      .get('http://localhost:3333/api/session', { withCredentials: true })
-      .then(function (response) {
-        setData(response.data)
-      })
-      .catch(function (response) {
-        console.log(response)
-      })
+    const response = await httpClient.get(`session`)
+    setData(response.data)
   }
   useEffect(() => {
-    // getAllSession()
+    getAllSession()
   }, [])
   return (
     <Stack>

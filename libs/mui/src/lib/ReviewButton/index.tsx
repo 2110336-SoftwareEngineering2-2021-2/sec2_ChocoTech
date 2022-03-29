@@ -19,14 +19,6 @@ function ReviewMenu(props: ReviewMenuProps) {
   }
   async function reportReview() {
     await httpClient.post(`review/report/${props.id}`)
-    // try {
-    //   const response = await axios.post(`http://localhost:3333/api/review/report/${props.id}`, {
-    //     withCredentials: true,
-    //   })
-    //   console.log(response)
-    // } catch (error) {
-    //   console.error(error)
-    // }
   }
   return (
     <>

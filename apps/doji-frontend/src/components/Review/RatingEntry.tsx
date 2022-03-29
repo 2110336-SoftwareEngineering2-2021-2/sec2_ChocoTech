@@ -4,7 +4,6 @@ import { formatDistanceToNow } from 'date-fns'
 import ReviewMenu from 'libs/mui/src/lib/ReviewButton'
 
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
-import { BsThreeDotsVertical } from 'react-icons/bs'
 
 function ReviewEntry(props: { data: IPublicSessionReviewResponseDTO }) {
   const theme = useTheme()
@@ -18,7 +17,6 @@ function ReviewEntry(props: { data: IPublicSessionReviewResponseDTO }) {
             {props.data.authorName}
           </Typography>
         </Stack>
-        {/* <BsThreeDotsVertical /> */}
         <ReviewMenu id={props.data.id} />
       </Stack>
       <Stack direction="row" alignItems="center" spacing="2em">
