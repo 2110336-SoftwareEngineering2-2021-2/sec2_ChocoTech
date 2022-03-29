@@ -4,12 +4,16 @@ import { IsNumber, IsString } from 'class-validator'
 
 export class ReviewCreationRequestDTO implements IReviewCreationRequestDTO {
   @ApiProperty()
+  @IsNumber()
+  rating: number
+
+  @ApiProperty()
   @IsString()
   content: string
 
   @ApiProperty()
   @IsNumber()
-  rating: number
+  sessionId: string
 }
 
 export class ReviewStatResponseDTO implements IReviewStatResponseDTO {
