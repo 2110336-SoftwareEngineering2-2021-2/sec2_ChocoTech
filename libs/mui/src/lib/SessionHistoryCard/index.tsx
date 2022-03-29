@@ -9,16 +9,19 @@ export interface SessionHistoryCardProps extends ISchedule {}
 export function SessionHistoryCard(props: SessionHistoryCardProps) {
   //TODO
   function refundAmount() {
-    return 500
+    if (hasPenalty()) {
+      return props.fee - deductAmount()
+    }
+    return props.fee
   }
   function deductAmount() {
-    return 10
+    return props.fee * 0.3
   }
   function hasPenalty() {
-    const date1 = new Date('06/30/2019')
-    const date2 = new Date('07/30/2019')
+    const date_start = props.startTime
+    const date_current = new Date()
 
-    const Difference_In_Time = date2.getTime() - date1.getTime()
+    const Difference_In_Time = date_current.getTime() - date_start.getTime()
 
     const Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24)
 

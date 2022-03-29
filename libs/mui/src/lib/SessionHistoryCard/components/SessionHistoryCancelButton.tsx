@@ -68,7 +68,7 @@ export default function SessionHistoryCancelButton(props: SessionInfo) {
                       {' '}
                       {props.deductAmount}{' '}
                     </Typography>{' '}
-                    coins for cancelling within 7 days of the session date.
+                    coins for cancelling within 3 days of the session date.
                   </>
                 )}
               </Typography>
