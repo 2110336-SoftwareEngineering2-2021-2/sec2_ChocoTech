@@ -1,14 +1,14 @@
-import { httpClient } from '@frontend/services'
 import { IconButton, Menu, MenuItem } from '@mui/material'
-import axios from 'axios'
 
 import React from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 
 export interface ReviewMenuProps {
   id: string
+  onReport: () => Promise<any>
 }
-function ReviewMenu(props: ReviewMenuProps) {
+
+export function ReviewMenu(props: ReviewMenuProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -17,9 +17,7 @@ function ReviewMenu(props: ReviewMenuProps) {
   const handleClose = () => {
     setAnchorEl(null)
   }
-  async function reportReview() {
-    await httpClient.post(`review/report/${props.id}`)
-  }
+
   return (
     <>
       <IconButton
@@ -42,9 +40,8 @@ function ReviewMenu(props: ReviewMenuProps) {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={reportReview}>Report</MenuItem>
+        <MenuItem onClick={props.onReport}>Report</MenuItem>
       </Menu>
     </>
   )
 }
-export default ReviewMenu

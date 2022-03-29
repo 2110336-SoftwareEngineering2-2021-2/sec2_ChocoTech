@@ -1,7 +1,7 @@
 import { getServerSideUser } from '@frontend/common/auth'
 import { httpClient } from '@frontend/services'
 import { fetchUserInformation } from '@frontend/services/fetcher'
-import { IMeResponseDTO, IUserEditProfileRequestDTO } from '@libs/api'
+import { IMeResponseDTO } from '@libs/api'
 import { CompactProfile, CountrySelect } from '@libs/mui'
 import { Button, Stack, TextField, Typography } from '@mui/material'
 
@@ -14,12 +14,12 @@ interface SettingsPageProps {
 }
 
 type UpdateProfileModel = {
-  username: String
-  email: String
-  displayName: String
-  firstName: String
-  lastName: String
-  location: String
+  username: string
+  email: string
+  displayName: string
+  firstName: string
+  lastName: string
+  location: string
 }
 
 const Index: React.FC<SettingsPageProps> = ({ user }) => {

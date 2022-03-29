@@ -27,3 +27,7 @@ export interface IApproveExpertDetailDTO {
   profilePictureURL: string
   workHistory: IWorkHistory[]
 }
+
+export interface IChangeUserRoleDTO {
+  status: 'approved' | 'rejected'
+}

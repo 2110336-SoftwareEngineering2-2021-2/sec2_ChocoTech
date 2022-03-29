@@ -63,7 +63,13 @@ const MagicComponent: React.FC<{ user?: IMeResponseDTO }> = ({ user }) => {
 const MainNavBar: React.FC<{ user?: IMeResponseDTO; show?: boolean }> = ({ show }) => {
   const user = useAuthStore((store) => store.user)
   if (!show) return null
-  return <NavBar role={user?.role ? user.role : 'none'} username={user?.username ?? 'username'} />
+  return (
+    <NavBar
+      role={user?.role ? user.role : 'none'}
+      username={user?.username ?? 'username'}
+      avartarSrc={user.profilePictureURL}
+    />
+  )
 }
 
 function CustomApp(props: ExtendedAppProps) {

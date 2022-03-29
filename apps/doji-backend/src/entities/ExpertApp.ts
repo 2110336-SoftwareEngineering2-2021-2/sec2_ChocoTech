@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, Property } from '@mikro-orm/core'
+import { Entity, ManyToOne } from '@mikro-orm/core'
 
 import { User } from './User'
 
@@ -6,10 +6,4 @@ import { User } from './User'
 export class ExpertApp {
   @ManyToOne({ primary: true })
   user: User
-
-  @Property()
-  field: string
-
-  @Property()
-  desc: string
 }

@@ -20,7 +20,7 @@ const BoxStyled = styled('div')`
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
 `
 
-export default function SessionHistoryCancelButton(props: SessionInfo) {
+export function SessionHistoryCancelButton(props: SessionInfo) {
   async function cancelSession() {
     await axios
       .delete('http://localhost:3333/api/session/participant', {
