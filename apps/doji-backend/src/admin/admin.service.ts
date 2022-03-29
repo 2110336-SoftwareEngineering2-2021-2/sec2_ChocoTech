@@ -1,4 +1,8 @@
-import { AdminCreationRequestDTO, ApproveExpertDetailDTO } from '@backend/admin/admin.dto'
+import {
+  AdminCreationRequestDTO,
+  ApproveExpertDetailDTO,
+  ChangeUserRole,
+} from '@backend/admin/admin.dto'
 import { Admin } from '@backend/entities/Admin'
 import { ExpertApp } from '@backend/entities/ExpertApp'
 import { User, UserRole } from '@backend/entities/User'
@@ -53,27 +57,17 @@ export class AdminService {
     return detail
   }
 
-  async approveExpert(username: string) {
-    const user = await this.userRepo.findOne({ username: username })
-    const expertApp = await this.expertAppRepo.findOne({ user: user })
-    if (!user || !expertApp) {
+  async approveOrRejectExpert(username: string, status: ChangeUserRole) {
+    const expertApp = await this.expertAppRepo.findOne({ user: { username: username } }, ['user'])
+    if (!expertApp.user) {
       throw new NotFoundException('User not found or user did not send application')
     }
-    if (user.role == UserRole.USER) {
-      user.role = UserRole.EXPERT
-      await this.userRepo.persistAndFlush(user)
-    } else {
+    if (expertApp.user.role !== UserRole.USER) {
       throw new UnprocessableEntityException('User is already an expert')
     }
-    await this.expertAppRepo.removeAndFlush(expertApp)
-    return
-  }
-
-  async rejectExpert(username: string) {
-    const user = await this.userRepo.findOne({ username: username })
-    const expertApp = await this.expertAppRepo.findOne({ user: user })
-    if (!user || !expertApp) {
-      throw new NotFoundException('User not found or user did not send application')
+    if (status === ChangeUserRole.APPROVED) {
+      expertApp.user.role = UserRole.EXPERT
+      await this.userRepo.persistAndFlush(expertApp.user)
     }
     await this.expertAppRepo.removeAndFlush(expertApp)
     return

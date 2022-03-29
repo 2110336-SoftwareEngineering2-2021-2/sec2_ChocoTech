@@ -48,7 +48,6 @@ export const UserBar: React.FC<UserBarProps> = ({
   }
 
   if (!isLoggedIn || !username) return null
-  console.log(avartarSrc)
   return (
     <Stack p={0}>
       <Hightlight
