@@ -8,10 +8,6 @@ export class UserEditProfileRequest implements IUserEditProfileRequestDTO {
   displayName: string
 
   @ApiProperty()
-  @IsEmail()
-  email: string
-
-  @ApiProperty()
   @IsString()
   firstName: string
 

@@ -11,7 +11,6 @@ export class ProfileService {
 
   async editProfile(dto: UserEditProfileRequest, userRef: IUserReference) {
     const user = await userRef.getUser()
-    user.email = dto.email
     user.displayName = dto.displayName
     user.firstName = dto.firstName
     user.lastName = dto.lastName

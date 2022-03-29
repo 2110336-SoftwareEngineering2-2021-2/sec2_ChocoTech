@@ -27,7 +27,6 @@ export interface IUserChangePasswordRequestDTO {
 
 export interface IUserEditProfileRequestDTO {
   displayName: string
-  email: string
   firstName: string
   lastName: string
   location: string
