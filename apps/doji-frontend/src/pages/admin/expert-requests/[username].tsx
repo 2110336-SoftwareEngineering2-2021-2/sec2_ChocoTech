@@ -2,17 +2,34 @@ import { httpClient } from '@frontend/services'
 import { IApproveExpertDetailDTO } from '@libs/api'
 import { Achievement, CompactProfile } from '@libs/mui'
 import { Button, Stack, Typography } from '@mui/material'
-import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
 
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 
-export function Index({ username }) {
-  const HandleDecline = () => {
+function Index() {
+  const router = useRouter()
+  const username = router.query.username as string
+
+  const changeRole = async () => {
+    return await httpClient.put<void>(`admin/role/${username}`)
+  }
+  const changeRoleMutation = useMutation<void, AxiosError, ICha>(changeRole, {
+    onSuccess: () => {
+      toast.success('Password changed successfully')
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.response.data.message)
+    },
+  })
+
+  const handleDecline = () => {
     return null
   }
-  const HandleAccept = () => {
+
+  const handleAccept = () => {
     return null
   }
+
   const { data, isLoading } = useQuery<IApproveExpertDetailDTO>(
     ['getWorkHistory', username],
     async () => {
@@ -26,7 +43,7 @@ export function Index({ username }) {
   }
 
   return (
-    <Stack>
+    <Stack mt={5}>
       <CompactProfile
         username={username}
         displayName={data.firstname + ' ' + data.lastname}
@@ -40,24 +57,15 @@ export function Index({ username }) {
         return <Achievement title={data.topic} desc={data.description} key={key} />
       })}
       <Stack m={3} direction="row" justifyContent="space-between" spacing={3.5}>
-        <Button fullWidth onClick={HandleDecline} variant="outlined" size="large">
+        <Button fullWidth onClick={handleDecline} variant="outlined" size="large">
           Decline
         </Button>
-        <Button fullWidth onClick={HandleAccept} size="large">
+        <Button fullWidth onClick={handleAccept} size="large">
           Accept
         </Button>
       </Stack>
     </Stack>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const query = context.query
-  return {
-    props: {
-      username: query.username,
-    },
-  }
 }
 
 export default Index
