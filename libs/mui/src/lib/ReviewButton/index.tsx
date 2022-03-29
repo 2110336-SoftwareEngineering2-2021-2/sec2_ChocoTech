@@ -6,7 +6,7 @@ import React from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 
 export interface ReviewMenuProps {
-  id: number
+  id: string
 }
 function ReviewMenu(props: ReviewMenuProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
