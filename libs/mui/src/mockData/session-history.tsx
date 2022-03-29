@@ -1,9 +1,9 @@
-import { ISession, SessionStatus } from '@libs/api'
+import { ISchedule } from '@libs/api'
 
 import { mockServiceData } from './services'
 import { mockUserData } from './users'
 
-export const mockSessionHistoryData: ISession[] = [
+export const mockSessionHistoryData: ISchedule[] = [
   // {
   //   id: 0,
   //   meetingProviderId: '0',
