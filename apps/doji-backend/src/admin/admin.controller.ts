@@ -34,6 +34,14 @@ export class AdminController {
     return await this.adminService.approveExpert(username)
   }
 
+  @Put('rejectExpert/:username')
+  @ApiOperation({ description: 'Edit role to approve user to be expert by username' })
+  @ApiResponse({ status: 404, description: 'User not found or user did not send application' })
+  @ApiResponse({ status: 200, description: 'Edited users role to expert' })
+  async rejectExpert(@Param('username') username: string) {
+    return await this.adminService.rejectExpert(username)
+  }
+
   @Post()
   @ApiOperation({ description: 'Regis new admin' })
   @ApiResponse({ status: 422, description: 'Admin with this username already exist.' })

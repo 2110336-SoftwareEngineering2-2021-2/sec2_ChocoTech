@@ -68,4 +68,14 @@ export class AdminService {
     await this.expertAppRepo.removeAndFlush(expertApp)
     return
   }
+
+  async rejectExpert(username: string) {
+    const user = await this.userRepo.findOne({ username: username })
+    const expertApp = await this.expertAppRepo.findOne({ user: user })
+    if (!user || !expertApp) {
+      throw new NotFoundException('User not found or user did not send application')
+    }
+    await this.expertAppRepo.removeAndFlush(expertApp)
+    return
+  }
 }
