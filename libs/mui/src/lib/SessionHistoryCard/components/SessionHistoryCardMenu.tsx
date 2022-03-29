@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem'
 import * as React from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 
-import SessionHistoryCancelButton from './SessionHistoryCancelButton'
+import { SessionHistoryCancelButton } from './SessionHistoryCancelButton'
 
 export interface SessionInfo {
   sessionId: string
