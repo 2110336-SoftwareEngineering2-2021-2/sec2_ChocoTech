@@ -32,7 +32,6 @@ export class ExpertAppService {
     application.user = user
     application.field = dto.field
     application.desc = dto.desc
-    console.log(application)
     try {
       await this.expertAppRepo.persistAndFlush(application)
     } catch (e) {

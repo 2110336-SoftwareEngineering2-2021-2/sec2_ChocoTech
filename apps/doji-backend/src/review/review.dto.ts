@@ -13,7 +13,7 @@ export class ReviewCreationRequestDTO implements IReviewCreationRequestDTO {
 
   @ApiProperty()
   @IsNumber()
-  sessionId: number
+  sessionId: string
 }
 
 export class ReviewStatResponseDTO implements IReviewStatResponseDTO {

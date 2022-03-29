@@ -1,29 +1,17 @@
-export interface IScheduleSessionDTO {
-  fee: number
-  expertUsername: string
-  serviceName: string
-  duration: number
-  startTime: Date
-  participantsUsername: string[]
-}
+import { ScheduleStatus } from 'libs/api/src/lib/constants/sessionStatus'
+import { ISession } from 'libs/api/src/lib/entities/Session'
 
-export interface IGetServiceByNameAndExpertUsernameDTO {
-  expertUsername: string
-  serviceName: string
-}
-
-export interface IServiceInformationDTO {
-  firstname: string
-  lastname: string
-  title: string
+export interface ICreateSessionRequestDTO {
+  topic: string
   description: string
   fee: number
 }
 
-export interface ISessionInformationResponseDTO {
-  id: number
-  reviews: IPublicSessionReviewResponseDTO[]
-  reviewStat: IReviewStatResponseDTO
+export interface IScheduleSessionDTO {
+  sessionId: string
+  duration: number
+  startTime: Date
+  participantsUsername: string[]
 }
 
 export interface IReviewStatResponseDTO {
@@ -42,4 +30,12 @@ export interface IPublicSessionReviewResponseDTO {
   authorName: string
   content: string
   createdAt: Date
+}
+
+export interface ISessionResponseDTO extends ISession {
+  reviewStat: IReviewStatResponseDTO
+}
+
+export interface IChangeScheduleStatusRequestDTO {
+  status: ScheduleStatus
 }

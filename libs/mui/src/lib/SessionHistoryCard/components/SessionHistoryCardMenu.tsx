@@ -8,7 +8,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs'
 import SessionHistoryCancelButton from './SessionHistoryCancelButton'
 
 export interface SessionInfo {
-  sessionId: number
+  sessionId: string
   expertName: string
   title: string
   hasPenalty: boolean
