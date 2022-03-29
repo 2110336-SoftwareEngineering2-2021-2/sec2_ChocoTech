@@ -20,7 +20,7 @@ export function SessionHistoryCard(props: SessionHistoryCardProps) {
     const dateStart = props.startTime
     const dateCurrent = new Date()
 
-    const DifferenceInTime = date_current.getTime() - date_start.getTime()
+    const DifferenceInTime = dateCurrent.getTime() - dateStart.getTime()
 
     const DifferenceInDays = DifferenceInTime / (1000 * 3600 * 24)
 
