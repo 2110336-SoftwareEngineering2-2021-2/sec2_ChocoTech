@@ -94,15 +94,8 @@ export class SessionService {
     }
   }
 
-  async acceptSchedule(scheduleId: string): Promise<ISchedule> {
-    const schedule = await this.scheduleRepo.findOne({ id: scheduleId }, [
-      'session',
-      'participants',
-      'session.owner',
-    ])
-    schedule.status = ScheduleStatus.ACCEPTED
+  private async _bookGoogleCalendar(schedule: Schedule) {
     const { session, participants, creator } = schedule
-
     /**
      * Prepare Google Oauth2 client and calendar
      */
@@ -120,6 +113,7 @@ export class SessionService {
      */
     const endTime = new Date(schedule.startTime)
     endTime.setHours(endTime.getHours() + schedule.duration)
+
     const attendeeEmails = [
       ...participants.getItems().map((p) => ({ email: p.email })),
       { email: creator.email },
@@ -167,6 +161,20 @@ export class SessionService {
     schedule.meetUrl = response.data.hangoutLink
 
     await this.scheduleRepo.persistAndFlush(schedule)
+    return schedule
+  }
+
+  async changeScheduleStatus(scheduleId: string, status: ScheduleStatus): Promise<ISchedule> {
+    const schedule = await this.scheduleRepo.findOne({ id: scheduleId }, [
+      'session',
+      'participants',
+      'session.owner',
+    ])
+    schedule.status = status
+    if (status === ScheduleStatus.ACCEPTED) {
+      return await this._bookGoogleCalendar(schedule)
+    }
+
     return schedule
   }
 

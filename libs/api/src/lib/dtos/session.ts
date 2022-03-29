@@ -1,3 +1,4 @@
+import { ScheduleStatus } from 'libs/api/src/lib/constants/sessionStatus'
 import { ISession } from 'libs/api/src/lib/entities/Session'
 
 export interface ICreateSessionRequestDTO {
@@ -33,4 +34,8 @@ export interface IPublicSessionReviewResponseDTO {
 
 export interface ISessionResponseDTO extends ISession {
   reviewStat: IReviewStatResponseDTO
+}
+
+export interface IChangeScheduleStatusRequestDTO {
+  status: ScheduleStatus
 }

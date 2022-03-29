@@ -2,7 +2,13 @@ import { CurrentUser, ExpertAuthGuard, UserAuthGuard } from '@backend/auth/user.
 import { User } from '@backend/entities/User'
 import { CreateSessionRequestDTO, ScheduleSessionDTO } from '@backend/session/session.dto'
 import { SessionService } from '@backend/session/session.service'
-import { ISchedule, ISession, ISessionResponseDTO, IUserReference } from '@libs/api'
+import {
+  IChangeScheduleStatusRequestDTO,
+  ISchedule,
+  ISession,
+  ISessionResponseDTO,
+  IUserReference,
+} from '@libs/api'
 import {
   Body,
   Controller,
@@ -61,11 +67,14 @@ export class SessionController {
     return await this.sessionService.schedule(dto, user)
   }
 
-  @Post('accept/schedule/:scheduleId')
+  @Post('schedule/:scheduleId')
   @UseGuards(ExpertAuthGuard)
   @ApiCookieAuth()
-  async acceptSchedule(@Param('scheduleId') scheduleId: string): Promise<ISchedule> {
-    return await this.sessionService.acceptSchedule(scheduleId)
+  async changeScheduleStatus(
+    @Param('scheduleId') scheduleId: string,
+    @Body() { status }: IChangeScheduleStatusRequestDTO,
+  ): Promise<ISchedule> {
+    return await this.sessionService.changeScheduleStatus(scheduleId, status)
   }
 
   @Delete(':sessionId/participant')
