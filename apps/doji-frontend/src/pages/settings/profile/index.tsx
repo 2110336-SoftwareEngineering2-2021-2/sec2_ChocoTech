@@ -2,7 +2,7 @@ import { getServerSideUser } from '@frontend/common/auth'
 import { httpClient } from '@frontend/services'
 import { fetchUserInformation } from '@frontend/services/fetcher'
 import { IMeResponseDTO, IUserEditProfileRequestDTO } from '@libs/api'
-import { CompactPrpfile, CountrySelect } from '@libs/mui'
+import { CompactProfile, CountrySelect } from '@libs/mui'
 import { Button, Stack, TextField, Typography } from '@mui/material'
 
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -54,7 +54,7 @@ const Index: React.FC<SettingsPageProps> = ({ user }) => {
           Edit profile
         </Typography>
 
-        <CompactPrpfile
+        <CompactProfile
           username={user.username}
           displayName={user.displayName}
           // profileUrl={profilePictureURL}
