@@ -1,6 +1,6 @@
 import { getServerSideUser } from '@frontend/common/auth'
 import { IMeResponseDTO } from '@libs/api'
-import { CompactPrpfile } from '@libs/mui'
+import { CompactProfile } from '@libs/mui'
 import { List, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material'
 import Link from 'next/link'
 
@@ -42,7 +42,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ user }) => {
       <Typography variant="title3" py={2} px={3} mt={2}>
         Settings
       </Typography>
-      <CompactPrpfile
+      <CompactProfile
         username={user.username}
         displayName={displayName}
         profileUrl={user.profilePictureURL}
