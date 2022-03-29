@@ -60,7 +60,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ user }) => {
       <List component="nav" sx={{ mt: 2 }}>
         <Stack direction="column" spacing={1}>
           <ListItem href="/settings/profile" text="Edit Profile" icon={<FiEdit2 />} />
-          <ListItem href="/settings/change-password" text="Change password" icon={<FiLock />} />
+          <ListItem href="change-password" text="Change password" icon={<FiLock />} />
           <ListItem href="/settings/wallet" text="Wallet" icon={<FiDollarSign />} />
           <ListItem href="/settings/experience" text="Experience" icon={<FiLayers />} />
           <ListItem href="/logout" text="Logout" icon={<FiLogOut />} />
