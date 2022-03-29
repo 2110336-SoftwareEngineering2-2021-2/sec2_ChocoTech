@@ -1,4 +1,5 @@
 import { User } from '@backend/entities/User'
+import { IFriendRequest } from '@libs/api'
 import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
 import { randomUUID } from 'crypto'
 
@@ -10,7 +11,7 @@ export enum friendRequestStatus {
 }
 
 @Entity()
-export class FriendRequest {
+export class FriendRequest implements IFriendRequest {
   @PrimaryKey()
   id: string
 
@@ -24,7 +25,7 @@ export class FriendRequest {
   receiver: User
 
   @Property()
-  dateReceived: Date
+  dateResponded: Date
 
   @Enum(() => friendRequestStatus)
   @Property({ default: friendRequestStatus.PENDING })

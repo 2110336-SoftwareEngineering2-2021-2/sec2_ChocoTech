@@ -6,6 +6,6 @@ export interface IFriendRequest {
   sender: IUser
   dateSent: Date
   receiver: IUser
-  dateResponse: Date
+  dateResponded: Date
   status: friendRequestStatus
 }

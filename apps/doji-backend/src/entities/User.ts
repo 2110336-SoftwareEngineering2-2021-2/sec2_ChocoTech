@@ -1,5 +1,14 @@
+import { FriendRequest } from '@backend/entities/FriendRequest'
 import { ISchedule, IUser } from '@libs/api'
-import { Collection, Entity, Enum, ManyToMany, PrimaryKey, Property } from '@mikro-orm/core'
+import {
+  Collection,
+  Entity,
+  Enum,
+  ManyToMany,
+  OneToMany,
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/core'
 
 import { Review } from '../entities/Review'
 import { Schedule } from './Schedule'
@@ -62,6 +71,12 @@ export class User implements IUser {
 
   @ManyToMany(() => Review, (review) => review.reportByUser)
   reviews = new Collection<Review>(this)
+
+  @OneToMany(() => FriendRequest, (friendRequest) => friendRequest.receiver)
+  sentFriendRequest = new Collection<User>(this)
+
+  @OneToMany(() => FriendRequest, (friendRequest) => friendRequest.sender)
+  receivedFriendRequest = new Collection<User>(this)
 
   // @ManyToOne({ nullable: true })
   // verifiedByAdmin!: Admin
