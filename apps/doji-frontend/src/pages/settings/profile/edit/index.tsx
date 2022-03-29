@@ -1,122 +1,126 @@
 import { getServerSideUser } from '@frontend/common/auth'
-import { IMeResponseDTO } from '@libs/api'
+import { httpClient } from '@frontend/services'
+import { fetchUserInformation } from '@frontend/services/fetcher'
+import { IMeResponseDTO, IUserEditProfileRequestDTO } from '@libs/api'
 import { CompactPrpfile, CountrySelect } from '@libs/mui'
 import { Button, Stack, TextField, Typography } from '@mui/material'
 
-import { useMemo } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
+import { useQuery } from 'react-query'
 
 interface SettingsPageProps {
   user: IMeResponseDTO
 }
 
+type UpdateProfileModel = {
+  username: String
+  email: String
+  displayName: String
+  firstName: String
+  lastName: String
+  location: String
+}
+
 const Index: React.FC<SettingsPageProps> = ({ user }) => {
-  const displayName = useMemo(() => {
-    if (user.displayName) return user.displayName
-    if (user.firstName && user.lastName) return `${user.firstName} ${user.lastName}`
-    return user.username
-  }, [user])
-  const firstName = useMemo(() => {
-    return user.firstName
-  }, [user])
-  const lastName = useMemo(() => {
-    return user.lastName
-  }, [user])
-  const profilePictureURL = useMemo(() => {
-    return user.profilePictureURL
-  }, [user])
+  const { data: userData } = useQuery('user', fetchUserInformation, { initialData: user })
 
-  const setFirstName = (f) => {
-    user.firstName = f
-    console.log(user.firstName)
-  }
+  const { register, handleSubmit } = useForm<UpdateProfileModel>({
+    defaultValues: {
+      username: user.username,
+      email: user.email,
+      displayName: user.displayName,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      location: user.location,
+    },
+  })
 
-  const setLastName = (l) => {
-    user.lastName = l
-    console.log(user.lastName)
-  }
+  const onSubmit: SubmitHandler<UpdateProfileModel> = async (data) => {
+    delete data.email
+    delete data.username
 
-  const setProfilePictureURL = (url) => {
-    user.profilePictureURL = url
-    console.log(user.profilePictureURL)
+    await toast.promise(httpClient.put('profile/edit', data), {
+      loading: 'Loading...',
+      success: 'Update your profile successful.',
+      error: 'An error occur',
+    })
   }
 
   return (
-    <Stack direction="column" spacing={1}>
-      <Typography variant="title3" mt={4}>
-        Edit profile
-      </Typography>
-      <CompactPrpfile
-        username={user.username}
-        displayName={displayName}
-        profileUrl={profilePictureURL}
-        editable
-        onUpload={(e) => {
-          console.log(e.target.value)
-          setProfilePictureURL(e.target.value)
-        }}
-      />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Stack direction="column" spacing={1}>
+        <Typography variant="title3" mt={4}>
+          Edit profile
+        </Typography>
 
-      <Typography variant="regular" fontWeight={500} pt={1}>
-        Username
-      </Typography>
-      <TextField variant="filled" disabled value={user.username} />
+        <CompactPrpfile
+          username={user.username}
+          displayName={user.displayName}
+          // profileUrl={profilePictureURL}
+          editable
+          // onUpload={(e) => {
+          //   console.log(e.target.value)
+          //   // setProfilePictureURL(e.target.value)
+          // }}
+        />
 
-      <Typography variant="regular" fontWeight={500} pt={1}>
-        Email
-      </Typography>
-      <TextField variant="filled" disabled value={user.email} />
+        <Typography variant="regular" fontWeight={500} pt={1}>
+          Username
+        </Typography>
+        <TextField
+          variant="filled"
+          disabled
+          defaultValue={user.username ?? ''}
+          {...register('username')}
+        />
 
-      <Typography variant="regular" fontWeight={500} pt={1}>
-        Display name
-      </Typography>
-      <TextField
-        defaultValue={displayName}
-        onChange={(e) => {
-          console.log(e.target.value)
-        }}
-      />
+        <Typography variant="regular" fontWeight={500} pt={1}>
+          Email
+        </Typography>
+        <TextField
+          variant="filled"
+          disabled
+          defaultValue={user.email ?? ''}
+          {...register('email')}
+        />
 
-      <Typography variant="regular" fontWeight={500} pt={1}>
-        First name
-      </Typography>
-      <TextField
-        defaultValue={firstName}
-        onChange={(e) => {
-          setFirstName(e.target.value)
-        }}
-      />
+        <Typography variant="regular" fontWeight={500} pt={1}>
+          Display name
+        </Typography>
+        <TextField defaultValue={user.displayName ?? ''} {...register('displayName')} />
 
-      <Typography variant="regular" fontWeight={500} pt={1}>
-        Last name
-      </Typography>
-      <TextField
-        defaultValue={lastName}
-        onChange={(e) => {
-          setLastName(e.target.value)
-        }}
-      />
+        <Typography variant="regular" fontWeight={500} pt={1}>
+          First name
+        </Typography>
+        <TextField defaultValue={user.firstName ?? ''} {...register('firstName')} />
 
-      <Typography variant="regular" fontWeight={500} pt={1}>
-        Location
-      </Typography>
-      <CountrySelect
-        // textFieldProps={{ value: user.location }}
-        // value={user.location}
-        onChange={(e) => {
-          console.log(e)
-        }}
-      />
+        <Typography variant="regular" fontWeight={500} pt={1}>
+          Last name
+        </Typography>
+        <TextField defaultValue={user.lastName ?? ''} {...register('lastName')} />
 
-      <Button
-        variant="contained"
-        style={{ marginTop: '24px' }}
-        // onSubmit={() => {
-        //   submitNewProfile()
-        // }}
-      >
-        Update Profile
-      </Button>
-    </Stack>
+        <Typography variant="regular" fontWeight={500} pt={1}>
+          Location
+        </Typography>
+        <CountrySelect
+          // textFieldProps={{ value: user.location }}
+          // value={user.location}
+          // onChange={(e) => {
+          //   console.log(e)
+          // }}
+          // onSelect={(e) => {
+          //   // console.log(e.target.value)
+          // }}
+          defaultValue={user.location ?? ''}
+          {...register('location')}
+        />
+
+        <Button variant="contained" style={{ marginTop: '24px' }} type="submit">
+          Update Profile
+        </Button>
+      </Stack>
+    </form>
   )
 }
 
