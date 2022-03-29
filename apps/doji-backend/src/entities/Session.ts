@@ -1,66 +1,27 @@
-import { ISession } from '@libs/api'
-import {
-  Collection,
-  Entity,
-  Enum,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  PrimaryKey,
-  Property,
-} from '@mikro-orm/core'
+import { IReview, ISession } from '@libs/api'
+import { Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Property } from '@mikro-orm/core'
+import { randomUUID } from 'crypto'
 
-import { Service } from '../entities/Service'
-import { User } from '../entities/User'
 import { Review } from './Review'
-
-export enum SessionStatus {
-  PENDING = 'pending',
-  ACCEPTED = 'accepted',
-  ENDED = 'ended',
-  REVIEWED = 'reviewed',
-  CANCELED = 'canceled',
-}
+import { User } from './User'
 
 @Entity()
 export class Session implements ISession {
   @PrimaryKey()
-  id!: number
+  id: string = randomUUID()
 
-  @Property()
-  meetingProviderId: string
-
-  @Property()
-  fee: number
-
-  @Property()
-  coinOnHold: number
-
-  @Enum(() => SessionStatus)
-  @Property({ default: SessionStatus.PENDING, nullable: true })
-  status?: SessionStatus = SessionStatus.PENDING
+  @ManyToOne(() => User, { primary: true })
+  owner: User
 
   @Property()
   topic: string
 
   @Property()
-  duration: number
+  fee: number
 
   @Property()
-  startTime: Date
-
-  @Property()
-  sourceId: string
-
-  @ManyToOne(() => User)
-  creator: User
-
-  @ManyToOne(() => Service)
-  service: Service
-
-  @ManyToMany(() => User, 'sessions', { owner: true })
-  participants = new Collection<User>(this)
+  description: string
 
   @OneToMany(() => Review, (review) => review.session)
-  reviews = new Collection<Review>(this)
+  reviews = new Collection<IReview>(this)
 }

@@ -15,6 +15,6 @@ export const mockUserData: IUser[] = [
     location: 'Bangkok',
     googleEmail: 'John.D@gmail.com',
     profilePictureURL: 'https://mui.com/static/images/avatar/3.jpg',
-    sessions: [] as any,
+    schedules: [] as any,
   },
 ]

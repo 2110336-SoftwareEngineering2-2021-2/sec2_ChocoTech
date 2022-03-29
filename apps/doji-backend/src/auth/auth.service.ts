@@ -2,6 +2,7 @@ import { UserRegistrationRequestDTO } from '@backend/auth/auth.dto'
 import { InvalidToken } from '@backend/auth/auth.exception'
 import { User } from '@backend/entities/User'
 import { environment } from '@backend/environments/environment'
+import { createGoogleOAuth2Client } from '@backend/utils/google'
 import {
   RedisKeyType,
   deserializeUserReference,
@@ -38,11 +39,7 @@ interface ILogin {
 
 @Injectable()
 export class AuthService {
-  private readonly oauth2Client = new google.auth.OAuth2(
-    environment.googleOAuth.clientId,
-    environment.googleOAuth.clientSecret,
-    `${environment.domain.backend}/auth/google/callback`,
-  )
+  private readonly oauth2Client = createGoogleOAuth2Client()
   private readonly oauth2 = google.oauth2({
     version: 'v2',
     auth: this.oauth2Client,

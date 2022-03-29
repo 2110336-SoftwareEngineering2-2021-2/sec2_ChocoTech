@@ -1,5 +1,6 @@
 import { Review } from '@backend/entities/Review'
 import { Session } from '@backend/entities/Session'
+import { User } from '@backend/entities/User'
 import { ReviewCreationRequestDTO } from '@backend/review/review.dto'
 import { IUserReference } from '@libs/api'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
@@ -35,7 +36,7 @@ export class ReviewService {
     return
   }
 
-  async getAllReviews(sessionId: number) {
+  async getAllReviews(sessionId: string) {
     const reviewList = await this.reviewRepo.find(
       {
         session: { id: sessionId },
@@ -45,5 +46,17 @@ export class ReviewService {
       },
     )
     return reviewList
+  }
+  async reportReview(rid: string, userRef: IUserReference) {
+    const user = await userRef.getUser()
+    const review = await this.reviewRepo.findOne({ id: rid })
+    if (!review) {
+      throw new NotFoundException('Review not found')
+    }
+    await review.reportByUser.init()
+    review.reportByUser.add(user as User)
+    this.reviewRepo.flush()
+
+    return
   }
 }

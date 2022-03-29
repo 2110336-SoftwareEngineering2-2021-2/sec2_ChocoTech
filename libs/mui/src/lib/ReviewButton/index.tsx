@@ -1,21 +1,14 @@
-import { IconButton } from '@mui/material'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
+import { httpClient } from '@frontend/services'
+import { IconButton, Menu, MenuItem } from '@mui/material'
+import axios from 'axios'
 
-import * as React from 'react'
+import React from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 
-import SessionHistoryCancelButton from './SessionHistoryCancelButton'
-
-export interface SessionInfo {
-  sessionId: string
-  expertName: string
-  title: string
-  hasPenalty: boolean
-  deductAmount: number
-  refundAmount: number
+export interface ReviewMenuProps {
+  id: string
 }
-export function SessionHistoryCardMenu(props: SessionInfo) {
+function ReviewMenu(props: ReviewMenuProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -24,9 +17,11 @@ export function SessionHistoryCardMenu(props: SessionInfo) {
   const handleClose = () => {
     setAnchorEl(null)
   }
-
+  async function reportReview() {
+    await httpClient.post(`review/report/${props.id}`)
+  }
   return (
-    <div>
+    <>
       <IconButton
         aria-label="more"
         id="basic-button"
@@ -42,15 +37,14 @@ export function SessionHistoryCardMenu(props: SessionInfo) {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        transformOrigin={{ vertical: 0, horizontal: 45 }}
+        transformOrigin={{ vertical: 0, horizontal: 47.5 }}
         MenuListProps={{
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem>
-          <SessionHistoryCancelButton {...props} />
-        </MenuItem>
+        <MenuItem onClick={reportReview}>Report</MenuItem>
       </Menu>
-    </div>
+    </>
   )
 }
+export default ReviewMenu
