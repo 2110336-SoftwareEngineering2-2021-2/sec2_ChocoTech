@@ -9,12 +9,12 @@ export interface SessionHistoryCardProps extends ISchedule {}
 export function SessionHistoryCard(props: SessionHistoryCardProps) {
   function refundAmount() {
     if (hasPenalty()) {
-      return props.fee - deductAmount()
+      return props.session.fee - deductAmount()
     }
-    return props.fee
+    return props.session.fee
   }
   function deductAmount() {
-    return props.fee * 0.3
+    return props.session.fee * 0.3
   }
   function hasPenalty() {
     const dateStart = props.startTime
