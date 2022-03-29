@@ -3,10 +3,14 @@ import { httpClient } from '@frontend/services'
 import { IMeResponseDTO } from '@libs/api'
 import { CompactProfile } from '@libs/mui'
 import { List, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material'
+import { AxiosError } from 'axios'
 import Link from 'next/link'
+import router from 'next/router'
 
 import { ReactNode, useMemo } from 'react'
+import { toast } from 'react-hot-toast'
 import { FiDollarSign, FiEdit2, FiLayers, FiLock, FiLogOut } from 'react-icons/fi'
+import { useMutation } from 'react-query'
 
 import { ExpertCard } from './styled'
 
@@ -14,6 +18,10 @@ interface ListItemProps {
   href: string
   text: string
   icon: ReactNode
+}
+
+const expertApplicationRequest = async () => {
+  await httpClient.post(`/expert/application`, {})
 }
 
 const ListItem: React.FC<ListItemProps> = ({ href, text, icon }) => {
@@ -38,9 +46,17 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ user }) => {
     return user.username
   }, [user])
 
+  const expertApplicationMutation = useMutation(expertApplicationRequest, {
+    onSuccess: () => {
+      toast.success('Application successfull')
+    },
+    onError: (error: AxiosError) => {
+      toast.error(error.response.data.message)
+    },
+  })
+
   const handleExpertApp = async () => {
-    const { data } = await httpClient.post(`/expert/application`, {})
-    return data
+    await expertApplicationMutation.mutate()
   }
   return (
     <Stack direction="column">
