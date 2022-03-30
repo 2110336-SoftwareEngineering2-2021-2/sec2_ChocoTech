@@ -1,7 +1,7 @@
 import { User } from '@backend/entities/User'
 import { WorkHistory } from '@backend/entities/WorkHistory'
+import { IUserReference } from '@backend/types'
 import { WorkHistoryRequestDTO } from '@backend/work-history/work-history.dto'
-import { IUserReference } from '@libs/api'
 import { EntityRepository, NotFoundError } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'

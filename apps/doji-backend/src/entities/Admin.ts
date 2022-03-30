@@ -1,8 +1,7 @@
-import { IAdmin } from '@libs/api'
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core'
 
 @Entity()
-export class Admin implements IAdmin {
+export class Admin {
   @PrimaryKey()
   username: string
 
@@ -11,4 +10,11 @@ export class Admin implements IAdmin {
 
   //   @OneToMany(() => User, (user) => user.verifiedByAdmin)
   //   aprovedExpert = new Collection<User>(this)
+
+  toJSON() {
+    return {
+      username: this.username,
+      passwordHash: this.passwordHash,
+    }
+  }
 }

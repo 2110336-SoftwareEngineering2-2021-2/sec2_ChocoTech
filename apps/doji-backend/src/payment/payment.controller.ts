@@ -8,7 +8,7 @@ import {
   WithdrawalRequest,
 } from '@backend/payment/payment.dto'
 import { PaymentService } from '@backend/payment/payment.service'
-import { IUserReference } from '@libs/api'
+import { IUserReference } from '@backend/types'
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import Omise from 'omise'

@@ -1,5 +1,5 @@
-import { WorkHistory } from '@backend/entities/WorkHistory'
-import { IAdminCreationRequestDTO, IApproveExpertDetailDTO, IChangeUserRoleDTO } from '@libs/api'
+import { IAdminCreationRequestDTO, IApproveExpertDetailDTO, IWorkHistory } from '@libs/api'
+import { IChangeUserRoleDTO } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsEnum, IsString } from 'class-validator'
 
@@ -35,7 +35,7 @@ export class ApproveExpertDetailDTO implements IApproveExpertDetailDTO {
   profilePictureURL: string
 
   @ApiProperty()
-  workHistory: WorkHistory[]
+  workHistory: IWorkHistory[]
 }
 
 export class ChangeUserRoleDTO implements IChangeUserRoleDTO {

@@ -1,16 +1,9 @@
 import { UserRole } from '@libs/api'
 import { ISchedule } from 'libs/api/src/lib/entities/Schedule'
 
-import { IUser } from '../entities/User'
-
 export enum CookieKey {
   ACCESS_TOKEN = 'ACCESS_TOKEN',
   GOOGLE_ACCESS_TOKEN = 'GOOGLE_ACCESS_TOKEN',
-}
-
-export interface IUserReference<T extends IUser = IUser> {
-  username: string
-  getUser: <K extends T = T>() => Promise<K>
 }
 
 export interface IUserResponseDTO {

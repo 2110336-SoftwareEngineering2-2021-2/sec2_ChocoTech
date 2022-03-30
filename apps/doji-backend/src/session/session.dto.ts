@@ -1,12 +1,11 @@
 import { Review } from '@backend/entities/Review'
 import { ScheduleStatus } from '@backend/entities/Schedule'
-import { Session } from '@backend/entities/Session'
-import { User } from '@backend/entities/User'
 import {
   ICreateSessionRequestDTO,
   IScheduleSessionDTO,
   IScheudleResponseDTO,
   ISession,
+  IUser,
 } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
@@ -51,7 +50,7 @@ export class ScheduleSessionDTO implements IScheduleSessionDTO {
 
 export class SessionInfoResponseDTO implements Omit<ISession, 'reviews'> {
   id: string
-  owner: User
+  owner: IUser
   topic: string
   fee: number
   description: string
@@ -60,13 +59,13 @@ export class SessionInfoResponseDTO implements Omit<ISession, 'reviews'> {
 
 export class ScheudleResponseDTO implements IScheudleResponseDTO {
   id: string
-  session: Session
-  creator: User
+  session: ISession
+  creator: IUser
   coinOnHold: number
   status: ScheduleStatus
   duration: number
   startTime: Date
   meetId?: string
   meetUrl?: string
-  participants: User[]
+  participants: IUser[]
 }

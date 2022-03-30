@@ -1,5 +1,4 @@
 import { IReview, IUser } from '@libs/api'
-import { Collection } from '@mikro-orm/core'
 
 export interface ISession {
   id: string
@@ -7,5 +6,5 @@ export interface ISession {
   owner: IUser
   topic: string
   description: string
-  reviews: Collection<IReview>
+  reviews: IReview[]
 }

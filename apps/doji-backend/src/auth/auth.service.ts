@@ -2,6 +2,7 @@ import { UserRegistrationRequestDTO } from '@backend/auth/auth.dto'
 import { InvalidToken } from '@backend/auth/auth.exception'
 import { User } from '@backend/entities/User'
 import { environment } from '@backend/environments/environment'
+import { IUserReference } from '@backend/types'
 import { createGoogleOAuth2Client } from '@backend/utils/google'
 import {
   RedisKeyType,
@@ -10,7 +11,6 @@ import {
   generateRedisKey,
   serializeUserReference,
 } from '@backend/utils/redis'
-import { IUserReference } from '@libs/api'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import {

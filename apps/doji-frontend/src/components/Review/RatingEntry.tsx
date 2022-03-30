@@ -1,6 +1,5 @@
 import { httpClient } from '@frontend/services'
-import { IPublicSessionReviewResponseDTO } from '@libs/api'
-import { ReviewMenu } from '@libs/mui'
+import { IReview } from '@libs/api'
 import { Avatar, Stack, Typography, useTheme } from '@mui/material'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -8,7 +7,7 @@ import toast from 'react-hot-toast'
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
 import { useMutation } from 'react-query'
 
-function ReviewEntry(props: { data: IPublicSessionReviewResponseDTO }) {
+function ReviewEntry(props: { data: IReview }) {
   const theme = useTheme()
   const reportReviewMutation = useMutation(async () => {
     return (await httpClient.post('/path')).data
@@ -27,10 +26,10 @@ function ReviewEntry(props: { data: IPublicSessionReviewResponseDTO }) {
           {/*TODO Avatar*/}
           <Avatar src="https://mui.com/static/images/avatar/2.jpg" sx={{ width: 24, height: 24 }} />
           <Typography variant="small" fontWeight={400}>
-            {props.data.authorName}
+            {props.data.user}
           </Typography>
         </Stack>
-        <ReviewMenu id={props.data.id} onReport={handleReport} />
+        {/* <ReviewMenu id={props.data.id} onReport={handleReport} /> */}
       </Stack>
       <Stack direction="row" alignItems="center" spacing="2em">
         <Stack direction="row">

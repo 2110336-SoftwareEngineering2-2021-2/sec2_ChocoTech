@@ -1,4 +1,3 @@
-import { IReview, ISession } from '@libs/api'
 import { Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Property } from '@mikro-orm/core'
 import { randomUUID } from 'crypto'
 
@@ -6,7 +5,7 @@ import { Review } from './Review'
 import { User } from './User'
 
 @Entity()
-export class Session implements ISession {
+export class Session {
   @PrimaryKey()
   id: string = randomUUID()
 
@@ -23,5 +22,5 @@ export class Session implements ISession {
   description: string
 
   @OneToMany(() => Review, (review) => review.session)
-  reviews = new Collection<IReview>(this)
+  reviews = new Collection<Review>(this)
 }

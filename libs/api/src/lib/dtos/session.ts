@@ -42,6 +42,15 @@ export interface ISessionResponseDTO {
   topic: string
   description: string
   reviews: IReview[]
+}
+
+export interface ISessionStatResponseDTO {
+  id: string
+  fee: number
+  owner: IUser
+  topic: string
+  description: string
+  reviews: IReview[]
   reviewStat: IReviewStatResponseDTO
 }
 

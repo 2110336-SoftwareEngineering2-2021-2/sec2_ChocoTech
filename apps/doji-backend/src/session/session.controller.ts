@@ -1,17 +1,16 @@
 import { CurrentUser, ExpertAuthGuard, UserAuthGuard } from '@backend/auth/user.guard'
-import { User } from '@backend/entities/User'
 import {
   CreateSessionRequestDTO,
   ScheduleSessionDTO,
   ScheudleResponseDTO,
 } from '@backend/session/session.dto'
 import { SessionService } from '@backend/session/session.service'
+import { IUserReference } from '@backend/types'
 import {
   IChangeScheduleStatusRequestDTO,
   IScheudleResponseDTO,
   ISession,
-  ISessionResponseDTO,
-  IUserReference,
+  ISessionStatResponseDTO,
 } from '@libs/api'
 import {
   Body,
@@ -41,11 +40,10 @@ export class SessionController {
 
   @Get(':sessionId')
   @UseGuards(UserAuthGuard)
-  async getService(@Param('sessionId') sessionId: string): Promise<ISessionResponseDTO> {
+  async getSession(@Param('sessionId') sessionId: string): Promise<ISessionStatResponseDTO> {
     const session = await this.sessionService.getSession(sessionId)
     return {
       ...session,
-      reviews: session.reviews.getItems(),
       reviewStat: await this.sessionService.calculateReviewStatForSession(session),
     }
   }
@@ -57,7 +55,7 @@ export class SessionController {
     @Body() dto: CreateSessionRequestDTO,
     @CurrentUser() userRef: IUserReference,
   ): Promise<ISession> {
-    const user = await userRef.getUser<User>()
+    const user = await userRef.getUser()
     return await this.sessionService.create(dto, user)
   }
 
@@ -66,7 +64,7 @@ export class SessionController {
   @ApiOperation({ description: 'Get all schedules of current user' })
   @ApiCookieAuth()
   async getMySchedule(@CurrentUser() userRef: IUserReference): Promise<IScheudleResponseDTO[]> {
-    const user = await userRef.getUser<User>()
+    const user = await userRef.getUser()
     const schedules = await this.sessionService.getMySchedules(user)
     return schedules
   }
@@ -78,7 +76,7 @@ export class SessionController {
   async getRequestedSchedule(
     @CurrentUser() userRef: IUserReference,
   ): Promise<ScheudleResponseDTO[]> {
-    const user = await userRef.getUser<User>()
+    const user = await userRef.getUser()
     return await this.sessionService.getRequestedSchedule(user)
   }
 
@@ -89,7 +87,7 @@ export class SessionController {
     @Body() dto: ScheduleSessionDTO,
     @CurrentUser() userRef: IUserReference,
   ): Promise<IScheudleResponseDTO> {
-    const user = await userRef.getUser<User>()
+    const user = await userRef.getUser()
     return await this.sessionService.schedule(dto, user)
   }
 
@@ -114,7 +112,7 @@ export class SessionController {
     @Param('sessionId') sessionId: string,
     @CurrentUser() userRef: IUserReference,
   ) {
-    const user = await userRef.getUser<User>()
+    const user = await userRef.getUser()
     await this.sessionService.removeParticipant(sessionId, user)
   }
 
