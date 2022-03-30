@@ -12,7 +12,13 @@ import {
 } from '@backend/session/session.dto'
 import { createGoogleOAuth2Client } from '@backend/utils/google'
 import { parseReviewStatFromAggreationResult } from '@backend/utils/review'
-import { IReviewStatResponseDTO, ISchedule, IScheudleResponseDTO, ISession } from '@libs/api'
+import {
+  IReviewStatResponseDTO,
+  ISchedule,
+  IScheduleResponseDTO,
+  ISession,
+  ISessionStatResponseDTO,
+} from '@libs/api'
 import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { EntityManager } from '@mikro-orm/postgresql'
@@ -31,14 +37,15 @@ export class SessionService {
     private readonly transaction: CoinTransactionService,
   ) {}
 
-  async getSession(sessionId: string): Promise<ISession> {
+  async getSession(sessionId: string): Promise<ISessionStatResponseDTO> {
     const session = await this.sessionRepo.findOne({ id: sessionId }, [
       'owner',
       'reviews',
       'reviews.user',
     ])
-
-    return wrap(session).toJSON() as ISession
+    const sessionJSON = wrap(session).toJSON()
+    const reviewStat = await this.calculateReviewStatForSession(sessionId)
+    return { ...sessionJSON, reviewStat } as ISessionStatResponseDTO
   }
 
   async getAllSessions(): Promise<ISession[]> {
@@ -223,7 +230,7 @@ export class SessionService {
     return wrap(schedule).toJSON() as ISchedule
   }
 
-  async getMySchedules(user: User): Promise<IScheudleResponseDTO[]> {
+  async getMySchedules(user: User): Promise<IScheduleResponseDTO[]> {
     await user.schedules.init()
     const schedules = user.schedules.getItems()
     const schedulesJSON = schedules.map((s) => wrap(s).toJSON())
@@ -249,13 +256,13 @@ export class SessionService {
     }
   }
 
-  async calculateReviewStatForSession(session: ISession): Promise<IReviewStatResponseDTO> {
+  async calculateReviewStatForSession(sessionId: string): Promise<IReviewStatResponseDTO> {
     const counts: { rating: number; count: string }[] = await this.em
       .createQueryBuilder(Session, 's')
       .select(['r.rating', 'count(*)'])
       .leftJoin('s.reviews', 'r')
       .groupBy('r.rating')
-      .where({ id: session.id })
+      .where({ id: sessionId })
       .execute()
 
     return parseReviewStatFromAggreationResult(counts)

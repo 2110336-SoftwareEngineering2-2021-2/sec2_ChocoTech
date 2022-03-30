@@ -58,7 +58,7 @@ export interface IChangeScheduleStatusRequestDTO {
   status: ScheduleStatus
 }
 
-export interface IScheudleResponseDTO {
+export interface IScheduleResponseDTO {
   id: string
   session: ISession
   creator: IUser
