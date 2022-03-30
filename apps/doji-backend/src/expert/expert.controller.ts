@@ -24,11 +24,8 @@ export class ExpertAppController {
   @Post('application')
   @UseGuards(UserAuthGuard)
   @ApiCookieAuth()
-  async applicationRequest(
-    @Body() dto: ExpertApplicationRequest,
-    @CurrentUser() user: IUserReference,
-  ) {
-    await this.expertAppService.applicationRequest(dto, user)
+  async applicationRequest(@CurrentUser() user: IUserReference) {
+    await this.expertAppService.applicationRequest(user)
     return
   }
   // TODO: AdminGuard

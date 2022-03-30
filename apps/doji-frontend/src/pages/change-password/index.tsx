@@ -56,7 +56,7 @@ const ChangePasswordPage: ExtendedNextPage = () => {
   }
 
   return (
-    <Stack component="form" noValidate onSubmit={handleSubmit(onSubmit)} spacing={2}>
+    <Stack component="form" noValidate onSubmit={handleSubmit(onSubmit)} spacing={2} m={3}>
       <TextField
         {...register('oldPassword')}
         type="password"
@@ -78,10 +78,8 @@ const ChangePasswordPage: ExtendedNextPage = () => {
         error={!!errors.confirmPassword}
         helperText={errors.confirmPassword?.message}
       ></TextField>
-      <Button type="submit" variant="contained" sx={{ p: 2 }}>
-        <Typography variant="large" fontWeight="400">
-          Change password
-        </Typography>
+      <Button type="submit" sx={{ p: 2 }}>
+        Change password
       </Button>
     </Stack>
   )
