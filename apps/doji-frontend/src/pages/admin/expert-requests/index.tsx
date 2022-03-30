@@ -64,14 +64,11 @@ function ExpertRequest() {
     })
   }
   return (
-    <Stack>
-      <br />
-      <Typography fontWeight={700} variant="h4">
+    <Stack m={4} spacing={3}>
+      <Typography fontWeight={700} variant="title3">
         Expert Requests
       </Typography>
-      <br />
       <SearchBar ref={ref} />
-      <br />
       <Stack>
         {requestList.map((value: IExpertApplicationListItemDTO) => {
           return (
