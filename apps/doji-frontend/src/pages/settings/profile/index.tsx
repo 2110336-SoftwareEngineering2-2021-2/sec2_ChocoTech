@@ -103,18 +103,7 @@ const Index: React.FC<SettingsPageProps> = ({ user }) => {
         <Typography variant="regular" fontWeight={500} pt={1}>
           Location
         </Typography>
-        <CountrySelect
-          // textFieldProps={{ value: user.location }}
-          // value={user.location}
-          // onChange={(e) => {
-          //   console.log(e)
-          // }}
-          // onSelect={(e) => {
-          //   // console.log(e.target.value)
-          // }}
-          defaultValue={user.location ?? ''}
-          {...register('location')}
-        />
+        <CountrySelect register={register('location')} />
 
         <Button variant="contained" style={{ marginTop: '24px' }} type="submit">
           Update Profile

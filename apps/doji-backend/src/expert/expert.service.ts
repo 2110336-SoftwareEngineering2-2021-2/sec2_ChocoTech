@@ -64,7 +64,7 @@ export class ExpertAppService {
     const query = this.entityManager
       .createQueryBuilder(Review, 'r')
       .select(['r.rating', 'count(*)'])
-      .where({ session: { creator: expert } })
+      .where({ session: { owner: expert } })
       .groupBy('r.rating')
 
     return parseReviewStatFromAggreationResult(await query.execute())
