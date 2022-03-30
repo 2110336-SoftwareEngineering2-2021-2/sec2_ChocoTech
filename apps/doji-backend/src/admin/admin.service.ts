@@ -51,8 +51,7 @@ export class AdminService {
     }
     return {
       username: user.username,
-      firstname: user.firstName,
-      lastname: user.lastName,
+      displayName: user.displayName,
       profilePictureURL: user.profilePictureURL,
       workHistory: wrap(workHistory).toJSON() as IWorkHistory[],
     }
