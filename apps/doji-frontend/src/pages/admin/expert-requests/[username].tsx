@@ -60,7 +60,6 @@ function Index() {
         username={username}
         displayName={data.displayName}
         profileUrl={data.profilePictureURL}
-        isExpert
       />
       <Typography variant="regular" color="sky.main" pl={3}>
         Working history and Acheivement
