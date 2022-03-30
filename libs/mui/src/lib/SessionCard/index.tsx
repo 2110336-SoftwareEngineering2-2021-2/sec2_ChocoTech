@@ -17,7 +17,7 @@ export interface SessionCardProps extends ISession {
 }
 export function SessionCard(props: SessionCardProps) {
   return (
-    <Stack py={2} spacing={1.5} onClick={props.onClick}>
+    <Stack py={2} spacing={1.5} onClick={props.onClick} sx={{ cursor: 'pointer' }}>
       <Stack direction="row" justifyContent="space-between">
         <div>
           <Typography variant="large" fontWeight={700}>

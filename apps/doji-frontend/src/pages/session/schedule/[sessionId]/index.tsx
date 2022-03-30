@@ -53,21 +53,24 @@ const TotalPrice = ({ control, fee }: { control: Control<ScheduleModel>; fee: nu
   }
 
   return (
-    <Container>
-      <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
-        <Typography variant="large" fontWeight={700}>
-          Total Price
+    <Stack
+      direction={'row'}
+      justifyContent={'space-between'}
+      alignItems={'center'}
+      sx={{ width: '100%' }}
+    >
+      <Typography variant="large" fontWeight={700}>
+        Total Price
+      </Typography>
+      <Stack direction={'row'}>
+        <Typography variant="large" fontWeight={700} color="primary.dark">
+          {calculateTotal()}
         </Typography>
-        <Stack direction={'row'}>
-          <Typography variant="large" fontWeight={700} color="primary.dark">
-            {calculateTotal()}
-          </Typography>
-          <Typography variant="regular" fontWeight={400} color="primary.dark">
-            &nbsp; Doji coins
-          </Typography>
-        </Stack>
+        <Typography variant="regular" fontWeight={400} color="primary.dark">
+          &nbsp; Doji coins
+        </Typography>
       </Stack>
-    </Container>
+    </Stack>
   )
 }
 
@@ -157,11 +160,9 @@ export default function ScheduleSessionPage() {
   }
 
   return (
-    <Stack flexDirection="column" position="relative" minHeight="sm">
+    <Stack flexDirection="column" position="relative" minHeight="sm" spacing={3}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack direction={'column'}>
-          <br />
-
+        <Stack direction={'column'} spacing={3}>
           <Typography fontWeight={700} variant="title3">
             {sessionData.topic}
           </Typography>
@@ -176,7 +177,7 @@ export default function ScheduleSessionPage() {
                   bgcolor: 'primary.main',
                 },
               }}
-            ></Tables>
+            />
             <Stack direction={'row'}>
               <Typography variant="large" fontWeight={700} color="primary.dark">
                 {sessionData.fee}
@@ -186,12 +187,9 @@ export default function ScheduleSessionPage() {
               </Typography>
             </Stack>
           </Stack>
-          <br />
-          <Typography variant="regular" fontWeight={400}>
+          <Typography variant="regular" fontWeight={400} pb={4}>
             {sessionData.description}
           </Typography>
-          <br />
-          <br />
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <Controller
               name="date"
@@ -213,11 +211,9 @@ export default function ScheduleSessionPage() {
                   )}
                 />
               )}
-            ></Controller>
+            />
           </LocalizationProvider>
-          <br />
-          <br />
-          <Stack direction={'row'}>
+          <Stack direction={'row'} spacing={2} justifyContent="space-between">
             <TimePickerController
               name="startTime"
               control={control}
@@ -225,7 +221,8 @@ export default function ScheduleSessionPage() {
               registerName="startTime"
               label="Start Time"
               errors={errors.startTime}
-            ></TimePickerController>
+              fullWidth
+            />
             <TimePickerController
               name="endTime"
               control={control}
@@ -233,27 +230,23 @@ export default function ScheduleSessionPage() {
               registerName="endTime"
               label="End Time"
               errors={errors.endTime}
-            ></TimePickerController>
+              fullWidth
+            />
           </Stack>
-          <br />
-          <br />
           <Typography variant="large" fontWeight={700}>
             Participants
           </Typography>
-          <br />
           <Controller
             name="participants"
             control={control}
             render={({ field: { onChange, value } }) => <TagsInput onChange={onChange} />}
-          ></Controller>
-          <br />
-        </Stack>
-        <Stack alignItems="center" display="flex" direction={'column'} p={2} sx={{ bg: 'white' }}>
-          <TotalPrice control={control} fee={sessionData.fee} />
-          <br />
-          <Button fullWidth type="submit">
-            Schedule
-          </Button>
+          />
+          <Stack direction="column" spacing={5}>
+            <TotalPrice control={control} fee={sessionData.fee} />
+            <Button fullWidth type="submit">
+              Schedule
+            </Button>
+          </Stack>
         </Stack>
       </form>
       <ConfirmDialog
