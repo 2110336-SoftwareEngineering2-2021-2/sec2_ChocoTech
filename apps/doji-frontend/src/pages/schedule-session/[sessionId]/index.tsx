@@ -155,7 +155,14 @@ export default function ScheduleSessionPage() {
           <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
             <Tables
               content={'by ' + sessionData.owner.firstName + ' ' + sessionData.owner.lastName}
-              avatar={<Avatar></Avatar>}
+              avatar={{
+                alt: 'Robert William',
+                children: sessionData.owner.firstName?.charAt(0),
+                src: sessionData.owner.profilePictureURL,
+                sx: {
+                  bgcolor: 'primary.main',
+                },
+              }}
             ></Tables>
             <Stack direction={'row'}>
               <Typography variant="large" fontWeight={700} color="primary.dark">
