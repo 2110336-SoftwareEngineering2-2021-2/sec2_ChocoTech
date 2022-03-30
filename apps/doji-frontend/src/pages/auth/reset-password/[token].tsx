@@ -29,7 +29,7 @@ const ResetPassword: ExtendedNextPage = () => {
   const token = router.query.token
 
   const resetPasswordRequest = async (formData: IUserResetPasswordRequest): Promise<void> => {
-    await httpClient.post<IUserResetPasswordRequest>('/auth/reset-password/' + token)
+    await httpClient.post<IUserResetPasswordRequest>('/auth/reset-password/' + token, formData)
   }
 
   const {
