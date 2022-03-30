@@ -107,7 +107,7 @@ export class SessionService {
     schedule.startTime = dto.startTime
     schedule.participants.add(creator)
     try {
-      await this.transaction.withdrawUserAccount(creator, dto.coinOnHold, '')
+      await this.transaction.payForService(creator, dto.coinOnHold)
     } catch (e) {
       if (e instanceof InsufficientFundError) {
         throw new HttpException('Insufficient coin', HttpStatus.NOT_ACCEPTABLE)
