@@ -69,7 +69,7 @@ export class SessionService {
     const schedule = new Schedule()
     schedule.creator = creator
     schedule.session = session
-    schedule.coinOnHold = 0
+    schedule.coinOnHold = dto.coinOnHold
     schedule.duration = dto.duration
     schedule.startTime = dto.startTime
     schedule.participants.add(creator)

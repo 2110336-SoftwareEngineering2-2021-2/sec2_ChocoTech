@@ -11,6 +11,7 @@ export interface IScheduleSessionDTO {
   sessionId: string
   duration: number
   startTime: Date
+  coinOnHold: number
   participantsUsername: string[]
 }
 
