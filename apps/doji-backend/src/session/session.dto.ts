@@ -1,4 +1,12 @@
-import { ICreateSessionRequestDTO, IScheduleSessionDTO } from '@libs/api'
+import { Review } from '@backend/entities/Review'
+import { ScheduleStatus } from '@backend/entities/Schedule'
+import {
+  ICreateSessionRequestDTO,
+  IScheduleSessionDTO,
+  IScheudleResponseDTO,
+  ISession,
+  IUser,
+} from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
 import { IsArray, IsDate, IsNumber, IsString } from 'class-validator'
@@ -38,4 +46,26 @@ export class ScheduleSessionDTO implements IScheduleSessionDTO {
   @ApiProperty()
   @IsNumber()
   coinOnHold: number
+}
+
+export class SessionInfoResponseDTO implements Omit<ISession, 'reviews'> {
+  id: string
+  owner: IUser
+  topic: string
+  fee: number
+  description: string
+  reviews: Review[]
+}
+
+export class ScheudleResponseDTO implements IScheudleResponseDTO {
+  id: string
+  session: ISession
+  creator: IUser
+  coinOnHold: number
+  status: ScheduleStatus
+  duration: number
+  startTime: Date
+  meetId?: string
+  meetUrl?: string
+  participants: IUser[]
 }

@@ -16,4 +16,5 @@ export interface ISchedule {
   startTime: Date
   meetId?: string
   meetUrl?: string
+  participants: IUser[]
 }

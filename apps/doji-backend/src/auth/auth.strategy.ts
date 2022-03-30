@@ -1,6 +1,7 @@
 import { InvalidToken } from '@backend/auth/auth.exception'
 import { AuthService } from '@backend/auth/auth.service'
-import { CookieKey, IUserReference } from '@libs/api'
+import { IUserReference } from '@backend/types'
+import { CookieKey } from '@libs/api'
 import { Injectable, Logger } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy } from 'passport-cookie'

@@ -1,5 +1,5 @@
-import { User, UserRole } from '@backend/entities/User'
-import { IUserReference } from '@libs/api'
+import { UserRole } from '@backend/entities/User'
+import { IUserReference } from '@backend/types'
 import { ExecutionContext, Injectable, createParamDecorator } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 
@@ -16,7 +16,7 @@ export class ExpertAuthGuard extends UserAuthGuard {
 
     const request = context.switchToHttp().getRequest()
     const userRef = request.user as IUserReference
-    const user = await userRef.getUser<User>()
+    const user = await userRef.getUser()
 
     if (user && user.role === UserRole.EXPERT) {
       return true

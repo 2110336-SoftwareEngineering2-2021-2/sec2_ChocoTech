@@ -1,11 +1,6 @@
 import { ReviewStatResponseDTO } from '@backend/review/review.dto'
-import {
-  IExpertApplicationListItemDTO,
-  IExpertApplicationQueryDTO,
-  IExpertInfoResponseDTO,
-  IReviewStatResponseDTO,
-} from '@libs/api'
-import { ApiBody, ApiProperty } from '@nestjs/swagger'
+import { IExpertApplicationListItemDTO, IExpertInfoResponseDTO } from '@libs/api'
+import { ApiProperty } from '@nestjs/swagger'
 import { IsString } from 'class-validator'
 
 export class ExpertApplicationRequest {

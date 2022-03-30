@@ -1,4 +1,3 @@
-import { IReview } from '@libs/api'
 import { Collection, Entity, ManyToMany, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
 import { randomUUID } from 'crypto'
 
@@ -6,7 +5,7 @@ import { User } from '../entities/User'
 import { Session } from './Session'
 
 @Entity()
-export class Review implements IReview {
+export class Review {
   @PrimaryKey()
   id: string = randomUUID()
 

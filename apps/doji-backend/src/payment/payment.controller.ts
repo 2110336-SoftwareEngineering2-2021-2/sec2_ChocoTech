@@ -11,7 +11,8 @@ import {
   WithdrawalRequest,
 } from '@backend/payment/payment.dto'
 import { PaymentService } from '@backend/payment/payment.service'
-import { IUserReference } from '@libs/api'
+import { IUserReference } from '@backend/types'
+import { wrap } from '@mikro-orm/core'
 import {
   Body,
   Controller,
@@ -55,7 +56,7 @@ export class PaymentController {
       dto.cardToken,
       dto.isDefault,
     )
-    return updatedUser
+    return wrap(updatedUser).toJSON() as MeResponseDTO
   }
 
   @Delete('cards/:cardId')
