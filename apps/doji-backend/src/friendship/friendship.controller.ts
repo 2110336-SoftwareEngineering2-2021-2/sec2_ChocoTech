@@ -2,7 +2,7 @@ import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { FriendDTO } from '@backend/friendship/friendship.dto'
 import { FriendshipService } from '@backend/friendship/friendship.service'
 import { IUserReference } from '@libs/api'
-import { Controller, Get, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 @Controller('friendship')
@@ -36,7 +36,7 @@ export class FriendshipController {
   })
   @UseGuards(UserAuthGuard)
   @ApiCookieAuth()
-  async getFriendStatus(@CurrentUser() me: IUserReference, them: IUserReference) {
+  async getFriendStatus(@CurrentUser() me: IUserReference, @Body() them: IUserReference) {
     let friendRequest = this.friendshipService.getRequestFrom(me, them)
     if (friendRequest) return { request: friendRequest, status: 'sent' }
     else {

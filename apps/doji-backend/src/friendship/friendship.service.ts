@@ -87,10 +87,14 @@ export class FriendshipService {
     this.friendRequestRepo.persistAndFlush(friendRequest)
   }
 
-  async getFriends(userRef: IUserReference) {
+  async getFriends(userRef: IUserReference): Promise<FriendDTO[]> {
     const user = await userRef.getUser()
     const friends = user.friends
-    return friends
+    return friends.toArray().map((f) => {
+      const friend = new FriendDTO()
+      friend.username = f.username
+      return friend
+    })
   }
 
   //see if I have sent friend request to a user

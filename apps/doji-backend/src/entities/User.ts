@@ -65,6 +65,8 @@ export class User implements IUser {
 
   @ManyToMany(() => User)
   friends = new Collection<IUser>(this)
+
+  something = new Collection<number>(this)
   // @ManyToOne({ nullable: true })
   // verifiedByAdmin!: Admin
 }
