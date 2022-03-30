@@ -1,6 +1,9 @@
 import { MeResponseDTO } from '@backend/auth/auth.dto'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
-import { CoinTransactionService } from '@backend/payment/coin-transaction.service'
+import {
+  CoinTransactionService,
+  InsufficientFundError,
+} from '@backend/payment/coin-transaction.service'
 import {
   AttachCardRequestDTO,
   DepositRequest,
@@ -9,7 +12,16 @@ import {
 } from '@backend/payment/payment.dto'
 import { PaymentService } from '@backend/payment/payment.service'
 import { IUserReference } from '@libs/api'
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UnprocessableEntityException,
+  UseGuards,
+} from '@nestjs/common'
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import Omise from 'omise'
 
@@ -77,6 +89,18 @@ export class PaymentController {
   @ApiOperation({ description: 'Withdraw Doji Coin' })
   @ApiResponse({ status: 422, description: 'Insufficient Fund' })
   async withdraw(@CurrentUser() userRef: IUserReference, @Body() dto: WithdrawalRequest) {
-    await this.paymentService.withdraw(await userRef.getUser(), dto.amount, dto.destinationAccount)
+    try {
+      await this.paymentService.withdraw(
+        await userRef.getUser(),
+        dto.amount,
+        dto.destinationAccount,
+      )
+    } catch (e) {
+      if (e instanceof InsufficientFundError) {
+        throw new UnprocessableEntityException('Insufficient Fund')
+      } else {
+        throw e
+      }
+    }
   }
 }

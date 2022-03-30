@@ -8,11 +8,15 @@ import { Injectable } from '@nestjs/common'
 
 export class CoinTransactionError extends Error {}
 
+export class InsufficientFundError extends Error {}
+
 export class SimpleTransactionBuilder {
   private transaction: CoinTransaction
+  private users: User[]
 
   constructor(private readonly coinTransactionRepo: EntityRepository<CoinTransaction>) {
     this.transaction = new CoinTransaction()
+    this.users = []
   }
 
   setDescription(description: string): SimpleTransactionBuilder {
@@ -35,10 +39,14 @@ export class SimpleTransactionBuilder {
 
     user.coinBalance += coin
 
+    this.users.push(user)
+
     return this
   }
 
   async commit(): Promise<CoinTransaction> {
+    if (this.users.filter((u) => u.coinBalance < 0).length > 0) throw new InsufficientFundError()
+
     await this.coinTransactionRepo.persistAndFlush(this.transaction)
     return this.transaction
   }
