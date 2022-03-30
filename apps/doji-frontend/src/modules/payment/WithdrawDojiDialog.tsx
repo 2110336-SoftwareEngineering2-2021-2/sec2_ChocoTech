@@ -52,6 +52,9 @@ function WithdrawDojiDialog(props: { open: boolean; onClose: () => void }) {
         },
       )
       .then(props.onClose)
+      .catch((e) =>
+        toast.error(e?.response?.data?.message || e?.message || 'Error during withdrawal request'),
+      )
   }
 
   return (
@@ -86,6 +89,7 @@ function WithdrawDojiDialog(props: { open: boolean; onClose: () => void }) {
               control={control}
               name="bank"
               rules={{ required: true }}
+              defaultValue="kbank"
               render={({ field: { onChange, value }, fieldState: { error } }) => (
                 <Select fullWidth onChange={onChange} value={value} error={!!error}>
                   <MenuItem value="kbank">KBank</MenuItem>

@@ -81,11 +81,15 @@ const SelectPaymentPanel = () => {
   )
 
   const handleDeleteCreditCard = async (targetCardId: string) => {
-    toast.promise(deleteCreditCardMutation.mutateAsync({ cardId: targetCardId }), {
-      loading: 'loading',
-      success: 'delete success',
-      error: 'fail to delete card',
-    })
+    toast
+      .promise(deleteCreditCardMutation.mutateAsync({ cardId: targetCardId }), {
+        loading: 'loading',
+        success: 'delete success',
+        error: 'fail to delete card',
+      })
+      .catch((e) =>
+        toast.error(e?.response?.data?.message || e?.message || 'Error during deletion'),
+      )
   }
   if (isLoading || isUserLoading) return null
 

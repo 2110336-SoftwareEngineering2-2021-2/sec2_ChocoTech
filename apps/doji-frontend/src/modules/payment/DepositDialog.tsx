@@ -51,6 +51,9 @@ function DepositDialog(props: { open: boolean; onClose: () => void; cards: Omise
         error: 'Failed to deposit',
       })
       .then(props.onClose)
+      .catch((e) =>
+        toast.error(e?.response?.data?.message || e?.message || 'Error during deposit request'),
+      )
   }
 
   return (
