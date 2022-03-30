@@ -10,11 +10,4 @@ export class Admin {
 
   //   @OneToMany(() => User, (user) => user.verifiedByAdmin)
   //   aprovedExpert = new Collection<User>(this)
-
-  toJSON() {
-    return {
-      username: this.username,
-      passwordHash: this.passwordHash,
-    }
-  }
 }

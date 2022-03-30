@@ -6,10 +6,4 @@ import { User } from './User'
 export class ExpertApp {
   @ManyToOne({ primary: true })
   user: User
-
-  toJSON() {
-    return {
-      user: this.user,
-    }
-  }
 }

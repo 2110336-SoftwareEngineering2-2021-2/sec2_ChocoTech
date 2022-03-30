@@ -1,9 +1,8 @@
-import { IMeResponseDTO, IUser, UserRole } from '@libs/api'
+import { IMeResponseDTO, UserRole } from '@libs/api'
 
 export const mockUserData: IMeResponseDTO[] = [
   {
     username: 'John',
-
     displayName: 'John Doe',
     coinBalance: 450,
     onlineStatus: true,
@@ -16,5 +15,6 @@ export const mockUserData: IMeResponseDTO[] = [
     googleEmail: 'John.D@gmail.com',
     profilePictureURL: 'https://mui.com/static/images/avatar/3.jpg',
     schedules: [],
+    reviews: [],
   },
 ]
