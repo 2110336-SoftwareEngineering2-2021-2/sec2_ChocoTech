@@ -68,6 +68,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ user }) => {
         username={user.username}
         displayName={displayName}
         profileUrl={user.profilePictureURL}
+        isExpert={user.role === UserRole.EXPERT}
       />
       {user.role !== UserRole.EXPERT && (
         <ExpertCard onClick={handleExpertApp}>
