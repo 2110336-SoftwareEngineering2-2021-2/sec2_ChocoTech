@@ -99,11 +99,18 @@ export default function ScheduleSessionPage() {
     },
   })
 
-  const { data: sessionData, isLoading } = useQuery<ISessionResponseDTO>(
+  const {
+    data: sessionData,
+    isLoading,
+    isIdle,
+  } = useQuery<ISessionResponseDTO>(
     ['createSchedule', sessionId],
     async () => {
       const { data } = await httpClient.get(`/session/${sessionId}`)
       return data
+    },
+    {
+      enabled: !!sessionId,
     },
   )
 
@@ -146,7 +153,7 @@ export default function ScheduleSessionPage() {
     })
   }
 
-  if (isLoading) {
+  if (isLoading || isIdle) {
     return null
   }
 
