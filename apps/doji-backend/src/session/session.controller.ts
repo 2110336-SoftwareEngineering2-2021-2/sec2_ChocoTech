@@ -97,7 +97,7 @@ export class SessionController {
   async changeScheduleStatus(
     @Param('scheduleId') scheduleId: string,
     @Body() { status }: ChangeScheduleStatusRequestDTO,
-  ): Promise<IScheudleResponseDTO> {
+  ): Promise<IScheduleResponseDTO> {
     return await this.sessionService.changeScheduleStatus(scheduleId, status)
   }
 

@@ -24,7 +24,7 @@ import { InjectRepository } from '@mikro-orm/nestjs'
 import { EntityManager } from '@mikro-orm/postgresql'
 import { HttpException, HttpStatus, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { randomUUID } from 'crypto'
-import { calendar_v3, google } from 'googleapis'
+import { google } from 'googleapis'
 
 @Injectable()
 export class SessionService {
@@ -64,8 +64,9 @@ export class SessionService {
       const schedules = await this.scheduleRepo.find(
         {
           session: { owner: expert },
+          status: ScheduleStatus.PENDING,
         },
-        ['participants', 'session'],
+        ['participants', 'session', 'creator'],
       )
       const schedulesJSON = schedules.map((s) => wrap(s).toJSON())
       return schedulesJSON as ScheudleResponseDTO[]
@@ -208,11 +209,10 @@ export class SessionService {
       })
       schedule.meetId = response.data.id
       schedule.meetUrl = response.data.hangoutLink
-
       await this.scheduleRepo.persistAndFlush(schedule)
       return wrap(schedule).toJSON() as ISchedule
     } catch (err) {
-      this.logger.log(err)
+      this.logger.error(err)
     }
   }
 
@@ -224,8 +224,9 @@ export class SessionService {
     ])
     schedule.status = status
     if (status === ScheduleStatus.ACCEPTED) {
-      return await this._bookGoogleCalendar(schedule)
+      await this._bookGoogleCalendar(schedule)
     }
+    await this.scheduleRepo.persistAndFlush(schedule)
 
     return wrap(schedule).toJSON() as ISchedule
   }
