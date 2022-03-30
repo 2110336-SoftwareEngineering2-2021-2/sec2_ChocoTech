@@ -6,7 +6,7 @@ import { randomUUID } from 'crypto'
 export enum friendRequestStatus {
   PENDING = 'pending',
   ACCEPTED = 'accepted',
-  CANCELED = 'cancelled',
+  CANCELLED = 'cancelled',
   REJECTED = 'rejected',
 }
 
@@ -15,13 +15,13 @@ export class FriendRequest implements IFriendRequest {
   @PrimaryKey()
   id: string
 
-  @ManyToOne((user) => user.receivedFriendRequest)
+  @ManyToOne(() => User)
   sender: User
 
   @Property()
   dateSent: Date
 
-  @ManyToOne((user) => user.sentFriendRequest)
+  @ManyToOne(() => User)
   receiver: User
 
   @Property()
