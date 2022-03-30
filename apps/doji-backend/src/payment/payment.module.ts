@@ -12,6 +12,6 @@ import { PaymentService } from './payment.service'
   imports: [MikroOrmModule.forFeature([User, CoinTransaction, CoinTransactionLine])],
   providers: [PaymentService, CoinTransactionService],
   controllers: [PaymentController],
-  exports: [PaymentService],
+  exports: [PaymentService, CoinTransactionService],
 })
 export class PaymentModule {}

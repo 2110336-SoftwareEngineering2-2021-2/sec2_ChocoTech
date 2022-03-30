@@ -99,11 +99,18 @@ export default function ScheduleSessionPage() {
     },
   })
 
-  const { data: sessionData, isLoading } = useQuery<ISessionResponseDTO>(
+  const {
+    data: sessionData,
+    isLoading,
+    isIdle,
+  } = useQuery<ISessionResponseDTO>(
     ['createSchedule', sessionId],
     async () => {
       const { data } = await httpClient.get(`/session/${sessionId}`)
       return data
+    },
+    {
+      enabled: !!sessionId,
     },
   )
 
@@ -113,12 +120,13 @@ export default function ScheduleSessionPage() {
 
   async function handleCloseDialog(value) {
     setOpenDialog(false)
-    if (value) {
-      await toast.promise(httpClient.post('session/schedule', scheduleSessionData), {
-        loading: 'Loading...',
-        success: 'Your session has been scheduled.',
-        error: 'An error occur',
-      })
+    try {
+      if (value) {
+        await httpClient.post('session/schedule/requests', scheduleSessionData)
+        toast.success('Your schedule is created')
+      }
+    } catch (e) {
+      toast.error(e.response.data.message)
     }
   }
 
@@ -145,7 +153,7 @@ export default function ScheduleSessionPage() {
     })
   }
 
-  if (isLoading) {
+  if (isLoading || isIdle) {
     return null
   }
 

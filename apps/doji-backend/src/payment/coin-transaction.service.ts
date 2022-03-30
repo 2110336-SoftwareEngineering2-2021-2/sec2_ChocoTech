@@ -82,7 +82,12 @@ export class CoinTransactionService {
       .incrementUserCoin(user, -amount, { destinationAccount })
       .commit()
   }
-
+  async payForService(user: User, amount: number): Promise<CoinTransaction> {
+    return await this.buildTransaction()
+      .setDescription('PAY FOR SCHEDULE SESSION')
+      .incrementUserCoin(user, -(amount * 100))
+      .commit()
+  }
   async getUserTransactions(user: User): Promise<UserTransactionLineResponseDTO[]> {
     const transactions = await this.coinTransactionLineRepo.find(
       { accountUser: user, account: Account.USER_PAYABLE_ACCOUNT },
