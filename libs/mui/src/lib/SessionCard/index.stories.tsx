@@ -12,9 +12,9 @@ const Template: Story<SessionCardProps> = (args) => {
 }
 
 export const Default = Template.bind({})
-Default.args = {
-  topic: 'Hello',
-  expertName: 'username',
-  price: 10,
-  profileImageURL: 'https://mui.com/static/images/avatar/1.jpg',
-}
+// Default.args = {
+//   topic: 'Hello',
+//   expertName: 'username',
+//   price: 10,
+//   profileImageURL: 'https://mui.com/static/images/avatar/1.jpg',
+// }

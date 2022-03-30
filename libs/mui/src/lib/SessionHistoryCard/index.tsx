@@ -17,7 +17,7 @@ export function SessionHistoryCard(props: SessionHistoryCardProps) {
     return props.session.fee * 0.3
   }
   function hasPenalty() {
-    const dateStart = props.startTime
+    const dateStart = new Date(props.startTime)
     const dateCurrent = new Date()
 
     const DifferenceInTime = dateCurrent.getTime() - dateStart.getTime()
@@ -42,14 +42,14 @@ export function SessionHistoryCard(props: SessionHistoryCardProps) {
                   {props.session.topic}
                 </Typography>
                 <Typography variant="small" fontWeight={400} color="ink.lighter">
-                  {props.startTime.toDateString()}
+                  {new Date(props.startTime).toDateString()}
                 </Typography>
               </Stack>
               <div>
                 <SessionStatusCard status={props.status} />
               </div>
               {props.status === ScheduleStatus.ACCEPTED && (
-                <Button variant="outlined" size="small" fullWidth>
+                <Button variant="outlined" size="small" fullWidth href={props.meetUrl}>
                   Join Session
                 </Button>
               )}

@@ -1,5 +1,6 @@
 import { CurrentUser, ExpertAuthGuard, UserAuthGuard } from '@backend/auth/user.guard'
 import {
+  ChangeScheduleStatusRequestDTO,
   CreateSessionRequestDTO,
   ScheduleSessionDTO,
   ScheudleResponseDTO,
@@ -96,7 +97,7 @@ export class SessionController {
   @ApiCookieAuth()
   async changeScheduleStatus(
     @Param('scheduleId') scheduleId: string,
-    @Body() { status }: IChangeScheduleStatusRequestDTO,
+    @Body() { status }: ChangeScheduleStatusRequestDTO,
   ): Promise<IScheudleResponseDTO> {
     return await this.sessionService.changeScheduleStatus(scheduleId, status)
   }

@@ -16,12 +16,13 @@ import { IReviewStatResponseDTO, ISchedule, IScheudleResponseDTO, ISession } fro
 import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { EntityManager } from '@mikro-orm/postgresql'
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { randomUUID } from 'crypto'
-import { google } from 'googleapis'
+import { calendar_v3, google } from 'googleapis'
 
 @Injectable()
 export class SessionService {
+  private readonly logger = new Logger(SessionService.name)
   constructor(
     @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
     @InjectRepository(Session) private readonly sessionRepo: EntityRepository<Session>,
@@ -42,14 +43,11 @@ export class SessionService {
 
   async getAllSessions(): Promise<ISession[]> {
     try {
-      const sessions = await this.sessionRepo.findAll([
-        'owner',
-        'owner.user',
-        'reviews',
-        'reviews.user',
-      ])
-      return wrap(sessions).toJSON() as ISession[]
+      const sessions = await this.sessionRepo.findAll(['owner', 'reviews', 'reviews.user'])
+      const sessionsJSON = sessions.map((s) => wrap(s).toJSON())
+      return sessionsJSON as ISession[]
     } catch (err) {
+      console.log(err)
       throw new NotFoundException('Session not found')
     }
   }
@@ -62,7 +60,8 @@ export class SessionService {
         },
         ['participants', 'session'],
       )
-      return wrap(schedules).toJSON() as ScheudleResponseDTO[]
+      const schedulesJSON = schedules.map((s) => wrap(s).toJSON())
+      return schedulesJSON as ScheudleResponseDTO[]
     } catch (err) {
       throw new NotFoundException('Schedule not found')
     }
@@ -164,46 +163,50 @@ export class SessionService {
     /**
      * Add Google Calendar event to get google meet link
      */
-    const response = await googleCalendar.events.insert({
-      calendarId: 'primary',
-      requestBody: {
-        summary: session.topic,
-        description: session.description,
-        start: {
-          dateTime: schedule.startTime.toISOString(), // RFC3339 format for example: 2018-04-05T09:00:00-07:00
-          timeZone: 'Asia/Bangkok',
-        },
-        end: {
-          dateTime: endTime.toISOString(), // RFC3339 format for example: 2018-04-05T09:00:00-07:00
-          timeZone: 'Asia/Bangkok',
-        },
-        attendees: attendeeEmails,
-        reminders: {
-          useDefault: false,
-          overrides: [
-            { method: 'email', minutes: 24 * 60 },
-            { method: 'popup', minutes: 10 },
-          ],
-        },
-        creator: {
-          email: creator.email,
-        },
-        conferenceData: {
-          createRequest: {
-            requestId: randomUUID(),
-            conferenceSolutionKey: {
-              type: 'hangoutsMeet',
+    try {
+      const response = await googleCalendar.events.insert({
+        calendarId: 'primary',
+        requestBody: {
+          summary: session.topic,
+          description: session.description,
+          start: {
+            dateTime: schedule.startTime.toISOString(), // RFC3339 format for example: 2018-04-05T09:00:00-07:00
+            timeZone: 'Asia/Bangkok',
+          },
+          end: {
+            dateTime: endTime.toISOString(), // RFC3339 format for example: 2018-04-05T09:00:00-07:00
+            timeZone: 'Asia/Bangkok',
+          },
+          attendees: attendeeEmails,
+          reminders: {
+            useDefault: false,
+            overrides: [
+              { method: 'email', minutes: 24 * 60 },
+              { method: 'popup', minutes: 10 },
+            ],
+          },
+          creator: {
+            email: creator.email,
+          },
+          conferenceData: {
+            createRequest: {
+              requestId: randomUUID(),
+              conferenceSolutionKey: {
+                type: 'hangoutsMeet',
+              },
             },
           },
         },
-      },
-      conferenceDataVersion: 1,
-    })
-    schedule.meetId = response.data.id
-    schedule.meetUrl = response.data.hangoutLink
+        conferenceDataVersion: 1,
+      })
+      schedule.meetId = response.data.id
+      schedule.meetUrl = response.data.hangoutLink
 
-    await this.scheduleRepo.persistAndFlush(schedule)
-    return wrap(schedule).toJSON() as ISchedule
+      await this.scheduleRepo.persistAndFlush(schedule)
+      return wrap(schedule).toJSON() as ISchedule
+    } catch (err) {
+      this.logger.log(err)
+    }
   }
 
   async changeScheduleStatus(scheduleId: string, status: ScheduleStatus): Promise<ISchedule> {
@@ -223,7 +226,8 @@ export class SessionService {
   async getMySchedules(user: User): Promise<IScheudleResponseDTO[]> {
     await user.schedules.init()
     const schedules = user.schedules.getItems()
-    return wrap(schedules).toJSON() as IScheudleResponseDTO[]
+    const schedulesJSON = schedules.map((s) => wrap(s).toJSON())
+    return schedulesJSON as IScheudleResponseDTO[]
   }
 
   async removeParticipant(scheduleId: string, targetUser: User) {

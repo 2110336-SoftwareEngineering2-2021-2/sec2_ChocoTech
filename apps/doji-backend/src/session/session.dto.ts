@@ -1,6 +1,7 @@
 import { Review } from '@backend/entities/Review'
 import { ScheduleStatus } from '@backend/entities/Schedule'
 import {
+  IChangeScheduleStatusRequestDTO,
   ICreateSessionRequestDTO,
   IScheduleSessionDTO,
   IScheudleResponseDTO,
@@ -9,7 +10,7 @@ import {
 } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
-import { IsArray, IsDate, IsNumber, IsString } from 'class-validator'
+import { IsArray, IsDate, IsEnum, IsNumber, IsString } from 'class-validator'
 
 export class CreateSessionRequestDTO implements ICreateSessionRequestDTO {
   @ApiProperty()
@@ -68,4 +69,9 @@ export class ScheudleResponseDTO implements IScheudleResponseDTO {
   meetId?: string
   meetUrl?: string
   participants: IUser[]
+}
+export class ChangeScheduleStatusRequestDTO implements IChangeScheduleStatusRequestDTO {
+  @ApiProperty()
+  @IsEnum(ScheduleStatus)
+  status: ScheduleStatus
 }
