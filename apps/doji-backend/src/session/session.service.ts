@@ -37,14 +37,11 @@ export class SessionService {
 
   async getAllSessions(): Promise<ISession[]> {
     try {
-      const sessions = await this.sessionRepo.findAll([
-        'owner',
-        'owner.user',
-        'reviews',
-        'reviews.user',
-      ])
-      return wrap(sessions).toJSON() as ISession[]
+      const sessions = await this.sessionRepo.findAll(['owner', 'reviews', 'reviews.user'])
+      const sessionsJSON = sessions.map((s) => wrap(s).toJSON())
+      return sessionsJSON as ISession[]
     } catch (err) {
+      console.log(err)
       throw new NotFoundException('Session not found')
     }
   }
@@ -57,7 +54,8 @@ export class SessionService {
         },
         ['participants', 'session'],
       )
-      return wrap(schedules).toJSON() as ScheudleResponseDTO[]
+      const schedulesJSON = schedules.map((s) => wrap(s).toJSON())
+      return schedulesJSON as ScheudleResponseDTO[]
     } catch (err) {
       throw new NotFoundException('Schedule not found')
     }
@@ -210,7 +208,8 @@ export class SessionService {
   async getMySchedules(user: User): Promise<IScheudleResponseDTO[]> {
     await user.schedules.init()
     const schedules = user.schedules.getItems()
-    return wrap(schedules).toJSON() as IScheudleResponseDTO[]
+    const schedulesJSON = schedules.map((s) => wrap(s).toJSON())
+    return schedulesJSON as IScheudleResponseDTO[]
   }
 
   async removeParticipant(scheduleId: string, targetUser: User) {
