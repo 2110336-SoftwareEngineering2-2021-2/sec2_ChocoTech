@@ -63,14 +63,13 @@ const LoginPage: ExtendedNextPage = () => {
         component="form"
         direction="column"
         justifyContent="space-between"
-        mt={2}
         spacing={2}
         flexGrow={1}
         onSubmit={handleSubmit(onSubmit)}
         noValidate
       >
         <Stack direction="column" spacing={2}>
-          <Typography variant="large" fontWeight={500} align="center" lineHeight={4}>
+          <Typography variant="title3" fontWeight={500} align="center" lineHeight={4}>
             Log in
           </Typography>
           <TextField

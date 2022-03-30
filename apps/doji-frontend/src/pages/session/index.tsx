@@ -1,7 +1,7 @@
 import { httpClient } from '@frontend/services'
 import { ExtendedNextPage } from '@frontend/type'
-import { ISchedule, ISession } from '@libs/api'
-import { SearchBar, SessionCard, SessionCardProps } from '@libs/mui'
+import { ISession } from '@libs/api'
+import { SearchBar, SessionCard } from '@libs/mui'
 import { Divider, Stack } from '@mui/material'
 import { useRouter } from 'next/router'
 
@@ -16,7 +16,7 @@ const Index: ExtendedNextPage = () => {
   return (
     <>
       <SearchBar />
-      <Stack divider={<Divider flexItem />} spacing={2}>
+      <Stack divider={<Divider flexItem />} spacing={3} mt={4}>
         {data.map((elem, index) => (
           <SessionCard {...elem} key={elem.id} onClick={() => router.push(`/session/${elem.id}`)} />
         ))}
