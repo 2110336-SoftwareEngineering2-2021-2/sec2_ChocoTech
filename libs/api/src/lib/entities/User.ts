@@ -20,4 +20,5 @@ export interface IUser {
   googleEmail?: string
   profilePictureURL?: string
   schedules: Collection<ISchedule>
+  friends: Collection<IUser>
 }
