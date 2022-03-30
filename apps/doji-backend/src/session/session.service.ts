@@ -163,9 +163,8 @@ export class SessionService {
     /**
      * Add Google Calendar event to get google meet link
      */
-    let response: calendar_v3.Calendar.Schema$Event
     try {
-      response = await googleCalendar.events.insert({
+      const response = await googleCalendar.events.insert({
         calendarId: 'primary',
         requestBody: {
           summary: session.topic,
@@ -200,14 +199,14 @@ export class SessionService {
         },
         conferenceDataVersion: 1,
       })
+      schedule.meetId = response.data.id
+      schedule.meetUrl = response.data.hangoutLink
+
+      await this.scheduleRepo.persistAndFlush(schedule)
+      return wrap(schedule).toJSON() as ISchedule
     } catch (err) {
       this.logger.log(err)
     }
-    schedule.meetId = response.data.id
-    schedule.meetUrl = response.data.hangoutLink
-
-    await this.scheduleRepo.persistAndFlush(schedule)
-    return wrap(schedule).toJSON() as ISchedule
   }
 
   async changeScheduleStatus(scheduleId: string, status: ScheduleStatus): Promise<ISchedule> {
