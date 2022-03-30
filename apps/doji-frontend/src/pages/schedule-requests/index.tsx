@@ -1,36 +1,37 @@
 import { httpClient } from '@frontend/services'
-import { IExpertApplicationListItemDTO } from '@libs/api'
+import { IScheduleResponseDTO } from '@libs/api'
 import { SearchBar, SearchBarRef, Tables, TablesActionType } from '@libs/mui'
-import { Stack, Typography } from '@mui/material'
+import { Avatar, Button, Stack, Typography } from '@mui/material'
 import router from 'next/router'
 
 import { useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 
-interface IExpertCardProp {
-  fullname: string
-  username: string
-}
-function ExpertCard(props: IExpertCardProp) {
+function ScheduleCard(props: IScheduleResponseDTO) {
   return (
-    <Tables
-      onClick={() => {
-        router.push('expert-requests/' + props.username)
-      }}
-      action={{
-        children: 'detail',
-        type: TablesActionType.Button,
-      }}
-      avatar={{
-        alt: 'Robert William',
-        children: 'TY',
-        src: 'https://mui.com/static/images/avatar/1.jpg',
-        sx: {
-          bgcolor: 'primary.main',
-        },
-      }}
-      content={props.fullname}
-    />
+    <Stack direction="row" justifyContent="space-between" spacing={1}>
+      <Stack direction="row">
+        <Avatar alt="Robert William" src="https://mui.com/static/images/avatar/1.jpg" />
+        <Typography>Test</Typography>
+      </Stack>
+      <Stack direction="row">
+        <Button
+          onClick={() => {
+            router.push('schedule-requests/' + props.creator.username)
+          }}
+        >
+          Accept
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            router.push('schedule-requests/' + props.creator.username)
+          }}
+        >
+          Reject
+        </Button>
+      </Stack>
+    </Stack>
   )
 }
 
@@ -38,15 +39,12 @@ function ScheduleRequest() {
   const ref = useRef<SearchBarRef>(null)
   const lastInput = useRef<string>('')
   const [requestList, setRequestList] = useState([])
-  const { data, isLoading } = useQuery<IExpertApplicationListItemDTO[]>(
-    ['getApplications'],
-    async () => {
-      const { data } = await httpClient.get(`/session/schedule/request`)
-      setRequestList(data)
-      console.log(data)
-      return data
-    },
-  )
+  const { data, isLoading } = useQuery<IScheduleResponseDTO[]>(['getApplications'], async () => {
+    const { data } = await httpClient.get(`/session/schedule/request`)
+    setRequestList(data)
+    console.log(data)
+    return data
+  })
 
   const fetchData = () => {
     const currentInput = ref.current?.get<string | undefined>('value')
@@ -65,20 +63,16 @@ function ScheduleRequest() {
   }
   return (
     <Stack m={4}>
-      <br />
       <Typography fontWeight={700} variant="title3">
         Schedule Requests
       </Typography>
-      <br />
-      <SearchBar ref={ref} />
-      <br />
-      <Stack>
-        {requestList.map((data: IExpertApplicationListItemDTO) => {
+      <Stack spacing={1} mt={3}>
+        {requestList.map((data: IScheduleResponseDTO) => {
           return (
-            <ExpertCard
-              key={data.username}
-              fullname={`${data.firstname} ${data.lastname}`}
-              username={data.username}
+            <ScheduleCard
+              key={data.id}
+              fullname={data.session.topic}
+              username={data.creator.username}
             />
           )
         })}
