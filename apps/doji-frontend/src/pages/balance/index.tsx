@@ -1,144 +1,96 @@
 import { getServerSideUser } from '@frontend/common/auth'
-import { DialogState, TopUpDialog } from '@frontend/components/TopUpDialog'
-import { WalletCard } from '@frontend/components/WalletCard'
+import DepositDialog from '@frontend/modules/payment/DepositDialog'
+import TransactionEntry from '@frontend/modules/payment/TransactionEntry'
+import WithdrawDojiDialog from '@frontend/modules/payment/WithdrawDojiDialog'
+import SelectPaymentPanel from '@frontend/modules/payment/select'
 import { httpClient } from '@frontend/services'
-import { useAuthStore } from '@frontend/stores'
-import { ExtendedNextPage } from '@frontend/type'
 import { stangToBathString } from '@frontend/utils/stangBathToString'
-import {
-  IErrorMessage,
-  IMeResponseDTO,
-  IUserTransactionLineResponseDTO,
-  IWithdrawalRequest,
-} from '@libs/api'
-import { CircularProgress, Drawer, Stack, TextField, Typography } from '@mui/material'
-import { Box, useTheme } from '@mui/system'
-import { AxiosError } from 'axios'
+import { IMeResponseDTO, IUserTransactionLineResponseDTO } from '@libs/api'
+import { Button, Card, CircularProgress, IconButton, Stack, Typography } from '@mui/material'
+import Link from 'next/link'
+import Omise from 'omise'
 
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import toast from 'react-hot-toast'
-import { useMutation, useQuery } from 'react-query'
+import { AiOutlinePlus } from 'react-icons/ai'
+import { useQuery } from 'react-query'
 
-function TransactionRecord(props: { id: string; value: string; title: string }) {
-  const theme = useTheme()
-
-  return (
-    <Box>
-      <Stack direction="row" justifyContent="space-between">
-        <Stack>
-          <Typography>{props.title}</Typography>
-          <Typography color={theme.palette.ink.light}>Transaction ID: {props.id}</Typography>
-        </Stack>
-        <Typography>{props.value}</Typography>
-      </Stack>
-    </Box>
-  )
-}
-
-const MyBalancePage: ExtendedNextPage = () => {
-  const theme = useTheme()
-
-  const [withdrawDrawer, setWithdrawDrawer] = useState(false)
-
-  const { setUser } = useAuthStore()
-
-  const userInfoQuery = useQuery<IMeResponseDTO>('/auth/me', () =>
+function BalancePage() {
+  const meQuery = useQuery<IMeResponseDTO>('/auth/me', () =>
     httpClient.get('/auth/me').then((res) => res.data),
   )
   const transactionsQuery = useQuery<IUserTransactionLineResponseDTO[]>(
     '/payment/transaction',
     () => httpClient.get('/payment/transaction').then((res) => res.data),
   )
-  const withdrawMutation = useMutation<unknown, AxiosError<IErrorMessage>, IWithdrawalRequest>(
-    '/payment/withdraw',
-    (r) => httpClient.post('/payment/withdraw', r),
-    {
-      onError: (e) => {
-        toast.error(`Fail to withdraw: ${e.response?.data?.message}`)
-      },
-      onSuccess: () => {
-        userInfoQuery.refetch().then((res) => setUser(res.data))
-        transactionsQuery.refetch()
-      },
-    },
+  const cardsQuery = useQuery<Omise.Cards.ICard[]>('/payment/cards', () =>
+    httpClient.get('/payment/cards').then((res) => res.data),
   )
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm()
+  const [depositDialogOpen, setDepositDialogOpen] = useState(false)
+  const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false)
 
-  if (userInfoQuery.isError || transactionsQuery.isError)
-    return <div>{'Error' + (userInfoQuery.error || transactionsQuery.error)}</div>
+  const loading = meQuery.isLoading || transactionsQuery.isLoading || cardsQuery.isLoading
+  const error = meQuery.error || transactionsQuery.error || cardsQuery.error
 
-  if (userInfoQuery.isLoading || transactionsQuery.isLoading) return <CircularProgress />
+  if (error) return <p>Error: {JSON.stringify(error)}</p>
+
+  if (loading) return <CircularProgress />
 
   return (
-    <Stack spacing="1em">
-      <Typography variant="title3">My Balance</Typography>
-      <Stack px="1em">
-        <WalletCard
-          balance={stangToBathString(userInfoQuery.data.coinBalance) + ' THB'}
-          onClickWithdraw={() => setWithdrawDrawer(true)}
-        />
+    <Stack spacing="2em" mt="1em" px="1em">
+      <Typography variant="title3">Wallet</Typography>
+
+      <Card>
+        <Stack p="1.5em" spacing="0.5em">
+          <Typography variant="tiny" color="sky.main" fontWeight={500}>
+            Doji Coin
+          </Typography>
+          <Typography variant="title3" color="primary.dark">
+            {stangToBathString(meQuery.data.coinBalance)} THB
+          </Typography>
+        </Stack>
+      </Card>
+
+      <Stack direction="row" spacing="1.5em">
+        <Button fullWidth variant="outlined" onClick={() => setWithdrawDialogOpen(true)}>
+          Withdraw
+        </Button>
+        <Button fullWidth onClick={() => setDepositDialogOpen(true)}>
+          Buy
+        </Button>
       </Stack>
-      <Typography variant="h5" fontWeight={700}>
-        Transaction Records
+
+      <Typography variant="large" fontWeight={500}>
+        Payment method
+        <Link href="/balance/new">
+          <IconButton color="primary">
+            <AiOutlinePlus size="1em" />
+          </IconButton>
+        </Link>
       </Typography>
-      <Stack paddingX="1em" spacing="0.75em">
-        {transactionsQuery.data.map((transaction) => (
-          <TransactionRecord
-            key={transaction.id}
-            id={transaction.id}
-            value={stangToBathString(transaction.amount)}
-            title={transaction.description}
-          />
+
+      <SelectPaymentPanel />
+
+      <Typography variant="large" fontWeight={500}>
+        Transaction Record
+      </Typography>
+
+      <Stack spacing="1em">
+        {transactionsQuery.data.map((entry) => (
+          <TransactionEntry key={entry.id} data={entry} />
         ))}
       </Stack>
-      <Drawer
-        open={withdrawDrawer}
-        onClose={() => {
-          setWithdrawDrawer(false)
-          withdrawMutation.reset()
-        }}
-        anchor="bottom"
-        PaperProps={{ sx: { alignItems: 'center' } }}
-      >
-        <TopUpDialog
-          dialogState={withdrawMutation.status as DialogState}
-          actionText="Withdraw"
-          onSubmit={handleSubmit((form) =>
-            withdrawMutation.mutate({
-              amount: form.amount * 100,
-              destinationAccount: form.withdrawDestination,
-            }),
-          )}
-        >
-          <Typography variant="title2">Specify Amount</Typography>
-          <Stack direction="row" alignItems="center" spacing="0.5em">
-            <TextField
-              {...register('amount', { required: true, pattern: /^\d+$/ })}
-              error={!!errors.amount}
-              label="Amount"
-            />
-            <Typography variant="title2">THB</Typography>
-          </Stack>
-          <TextField
-            label="Destination Account"
-            {...register('withdrawDestination', { required: true })}
-            error={!!errors.withdrawDestination}
-          />
-          <Typography variant="regular">
-            Current Balance: {stangToBathString(userInfoQuery.data.coinBalance)} THB
-          </Typography>
-        </TopUpDialog>
-      </Drawer>
+
+      <DepositDialog
+        open={depositDialogOpen}
+        onClose={() => setDepositDialogOpen(false)}
+        cards={cardsQuery.data}
+      />
+      <WithdrawDojiDialog open={withdrawDialogOpen} onClose={() => setWithdrawDialogOpen(false)} />
     </Stack>
   )
 }
 
-export default MyBalancePage
-
 export const getServerSideProps = getServerSideUser()
+
+export default BalancePage
