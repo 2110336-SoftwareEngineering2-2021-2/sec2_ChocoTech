@@ -28,11 +28,11 @@ const MainNavBar: React.FC<{ user?: IMeResponseDTO; show?: boolean }> = ({ user,
   return <NavBar role={user?.role ? user.role : 'none'} username={user?.username ?? 'username'} />
 }
 
+const queryClient = new QueryClient()
+
 function CustomApp(props: ExtendedAppProps) {
   const { Component, pageProps } = props
   const showNavbar = !Component.dontShowNavBar
-
-  const [queryClient] = useState(() => new QueryClient())
 
   return (
     <QueryClientProvider client={queryClient}>
