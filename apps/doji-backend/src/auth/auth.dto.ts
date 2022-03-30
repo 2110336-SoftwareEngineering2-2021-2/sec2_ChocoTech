@@ -8,7 +8,6 @@ import {
   IUserSendResetPasswordEmailRequest,
   UserRole,
 } from '@libs/api'
-import { Collection } from '@mikro-orm/core'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsEmail, IsNumber, IsString } from 'class-validator'
 
@@ -51,13 +50,16 @@ export class MeResponseDTO implements IMeResponseDTO {
   omiseCustomerToken?: string
 
   @ApiProperty()
-  schedules: Collection<ISchedule>
-
-  @ApiProperty()
   googleRefreshToken?: string
 
   @ApiProperty()
   googleEmail?: string
+
+  @ApiProperty()
+  profilePictureURL?: string
+
+  @ApiProperty()
+  schedules?: ISchedule[]
 }
 
 export class UserRegistrationRequestDTO implements IUserRegistrationRequestDTO {

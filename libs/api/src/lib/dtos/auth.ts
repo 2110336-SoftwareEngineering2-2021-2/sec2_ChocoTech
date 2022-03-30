@@ -1,3 +1,6 @@
+import { UserRole } from '@libs/api'
+import { ISchedule } from 'libs/api/src/lib/entities/Schedule'
+
 import { IUser } from '../entities/User'
 
 export enum CookieKey {
@@ -10,7 +13,26 @@ export interface IUserReference<T extends IUser = IUser> {
   getUser: <K extends T = T>() => Promise<K>
 }
 
-export interface IMeResponseDTO extends Omit<IUser, 'passwordHash'> {}
+export interface IUserResponseDTO {
+  username: string
+  passwordHash: string
+  displayName: string
+  coinBalance: number
+  onlineStatus: boolean
+  email: string
+  registerationDate: Date
+  role: UserRole
+  firstName?: string
+  lastName?: string
+  location?: string
+  omiseCustomerToken?: string
+  googleRefreshToken?: string
+  googleEmail?: string
+  profilePictureURL?: string
+  schedules?: ISchedule[]
+}
+
+export interface IMeResponseDTO extends Omit<IUserResponseDTO, 'passwordHash'> {}
 
 export interface IUserSendResetPasswordEmailRequest {
   email: string

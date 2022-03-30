@@ -1,5 +1,6 @@
 import { IReview, IUser } from '@libs/api'
 import { ScheduleStatus } from 'libs/api/src/lib/constants/sessionStatus'
+import { IMeResponseDTO } from 'libs/api/src/lib/dtos/auth'
 import { ISession } from 'libs/api/src/lib/entities/Session'
 
 export interface ICreateSessionRequestDTO {
@@ -37,7 +38,7 @@ export interface IPublicSessionReviewResponseDTO {
 export interface ISessionResponseDTO {
   id: string
   fee: number
-  owner: IUser
+  owner: IMeResponseDTO
   topic: string
   description: string
   reviews: IReview[]

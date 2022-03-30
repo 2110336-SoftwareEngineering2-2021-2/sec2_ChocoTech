@@ -37,7 +37,7 @@ export class PaymentController {
   async attachCreditCard(
     @Body() dto: AttachCardRequestDTO,
     @CurrentUser() userRef: IUserReference,
-  ): Promise<MeResponseDTO> {
+  ): Promise<Omit<MeResponseDTO, 'schedules'>> {
     const updatedUser = await this.paymentService.attachCreditCard(
       await userRef.getUser(),
       dto.cardToken,

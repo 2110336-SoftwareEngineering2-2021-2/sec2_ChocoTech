@@ -9,6 +9,7 @@ import {
 import { AuthService } from '@backend/auth/auth.service'
 import { Cookie } from '@backend/auth/cookie.decorator'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
+import { User } from '@backend/entities/User'
 import { environment } from '@backend/environments/environment'
 import { CookieKey, IUserReference } from '@libs/api'
 import { Body, Controller, Get, Param, Post, Query, Redirect, Res, UseGuards } from '@nestjs/common'
@@ -27,7 +28,23 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'The value associated with the given token' })
   @ApiCookieAuth()
   async getUserInformation(@CurrentUser() userRef: IUserReference): Promise<MeResponseDTO> {
-    return await userRef.getUser()
+    const user = await userRef.getUser<User>()
+    return {
+      username: user.username,
+      displayName: user.displayName,
+      coinBalance: user.coinBalance,
+      onlineStatus: user.onlineStatus,
+      email: user.email,
+      registerationDate: user.registerationDate,
+      role: user.role,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      location: user.location,
+      omiseCustomerToken: user.omiseCustomerToken,
+      googleRefreshToken: user.googleRefreshToken,
+      googleEmail: user.googleEmail,
+      profilePictureURL: user.profilePictureURL,
+    }
   }
 
   @Post('login')

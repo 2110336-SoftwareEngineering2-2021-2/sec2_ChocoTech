@@ -1,4 +1,3 @@
-import { IUser } from '@libs/api'
 import { Collection, Entity, Enum, ManyToMany, PrimaryKey, Property } from '@mikro-orm/core'
 
 import { Review } from '../entities/Review'
@@ -10,7 +9,7 @@ export enum UserRole {
 }
 
 @Entity()
-export class User implements IUser {
+export class User {
   @PrimaryKey()
   username: string
 
