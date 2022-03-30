@@ -5,10 +5,10 @@ import { CompactProfile } from '@libs/mui'
 import { List, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material'
 import { AxiosError } from 'axios'
 import Link from 'next/link'
-import router from 'next/router'
 
 import { ReactNode, useMemo } from 'react'
 import { toast } from 'react-hot-toast'
+import { AiOutlineGooglePlus } from 'react-icons/ai'
 import { FiDollarSign, FiEdit2, FiLayers, FiLock, FiLogOut } from 'react-icons/fi'
 import { useMutation } from 'react-query'
 
@@ -90,7 +90,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ user }) => {
           <ListItem
             href={`${process.env.NEXT_PUBLIC_API_URL}/auth/google`}
             text="Link with Google"
-            icon={<FiLogOut />}
+            icon={<AiOutlineGooglePlus />}
           />
           <ListItem href="/logout" text="Logout" icon={<FiLogOut />} />
         </Stack>

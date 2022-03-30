@@ -24,15 +24,17 @@ const SessionPage: ExtendedNextPage = () => {
   if (isLoading) return <CircularProgress />
 
   return (
-    <Stack padding="1em" spacing="1em">
+    <Stack mt={5} spacing={4}>
       <SessionDetail {...data} />
       <Link href={`/session/schedule/${data.id}`} passHref>
         <Button sx={{ margin: '1em' }}>Schedule</Button>
       </Link>
-      <Typography color="sky.main" fontWeight={500}>
-        Rating and Review
-      </Typography>
-      <RatingPanel reviewStat={data.reviewStat} />
+      <div>
+        <Typography color="sky.main" fontWeight={500}>
+          Rating and Review
+        </Typography>
+        <RatingPanel reviewStat={data.reviewStat} />
+      </div>
       <ReviewInput />
       {data.reviews.map((review) => (
         <ReviewEntry key={review.id} data={review} />
