@@ -1,6 +1,7 @@
 import { FriendRequest, friendRequestStatus } from '@backend/entities/FriendRequest'
 import { User } from '@backend/entities/User'
-import { IFriendRequestResponseDTO, IUserReference } from '@libs/api'
+import { FriendDTO } from '@backend/friendship/friendship.dto'
+import { IFriendRequestResponseDTO, IUser, IUserReference } from '@libs/api'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable } from '@nestjs/common'
@@ -42,6 +43,7 @@ export class FriendshipService {
       const sender = friendRequest.sender
       const receiver = friendRequest.receiver
       sender.friends.add(receiver)
+      receiver.friends.add(sender)
 
       //update database
       this.userRepo.persistAndFlush(sender)
@@ -58,6 +60,31 @@ export class FriendshipService {
   async cancelFriendRequest(id: string) {
     const friendRequest = await this.friendRequestRepo.findOne({ id: id })
     friendRequest.status = friendRequestStatus.CANCELLED
+  }
+
+  async unFriend(me: IUserReference, them: IUserReference) {
+    const user1 = await me.getUser()
+    const user2 = await them.getUser()
+    let friendRequest = await this.friendRequestRepo.findOne({
+      sender: { username: user1.username },
+      receiver: { username: user2.username },
+      status: friendRequestStatus.ACCEPTED,
+    })
+    if (!friendRequest) {
+      friendRequest = await this.friendRequestRepo.findOne({
+        sender: { username: user2.username },
+        receiver: { username: user1.username },
+        status: friendRequestStatus.ACCEPTED,
+      })
+    }
+    friendRequest.status = friendRequestStatus.ENDED
+
+    user1.friends.remove(user2)
+    user2.friends.remove(user1)
+
+    this.userRepo.persistAndFlush(user1)
+    this.userRepo.persistAndFlush(user2)
+    this.friendRequestRepo.persistAndFlush(friendRequest)
   }
 
   async getFriends(userRef: IUserReference) {
@@ -80,5 +107,13 @@ export class FriendshipService {
   //see if there's a friend request sent to me from a user
   async getRequestFrom(me: IUserReference, them: IUserReference) {
     return this.getRequestTo(them, me)
+  }
+
+  async getFriendRequests(me: IUserReference) {
+    const user = await me.getUser()
+    return this.friendRequestRepo.findAll({
+      receiver: { username: user.username },
+      status: friendRequestStatus.PENDING,
+    })
   }
 }

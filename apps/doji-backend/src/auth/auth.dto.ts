@@ -1,6 +1,7 @@
 import {
   IMeResponseDTO,
   ISchedule,
+  IUser,
   IUserChangePasswordRequestDTO,
   IUserLoginRequestDTO,
   IUserRegistrationRequestDTO,
@@ -58,6 +59,9 @@ export class MeResponseDTO implements IMeResponseDTO {
 
   @ApiProperty()
   googleEmail?: string
+
+  @ApiProperty()
+  friends: Collection<IUser>
 }
 
 export class UserRegistrationRequestDTO implements IUserRegistrationRequestDTO {
