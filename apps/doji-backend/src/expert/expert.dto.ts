@@ -28,6 +28,9 @@ export class ExpertApplicationListItemDTO implements IExpertApplicationListItemD
   @ApiProperty()
   @IsString()
   username: string
+  @ApiProperty()
+  @IsString()
+  imageURL: string
 }
 
 export class ExpertInfoResponseDTO implements IExpertInfoResponseDTO {

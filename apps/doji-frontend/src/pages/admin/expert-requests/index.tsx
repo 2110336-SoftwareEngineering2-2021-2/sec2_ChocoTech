@@ -10,6 +10,7 @@ import { useQuery } from 'react-query'
 interface IExpertCardProp {
   fullname: string
   username: string
+  imageURL: string
 }
 function ExpertCard(props: IExpertCardProp) {
   return (
@@ -23,8 +24,8 @@ function ExpertCard(props: IExpertCardProp) {
       }}
       avatar={{
         alt: 'Robert William',
-        children: 'TY',
-        src: 'https://mui.com/static/images/avatar/1.jpg',
+        children: props.fullname.charAt(0),
+        src: props.imageURL,
         sx: {
           bgcolor: 'primary.main',
         },
@@ -78,6 +79,7 @@ function ExpertRequest() {
               key={value.username}
               fullname={`${value.firstname} ${value.lastname}`}
               username={value.username}
+              imageURL={value.imageURL}
             />
           )
         })}

@@ -10,6 +10,7 @@ export interface IExpertApplicationListItemDTO {
   firstname: string
   lastname: string
   username: string
+  imageURL: string
 }
 
 export interface IExpertApplicationQueryDTO {
