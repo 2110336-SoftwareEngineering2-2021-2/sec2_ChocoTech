@@ -3,8 +3,8 @@ import { ScheduleStatus } from '@backend/entities/Schedule'
 import {
   IChangeScheduleStatusRequestDTO,
   ICreateSessionRequestDTO,
+  IScheduleResponseDTO,
   IScheduleSessionDTO,
-  IScheudleResponseDTO,
   ISession,
   IUser,
 } from '@libs/api'
@@ -58,7 +58,7 @@ export class SessionInfoResponseDTO implements Omit<ISession, 'reviews'> {
   reviews: Review[]
 }
 
-export class ScheudleResponseDTO implements IScheudleResponseDTO {
+export class ScheudleResponseDTO implements IScheduleResponseDTO {
   id: string
   session: ISession
   creator: IUser

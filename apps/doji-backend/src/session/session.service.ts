@@ -12,13 +12,19 @@ import {
 } from '@backend/session/session.dto'
 import { createGoogleOAuth2Client } from '@backend/utils/google'
 import { parseReviewStatFromAggreationResult } from '@backend/utils/review'
-import { IReviewStatResponseDTO, ISchedule, IScheudleResponseDTO, ISession } from '@libs/api'
+import {
+  IReviewStatResponseDTO,
+  ISchedule,
+  IScheduleResponseDTO,
+  ISession,
+  ISessionStatResponseDTO,
+} from '@libs/api'
 import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { EntityManager } from '@mikro-orm/postgresql'
 import { HttpException, HttpStatus, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { randomUUID } from 'crypto'
-import { calendar_v3, google } from 'googleapis'
+import { google } from 'googleapis'
 
 @Injectable()
 export class SessionService {
@@ -31,14 +37,15 @@ export class SessionService {
     private readonly transaction: CoinTransactionService,
   ) {}
 
-  async getSession(sessionId: string): Promise<ISession> {
+  async getSession(sessionId: string): Promise<ISessionStatResponseDTO> {
     const session = await this.sessionRepo.findOne({ id: sessionId }, [
       'owner',
       'reviews',
       'reviews.user',
     ])
-
-    return wrap(session).toJSON() as ISession
+    const sessionJSON = wrap(session).toJSON()
+    const reviewStat = await this.calculateReviewStatForSession(sessionId)
+    return { ...sessionJSON, reviewStat } as ISessionStatResponseDTO
   }
 
   async getAllSessions(): Promise<ISession[]> {
@@ -57,8 +64,9 @@ export class SessionService {
       const schedules = await this.scheduleRepo.find(
         {
           session: { owner: expert },
+          status: ScheduleStatus.PENDING,
         },
-        ['participants', 'session'],
+        ['participants', 'session', 'creator'],
       )
       const schedulesJSON = schedules.map((s) => wrap(s).toJSON())
       return schedulesJSON as ScheudleResponseDTO[]
@@ -201,11 +209,10 @@ export class SessionService {
       })
       schedule.meetId = response.data.id
       schedule.meetUrl = response.data.hangoutLink
-
       await this.scheduleRepo.persistAndFlush(schedule)
       return wrap(schedule).toJSON() as ISchedule
     } catch (err) {
-      this.logger.log(err)
+      this.logger.error(err)
     }
   }
 
@@ -217,17 +224,18 @@ export class SessionService {
     ])
     schedule.status = status
     if (status === ScheduleStatus.ACCEPTED) {
-      return await this._bookGoogleCalendar(schedule)
+      await this._bookGoogleCalendar(schedule)
     }
+    await this.scheduleRepo.persistAndFlush(schedule)
 
     return wrap(schedule).toJSON() as ISchedule
   }
 
-  async getMySchedules(user: User): Promise<IScheudleResponseDTO[]> {
+  async getMySchedules(user: User): Promise<IScheduleResponseDTO[]> {
     await user.schedules.init()
     const schedules = user.schedules.getItems()
     const schedulesJSON = schedules.map((s) => wrap(s).toJSON())
-    return schedulesJSON as IScheudleResponseDTO[]
+    return schedulesJSON as IScheduleResponseDTO[]
   }
 
   async removeParticipant(scheduleId: string, targetUser: User) {
@@ -249,13 +257,13 @@ export class SessionService {
     }
   }
 
-  async calculateReviewStatForSession(session: ISession): Promise<IReviewStatResponseDTO> {
+  async calculateReviewStatForSession(sessionId: string): Promise<IReviewStatResponseDTO> {
     const counts: { rating: number; count: string }[] = await this.em
       .createQueryBuilder(Session, 's')
       .select(['r.rating', 'count(*)'])
       .leftJoin('s.reviews', 'r')
       .groupBy('r.rating')
-      .where({ id: session.id })
+      .where({ id: sessionId })
       .execute()
 
     return parseReviewStatFromAggreationResult(counts)
