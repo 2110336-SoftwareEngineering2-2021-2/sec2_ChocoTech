@@ -1,4 +1,4 @@
-import { ISchedule, IUser } from '@libs/api'
+import { IUser } from '@libs/api'
 import { Collection, Entity, Enum, ManyToMany, PrimaryKey, Property } from '@mikro-orm/core'
 
 import { Review } from '../entities/Review'
@@ -58,7 +58,7 @@ export class User implements IUser {
   profilePictureURL?: string
 
   @ManyToMany(() => Schedule, (schedule) => schedule.participants)
-  schedules = new Collection<ISchedule>(this)
+  schedules = new Collection<Schedule>(this)
 
   @ManyToMany(() => Review, (review) => review.reportByUser)
   reviews = new Collection<Review>(this)

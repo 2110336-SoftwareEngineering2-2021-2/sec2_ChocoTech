@@ -1,3 +1,4 @@
+import { IReview, IUser } from '@libs/api'
 import { ScheduleStatus } from 'libs/api/src/lib/constants/sessionStatus'
 import { ISession } from 'libs/api/src/lib/entities/Session'
 
@@ -33,10 +34,29 @@ export interface IPublicSessionReviewResponseDTO {
   createdAt: Date
 }
 
-export interface ISessionResponseDTO extends ISession {
+export interface ISessionResponseDTO {
+  id: string
+  fee: number
+  owner: IUser
+  topic: string
+  description: string
+  reviews: IReview[]
   reviewStat: IReviewStatResponseDTO
 }
 
 export interface IChangeScheduleStatusRequestDTO {
   status: ScheduleStatus
+}
+
+export interface IScheudleResponseDTO {
+  id: string
+  session: ISession
+  creator: IUser
+  coinOnHold: number
+  status: ScheduleStatus
+  duration: number
+  startTime: Date
+  meetId?: string
+  meetUrl?: string
+  participants?: IUser[]
 }
