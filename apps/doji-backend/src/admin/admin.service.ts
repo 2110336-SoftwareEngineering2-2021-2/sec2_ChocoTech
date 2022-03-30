@@ -49,11 +49,14 @@ export class AdminService {
     if (!user) {
       throw new NotFoundException('User not found or do not have work history')
     }
+
+    const wh = workHistory.map((wh) => wrap(wh).toJSON() as IWorkHistory)
+
     return {
       username: user.username,
       displayName: user.displayName,
       profilePictureURL: user.profilePictureURL,
-      workHistory: wrap(workHistory).toJSON() as IWorkHistory[],
+      workHistory: wh,
     }
   }
 
