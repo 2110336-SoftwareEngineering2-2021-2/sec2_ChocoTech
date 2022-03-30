@@ -41,7 +41,7 @@ export const expertListItems: NavigationListItem[] = [
   { type: 'item', href: '/chat', Icon: FiMessageSquare, text: 'Chat', isInUserMenu: true },
   { type: 'item', href: '/settings', Icon: FiSettings, text: 'Setting', isInUserMenu: true },
   { type: 'header', header: 'Expert Menu' },
-  { type: 'item', href: '/session/new', Icon: FiPlus, text: 'New session', isInUserMenu: true },
+  { type: 'item', href: '/session/create', Icon: FiPlus, text: 'New session', isInUserMenu: true },
   {
     type: 'item',
     href: '/session/requests',
