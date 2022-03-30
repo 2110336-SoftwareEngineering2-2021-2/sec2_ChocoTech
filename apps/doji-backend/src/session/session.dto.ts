@@ -34,4 +34,8 @@ export class ScheduleSessionDTO implements IScheduleSessionDTO {
   @ApiProperty()
   @IsArray()
   participantsUsername: string[]
+
+  @ApiProperty()
+  @IsNumber()
+  coinOnHold: number
 }

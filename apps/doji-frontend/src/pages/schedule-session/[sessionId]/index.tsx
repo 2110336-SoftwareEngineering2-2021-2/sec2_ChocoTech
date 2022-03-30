@@ -82,6 +82,7 @@ export default function ScheduleSessionPage() {
     duration: 0,
     startTime: new Date(),
     participantsUsername: [],
+    coinOnHold: 0,
   })
   const {
     register,
@@ -131,11 +132,16 @@ export default function ScheduleSessionPage() {
       data.startTime.getMinutes(),
       data.startTime.getSeconds(),
     )
+    let total = duration * sessionData.fee * (data.participants.length + 1)
+    if (total < 0) {
+      total = 0
+    }
     setScheduleSessionData({
       sessionId: sessionId,
       duration: duration,
       startTime: startDate,
       participantsUsername: data.participants.map((element) => element.value),
+      coinOnHold: total,
     })
   }
 
@@ -155,7 +161,14 @@ export default function ScheduleSessionPage() {
           <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
             <Tables
               content={'by ' + sessionData.owner.firstName + ' ' + sessionData.owner.lastName}
-              avatar={<Avatar></Avatar>}
+              avatar={{
+                alt: 'Robert William',
+                children: sessionData.owner.firstName?.charAt(0),
+                src: sessionData.owner.profilePictureURL,
+                sx: {
+                  bgcolor: 'primary.main',
+                },
+              }}
             ></Tables>
             <Stack direction={'row'}>
               <Typography variant="large" fontWeight={700} color="primary.dark">
@@ -236,7 +249,11 @@ export default function ScheduleSessionPage() {
           </Button>
         </Stack>
       </form>
-      <ConfirmDialog isOpen={openDialog} onClose={handleCloseDialog} coinAmount={sessionData.fee} />
+      <ConfirmDialog
+        isOpen={openDialog}
+        onClose={handleCloseDialog}
+        coinAmount={scheduleSessionData.coinOnHold}
+      />
     </Stack>
   )
 }

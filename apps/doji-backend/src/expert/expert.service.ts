@@ -61,6 +61,7 @@ export class ExpertAppService {
         firstname: value.user.firstName,
         lastname: value.user.lastName,
         username: value.user.username,
+        imageURL: value.user.profilePictureURL,
       }
       return output
     })
