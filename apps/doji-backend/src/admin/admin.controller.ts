@@ -1,4 +1,8 @@
-import { AdminCreationRequestDTO, ApproveExpertDetailDTO } from '@backend/admin/admin.dto'
+import {
+  AdminCreationRequestDTO,
+  ApproveExpertDetailDTO,
+  ChangeUserRoleDTO,
+} from '@backend/admin/admin.dto'
 import { AdminService } from '@backend/admin/admin.service'
 import { Admin } from '@backend/entities/Admin'
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
@@ -26,12 +30,12 @@ export class AdminController {
     return await this.adminService.getWorkHistoryByUsername(username)
   }
 
-  @Put('approveExpert/:username')
-  @ApiOperation({ description: 'Edit role to approve user to be expert by username' })
-  @ApiResponse({ status: 404, description: 'User not found' })
+  @Put('role/:username')
+  @ApiOperation({ description: 'Edit role of user if admin approve' })
+  @ApiResponse({ status: 404, description: 'User not found or user did not send application' })
   @ApiResponse({ status: 200, description: 'Edited users role to expert' })
-  async appoveExpert(@Param('username') username: string) {
-    return await this.adminService.approveExpert(username)
+  async appoveExpert(@Param('username') username: string, @Body() body: ChangeUserRoleDTO) {
+    return await this.adminService.approveOrRejectExpert(username, body.status)
   }
 
   @Post()

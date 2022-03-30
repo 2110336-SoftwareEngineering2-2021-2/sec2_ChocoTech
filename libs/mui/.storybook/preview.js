@@ -1,5 +1,6 @@
 import { ThemeProvider } from '@mui/material'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
+import * as NextImage from 'next/image'
 
 import { theme } from '../src/config/theme'
 
@@ -50,3 +51,10 @@ export const parameters = {
     },
   },
 }
+
+const OriginalNextImage = NextImage.default
+// eslint-disable-next-line
+Object.defineProperty(NextImage, 'default', {
+  configurable: true,
+  value: (props) => <OriginalNextImage {...props} unoptimized />,
+})

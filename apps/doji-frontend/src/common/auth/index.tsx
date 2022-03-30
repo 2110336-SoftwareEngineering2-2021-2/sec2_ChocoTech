@@ -1,3 +1,4 @@
+import { queryClient } from '@frontend/services'
 import { fetchUserInformation } from '@frontend/services/fetcher'
 import { IMeResponseDTO } from '@libs/api'
 import axios from 'axios'
@@ -15,6 +16,7 @@ export const getServerSideUser =
       const data = await fetchUserInformation({
         headers: cookieHeader ? { cookie: cookieHeader } : undefined,
       })
+      queryClient.setQueryData('user', data)
       const otherProps = fetcher ? await fetcher() : {}
       return {
         props: {

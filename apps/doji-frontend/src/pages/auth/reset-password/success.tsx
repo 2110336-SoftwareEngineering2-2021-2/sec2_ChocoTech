@@ -1,5 +1,6 @@
 import { ExtendedNextPage } from '@frontend/type'
 import { Button, Stack, Typography } from '@mui/material'
+import Link from 'next/link'
 
 const resetPasswordSuccess: ExtendedNextPage = () => {
   return (
@@ -7,9 +8,11 @@ const resetPasswordSuccess: ExtendedNextPage = () => {
       <Typography variant="title3" fontWeight={700} p={[2, 8]} align="center">
         Reset Password Success
       </Typography>
-      <Button size="large" type="submit" color="primary" variant="contained">
-        go to login
-      </Button>
+      <Link href="/login" passHref>
+        <Button size="large" type="submit" color="primary" variant="contained">
+          go to login
+        </Button>
+      </Link>
     </Stack>
   )
 }
