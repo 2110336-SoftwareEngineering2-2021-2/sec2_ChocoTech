@@ -1,4 +1,5 @@
 import { IReviewStatResponseDTO } from 'libs/api/src/lib/dtos/session'
+import { IWorkHistory } from 'libs/api/src/lib/entities/WorkHistory'
 
 export interface IExpertRegistrationRequestDTO {
   field: string
@@ -17,4 +18,16 @@ export interface IExpertApplicationQueryDTO {
 
 export interface IExpertInfoResponseDTO {
   reviewStat: IReviewStatResponseDTO
+}
+
+export interface IApproveExpertDetailDTO {
+  firstname: string
+  lastname: string
+  username: string
+  profilePictureURL: string
+  workHistory: IWorkHistory[]
+}
+
+export interface IChangeUserRoleDTO {
+  status: 'approved' | 'rejected'
 }

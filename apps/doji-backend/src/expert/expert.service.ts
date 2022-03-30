@@ -26,13 +26,10 @@ export class ExpertAppService {
     private readonly entityManager: EntityManager,
   ) {}
 
-  async applicationRequest(dto: ExpertApplicationRequest, userRef: IUserReference) {
-    const user = await userRef.getUser<User>()
+  async applicationRequest(userRef: IUserReference) {
+    const user = await userRef.getUser()
     const application = new ExpertApp()
-    application.user = user
-    application.field = dto.field
-    application.desc = dto.desc
-    console.log(application)
+    application.user = user as User
     try {
       await this.expertAppRepo.persistAndFlush(application)
     } catch (e) {

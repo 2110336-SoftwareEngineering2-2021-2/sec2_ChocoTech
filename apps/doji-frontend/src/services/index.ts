@@ -1,6 +1,8 @@
 import axios, { AxiosError } from 'axios'
 import type { Omise } from 'omise-js-typed'
 
+import { QueryClient } from 'react-query'
+
 export const httpClient = axios.create({
   baseURL: '/api',
   timeout: 10000,
@@ -18,7 +20,7 @@ httpClient.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response?.status === 401) {
       console.log('Token expired or invalid')
-      if (typeof window !== 'undefined') window.location.href = '/login'
+      // window.location.href = '/login'
     }
     return Promise.reject(error)
   },
@@ -31,3 +33,5 @@ export const createOmiseClient = (): Omise | undefined => {
     return omise
   }
 }
+
+export const queryClient = new QueryClient()

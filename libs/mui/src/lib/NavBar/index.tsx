@@ -9,7 +9,6 @@ import {
   Link as MuiLink,
   Stack,
   Tooltip,
-  Typography,
   useTheme,
 } from '@mui/material'
 import { useResponsive } from 'libs/mui/src/hooks'
@@ -30,6 +29,7 @@ export type UserRole = 'admin' | 'user' | 'expert' | 'none'
 export interface NavBarProps {
   role?: UserRole
   username?: string
+  avartarSrc?: string
 }
 
 interface NavBarListItemProps extends DrawerProps {
@@ -99,7 +99,7 @@ const CustomDrawer: React.FC<NavBarListItemProps> = ({
   )
 }
 
-export const NavBar: React.FC<NavBarProps> = ({ role = 'none', username }) => {
+export const NavBar: React.FC<NavBarProps> = ({ role = 'none', username, avartarSrc }) => {
   const theme = useTheme()
   const [open, setOpen] = useState(false)
   const isMdUp = useResponsive('md', 'up')
@@ -154,7 +154,12 @@ export const NavBar: React.FC<NavBarProps> = ({ role = 'none', username }) => {
               </MuiLink>
             </Link>
           ))}
-          <UserBar items={itemList} isLoggedIn={role !== 'none'} username={username} />
+          <UserBar
+            avartarSrc={avartarSrc}
+            items={itemList}
+            isLoggedIn={role !== 'none'}
+            username={username}
+          />
         </Stack>
       ) : (
         <>

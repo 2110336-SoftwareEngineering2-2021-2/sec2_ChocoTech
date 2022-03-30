@@ -1,13 +1,13 @@
 import { IWorkHistory } from '@libs/api'
 import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
-import { uuid } from 'uuidv4'
+import { randomUUID } from 'crypto'
 
-import { User } from '../entities/User'
+import { User } from './User'
 
 @Entity()
 export class WorkHistory implements IWorkHistory {
   @PrimaryKey()
-  id: string = uuid()
+  id: string = randomUUID()
 
   @ManyToOne({ primary: true })
   expert: User

@@ -1,15 +1,15 @@
 import { httpClient } from '@frontend/services'
+import { fetchUserInformation } from '@frontend/services/fetcher'
+import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Link as MuiLink, Stack, TextField, Typography } from '@mui/material'
-import { bgcolor } from '@mui/system'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { InferType, object, string } from 'yup'
 
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 
 const LoginSchema = object({
   username: string().trim().required('Please enter the username'),
@@ -31,13 +31,17 @@ const LoginPage: ExtendedNextPage = () => {
     resolver: yupResolver(LoginSchema),
   })
 
-  const router = useRouter()
+  const setUser = useAuthStore((store) => store.setUser)
+
+  const { refetch: userRefetch } = useQuery('user', fetchUserInformation, {
+    retry: false,
+    enabled: false,
+  })
 
   const loginMutation = useMutation(loginRequest, {
-    onSuccess: () => {
-      // const localStorage = new Storage('localStorage')
-      // localStorage.set<string>(StorageKey.TOKEN, token)
-      // setUser(user)
+    onSuccess: async () => {
+      const { data } = await userRefetch()
+      setUser(data)
     },
   })
 
