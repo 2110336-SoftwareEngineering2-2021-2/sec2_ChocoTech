@@ -56,7 +56,12 @@ function Index() {
 
   return (
     <Stack mt={5}>
-      <CompactProfile username={username} displayName={data.displayName} profileUrl="" isExpert />
+      <CompactProfile
+        username={username}
+        displayName={data.displayName}
+        profileUrl={data.profilePictureURL}
+        isExpert
+      />
       <Typography variant="regular" color="sky.main" pl={3}>
         Working history and Acheivement
       </Typography>
