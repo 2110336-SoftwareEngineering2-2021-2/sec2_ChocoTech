@@ -121,7 +121,7 @@ export default function ScheduleSessionPage() {
     setOpenDialog(false)
     try {
       if (value) {
-        await httpClient.post('session/schedule/requests', scheduleSessionData)
+        await httpClient.post('session/schedule/request', scheduleSessionData)
         toast.success('Your schedule is created')
       }
     } catch (e) {
