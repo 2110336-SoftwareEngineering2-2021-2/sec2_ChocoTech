@@ -1,5 +1,4 @@
 import {
-  MeResponseDTO,
   UserChangePasswordRequestDTO,
   UserLoginRequestDTO,
   UserRegistrationRequestDTO,
@@ -11,8 +10,7 @@ import { Cookie } from '@backend/auth/cookie.decorator'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { environment } from '@backend/environments/environment'
 import { IUserReference } from '@backend/types'
-import { CookieKey } from '@libs/api'
-import { wrap } from '@mikro-orm/core'
+import { CookieKey, IUser } from '@libs/api'
 import { Body, Controller, Get, Param, Post, Query, Redirect, Res, UseGuards } from '@nestjs/common'
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ThrottlerGuard } from '@nestjs/throttler'
@@ -28,9 +26,8 @@ export class AuthController {
   @ApiResponse({ status: 403, description: 'The token is invalid' })
   @ApiResponse({ status: 200, description: 'The value associated with the given token' })
   @ApiCookieAuth()
-  async getUserInformation(@CurrentUser() userRef: IUserReference): Promise<MeResponseDTO> {
-    const user = await userRef.getUser()
-    return wrap(user).toJSON() as MeResponseDTO
+  async getUserInformation(@CurrentUser() userRef: IUserReference): Promise<IUser> {
+    return await this.authService.getUserInformation(userRef)
   }
 
   @Post('login')

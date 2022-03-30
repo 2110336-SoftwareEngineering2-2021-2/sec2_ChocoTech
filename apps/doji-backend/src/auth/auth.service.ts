@@ -11,7 +11,8 @@ import {
   generateRedisKey,
   serializeUserReference,
 } from '@backend/utils/redis'
-import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
+import { IUser } from '@libs/api'
+import { EntityRepository, UniqueConstraintViolationException, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import {
   ForbiddenException,
@@ -247,13 +248,8 @@ export class AuthService {
     }
   }
 
-  async getUserInformation(userRef: IUserReference) {
+  async getUserInformation(userRef: IUserReference): Promise<IUser> {
     const user = await userRef.getUser()
-    return {
-      username: user.username,
-      email: user.email,
-      displayName: user.displayName,
-      profilePictureURL: user.profilePictureURL,
-    }
+    return wrap(user).toJSON() as IUser
   }
 }
