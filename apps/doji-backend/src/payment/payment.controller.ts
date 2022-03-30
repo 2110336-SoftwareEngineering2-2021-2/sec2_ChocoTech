@@ -12,6 +12,7 @@ import {
 } from '@backend/payment/payment.dto'
 import { PaymentService } from '@backend/payment/payment.service'
 import { IUserReference } from '@backend/types'
+import { wrap } from '@mikro-orm/core'
 import {
   Body,
   Controller,
@@ -49,13 +50,13 @@ export class PaymentController {
   async attachCreditCard(
     @Body() dto: AttachCardRequestDTO,
     @CurrentUser() userRef: IUserReference,
-  ): Promise<Omit<MeResponseDTO, 'schedules'>> {
+  ): Promise<MeResponseDTO> {
     const updatedUser = await this.paymentService.attachCreditCard(
       await userRef.getUser(),
       dto.cardToken,
       dto.isDefault,
     )
-    return updatedUser
+    return wrap(updatedUser).toJSON() as MeResponseDTO
   }
 
   @Delete('cards/:cardId')
