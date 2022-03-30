@@ -6,11 +6,6 @@ import { User } from './User'
 
 export enum Account {
   /**
-   * Fund Charged from Omise
-   */
-  CHARGED_OMISE_CASH_ACCOUNT = 'changed_omise_cash_account',
-
-  /**
    * Platform's debt owe by the user
    */
   USER_PAYABLE_ACCOUNT = 'user_payable_account',

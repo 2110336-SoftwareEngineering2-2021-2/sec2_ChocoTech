@@ -8,6 +8,42 @@ import { Injectable } from '@nestjs/common'
 
 export class CoinTransactionError extends Error {}
 
+export class SimpleTransactionBuilder {
+  private transaction: CoinTransaction
+
+  constructor(private readonly coinTransactionRepo: EntityRepository<CoinTransaction>) {
+    this.transaction = new CoinTransaction()
+  }
+
+  setDescription(description: string): SimpleTransactionBuilder {
+    this.transaction.description = description
+    return this
+  }
+
+  incrementUserCoin(
+    user: User,
+    coin: number,
+    additionalData?: Record<string, string>,
+  ): SimpleTransactionBuilder {
+    const line = new CoinTransactionLine(this.transaction, Account.USER_PAYABLE_ACCOUNT)
+    line.accountUser = user
+
+    if (additionalData) line.additionalData = JSON.stringify(additionalData)
+
+    line.amount = coin
+    this.transaction.lines.add(line)
+
+    user.coinBalance += coin
+
+    return this
+  }
+
+  async commit(): Promise<CoinTransaction> {
+    await this.coinTransactionRepo.persistAndFlush(this.transaction)
+    return this.transaction
+  }
+}
+
 @Injectable()
 export class CoinTransactionService {
   constructor(
@@ -17,28 +53,15 @@ export class CoinTransactionService {
     private readonly coinTransactionLineRepo: EntityRepository<CoinTransactionLine>,
   ) {}
 
+  buildTransaction(): SimpleTransactionBuilder {
+    return new SimpleTransactionBuilder(this.coinTransactionRepo)
+  }
+
   async depositUserAccount(user: User, amount: number, chargeId: string): Promise<CoinTransaction> {
-    const transaction = new CoinTransaction()
-    transaction.description = 'USER DEPOSIT VIA OMISE'
-
-    const debitOmiseCashAcc = new CoinTransactionLine(
-      transaction,
-      Account.CHARGED_OMISE_CASH_ACCOUNT,
-    )
-    debitOmiseCashAcc.amount = amount
-    debitOmiseCashAcc.additionalData = JSON.stringify({ chargeId })
-
-    const creditUserPayable = new CoinTransactionLine(transaction, Account.USER_PAYABLE_ACCOUNT)
-    creditUserPayable.amount = amount
-    creditUserPayable.accountUser = user
-
-    user.coinBalance += amount
-
-    transaction.lines.add(debitOmiseCashAcc)
-    transaction.lines.add(creditUserPayable)
-
-    await this.coinTransactionRepo.persistAndFlush(transaction)
-    return transaction
+    return await this.buildTransaction()
+      .setDescription('USER DEPOSIT VIA OMISE')
+      .incrementUserCoin(user, amount, { chargeId })
+      .commit()
   }
 
   async withdrawUserAccount(
@@ -46,25 +69,10 @@ export class CoinTransactionService {
     amount: number,
     destinationAccount: string,
   ): Promise<CoinTransaction> {
-    const transaction = new CoinTransaction()
-    transaction.description = 'USER WITHDRAW CASH'
-
-    const creditOmiseCashAcc = new CoinTransactionLine(
-      transaction,
-      Account.CHARGED_OMISE_CASH_ACCOUNT,
-    )
-    creditOmiseCashAcc.amount = -amount
-    creditOmiseCashAcc.additionalData = JSON.stringify({ destinationAccount })
-
-    const debitUserPayable = new CoinTransactionLine(transaction, Account.USER_PAYABLE_ACCOUNT)
-    debitUserPayable.amount = -amount
-    debitUserPayable.accountUser = user
-
-    user.coinBalance -= amount
-    if (user.coinBalance < 0) throw new CoinTransactionError('Insufficient Fund')
-
-    await this.coinTransactionRepo.persistAndFlush(transaction)
-    return transaction
+    return await this.buildTransaction()
+      .setDescription('USER WITHDRAW CASH')
+      .incrementUserCoin(user, -amount, { destinationAccount })
+      .commit()
   }
 
   async getUserTransactions(user: User): Promise<UserTransactionLineResponseDTO[]> {
