@@ -37,7 +37,7 @@ const AddNewPaymentPage: ExtendedNextPage = () => {
 
   const handleAddNewPayment = useCallback(
     (type: AddNewPaymentType) => {
-      router.push(`/payment/new/${type}`)
+      router.push(`/balance/new/${type}`)
     },
     [router],
   )
