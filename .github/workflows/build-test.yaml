@@ -91,3 +91,6 @@ jobs:
 
       - name: Build the projects
         run: yarn build
+
+      - name: Build the storybook of the project
+        run: yarn build:storybook
