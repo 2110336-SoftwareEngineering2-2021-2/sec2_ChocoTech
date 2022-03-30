@@ -1,13 +1,16 @@
 import { CurrentUser, ExpertAuthGuard, UserAuthGuard } from '@backend/auth/user.guard'
-import { User } from '@backend/entities/User'
-import { CreateSessionRequestDTO, ScheduleSessionDTO } from '@backend/session/session.dto'
+import {
+  CreateSessionRequestDTO,
+  ScheduleSessionDTO,
+  ScheudleResponseDTO,
+} from '@backend/session/session.dto'
 import { SessionService } from '@backend/session/session.service'
+import { IUserReference } from '@backend/types'
 import {
   IChangeScheduleStatusRequestDTO,
-  ISchedule,
+  IScheudleResponseDTO,
   ISession,
-  ISessionResponseDTO,
-  IUserReference,
+  ISessionStatResponseDTO,
 } from '@libs/api'
 import {
   Body,
@@ -18,7 +21,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common'
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
@@ -30,15 +32,15 @@ export class SessionController {
   @Get()
   @HttpCode(200)
   @ApiCookieAuth()
-  @ApiOperation({ description: 'Get all sessions filtered by an expert' })
-  @ApiResponse({ status: 200, description: 'All sessions of user have benn listed' })
-  async findAll(@Query('expert_username') expertUsername?: string): Promise<ISession[]> {
-    return await this.sessionService.getAllSessionsByExpert(expertUsername)
+  @ApiOperation({ description: 'Get all sessions' })
+  @ApiResponse({ status: 200, description: 'Get all sessions' })
+  async findAll(): Promise<ISession[]> {
+    return await this.sessionService.getAllSessions()
   }
 
   @Get(':sessionId')
   @UseGuards(UserAuthGuard)
-  async getService(@Param('sessionId') sessionId: string): Promise<ISessionResponseDTO> {
+  async getSession(@Param('sessionId') sessionId: string): Promise<ISessionStatResponseDTO> {
     const session = await this.sessionService.getSession(sessionId)
     return {
       ...session,
@@ -53,7 +55,7 @@ export class SessionController {
     @Body() dto: CreateSessionRequestDTO,
     @CurrentUser() userRef: IUserReference,
   ): Promise<ISession> {
-    const user = await userRef.getUser<User>()
+    const user = await userRef.getUser()
     return await this.sessionService.create(dto, user)
   }
 
@@ -61,19 +63,31 @@ export class SessionController {
   @UseGuards(UserAuthGuard)
   @ApiOperation({ description: 'Get all schedules of current user' })
   @ApiCookieAuth()
-  async getMySchedule(@CurrentUser() userRef: IUserReference): Promise<ISchedule[]> {
-    const user = await userRef.getUser<User>()
-    return await this.sessionService.getMySchedules(user)
+  async getMySchedule(@CurrentUser() userRef: IUserReference): Promise<IScheudleResponseDTO[]> {
+    const user = await userRef.getUser()
+    const schedules = await this.sessionService.getMySchedules(user)
+    return schedules
   }
 
-  @Post('schedule')
+  @Get('schedule/request')
+  @UseGuards(ExpertAuthGuard)
+  @ApiOperation({ description: 'Get all requested schedule of expert user' })
+  @ApiCookieAuth()
+  async getRequestedSchedule(
+    @CurrentUser() userRef: IUserReference,
+  ): Promise<ScheudleResponseDTO[]> {
+    const user = await userRef.getUser()
+    return await this.sessionService.getRequestedSchedule(user)
+  }
+
+  @Post('schedule/requests')
   @UseGuards(UserAuthGuard)
   @ApiCookieAuth()
   async schedule(
     @Body() dto: ScheduleSessionDTO,
     @CurrentUser() userRef: IUserReference,
-  ): Promise<ISchedule> {
-    const user = await userRef.getUser<User>()
+  ): Promise<IScheudleResponseDTO> {
+    const user = await userRef.getUser()
     return await this.sessionService.schedule(dto, user)
   }
 
@@ -83,7 +97,7 @@ export class SessionController {
   async changeScheduleStatus(
     @Param('scheduleId') scheduleId: string,
     @Body() { status }: IChangeScheduleStatusRequestDTO,
-  ): Promise<ISchedule> {
+  ): Promise<IScheudleResponseDTO> {
     return await this.sessionService.changeScheduleStatus(scheduleId, status)
   }
 
@@ -98,7 +112,7 @@ export class SessionController {
     @Param('sessionId') sessionId: string,
     @CurrentUser() userRef: IUserReference,
   ) {
-    const user = await userRef.getUser<User>()
+    const user = await userRef.getUser()
     await this.sessionService.removeParticipant(sessionId, user)
   }
 

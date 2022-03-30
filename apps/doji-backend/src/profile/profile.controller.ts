@@ -1,6 +1,6 @@
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { UserEditProfileRequest } from '@backend/profile/profile.dto'
-import { IUserReference } from '@libs/api'
+import { IUserReference } from '@backend/types'
 import { Body, Controller, Put, UseGuards } from '@nestjs/common'
 import { ApiCookieAuth } from '@nestjs/swagger'
 

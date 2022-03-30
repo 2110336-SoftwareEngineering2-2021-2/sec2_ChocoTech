@@ -1,11 +1,15 @@
 import { Schedule, ScheduleStatus } from '@backend/entities/Schedule'
 import { Session } from '@backend/entities/Session'
 import { User } from '@backend/entities/User'
-import { CreateSessionRequestDTO, ScheduleSessionDTO } from '@backend/session/session.dto'
+import {
+  CreateSessionRequestDTO,
+  ScheduleSessionDTO,
+  ScheudleResponseDTO,
+} from '@backend/session/session.dto'
 import { createGoogleOAuth2Client } from '@backend/utils/google'
 import { parseReviewStatFromAggreationResult } from '@backend/utils/review'
-import { IReviewStatResponseDTO, ISchedule, ISession } from '@libs/api'
-import { EntityRepository } from '@mikro-orm/core'
+import { IReviewStatResponseDTO, ISchedule, IScheudleResponseDTO, ISession } from '@libs/api'
+import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { EntityManager } from '@mikro-orm/postgresql'
 import { Injectable, NotFoundException } from '@nestjs/common'
@@ -21,35 +25,59 @@ export class SessionService {
     private readonly em: EntityManager,
   ) {}
 
-  async getSession(sessionId: string) {
+  async getSession(sessionId: string): Promise<ISession> {
     const session = await this.sessionRepo.findOne({ id: sessionId }, [
       'owner',
       'reviews',
       'reviews.user',
     ])
 
-    if (session === null || session.owner === null) {
-      throw new NotFoundException('Service not found')
-    }
-
-    return session
+    return wrap(session).toJSON() as ISession
   }
 
-  async getAllSessionsByExpert(expertUsername?: string): Promise<Session[]> {
+  async getAllSessions(): Promise<ISession[]> {
     try {
-      const sessions = await this.sessionRepo.find(
-        {
-          owner: {
-            username: expertUsername,
-          },
-        },
-        ['owner', 'reviews', 'reviews.user'],
-      )
-      return sessions
+      const sessions = await this.sessionRepo.findAll([
+        'owner',
+        'owner.user',
+        'reviews',
+        'reviews.user',
+      ])
+      return wrap(sessions).toJSON() as ISession[]
     } catch (err) {
-      throw new NotFoundException('Service not found')
+      throw new NotFoundException('Session not found')
     }
   }
+
+  async getRequestedSchedule(expert: User): Promise<ScheudleResponseDTO[]> {
+    try {
+      const schedules = await this.scheduleRepo.find(
+        {
+          session: { owner: expert },
+        },
+        ['participants', 'session'],
+      )
+      return wrap(schedules).toJSON() as ScheudleResponseDTO[]
+    } catch (err) {
+      throw new NotFoundException('Schedule not found')
+    }
+  }
+
+  // async getAllSessionsByExpert(expertUsername?: string): Promise<Session[]> {
+  //   try {
+  //     const sessions = await this.sessionRepo.find(
+  //       {
+  //         owner: {
+  //           username: expertUsername,
+  //         },
+  //       },
+  //       ['owner', 'reviews', 'reviews.user'],
+  //     )
+  //     return sessions
+  //   } catch (err) {
+  //     throw new NotFoundException('Service not found')
+  //   }
+  // }
 
   async create(dto: CreateSessionRequestDTO, owner: User): Promise<ISession> {
     const session = new Session()
@@ -59,7 +87,7 @@ export class SessionService {
     session.fee = dto.fee
 
     await this.sessionRepo.persistAndFlush(session)
-    return session
+    return wrap(session).toJSON() as ISession
   }
 
   async schedule(dto: ScheduleSessionDTO, creator: User): Promise<ISchedule> {
@@ -87,14 +115,15 @@ export class SessionService {
         schedule.participants.add(participant)
       })
       await this.scheduleRepo.persistAndFlush(schedule)
-      return schedule
+
+      return wrap(schedule).toJSON() as ISchedule
     } catch (e) {
       console.error(e)
       throw new NotFoundException('Users not found')
     }
   }
 
-  private async _bookGoogleCalendar(schedule: Schedule) {
+  private async _bookGoogleCalendar(schedule: Schedule): Promise<ISchedule> {
     const { session, participants, creator } = schedule
     /**
      * Prepare Google Oauth2 client and calendar
@@ -161,7 +190,7 @@ export class SessionService {
     schedule.meetUrl = response.data.hangoutLink
 
     await this.scheduleRepo.persistAndFlush(schedule)
-    return schedule
+    return wrap(schedule).toJSON() as ISchedule
   }
 
   async changeScheduleStatus(scheduleId: string, status: ScheduleStatus): Promise<ISchedule> {
@@ -175,13 +204,13 @@ export class SessionService {
       return await this._bookGoogleCalendar(schedule)
     }
 
-    return schedule
+    return wrap(schedule).toJSON() as ISchedule
   }
 
-  async getMySchedules(user: User): Promise<ISchedule[]> {
+  async getMySchedules(user: User): Promise<IScheudleResponseDTO[]> {
     await user.schedules.init()
     const schedules = user.schedules.getItems()
-    return schedules
+    return wrap(schedules).toJSON() as IScheudleResponseDTO[]
   }
 
   async removeParticipant(scheduleId: string, targetUser: User) {
@@ -203,7 +232,7 @@ export class SessionService {
     }
   }
 
-  async calculateReviewStatForSession(session: Session): Promise<IReviewStatResponseDTO> {
+  async calculateReviewStatForSession(session: ISession): Promise<IReviewStatResponseDTO> {
     const counts: { rating: number; count: string }[] = await this.em
       .createQueryBuilder(Session, 's')
       .select(['r.rating', 'count(*)'])
@@ -211,6 +240,7 @@ export class SessionService {
       .groupBy('r.rating')
       .where({ id: session.id })
       .execute()
+
     return parseReviewStatFromAggreationResult(counts)
   }
 }

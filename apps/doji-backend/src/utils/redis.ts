@@ -1,5 +1,5 @@
 import { User } from '@backend/entities/User'
-import { IUserReference } from '@libs/api'
+import { IUserReference } from '@backend/types'
 import { EntityRepository } from '@mikro-orm/core'
 import { randomBytes } from 'crypto'
 
@@ -34,9 +34,9 @@ export function serializeUserReference(ref: RawUserReference) {
 export function deserializeUserReference(
   userRefString: string,
   userRepo: EntityRepository<User>,
-): IUserReference<User> {
+): IUserReference {
   const obj: RawUserReference = JSON.parse(userRefString)
-  const userRef: IUserReference<User> = {
+  const userRef: IUserReference = {
     username: obj.username,
     getUser: () => userRepo.findOneOrFail({ username: obj.username }) as any,
   }

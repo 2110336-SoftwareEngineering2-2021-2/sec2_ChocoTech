@@ -7,7 +7,8 @@ import { Admin } from '@backend/entities/Admin'
 import { ExpertApp } from '@backend/entities/ExpertApp'
 import { User, UserRole } from '@backend/entities/User'
 import { WorkHistory } from '@backend/entities/WorkHistory'
-import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
+import { IWorkHistory } from '@libs/api'
+import { EntityRepository, UniqueConstraintViolationException, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common'
 import bcrypt from 'bcrypt'
@@ -48,12 +49,12 @@ export class AdminService {
     if (!user) {
       throw new NotFoundException('User not found or do not have work history')
     }
-    const detail = new ApproveExpertDetailDTO()
-    detail.username = user.username
-    detail.displayName = user.displayName
-    detail.profilePictureURL = user.profilePictureURL
-    detail.workHistory = workHistory
-    return detail
+    return {
+      username: user.username,
+      displayName: user.displayName,
+      profilePictureURL: user.profilePictureURL,
+      workHistory: wrap(workHistory).toJSON() as IWorkHistory[],
+    }
   }
 
   async approveOrRejectExpert(username: string, status: ChangeUserRole) {

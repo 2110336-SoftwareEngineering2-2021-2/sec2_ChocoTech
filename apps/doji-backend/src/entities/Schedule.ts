@@ -1,4 +1,3 @@
-import { ISchedule } from '@libs/api'
 import {
   Collection,
   Entity,
@@ -22,7 +21,7 @@ export enum ScheduleStatus {
 }
 
 @Entity()
-export class Schedule implements ISchedule {
+export class Schedule {
   @PrimaryKey()
   id: string = randomUUID()
 

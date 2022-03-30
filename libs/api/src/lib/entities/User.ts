@@ -1,23 +1,23 @@
-import { Collection } from '@mikro-orm/core'
+import { IReview } from 'libs/api/src/lib/entities/Review'
 import { ISchedule } from 'libs/api/src/lib/entities/Schedule'
 
 import { UserRole } from '../constants/userRole'
 
 export interface IUser {
   username: string
-  passwordHash: string
+  email: string
   displayName: string
   coinBalance: number
   onlineStatus: boolean
-  email: string
   registerationDate: Date
   role: UserRole
   firstName?: string
   lastName?: string
   location?: string
   omiseCustomerToken?: string
-  googleRefreshToken?: string
   googleEmail?: string
+  googleRefreshToken?: string
   profilePictureURL?: string
-  schedules: Collection<ISchedule>
+  schedules: ISchedule[]
+  reviews: IReview[]
 }

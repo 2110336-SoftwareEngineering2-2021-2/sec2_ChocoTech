@@ -1,6 +1,6 @@
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
+import { IUserReference } from '@backend/types'
 import { WorkHistoryRequestDTO } from '@backend/work-history/work-history.dto'
-import { IUserReference } from '@libs/api'
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common'
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
