@@ -39,6 +39,7 @@ const Index: React.FC<SettingsPageProps> = ({ user }) => {
   const onSubmit: SubmitHandler<UpdateProfileModel> = async (data) => {
     delete data.email
     delete data.username
+    data.location = 'th'
 
     await toast.promise(httpClient.put('profile/edit', data), {
       loading: 'Loading...',
