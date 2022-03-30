@@ -28,11 +28,10 @@ import toast from 'react-hot-toast'
 import { FaCcMastercard, FaCcVisa } from 'react-icons/fa'
 import { ImCross } from 'react-icons/im'
 import { IconBaseProps } from 'react-icons/lib'
-import { useMutation, useQuery } from 'react-query'
+import { QueryClient, useMutation, useQuery, useQueryClient } from 'react-query'
 
-const SelectPaymentPage: ExtendedNextPage = () => {
+const SelectPaymentPanel = () => {
   const theme = useTheme()
-  const [targetCard, setTargetCard] = useState<string | null>(null)
 
   const { data, isLoading, isError } = useQuery<Omise.Cards.ICard[], AxiosError>(
     `/payment/cards`,
@@ -70,30 +69,28 @@ const SelectPaymentPage: ExtendedNextPage = () => {
     isError: isUserError,
   } = useQuery<IMeResponseDTO>('/auth/me', () => httpClient.get('/auth/me').then((res) => res.data))
 
-  const depositMutation = useMutation<unknown, AxiosError<IErrorMessage>, IDepositRequest>(
-    `/payment/deposit`,
-    (data) => httpClient.post('/payment/deposit', data),
-  )
-
+  const queryClient = useQueryClient()
   const deleteCreditCardMutation = useMutation<void, AxiosError<IErrorMessage>, { cardId: string }>(
     `/payment/cards`,
     (data) => httpClient.delete(`/payment/cards/${data.cardId}`),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(`/payment/cards`)
+      },
+    },
   )
 
   const handleDeleteCreditCard = async (targetCardId: string) => {
-    toast.promise(deleteCreditCardMutation.mutateAsync({ cardId: targetCardId }), {
-      loading: 'loading',
-      success: 'delete success',
-      error: 'fail to delete card',
-    })
+    toast
+      .promise(deleteCreditCardMutation.mutateAsync({ cardId: targetCardId }), {
+        loading: 'loading',
+        success: 'delete success',
+        error: 'fail to delete card',
+      })
+      .catch((e) =>
+        toast.error(e?.response?.data?.message || e?.message || 'Error during deletion'),
+      )
   }
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm()
-
   if (isLoading || isUserLoading) return null
 
   if (isError || isUserError) return <div>Error</div>
@@ -107,7 +104,6 @@ const SelectPaymentPage: ExtendedNextPage = () => {
           avatar={renderPaymentIcon(card.brand.toLowerCase() as PaymentType)}
           onClick={(event) => {
             event.stopPropagation()
-            setTargetCard(card.id)
           }}
           onMouseOver={() => console.log('WWww')}
           action={{
@@ -125,48 +121,8 @@ const SelectPaymentPage: ExtendedNextPage = () => {
           }}
         />
       ))}
-      <Stack pt={3}>
-        <Link href="/payment/new" passHref>
-          <Button>Add payment method</Button>
-        </Link>
-      </Stack>
-      <Drawer
-        open={!!targetCard}
-        onClose={() => {
-          setTargetCard(null)
-          depositMutation.reset()
-        }}
-        anchor="bottom"
-        PaperProps={{ sx: { alignItems: 'center' } }}
-      >
-        <TopUpDialog
-          actionText="Top Up"
-          dialogState={depositMutation.status as DialogState}
-          onSubmit={handleSubmit((form) =>
-            toast.promise(
-              depositMutation.mutateAsync({ cardId: targetCard, amount: form.amount * 100 }),
-              { loading: 'loading', success: 'top up success', error: 'fail to top up' },
-            ),
-          )}
-        >
-          <Typography variant="title2">Specify Amount</Typography>
-          <Stack direction="row" alignItems="center" spacing="0.5em">
-            <TextField
-              {...register('amount', { required: true, pattern: /^\d+$/ })}
-              error={!!errors.amount}
-              label="Amount"
-            />
-            <Typography variant="title2">THB</Typography>
-          </Stack>
-          <Typography variant="regular">
-            Current Balance: {stangToBathString(user.coinBalance)} THB
-          </Typography>
-        </TopUpDialog>
-      </Drawer>
     </Stack>
   )
 }
 
-export const getServerSideProps = getServerSideUser()
-
-export default SelectPaymentPage
+export default SelectPaymentPanel

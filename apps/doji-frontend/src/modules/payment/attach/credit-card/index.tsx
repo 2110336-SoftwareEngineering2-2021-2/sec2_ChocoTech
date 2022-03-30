@@ -1,19 +1,21 @@
+import { getServerSideUser } from '@frontend/common/auth'
 import { createOmiseClient, httpClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IAttachCardRequestDTO } from '@libs/api'
+import { IAttachCardRequestDTO, IMeResponseDTO } from '@libs/api'
 import { CountrySelect } from '@libs/mui'
 import { Button, Stack, Switch, TextField, Typography, useTheme } from '@mui/material'
 import { AxiosError } from 'axios'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { InferType, boolean, object, string } from 'yup'
 
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { FiAlertCircle, FiCreditCard } from 'react-icons/fi'
 import { IconBaseProps } from 'react-icons/lib'
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 import MaskedInput from 'react-text-mask'
 
 import { CARD_NUMBER_MASK, CVV_MASK, EXPIRED_DATE_MASK } from './constants'
@@ -28,9 +30,8 @@ const NewCreditCardSchema = object({
 
 type NewCreditCardModel = InferType<typeof NewCreditCardSchema>
 
-const AddNewCreditCardPage: ExtendedNextPage = () => {
+function AddNewCreditCardPage(props: { user: IMeResponseDTO }) {
   const theme = useTheme()
-  const { user } = useAuthStore()
   const {
     register,
     handleSubmit,
@@ -49,13 +50,15 @@ const AddNewCreditCardPage: ExtendedNextPage = () => {
     },
   )
 
+  const queryClient = useQueryClient()
+
   const createTokenMutation = useMutation<void, AxiosError, NewCreditCardModel>(
     async (data: NewCreditCardModel) => {
       const omise = createOmiseClient()
       await omise.createToken(
         'card',
         {
-          name: `${user.firstName} ${user.lastName}`,
+          name: `${props.user.firstName} ${props.user.lastName}`,
           number: data.cardNumber.split('-').join(''),
           expiration_month: parseInt(data.expiredDate.split('/')[0]),
           expiration_year: parseInt(data.expiredDate.split('/')[1]),
@@ -76,6 +79,11 @@ const AddNewCreditCardPage: ExtendedNextPage = () => {
         },
       )
     },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(`/payment/cards`)
+      },
+    },
   )
 
   const iconProps: IconBaseProps = {
@@ -94,8 +102,11 @@ const AddNewCreditCardPage: ExtendedNextPage = () => {
     helperText: errors[key]?.message,
   })
 
+  const router = useRouter()
+
   const onSubmit = async (data: NewCreditCardModel) => {
     await createTokenMutation.mutateAsync(data)
+    router.push('/balance')
   }
 
   return (
@@ -152,11 +163,9 @@ const AddNewCreditCardPage: ExtendedNextPage = () => {
         <Switch {...register('isDefault')} defaultChecked />
       </Stack>
       <Stack direction="row" spacing={2} justifyContent="space-between">
-        <Link href="/payment/new" passHref>
-          <Button type="submit" variant="outlined" fullWidth>
-            Cancel
-          </Button>
-        </Link>
+        <Button type="submit" variant="outlined" fullWidth onClick={() => router.back()}>
+          Cancel
+        </Button>
         <Button type="submit" fullWidth>
           Add Credit Card
         </Button>
@@ -164,5 +173,7 @@ const AddNewCreditCardPage: ExtendedNextPage = () => {
     </Stack>
   )
 }
+
+export const getServerSideProps = getServerSideUser()
 
 export default AddNewCreditCardPage

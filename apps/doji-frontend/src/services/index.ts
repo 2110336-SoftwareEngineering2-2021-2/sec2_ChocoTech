@@ -1,18 +1,12 @@
 import axios, { AxiosError } from 'axios'
-import { setupCache } from 'axios-cache-adapter'
 import type { Omise } from 'omise-js-typed'
 
 import { QueryClient } from 'react-query'
-
-const cache = setupCache({
-  maxAge: 15 * 60 * 1000,
-})
 
 export const httpClient = axios.create({
   baseURL: '/api',
   timeout: 10000,
   withCredentials: true,
-  adapter: cache.adapter,
 })
 
 httpClient.interceptors.request.use((request) => {
