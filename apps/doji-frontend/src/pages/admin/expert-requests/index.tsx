@@ -2,6 +2,7 @@ import { httpClient } from '@frontend/services'
 import { IExpertApplicationListItemDTO } from '@libs/api'
 import { SearchBar, SearchBarRef, Tables, TablesActionType } from '@libs/mui'
 import { Stack, Typography } from '@mui/material'
+import router from 'next/router'
 
 import { useRef, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -13,6 +14,9 @@ interface IExpertCardProp {
 function ExpertCard(props: IExpertCardProp) {
   return (
     <Tables
+      onClick={() => {
+        router.push('expert-requests/' + props.username)
+      }}
       action={{
         children: 'detail',
         type: TablesActionType.Button,
@@ -42,13 +46,17 @@ function ExpertRequest() {
       return data
     },
   )
-  setInterval(() => {
+
+  const fetchData = () => {
     const currentInput = ref.current?.get<string | undefined>('value')
     if (lastInput.current != currentInput) {
       lastInput.current = currentInput
       getData(currentInput)
     }
-  }, 2000)
+  }
+  useQuery('getApplication', fetchData, {
+    refetchInterval: 2000,
+  })
   function getData(keyword: string) {
     httpClient.get(`/expert/applications/?keyword=${keyword}`).then((value) => {
       setRequestList(value.data)
