@@ -234,7 +234,7 @@ export class SessionService {
     await user.schedules.init()
     const schedules = user.schedules.getItems()
     const schedulesJSON = schedules.map((s) => wrap(s).toJSON())
-    return schedulesJSON as IScheudleResponseDTO[]
+    return schedulesJSON as IScheduleResponseDTO[]
   }
 
   async removeParticipant(scheduleId: string, targetUser: User) {

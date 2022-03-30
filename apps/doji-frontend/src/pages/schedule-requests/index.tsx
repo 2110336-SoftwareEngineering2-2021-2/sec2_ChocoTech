@@ -41,8 +41,9 @@ function ScheduleRequest() {
   const { data, isLoading } = useQuery<IExpertApplicationListItemDTO[]>(
     ['getApplications'],
     async () => {
-      const { data } = await httpClient.get(`/expert/applications/`)
+      const { data } = await httpClient.get(`/session/schedule/request`)
       setRequestList(data)
+      console.log(data)
       return data
     },
   )
@@ -72,12 +73,12 @@ function ScheduleRequest() {
       <SearchBar ref={ref} />
       <br />
       <Stack>
-        {requestList.map((value: IExpertApplicationListItemDTO) => {
+        {requestList.map((data: IExpertApplicationListItemDTO) => {
           return (
             <ExpertCard
-              key={value.username}
-              fullname={`${value.firstname} ${value.lastname}`}
-              username={value.username}
+              key={data.username}
+              fullname={`${data.firstname} ${data.lastname}`}
+              username={data.username}
             />
           )
         })}
