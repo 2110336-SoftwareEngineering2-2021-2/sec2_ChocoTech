@@ -22,6 +22,7 @@ function Index() {
         success: 'Successfully reject',
         error: 'Failed to reject user',
       })
+      router.push('/admin/expert-requests')
     } catch (err) {
       console.log(err)
     }
@@ -34,6 +35,7 @@ function Index() {
         success: 'Successfully approve',
         error: 'Failed to approve user',
       })
+      router.push('/admin/expert-requests')
     } catch (err) {
       console.log(err)
     }

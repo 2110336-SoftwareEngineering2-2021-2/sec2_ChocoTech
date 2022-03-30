@@ -1,6 +1,6 @@
 import { getServerSideUser } from '@frontend/common/auth'
 import { httpClient } from '@frontend/services'
-import { IMeResponseDTO } from '@libs/api'
+import { IMeResponseDTO, UserRole } from '@libs/api'
 import { CompactProfile } from '@libs/mui'
 import { List, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material'
 import { AxiosError } from 'axios'
@@ -43,6 +43,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ user }) => {
   const displayName = useMemo(() => {
     if (user.displayName) return user.displayName
     if (user.firstName && user.lastName) return `${user.firstName} ${user.lastName}`
+
     return user.username
   }, [user])
 
@@ -68,14 +69,17 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ user }) => {
         displayName={displayName}
         profileUrl={user.profilePictureURL}
       />
-      <ExpertCard onClick={handleExpertApp}>
-        <Typography variant="regular" fontWeight={700} color="white">
-          Become expert
-        </Typography>
-        <Typography variant="small" fontWeight={400} color="white">
-          To create your own sessions and make an income
-        </Typography>
-      </ExpertCard>
+      {user.role !== UserRole.EXPERT && (
+        <ExpertCard onClick={handleExpertApp}>
+          <Typography variant="regular" fontWeight={700} color="white">
+            Become expert
+          </Typography>
+          <Typography variant="small" fontWeight={400} color="white">
+            To create your own sessions and make an income
+          </Typography>
+        </ExpertCard>
+      )}
+
       <List component="nav" sx={{ mt: 2 }}>
         <Stack direction="column" spacing={1}>
           <ListItem href="/settings/profile" text="Edit Profile" icon={<FiEdit2 />} />
