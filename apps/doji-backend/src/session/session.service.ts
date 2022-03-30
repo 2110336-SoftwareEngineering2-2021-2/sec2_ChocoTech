@@ -2,6 +2,10 @@ import { Schedule, ScheduleStatus } from '@backend/entities/Schedule'
 import { Session } from '@backend/entities/Session'
 import { User } from '@backend/entities/User'
 import {
+  CoinTransactionService,
+  InsufficientFundError,
+} from '@backend/payment/coin-transaction.service'
+import {
   CreateSessionRequestDTO,
   ScheduleSessionDTO,
   ScheudleResponseDTO,
@@ -12,7 +16,7 @@ import { IReviewStatResponseDTO, ISchedule, IScheudleResponseDTO, ISession } fro
 import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { EntityManager } from '@mikro-orm/postgresql'
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common'
 import { randomUUID } from 'crypto'
 import { google } from 'googleapis'
 
@@ -23,6 +27,7 @@ export class SessionService {
     @InjectRepository(Session) private readonly sessionRepo: EntityRepository<Session>,
     @InjectRepository(Schedule) private readonly scheduleRepo: EntityRepository<Schedule>,
     private readonly em: EntityManager,
+    private readonly transaction: CoinTransactionService,
   ) {}
 
   async getSession(sessionId: string): Promise<ISession> {
@@ -101,7 +106,15 @@ export class SessionService {
     schedule.duration = dto.duration
     schedule.startTime = dto.startTime
     schedule.participants.add(creator)
-
+    try {
+      await this.transaction.withdrawUserAccount(creator, dto.coinOnHold, '')
+    } catch (e) {
+      if (e instanceof InsufficientFundError) {
+        throw new HttpException('Insufficient coin', HttpStatus.NOT_ACCEPTABLE)
+      } else {
+        throw new HttpException('An error occur', HttpStatus.NOT_IMPLEMENTED)
+      }
+    }
     try {
       const usenameFilter = [
         ...dto.participantsUsername.map((u) => ({ username: u })),

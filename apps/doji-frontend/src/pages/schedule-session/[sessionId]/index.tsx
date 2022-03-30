@@ -113,12 +113,13 @@ export default function ScheduleSessionPage() {
 
   async function handleCloseDialog(value) {
     setOpenDialog(false)
-    if (value) {
-      await toast.promise(httpClient.post('session/schedule', scheduleSessionData), {
-        loading: 'Loading...',
-        success: 'Your session has been scheduled.',
-        error: 'An error occur',
-      })
+    try {
+      if (value) {
+        await httpClient.post('session/schedule/requests', scheduleSessionData)
+        toast.success('Your schedule is created')
+      }
+    } catch (e) {
+      toast.error(e.response.data.message)
     }
   }
 
