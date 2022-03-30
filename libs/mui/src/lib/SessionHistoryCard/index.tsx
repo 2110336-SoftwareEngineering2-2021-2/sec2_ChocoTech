@@ -7,14 +7,26 @@ import { SessionStatusCard } from './components/SessionStatusCard'
 export interface SessionHistoryCardProps extends ISchedule {}
 
 export function SessionHistoryCard(props: SessionHistoryCardProps) {
-  //TODO
   function refundAmount() {
-    return 500
+    if (hasPenalty()) {
+      return props.session.fee - deductAmount()
+    }
+    return props.session.fee
   }
   function deductAmount() {
-    return 10
+    return props.session.fee * 0.3
   }
   function hasPenalty() {
+    const dateStart = props.startTime
+    const dateCurrent = new Date()
+
+    const DifferenceInTime = dateCurrent.getTime() - dateStart.getTime()
+
+    const DifferenceInDays = DifferenceInTime / (1000 * 3600 * 24)
+
+    if (DifferenceInDays > 3) {
+      return false
+    }
     return true
   }
   //

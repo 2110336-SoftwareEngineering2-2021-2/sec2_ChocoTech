@@ -2,6 +2,7 @@ import { Stack, styled } from '@mui/material'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
 import Typography from '@mui/material/Typography'
+import axios from 'axios'
 
 import * as React from 'react'
 import toast from 'react-hot-toast'
@@ -19,7 +20,22 @@ const BoxStyled = styled('div')`
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
 `
 
-export default function SessionHistoryCancelButton(props: SessionInfo) {
+export function SessionHistoryCancelButton(props: SessionInfo) {
+  async function cancelSession() {
+    await axios
+      .delete('http://localhost:3333/api/session/participant', {
+        data: { sessionId: props.sessionId },
+        withCredentials: true,
+      })
+      .then(function (response) {
+        console.log('success')
+        console.log(response)
+      })
+      .catch(function (response) {
+        console.log('fail')
+        console.log(response)
+      })
+  }
   const [open, setOpen] = React.useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -68,7 +84,7 @@ export default function SessionHistoryCancelButton(props: SessionInfo) {
                       {' '}
                       {props.deductAmount}{' '}
                     </Typography>{' '}
-                    coins for cancelling within 7 days of the session date.
+                    coins for cancelling within 3 days of the session date.
                   </>
                 )}
               </Typography>
@@ -95,6 +111,7 @@ export default function SessionHistoryCancelButton(props: SessionInfo) {
               <Button
                 onClick={() => {
                   handleClose()
+                  cancelSession()
                   showCancelToast()
                 }}
               >

@@ -1,7 +1,7 @@
-import { Typography as MuiTypography, TypographyProps } from '@mui/material'
+import { Typography as MuiTypography, TypographyProps as MuiTypographyProps } from '@mui/material'
 
-export { TypographyProps }
+export interface TypographyProps extends MuiTypographyProps {}
 
-export default function Button(props: TypographyProps) {
+export default function Typography(props: TypographyProps) {
   return <MuiTypography {...props} />
 }

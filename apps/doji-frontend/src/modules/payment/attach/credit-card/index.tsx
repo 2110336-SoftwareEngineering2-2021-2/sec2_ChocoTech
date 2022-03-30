@@ -30,7 +30,7 @@ type NewCreditCardModel = InferType<typeof NewCreditCardSchema>
 
 const AddNewCreditCardPage: ExtendedNextPage = () => {
   const theme = useTheme()
-  const { userInfo } = useAuthStore()
+  const { user } = useAuthStore()
   const {
     register,
     handleSubmit,
@@ -55,7 +55,7 @@ const AddNewCreditCardPage: ExtendedNextPage = () => {
       await omise.createToken(
         'card',
         {
-          name: `${userInfo.firstName} ${userInfo.lastName}`,
+          name: `${user.firstName} ${user.lastName}`,
           number: data.cardNumber.split('-').join(''),
           expiration_month: parseInt(data.expiredDate.split('/')[0]),
           expiration_year: parseInt(data.expiredDate.split('/')[1]),

@@ -2,6 +2,8 @@ import axios, { AxiosError } from 'axios'
 import { setupCache } from 'axios-cache-adapter'
 import type { Omise } from 'omise-js-typed'
 
+import { QueryClient } from 'react-query'
+
 const cache = setupCache({
   maxAge: 15 * 60 * 1000,
 })
@@ -24,7 +26,7 @@ httpClient.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response?.status === 401) {
       console.log('Token expired or invalid')
-      if (typeof window !== 'undefined') window.location.href = '/login'
+      // window.location.href = '/login'
     }
     return Promise.reject(error)
   },
@@ -37,3 +39,5 @@ export const createOmiseClient = (): Omise | undefined => {
     return omise
   }
 }
+
+export const queryClient = new QueryClient()

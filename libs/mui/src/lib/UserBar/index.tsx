@@ -1,14 +1,4 @@
-import {
-  Avatar,
-  ListItemIcon,
-  Menu,
-  MenuItem,
-  Link as MuiLink,
-  Stack,
-  Typography,
-  styled,
-} from '@mui/material'
-import Link from 'next/link'
+import { Avatar, ListItemIcon, Menu, MenuItem, Stack, Typography, styled } from '@mui/material'
 import { useRouter } from 'next/router'
 
 import { useMemo, useState } from 'react'
@@ -58,10 +48,10 @@ export const UserBar: React.FC<UserBarProps> = ({
   }
 
   if (!isLoggedIn || !username) return null
-
   return (
-    <Stack p={1}>
+    <Stack p={0}>
       <Hightlight
+        my={-1}
         py={1}
         pr={2}
         pl={1.5}

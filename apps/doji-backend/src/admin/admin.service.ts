@@ -1,5 +1,10 @@
-import { AdminCreationRequestDTO, ApproveExpertDetailDTO } from '@backend/admin/admin.dto'
+import {
+  AdminCreationRequestDTO,
+  ApproveExpertDetailDTO,
+  ChangeUserRole,
+} from '@backend/admin/admin.dto'
 import { Admin } from '@backend/entities/Admin'
+import { ExpertApp } from '@backend/entities/ExpertApp'
 import { User, UserRole } from '@backend/entities/User'
 import { WorkHistory } from '@backend/entities/WorkHistory'
 import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
@@ -13,6 +18,7 @@ export class AdminService {
     @InjectRepository(Admin) private readonly adminRepo: EntityRepository<Admin>,
     @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
     @InjectRepository(WorkHistory) private readonly workHistoryRepo: EntityRepository<WorkHistory>,
+    @InjectRepository(ExpertApp) private readonly expertAppRepo: EntityRepository<ExpertApp>,
   ) {}
 
   async adminCreation(dto: AdminCreationRequestDTO) {
@@ -51,18 +57,19 @@ export class AdminService {
     return detail
   }
 
-  async approveExpert(username: string) {
-    const user = await this.userRepo.findOne({ username: username })
-    if (!user) {
-      throw new NotFoundException('User not found')
+  async approveOrRejectExpert(username: string, status: ChangeUserRole) {
+    const expertApp = await this.expertAppRepo.findOne({ user: { username: username } }, ['user'])
+    if (!expertApp.user) {
+      throw new NotFoundException('User not found or user did not send application')
     }
-    if (user.role == UserRole.USER) {
-      user.role = UserRole.EXPERT
-      await this.userRepo.persistAndFlush(user)
-    } else {
+    if (expertApp.user.role !== UserRole.USER) {
       throw new UnprocessableEntityException('User is already an expert')
     }
-
+    if (status === ChangeUserRole.APPROVED) {
+      expertApp.user.role = UserRole.EXPERT
+      await this.userRepo.persistAndFlush(expertApp.user)
+    }
+    await this.expertAppRepo.removeAndFlush(expertApp)
     return
   }
 }
