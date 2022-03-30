@@ -22,6 +22,7 @@ function Index() {
         success: 'Successfully reject',
         error: 'Failed to reject user',
       })
+      router.push('/admin/expert-requests')
     } catch (err) {
       console.log(err)
     }
@@ -34,6 +35,7 @@ function Index() {
         success: 'Successfully approve',
         error: 'Failed to approve user',
       })
+      router.push('/admin/expert-requests')
     } catch (err) {
       console.log(err)
     }
@@ -54,12 +56,7 @@ function Index() {
 
   return (
     <Stack mt={5}>
-      <CompactProfile
-        username={username}
-        displayName={data.firstname + ' ' + data.lastname}
-        profileUrl=""
-        isExpert
-      />
+      <CompactProfile username={username} displayName={data.displayName} profileUrl="" isExpert />
       <Typography variant="regular" color="sky.main" pl={3}>
         Working history and Acheivement
       </Typography>

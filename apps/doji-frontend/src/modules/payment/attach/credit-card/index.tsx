@@ -48,6 +48,11 @@ function AddNewCreditCardPage(props: { user: IMeResponseDTO }) {
     async (data) => {
       await httpClient.post<void, void, IAttachCardRequestDTO>('/payment/cards', data)
     },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(`/payment/cards`)
+      },
+    },
   )
 
   const queryClient = useQueryClient()
@@ -78,11 +83,6 @@ function AddNewCreditCardPage(props: { user: IMeResponseDTO }) {
           )
         },
       )
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(`/payment/cards`)
-      },
     },
   )
 

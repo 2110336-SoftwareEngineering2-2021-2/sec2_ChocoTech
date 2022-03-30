@@ -22,8 +22,7 @@ export interface IExpertInfoResponseDTO {
 }
 
 export interface IApproveExpertDetailDTO {
-  firstname: string
-  lastname: string
+  displayName: string
   username: string
   profilePictureURL: string
   workHistory: IWorkHistory[]
