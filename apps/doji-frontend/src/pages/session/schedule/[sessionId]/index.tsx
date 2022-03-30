@@ -1,4 +1,5 @@
 import ConfirmDialog from '@frontend/components/ExpertService/ConfirmDialog'
+import TagsInput from '@frontend/components/ExpertService/TagInput'
 import TimePickerController from '@frontend/components/ExpertService/TimePickerController'
 import { httpClient } from '@frontend/services'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -15,8 +16,6 @@ import { useState } from 'react'
 import { Control, Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { useQuery } from 'react-query'
-
-import TagsInput from '../../../components/ExpertService/TagInput'
 
 const today = new Date()
 today.setHours(0, 0, 0, 0)

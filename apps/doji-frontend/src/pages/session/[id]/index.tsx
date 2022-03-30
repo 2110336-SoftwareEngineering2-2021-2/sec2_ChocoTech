@@ -6,6 +6,7 @@ import { httpClient } from '@frontend/services'
 import { ExtendedNextPage } from '@frontend/type'
 import { ISessionStatResponseDTO } from '@libs/api'
 import { Button, CircularProgress, Stack, Typography } from '@mui/material'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import { useQuery } from 'react-query'
@@ -24,8 +25,10 @@ const SessionPage: ExtendedNextPage = () => {
 
   return (
     <Stack padding="1em" spacing="1em">
-      <SessionDetail />
-      <Button sx={{ margin: '1em' }}>Schedule</Button>
+      <SessionDetail {...data} />
+      <Link href={`/session/schedule/${data.id}`} passHref>
+        <Button sx={{ margin: '1em' }}>Schedule</Button>
+      </Link>
       <Typography color="sky.main" fontWeight={500}>
         Rating and Review
       </Typography>
