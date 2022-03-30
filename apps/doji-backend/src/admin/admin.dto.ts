@@ -24,11 +24,7 @@ export class ApproveExpertDetailDTO implements IApproveExpertDetailDTO {
 
   @ApiProperty()
   @IsString()
-  firstname: string
-
-  @ApiProperty()
-  @IsString()
-  lastname: string
+  displayName: string
 
   @ApiProperty()
   @IsString()

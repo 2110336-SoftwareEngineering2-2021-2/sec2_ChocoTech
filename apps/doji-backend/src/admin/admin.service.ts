@@ -50,8 +50,7 @@ export class AdminService {
     }
     const detail = new ApproveExpertDetailDTO()
     detail.username = user.username
-    detail.firstname = user.firstName
-    detail.lastname = user.lastName
+    detail.displayName = user.displayName
     detail.profilePictureURL = user.profilePictureURL
     detail.workHistory = workHistory
     return detail
