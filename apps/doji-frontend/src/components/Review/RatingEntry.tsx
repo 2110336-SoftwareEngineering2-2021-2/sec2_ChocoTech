@@ -26,7 +26,7 @@ function ReviewEntry(props: { data: IReview }) {
           {/*TODO Avatar*/}
           <Avatar src="https://mui.com/static/images/avatar/2.jpg" sx={{ width: 24, height: 24 }} />
           <Typography variant="small" fontWeight={400}>
-            {props.data.user}
+            {props.data.user.username}
           </Typography>
         </Stack>
         {/* <ReviewMenu id={props.data.id} onReport={handleReport} /> */}
