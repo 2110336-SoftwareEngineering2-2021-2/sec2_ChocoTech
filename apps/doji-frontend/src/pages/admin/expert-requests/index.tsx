@@ -2,7 +2,7 @@ import { httpClient } from '@frontend/services'
 import { IExpertApplicationListItemDTO } from '@libs/api'
 import { SearchBar, SearchBarRef, Tables, TablesActionType } from '@libs/mui'
 import { Stack, Typography } from '@mui/material'
-import router from 'next/router'
+import { useRouter } from 'next/router'
 
 import { useRef, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -11,13 +11,12 @@ interface IExpertCardProp {
   fullname: string
   username: string
   imageURL: string
+  onClick: (url) => void
 }
 function ExpertCard(props: IExpertCardProp) {
   return (
     <Tables
-      onClick={() => {
-        router.push('expert-requests/' + props.username)
-      }}
+      onClick={props.onClick}
       action={{
         children: 'detail',
         type: TablesActionType.Button,
@@ -58,10 +57,14 @@ function ExpertRequest() {
   useQuery('getApplication', fetchData, {
     refetchInterval: 2000,
   })
+  const router = useRouter()
   function getData(keyword: string) {
     httpClient.get(`/expert/applications/?keyword=${keyword}`).then((value) => {
       setRequestList(value.data)
     })
+    if (isLoading) {
+      return null
+    }
   }
   return (
     <Stack m={4} spacing={3}>
@@ -77,6 +80,9 @@ function ExpertRequest() {
               fullname={`${value.firstname} ${value.lastname}`}
               username={value.username}
               imageURL={value.imageURL}
+              onClick={(url) => {
+                router.push(`expert-requests/${value.username}`)
+              }}
             />
           )
         })}
