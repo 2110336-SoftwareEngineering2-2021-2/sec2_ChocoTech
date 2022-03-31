@@ -17,7 +17,7 @@ const Index: ExtendedNextPage = () => {
     <>
       <SearchBar />
       <Stack divider={<Divider flexItem />} spacing={3} mt={4}>
-        {data.map((elem, index) => (
+        {data.reverse().map((elem, index) => (
           <SessionCard {...elem} key={elem.id} onClick={() => router.push(`/session/${elem.id}`)} />
         ))}
       </Stack>
