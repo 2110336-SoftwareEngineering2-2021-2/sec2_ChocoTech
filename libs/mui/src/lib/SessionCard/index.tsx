@@ -1,9 +1,17 @@
-import { ISchedule, ISession } from '@libs/api'
+import { ISession } from '@libs/api'
 import { Avatar, Stack, Typography, styled } from '@mui/material'
 
 const StyleAvatar = styled(Avatar)`
   width: ${({ theme }) => theme.spacing(3)};
   height: ${({ theme }) => theme.spacing(3)};
+`
+const StyledStack = styled(Stack)`
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  transition: ${({ theme }) => theme.transitions.create('background')};
+  &:hover {
+    cursor: pointer;
+    background: ${({ theme }) => theme.palette.sky.lighter};
+  }
 `
 // export type SessionCardProps = {
 //   topic: string
@@ -17,7 +25,7 @@ export interface SessionCardProps extends ISession {
 }
 export function SessionCard(props: SessionCardProps) {
   return (
-    <Stack py={2} spacing={1.5} onClick={props.onClick} sx={{ cursor: 'pointer' }}>
+    <StyledStack p={2} spacing={1.5} onClick={props.onClick}>
       <Stack direction="row" justifyContent="space-between">
         <div>
           <Typography variant="large" fontWeight={700}>
@@ -45,6 +53,6 @@ export function SessionCard(props: SessionCardProps) {
       <Typography color="ink.main" variant="small" fontWeight={400}>
         {props.description}
       </Typography>
-    </Stack>
+    </StyledStack>
   )
 }
