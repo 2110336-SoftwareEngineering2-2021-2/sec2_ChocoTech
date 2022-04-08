@@ -39,8 +39,8 @@ export class ExpertAppService {
       {
         user: {
           $or: [
-            { firstName: { $ilike: `%${keyword}%` } },
-            { lastName: { $ilike: `%${keyword}%` } },
+            { username: { $ilike: `%${keyword}%` } },
+            { displayName: { $ilike: `%${keyword}%` } },
           ],
         },
       },
@@ -50,8 +50,7 @@ export class ExpertAppService {
     )
     const outputList: ExpertApplicationListItemDTO[] = allApplication.map((value, index) => {
       const output: ExpertApplicationListItemDTO = {
-        firstname: value.user.firstName,
-        lastname: value.user.lastName,
+        displayName: value.user.displayName,
         username: value.user.username,
         imageURL: value.user.profilePictureURL,
       }

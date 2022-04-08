@@ -8,29 +8,32 @@ import { useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 
 interface IExpertCardProp {
-  fullname: string
+  displayname: string
   username: string
   imageURL: string
   onClick: (url) => void
 }
 function ExpertCard(props: IExpertCardProp) {
   return (
-    <Tables
-      onClick={props.onClick}
-      action={{
-        children: 'detail',
-        type: TablesActionType.Button,
-      }}
-      avatar={{
-        alt: 'Robert William',
-        children: props.fullname.charAt(0),
-        src: props.imageURL,
-        sx: {
-          bgcolor: 'primary.main',
-        },
-      }}
-      content={props.fullname}
-    />
+    <div>
+      <Tables
+        onClick={props.onClick}
+        action={{
+          children: 'detail',
+          type: TablesActionType.Button,
+        }}
+        avatar={{
+          alt: 'Robert William',
+          children: props.username.charAt(0),
+          src: props.imageURL,
+          sx: {
+            bgcolor: 'primary.main',
+          },
+        }}
+        content={props.username}
+        caption={`@${props.displayname}`}
+      />
+    </div>
   )
 }
 
@@ -77,7 +80,7 @@ function ExpertRequest() {
           return (
             <ExpertCard
               key={value.username}
-              fullname={`${value.firstname} ${value.lastname}`}
+              displayname={value.displayName}
               username={value.username}
               imageURL={value.imageURL}
               onClick={(url) => {

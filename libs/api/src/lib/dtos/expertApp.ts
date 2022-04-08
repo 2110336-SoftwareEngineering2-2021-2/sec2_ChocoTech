@@ -7,8 +7,7 @@ export interface IExpertRegistrationRequestDTO {
 }
 
 export interface IExpertApplicationListItemDTO {
-  firstname: string
-  lastname: string
+  displayName: string
   username: string
   imageURL: string
 }

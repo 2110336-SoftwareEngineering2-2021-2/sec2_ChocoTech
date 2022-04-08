@@ -16,10 +16,7 @@ export class ExpertApplicationRequest {
 export class ExpertApplicationListItemDTO implements IExpertApplicationListItemDTO {
   @ApiProperty()
   @IsString()
-  firstname: string
-  @ApiProperty()
-  @IsString()
-  lastname: string
+  displayName: string
   @ApiProperty()
   @IsString()
   username: string
