@@ -1,5 +1,6 @@
-import { ISchedule, ScheduleStatus } from '@libs/api'
 import { Avatar, Box, Button, Divider, Stack, Typography } from '@mui/material'
+
+import { ISchedule, ScheduleStatus } from '@libs/api'
 
 import { SessionHistoryCardMenu } from './components/SessionHistoryCardMenu'
 import { SessionStatusCard } from './components/SessionStatusCard'

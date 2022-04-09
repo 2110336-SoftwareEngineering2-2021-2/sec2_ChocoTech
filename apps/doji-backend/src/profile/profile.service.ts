@@ -1,9 +1,10 @@
-import { User } from '@backend/entities/User'
-import { UserEditProfileRequest } from '@backend/profile/profile.dto'
-import { IUserReference } from '@backend/types'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable } from '@nestjs/common'
+
+import { User } from '@backend/entities/User'
+import { UserEditProfileRequest } from '@backend/profile/profile.dto'
+import { IUserReference } from '@backend/types'
 
 @Injectable()
 export class ProfileService {

@@ -1,13 +1,14 @@
-import { AuthService } from '@backend/auth/auth.service'
-import { AuthStrategy } from '@backend/auth/auth.strategy'
-import { User } from '@backend/entities/User'
-import { environment } from '@backend/environments/environment'
-import { ExternalModule } from '@backend/external/external.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Module } from '@nestjs/common'
 import { PassportModule } from '@nestjs/passport'
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { MailgunModule } from '@nextnm/nestjs-mailgun'
+
+import { AuthService } from '@backend/auth/auth.service'
+import { AuthStrategy } from '@backend/auth/auth.strategy'
+import { User } from '@backend/entities/User'
+import { environment } from '@backend/environments/environment'
+import { ExternalModule } from '@backend/external/external.module'
 
 import { AuthController } from './auth.controller'
 

@@ -1,10 +1,11 @@
+import { EntityRepository, NotFoundError } from '@mikro-orm/core'
+import { InjectRepository } from '@mikro-orm/nestjs'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
+
 import { User } from '@backend/entities/User'
 import { WorkHistory } from '@backend/entities/WorkHistory'
 import { IUserReference } from '@backend/types'
 import { WorkHistoryRequestDTO } from '@backend/work-history/work-history.dto'
-import { EntityRepository, NotFoundError } from '@mikro-orm/core'
-import { InjectRepository } from '@mikro-orm/nestjs'
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 
 @Injectable()
 export class WorkHistoryService {

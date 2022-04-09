@@ -1,12 +1,13 @@
-import { httpClient } from '@frontend/services'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { ICreateSessionRequestDTO } from '@libs/api'
 import { Button, TextField, Typography } from '@mui/material'
 import { type } from 'os'
-import * as yup from 'yup'
-
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
+import * as yup from 'yup'
+
+import { httpClient } from '@frontend/services'
+
+import { ICreateSessionRequestDTO } from '@libs/api'
 
 const CreateSessionResolver = yup.object({
   topic: yup.string().required('This field is required'),

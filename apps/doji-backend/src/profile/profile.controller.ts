@@ -1,8 +1,9 @@
+import { Body, Controller, Put, UseGuards } from '@nestjs/common'
+import { ApiCookieAuth } from '@nestjs/swagger'
+
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { UserEditProfileRequest } from '@backend/profile/profile.dto'
 import { IUserReference } from '@backend/types'
-import { Body, Controller, Put, UseGuards } from '@nestjs/common'
-import { ApiCookieAuth } from '@nestjs/swagger'
 
 import { ProfileService } from './profile.service'
 

@@ -1,6 +1,5 @@
 import { MenuItem } from '@mui/material'
 import { Meta, Story } from '@storybook/react'
-
 import { useCallback } from 'react'
 import { FiGitlab } from 'react-icons/fi'
 

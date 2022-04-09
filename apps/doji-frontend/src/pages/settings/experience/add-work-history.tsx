@@ -1,11 +1,12 @@
-import { getServerSideUser } from '@frontend/common/auth'
-import { httpClient } from '@frontend/services'
-import { IMeResponseDTO } from '@libs/api'
 import { Box, Button, Stack, TextField, Typography } from '@mui/material'
 import router from 'next/router'
-
 import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
+
+import { getServerSideUser } from '@frontend/common/auth'
+import { httpClient } from '@frontend/services'
+
+import { IMeResponseDTO } from '@libs/api'
 
 interface SettingsPageProps {
   user: IMeResponseDTO

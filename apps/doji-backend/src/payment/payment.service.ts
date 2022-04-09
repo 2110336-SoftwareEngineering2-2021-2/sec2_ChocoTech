@@ -1,9 +1,3 @@
-import { User } from '@backend/entities/User'
-import { environment } from '@backend/environments/environment'
-import {
-  CoinTransactionError,
-  CoinTransactionService,
-} from '@backend/payment/coin-transaction.service'
 import { EntityRepository } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import {
@@ -14,6 +8,13 @@ import {
 } from '@nestjs/common'
 import axios from 'axios'
 import Omise from 'omise'
+
+import { User } from '@backend/entities/User'
+import { environment } from '@backend/environments/environment'
+import {
+  CoinTransactionError,
+  CoinTransactionService,
+} from '@backend/payment/coin-transaction.service'
 
 @Injectable()
 export class PaymentService {

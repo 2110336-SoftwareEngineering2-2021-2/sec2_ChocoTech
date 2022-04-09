@@ -1,3 +1,6 @@
+import { ApiProperty } from '@nestjs/swagger'
+import { IsEmail, IsString } from 'class-validator'
+
 import {
   IMeResponseDTO,
   IReview,
@@ -9,8 +12,6 @@ import {
   IUserSendResetPasswordEmailRequest,
   UserRole,
 } from '@libs/api'
-import { ApiProperty } from '@nestjs/swagger'
-import { IsEmail, IsString } from 'class-validator'
 
 export class MeResponseDTO implements IMeResponseDTO {
   username: string

@@ -1,5 +1,6 @@
-import { IAuthHandshake, IListenOnlineStatusRequest, IOnlineStatusEvent } from '@libs/api'
 import { IsString } from 'class-validator'
+
+import { IAuthHandshake, IListenOnlineStatusRequest, IOnlineStatusEvent } from '@libs/api'
 
 export class AuthHandshake implements IAuthHandshake {
   @IsString()

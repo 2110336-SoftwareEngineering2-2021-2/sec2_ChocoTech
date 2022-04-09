@@ -1,8 +1,10 @@
-import { queryClient } from '@frontend/services'
-import { fetchUserInformation } from '@frontend/services/fetcher'
-import { IMeResponseDTO } from '@libs/api'
 import axios from 'axios'
 import { GetServerSideProps } from 'next'
+
+import { queryClient } from '@frontend/services'
+import { fetchUserInformation } from '@frontend/services/fetcher'
+
+import { IMeResponseDTO } from '@libs/api'
 
 interface GetServerSideUserProps {
   user: IMeResponseDTO

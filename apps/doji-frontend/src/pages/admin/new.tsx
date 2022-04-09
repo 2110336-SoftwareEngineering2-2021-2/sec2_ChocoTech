@@ -1,15 +1,16 @@
-import RegisteredTextfield from '@frontend/components/Register/registerTextfield'
-import { httpClient } from '@frontend/services'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IAdminCreationRequestDTO } from '@libs/api'
 import { Button, Stack, Typography } from '@mui/material'
 import { AxiosError } from 'axios'
 import router from 'next/router'
-import * as yup from 'yup'
-
 import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { useMutation } from 'react-query'
+import * as yup from 'yup'
+
+import RegisteredTextfield from '@frontend/components/Register/registerTextfield'
+import { httpClient } from '@frontend/services'
+
+import { IAdminCreationRequestDTO } from '@libs/api'
 
 const newAdminValidation = yup.object({
   username: yup.string().required('Please Enter a username'),

@@ -1,6 +1,7 @@
-import { ExtendedNextPage } from '@frontend/type'
 import { Button, Stack, Typography } from '@mui/material'
 import Link from 'next/link'
+
+import { ExtendedNextPage } from '@frontend/type'
 
 const resetPasswordSuccess: ExtendedNextPage = () => {
   return (

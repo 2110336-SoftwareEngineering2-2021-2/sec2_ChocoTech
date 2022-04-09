@@ -1,10 +1,11 @@
+import { Button, CircularProgress, Link, Stack, Typography } from '@mui/material'
+import { useQuery } from 'react-query'
+
 import { getServerSideUser } from '@frontend/common/auth'
 import { httpClient } from '@frontend/services'
+
 import { IMeResponseDTO, IWorkHistory } from '@libs/api'
 import { Achievement } from '@libs/mui'
-import { Button, CircularProgress, Link, Stack, Typography } from '@mui/material'
-
-import { useQuery } from 'react-query'
 
 interface SettingsPageProps {
   user: IMeResponseDTO

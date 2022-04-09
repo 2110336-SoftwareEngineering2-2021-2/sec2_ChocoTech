@@ -1,6 +1,5 @@
 import axios, { AxiosError } from 'axios'
 import type { Omise } from 'omise-js-typed'
-
 import { QueryClient } from 'react-query'
 
 export const httpClient = axios.create({

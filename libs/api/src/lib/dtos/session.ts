@@ -1,7 +1,8 @@
-import { IReview, IUser } from '@libs/api'
 import { ScheduleStatus } from 'libs/api/src/lib/constants/sessionStatus'
 import { IMeResponseDTO } from 'libs/api/src/lib/dtos/auth'
 import { ISession } from 'libs/api/src/lib/entities/Session'
+
+import { IReview, IUser } from '@libs/api'
 
 export interface ICreateSessionRequestDTO {
   topic: string

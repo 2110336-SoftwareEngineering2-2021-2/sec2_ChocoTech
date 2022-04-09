@@ -1,7 +1,8 @@
-import { OnlineStatusEvent } from '@backend/messaging/messaging.dto'
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
 import { Redis } from 'ioredis'
+
+import { OnlineStatusEvent } from '@backend/messaging/messaging.dto'
 
 enum MessagingPubSubTopic {
   ONLINE_STATUS_CHANGE_PUBSUB = 'online-status',

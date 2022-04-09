@@ -1,19 +1,20 @@
-import { queryClient } from '@frontend/services'
-import { fetchUserInformation } from '@frontend/services/fetcher'
-import { useAuthStore } from '@frontend/stores'
-import { ExtendedNextPage } from '@frontend/type'
-import { IMeResponseDTO } from '@libs/api'
-import { NavBar, theme } from '@libs/mui'
 import { Container, ThemeProvider, styled } from '@mui/material'
 import { isEqual } from 'lodash'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import Script from 'next/script'
-
 import { useEffect, useState } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { QueryClientProvider, useQuery, useQueryClient } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
+
+import { queryClient } from '@frontend/services'
+import { fetchUserInformation } from '@frontend/services/fetcher'
+import { useAuthStore } from '@frontend/stores'
+import { ExtendedNextPage } from '@frontend/type'
+
+import { IMeResponseDTO } from '@libs/api'
+import { NavBar, theme } from '@libs/mui'
 
 import './style.css'
 

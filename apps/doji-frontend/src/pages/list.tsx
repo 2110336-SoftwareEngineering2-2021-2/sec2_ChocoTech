@@ -1,9 +1,10 @@
-import { ExtendedNextPage } from '@frontend/type'
-import { SearchBar, SearchBarRef } from '@libs/mui'
 import { Link as MuiLink, Stack } from '@mui/material'
 import Link from 'next/link'
-
 import { FormEventHandler, useRef } from 'react'
+
+import { ExtendedNextPage } from '@frontend/type'
+
+import { SearchBar, SearchBarRef } from '@libs/mui'
 
 const ListPage: ExtendedNextPage = () => {
   const ref = useRef<SearchBarRef>(null)

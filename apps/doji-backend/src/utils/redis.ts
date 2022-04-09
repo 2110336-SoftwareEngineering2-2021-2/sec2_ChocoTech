@@ -1,7 +1,8 @@
-import { User } from '@backend/entities/User'
-import { IUserReference } from '@backend/types'
 import { EntityRepository } from '@mikro-orm/core'
 import { randomBytes } from 'crypto'
+
+import { User } from '@backend/entities/User'
+import { IUserReference } from '@backend/types'
 
 export enum RedisKeyType {
   USER_ACCESS_TOKEN = 'user_access_token',

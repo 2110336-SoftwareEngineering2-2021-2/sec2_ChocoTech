@@ -1,5 +1,6 @@
-import { ISession } from '@libs/api'
 import { Avatar, Stack, Typography } from '@mui/material'
+
+import { ISession } from '@libs/api'
 
 export interface SessionDetailProps extends ISession {}
 function SessionDetail(props: SessionDetailProps) {
