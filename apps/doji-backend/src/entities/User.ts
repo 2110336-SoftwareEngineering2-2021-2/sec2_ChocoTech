@@ -1,6 +1,16 @@
-import { Collection, Entity, Enum, ManyToMany, PrimaryKey, Property } from '@mikro-orm/core'
+import {
+  Collection,
+  Entity,
+  Enum,
+  ManyToMany,
+  OneToMany,
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/core'
 
-import { Review } from '../entities/Review'
+import { ChatRoom } from './ChatRoom'
+import { Message } from './Message'
+import { Review } from './Review'
 import { Schedule } from './Schedule'
 
 export enum UserRole {
@@ -62,6 +72,15 @@ export class User {
   @ManyToMany(() => Review, (review) => review.reportByUser)
   reviews = new Collection<Review>(this)
 
+  @OneToMany(() => Message, (message) => message.author)
+  messages = new Collection<Message>(this)
+
+  @ManyToMany(() => ChatRoom, (chatRoom) => chatRoom.participants)
+  chatRooms = new Collection<ChatRoom>(this)
+
   // @ManyToOne({ nullable: true })
   // verifiedByAdmin!: Admin
+  constructor(username: string) {
+    this.username = username
+  }
 }

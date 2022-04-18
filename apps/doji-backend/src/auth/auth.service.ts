@@ -10,11 +10,13 @@ import {
 } from '@nestjs/common'
 import { MailgunService } from '@nextnm/nestjs-mailgun'
 import bcrypt from 'bcrypt'
+import { parse } from 'cookie'
 import fs from 'fs'
 import { Auth, google } from 'googleapis'
 import Handlebars from 'handlebars'
 import { Redis } from 'ioredis'
 import path from 'path'
+import { Socket } from 'socket.io'
 
 import { UserRegistrationRequestDTO } from '@backend/auth/auth.dto'
 import { InvalidToken } from '@backend/auth/auth.exception'
@@ -30,7 +32,7 @@ import {
   serializeUserReference,
 } from '@backend/utils/redis'
 
-import { IUser } from '@libs/api'
+import { CookieKey, IUser } from '@libs/api'
 
 const TOKEN_EXPIRE_DURATION_SECONDS = 60 * 60 * 24 * 30 // 30 days
 const RESET_TOKEN_EXPIRE_DURATION_SECONDS = 60 * 5 // 5 minutes
@@ -106,6 +108,12 @@ export class AuthService {
     } catch (e) {
       throw new InvalidToken()
     }
+  }
+
+  async validateWebSocket(socket: Socket): Promise<IUserReference> {
+    const accessToken = parse(socket.handshake.headers.cookie)[CookieKey.ACCESS_TOKEN]
+    const userRef = await this.validateAccessToken(accessToken)
+    return userRef
   }
 
   async generateGoogleLoginURL(accessToken: string, rediectUrl: string): Promise<string> {
@@ -223,8 +231,7 @@ export class AuthService {
 
   async signup(dto: UserRegistrationRequestDTO) {
     //create new user and hash password
-    const newUser = new User()
-    newUser.username = dto.username
+    const newUser = new User(dto.username)
     newUser.email = dto.email
     newUser.displayName = dto.displayName
     newUser.passwordHash = await bcrypt.hash(dto.password, 10)
