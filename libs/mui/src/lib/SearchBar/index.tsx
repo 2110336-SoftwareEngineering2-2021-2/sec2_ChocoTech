@@ -1,5 +1,4 @@
 import { InputAdornment, Stack, TextField, TextFieldProps, useTheme } from '@mui/material'
-
 import { forwardRef, useImperativeHandle, useRef } from 'react'
 import { FiSearch, FiX } from 'react-icons/fi'
 

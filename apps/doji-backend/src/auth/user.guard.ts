@@ -1,7 +1,8 @@
-import { UserRole } from '@backend/entities/User'
-import { IUserReference } from '@backend/types'
 import { ExecutionContext, Injectable, createParamDecorator } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
+
+import { UserRole } from '@backend/entities/User'
+import { IUserReference } from '@backend/types'
 
 @Injectable()
 export class UserAuthGuard extends AuthGuard('auth') {}

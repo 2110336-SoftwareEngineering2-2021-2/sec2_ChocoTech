@@ -1,9 +1,10 @@
+import { Stack, Typography } from '@mui/material'
+import { useQuery } from 'react-query'
+
 import { httpClient } from '@frontend/services'
+
 import { ISchedule, ISession } from '@libs/api'
 import { SessionHistoryCard } from '@libs/mui'
-import { Stack, Typography } from '@mui/material'
-
-import { useQuery } from 'react-query'
 
 function SessionHistory() {
   const { data, isLoading } = useQuery<ISchedule[]>('/session/schedule/me', () =>

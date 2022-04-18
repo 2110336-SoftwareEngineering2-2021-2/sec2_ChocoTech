@@ -1,13 +1,14 @@
-import { getServerSideUser } from '@frontend/common/auth'
-import { httpClient } from '@frontend/services'
-import { fetchUserInformation } from '@frontend/services/fetcher'
-import { IMeResponseDTO } from '@libs/api'
-import { CompactProfile, CountrySelect } from '@libs/mui'
 import { Button, Stack, TextField, Typography } from '@mui/material'
-
 import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { useQuery } from 'react-query'
+
+import { getServerSideUser } from '@frontend/common/auth'
+import { httpClient } from '@frontend/services'
+import { fetchUserInformation } from '@frontend/services/fetcher'
+
+import { IMeResponseDTO } from '@libs/api'
+import { CompactProfile, CountrySelect } from '@libs/mui'
 
 interface SettingsPageProps {
   user: IMeResponseDTO

@@ -1,5 +1,6 @@
-import { IUser } from '@libs/api'
 import { ISession } from 'libs/api/src/lib/entities/Session'
+
+import { IUser } from '@libs/api'
 
 export interface IReview {
   id: string

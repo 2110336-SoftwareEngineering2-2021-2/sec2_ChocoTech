@@ -1,5 +1,6 @@
-import { ExtendedNextPage } from '@frontend/type'
 import { Typography } from '@mui/material'
+
+import { ExtendedNextPage } from '@frontend/type'
 
 const AddNewBankAccountPage: ExtendedNextPage = () => {
   return (

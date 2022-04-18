@@ -1,5 +1,4 @@
 import { Meta, Story } from '@storybook/react'
-
 import { useRef } from 'react'
 
 import { SearchBar, SearchBarProps, SearchBarRef } from '.'

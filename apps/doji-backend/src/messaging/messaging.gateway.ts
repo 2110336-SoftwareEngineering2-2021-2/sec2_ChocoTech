@@ -1,11 +1,3 @@
-import { AuthService } from '@backend/auth/auth.service'
-import {
-  AuthHandshake,
-  ListenOnlineStatusRequest,
-  OnlineStatusEvent,
-} from '@backend/messaging/messaging.dto'
-import { MessagingService } from '@backend/messaging/messaging.service'
-import { ClientEvent, ServerEvent } from '@libs/api'
 import { ArgumentsHost, Catch, Logger, UseFilters, ValidationError } from '@nestjs/common'
 import {
   BaseWsExceptionFilter,
@@ -20,6 +12,16 @@ import {
 import { ClassConstructor, plainToInstance } from 'class-transformer'
 import { Validator, ValidatorOptions } from 'class-validator'
 import { Server, Socket } from 'socket.io'
+
+import { AuthService } from '@backend/auth/auth.service'
+import {
+  AuthHandshake,
+  ListenOnlineStatusRequest,
+  OnlineStatusEvent,
+} from '@backend/messaging/messaging.dto'
+import { MessagingService } from '@backend/messaging/messaging.service'
+
+import { ClientEvent, ServerEvent } from '@libs/api'
 
 class DtoValidationError extends Error {
   constructor(private readonly errors: ValidationError[]) {

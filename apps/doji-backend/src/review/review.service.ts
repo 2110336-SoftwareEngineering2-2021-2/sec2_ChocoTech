@@ -1,11 +1,12 @@
+import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
+import { InjectRepository } from '@mikro-orm/nestjs'
+import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common'
+
 import { Review } from '@backend/entities/Review'
 import { Session } from '@backend/entities/Session'
 import { User } from '@backend/entities/User'
 import { ReviewCreationRequestDTO } from '@backend/review/review.dto'
 import { IUserReference } from '@backend/types'
-import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
-import { InjectRepository } from '@mikro-orm/nestjs'
-import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common'
 
 @Injectable()
 export class ReviewService {

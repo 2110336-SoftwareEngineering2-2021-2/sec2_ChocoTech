@@ -1,9 +1,9 @@
-import { getServerSideUser } from '@frontend/common/auth'
-import NotiDialog from '@frontend/components/NotiDialog/NotiDialog'
 import { Box, Stack, Tab, Tabs, Typography } from '@mui/material'
 import router from 'next/router'
-
 import React from 'react'
+
+import { getServerSideUser } from '@frontend/common/auth'
+import NotiDialog from '@frontend/components/NotiDialog/NotiDialog'
 
 interface TabPanelProps {
   index: number

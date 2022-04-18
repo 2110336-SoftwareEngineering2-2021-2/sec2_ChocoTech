@@ -1,11 +1,12 @@
-import { ExtendedNextPage } from '@frontend/type'
-import { Tables } from '@libs/mui'
 import { AvatarProps, Stack, SxProps, Theme, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
-
 import { useCallback } from 'react'
 import { FiBriefcase, FiCreditCard } from 'react-icons/fi'
 import { IconBaseProps } from 'react-icons/lib'
+
+import { ExtendedNextPage } from '@frontend/type'
+
+import { Tables } from '@libs/mui'
 
 type AddNewPaymentType = 'bank-account' | 'credit-card'
 

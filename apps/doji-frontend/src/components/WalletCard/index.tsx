@@ -1,6 +1,5 @@
 import { Box, Button, Card, Stack, Typography, useTheme } from '@mui/material'
 import Link from 'next/link'
-
 import { useState } from 'react'
 import { BiChevronRight } from 'react-icons/bi'
 

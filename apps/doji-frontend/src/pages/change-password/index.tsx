@@ -1,15 +1,16 @@
-import { getServerSideUser } from '@frontend/common/auth'
-import { httpClient } from '@frontend/services'
-import { ExtendedNextPage } from '@frontend/type'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IUserChangePasswordRequestDTO } from '@libs/api'
 import { Button, Stack, TextField, Typography } from '@mui/material'
 import { AxiosError } from 'axios'
-import { InferType, object, ref, string } from 'yup'
-
 import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { useMutation } from 'react-query'
+import { InferType, object, ref, string } from 'yup'
+
+import { getServerSideUser } from '@frontend/common/auth'
+import { httpClient } from '@frontend/services'
+import { ExtendedNextPage } from '@frontend/type'
+
+import { IUserChangePasswordRequestDTO } from '@libs/api'
 
 const ChangePasswordSchema = object({
   oldPassword: string().trim().required('Please enter the password'),

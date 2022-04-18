@@ -1,6 +1,5 @@
 import { Avatar, ListItemIcon, Menu, MenuItem, Stack, Typography, styled } from '@mui/material'
 import { useRouter } from 'next/router'
-
 import { useMemo, useState } from 'react'
 
 import { NavigationListItem, NavigationListItemItem } from '../NavBar/types'

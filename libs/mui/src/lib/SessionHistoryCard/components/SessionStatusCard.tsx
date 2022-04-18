@@ -1,9 +1,9 @@
-import { ScheduleStatus } from '@libs/api'
 import { Theme, Typography, styled, useTheme } from '@mui/material'
-
 import { AiOutlineCalendar } from 'react-icons/ai'
 import { BiLoader } from 'react-icons/bi'
 import { IoMdClose } from 'react-icons/io'
+
+import { ScheduleStatus } from '@libs/api'
 
 export interface SessionStatusProps {
   status?: ScheduleStatus

@@ -1,5 +1,6 @@
-import { ISession } from '@libs/api'
 import { Avatar, Stack, Typography, styled } from '@mui/material'
+
+import { ISession } from '@libs/api'
 
 const StyleAvatar = styled(Avatar)`
   width: ${({ theme }) => theme.spacing(3)};

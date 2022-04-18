@@ -1,6 +1,7 @@
-import { IReviewCreationRequestDTO, IReviewStatResponseDTO } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsNumber, IsString } from 'class-validator'
+
+import { IReviewCreationRequestDTO, IReviewStatResponseDTO } from '@libs/api'
 
 export class ReviewCreationRequestDTO implements IReviewCreationRequestDTO {
   @ApiProperty()

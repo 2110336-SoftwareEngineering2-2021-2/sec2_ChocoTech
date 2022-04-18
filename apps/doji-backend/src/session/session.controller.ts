@@ -1,18 +1,3 @@
-import { CurrentUser, ExpertAuthGuard, UserAuthGuard } from '@backend/auth/user.guard'
-import {
-  ChangeScheduleStatusRequestDTO,
-  CreateSessionRequestDTO,
-  ScheduleSessionDTO,
-  ScheudleResponseDTO,
-} from '@backend/session/session.dto'
-import { SessionService } from '@backend/session/session.service'
-import { IUserReference } from '@backend/types'
-import {
-  IChangeScheduleStatusRequestDTO,
-  IScheduleResponseDTO,
-  ISession,
-  ISessionStatResponseDTO,
-} from '@libs/api'
 import {
   Body,
   Controller,
@@ -25,6 +10,23 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
+
+import { CurrentUser, ExpertAuthGuard, UserAuthGuard } from '@backend/auth/user.guard'
+import {
+  ChangeScheduleStatusRequestDTO,
+  CreateSessionRequestDTO,
+  ScheduleSessionDTO,
+  ScheudleResponseDTO,
+} from '@backend/session/session.dto'
+import { SessionService } from '@backend/session/session.service'
+import { IUserReference } from '@backend/types'
+
+import {
+  IChangeScheduleStatusRequestDTO,
+  IScheduleResponseDTO,
+  ISession,
+  ISessionStatResponseDTO,
+} from '@libs/api'
 
 @Controller('session')
 export class SessionController {

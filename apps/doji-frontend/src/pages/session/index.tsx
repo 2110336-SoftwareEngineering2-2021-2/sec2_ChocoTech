@@ -1,11 +1,12 @@
-import { httpClient } from '@frontend/services'
-import { ExtendedNextPage } from '@frontend/type'
-import { ISession } from '@libs/api'
-import { SearchBar, SessionCard } from '@libs/mui'
 import { Divider, Stack } from '@mui/material'
 import { useRouter } from 'next/router'
-
 import { useQuery } from 'react-query'
+
+import { httpClient } from '@frontend/services'
+import { ExtendedNextPage } from '@frontend/type'
+
+import { ISession } from '@libs/api'
+import { SearchBar, SessionCard } from '@libs/mui'
 
 const Index: ExtendedNextPage = () => {
   const { data, isLoading } = useQuery<ISession[]>('/session', () =>

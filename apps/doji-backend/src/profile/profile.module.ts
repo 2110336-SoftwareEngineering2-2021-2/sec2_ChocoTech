@@ -1,6 +1,7 @@
-import { User } from '@backend/entities/User'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Module } from '@nestjs/common'
+
+import { User } from '@backend/entities/User'
 
 import { ProfileController } from './profile.controller'
 import { ProfileService } from './profile.service'

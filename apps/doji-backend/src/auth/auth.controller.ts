@@ -1,3 +1,8 @@
+import { Body, Controller, Get, Param, Post, Query, Redirect, Res, UseGuards } from '@nestjs/common'
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { ThrottlerGuard } from '@nestjs/throttler'
+import { Response } from 'express'
+
 import {
   UserChangePasswordRequestDTO,
   UserLoginRequestDTO,
@@ -10,11 +15,8 @@ import { Cookie } from '@backend/auth/cookie.decorator'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { environment } from '@backend/environments/environment'
 import { IUserReference } from '@backend/types'
+
 import { CookieKey, IUser } from '@libs/api'
-import { Body, Controller, Get, Param, Post, Query, Redirect, Res, UseGuards } from '@nestjs/common'
-import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
-import { ThrottlerGuard } from '@nestjs/throttler'
-import { Response } from 'express'
 
 @Controller('auth')
 export class AuthController {

@@ -1,14 +1,16 @@
+import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
+import { InjectRepository } from '@mikro-orm/nestjs'
+import { EntityManager } from '@mikro-orm/postgresql'
+import { Injectable, UnprocessableEntityException } from '@nestjs/common'
+
 import { ExpertApp } from '@backend/entities/ExpertApp'
 import { Review } from '@backend/entities/Review'
 import { User } from '@backend/entities/User'
 import { ExpertApplicationListItemDTO, ExpertInfoResponseDTO } from '@backend/expert/expert.dto'
 import { IUserReference } from '@backend/types'
 import { parseReviewStatFromAggreationResult } from '@backend/utils/review'
+
 import { IExpertApplicationQueryDTO } from '@libs/api'
-import { EntityRepository, UniqueConstraintViolationException } from '@mikro-orm/core'
-import { InjectRepository } from '@mikro-orm/nestjs'
-import { EntityManager } from '@mikro-orm/postgresql'
-import { Injectable, UnprocessableEntityException } from '@nestjs/common'
 
 @Injectable()
 export class ExpertAppService {

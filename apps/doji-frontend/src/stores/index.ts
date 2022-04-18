@@ -1,5 +1,6 @@
-import { IMeResponseDTO } from '@libs/api'
 import create from 'zustand'
+
+import { IMeResponseDTO } from '@libs/api'
 
 export interface AuthStore {
   user?: IMeResponseDTO

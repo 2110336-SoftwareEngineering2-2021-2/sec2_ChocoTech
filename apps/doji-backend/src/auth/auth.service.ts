@@ -1,17 +1,3 @@
-import { UserRegistrationRequestDTO } from '@backend/auth/auth.dto'
-import { InvalidToken } from '@backend/auth/auth.exception'
-import { User } from '@backend/entities/User'
-import { environment } from '@backend/environments/environment'
-import { IUserReference } from '@backend/types'
-import { createGoogleOAuth2Client } from '@backend/utils/google'
-import {
-  RedisKeyType,
-  deserializeUserReference,
-  generateRandomUserToken,
-  generateRedisKey,
-  serializeUserReference,
-} from '@backend/utils/redis'
-import { IUser } from '@libs/api'
 import { EntityRepository, UniqueConstraintViolationException, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import {
@@ -29,6 +15,22 @@ import { Auth, google } from 'googleapis'
 import Handlebars from 'handlebars'
 import { Redis } from 'ioredis'
 import path from 'path'
+
+import { UserRegistrationRequestDTO } from '@backend/auth/auth.dto'
+import { InvalidToken } from '@backend/auth/auth.exception'
+import { User } from '@backend/entities/User'
+import { environment } from '@backend/environments/environment'
+import { IUserReference } from '@backend/types'
+import { createGoogleOAuth2Client } from '@backend/utils/google'
+import {
+  RedisKeyType,
+  deserializeUserReference,
+  generateRandomUserToken,
+  generateRedisKey,
+  serializeUserReference,
+} from '@backend/utils/redis'
+
+import { IUser } from '@libs/api'
 
 const TOKEN_EXPIRE_DURATION_SECONDS = 60 * 60 * 24 * 30 // 30 days
 const RESET_TOKEN_EXPIRE_DURATION_SECONDS = 60 * 5 // 5 minutes

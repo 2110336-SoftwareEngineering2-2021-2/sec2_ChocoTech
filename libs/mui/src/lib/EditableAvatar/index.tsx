@@ -1,6 +1,5 @@
 import isPropValid from '@emotion/is-prop-valid'
 import { Avatar as MuiAvatar, AvatarProps as MuiAvatarProps, styled } from '@mui/material'
-
 import { AiOutlineCamera } from 'react-icons/ai'
 import { RiMedalFill } from 'react-icons/ri'
 

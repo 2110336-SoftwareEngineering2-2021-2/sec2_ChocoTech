@@ -1,15 +1,15 @@
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Button, Link as MuiLink, Stack, TextField, Typography } from '@mui/material'
+import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
+import { useMutation, useQuery } from 'react-query'
+import { InferType, object, string } from 'yup'
+
 import { httpClient } from '@frontend/services'
 import { fetchUserInformation } from '@frontend/services/fetcher'
 import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Button, Link as MuiLink, Stack, TextField, Typography } from '@mui/material'
-import Link from 'next/link'
-import { InferType, object, string } from 'yup'
-
-import { useForm } from 'react-hook-form'
-import toast from 'react-hot-toast'
-import { useMutation, useQuery } from 'react-query'
 
 const LoginSchema = object({
   username: string().trim().required('Please enter the username'),

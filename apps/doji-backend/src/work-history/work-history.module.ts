@@ -1,6 +1,7 @@
-import { WorkHistory } from '@backend/entities/WorkHistory'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Module } from '@nestjs/common'
+
+import { WorkHistory } from '@backend/entities/WorkHistory'
 
 import { WorkHistoryController } from './work-history.controller'
 import { WorkHistoryService } from './work-history.service'

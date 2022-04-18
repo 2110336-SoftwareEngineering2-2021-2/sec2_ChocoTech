@@ -11,7 +11,6 @@ import {
   styled,
 } from '@mui/material'
 import Image from 'next/image'
-
 import React from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { FiDelete, FiEdit2 } from 'react-icons/fi'

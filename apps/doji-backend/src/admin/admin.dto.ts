@@ -1,7 +1,8 @@
-import { IAdminCreationRequestDTO, IApproveExpertDetailDTO, IWorkHistory } from '@libs/api'
-import { IChangeUserRoleDTO } from '@libs/api'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsEnum, IsString } from 'class-validator'
+
+import { IAdminCreationRequestDTO, IApproveExpertDetailDTO, IWorkHistory } from '@libs/api'
+import { IChangeUserRoleDTO } from '@libs/api'
 
 export enum ChangeUserRole {
   APPROVED = 'approved',
