@@ -7,7 +7,7 @@ type StatusBadgeProp = { username: string; children: React.ReactChild }
 type UseOnlineStatusHookType = (username: string) => boolean
 
 function StatusAvatar(props: StatusBadgeProp & { useOnlineStatus: UseOnlineStatusHookType }) {
-  const { username, avatar, ...additionalProps } = props
+  const { username, ...additionalProps } = props
   const isOnline = props.useOnlineStatus(username)
   const color = isOnline ? 'green.main' : 'sky.main'
 
@@ -30,7 +30,7 @@ function StatusAvatar(props: StatusBadgeProp & { useOnlineStatus: UseOnlineStatu
   )
 }
 
-function WrappedStatusAvatar(props: StatusAvatarProp) {
+function WrappedStatusAvatar(props: StatusBadgeProp) {
   return (
     <OnlineStatusHookContext.Consumer>
       {(hook) => {
