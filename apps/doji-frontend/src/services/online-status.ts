@@ -1,8 +1,6 @@
 import { useEffect } from 'react'
-import { QueryClient, useQuery } from 'react-query'
 import { Socket, io } from 'socket.io-client'
-
-import { queryClient } from '@frontend/services'
+import create, { UseBoundStore } from 'zustand'
 
 import {
   ISubscriptionRequest,
@@ -20,7 +18,7 @@ export class OnlineStatusTrackingEntry {
 
   constructor(
     username: string,
-    private readonly queryClient: QueryClient,
+    private readonly onlineStatusStore: UseBoundStore<Map<string, boolean>>,
     private readonly socketControl: OnlineStatusSocketControl,
   ) {
     this.username = username
@@ -31,7 +29,9 @@ export class OnlineStatusTrackingEntry {
 
   updateStatus(newOnlineStatus: boolean) {
     this.online = newOnlineStatus
-    this.queryClient.invalidateQueries(this.queryKey)
+    this.onlineStatusStore.setState(
+      (state) => new Map([...Array.from(state), [this.username, newOnlineStatus]]),
+    )
   }
 
   incrementRefCount() {
@@ -48,7 +48,7 @@ export class OnlineStatusTrackingEntry {
 
 interface OnlineStatusSocketControl {
   subscribe(username: string): Promise<IUserStatusResponse>
-  unsubscribe(username: string)
+  unsubscribe(username: string): void
 }
 
 export class OnlineStatusFactory {
@@ -56,7 +56,9 @@ export class OnlineStatusFactory {
   private trackingEntries: Map<string, OnlineStatusTrackingEntry>
   private socketControl: OnlineStatusSocketControl
 
-  constructor(private readonly queryClient: QueryClient) {
+  onlineStatusStore = create(() => new Map<string, boolean>())
+
+  constructor() {
     this.client = io(SocketNamespace.ONLINE_STATUS)
     this.trackingEntries = new Map()
     this.client.on(OnlineStatusEvent.STATUS_CHANGED, (e: IUserStatusResponse) => {
@@ -81,18 +83,17 @@ export class OnlineStatusFactory {
   getTrackingEntry(username: string) {
     let entry = this.trackingEntries.get(username)
     if (!entry) {
-      entry = new OnlineStatusTrackingEntry(username, this.queryClient, this.socketControl)
+      entry = new OnlineStatusTrackingEntry(username, this.onlineStatusStore, this.socketControl)
       this.trackingEntries.set(username, entry)
     }
     return entry
   }
 }
 
-const onlineStatusFactory = new OnlineStatusFactory(queryClient)
+const onlineStatusFactory = new OnlineStatusFactory()
 
 export function useOnlineStatus(username: string) {
   const entry = onlineStatusFactory.getTrackingEntry(username)
-  const { data } = useQuery(entry.queryKey, () => entry.online)
 
   useEffect(() => {
     entry.incrementRefCount()
@@ -102,5 +103,5 @@ export function useOnlineStatus(username: string) {
     }
   }, [username])
 
-  return data
+  return onlineStatusFactory.onlineStatusStore((state) => state.get(username))
 }
