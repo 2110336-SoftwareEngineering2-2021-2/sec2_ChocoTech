@@ -36,12 +36,9 @@ export class OnlineStatusGateway implements OnGatewayConnection, OnGatewayDiscon
 
   async handleConnection(client: Socket) {
     const userRef = await this.socketAuthService.authenticateSocket(client)
-    if (!userRef) {
-      client.disconnect()
-      return
-    }
     const busContext = new SocketBusClientContext(client)
-    const userOnlineStatus = await this.onlineStatusService.getOnlineStatusForUser(userRef.username)
+    const userOnlineStatus =
+      userRef && (await this.onlineStatusService.getOnlineStatusForUser(userRef.username))
 
     //Initialize Context
     client.data.context = {
@@ -51,7 +48,7 @@ export class OnlineStatusGateway implements OnGatewayConnection, OnGatewayDiscon
     } as OnlineStatusSocketContext
 
     // Mark user online
-    await userOnlineStatus.incrementActiveSession()
+    if (userRef) await userOnlineStatus.incrementActiveSession()
   }
 
   @SubscribeMessage(OnlineStatusEvent.SUBSCRIBE)
@@ -84,7 +81,7 @@ export class OnlineStatusGateway implements OnGatewayConnection, OnGatewayDiscon
   async handleDisconnect(client: Socket) {
     const context: OnlineStatusSocketContext = client.data.context
     if (!context) return
-    await context.userOnlineStatus.decrementActiveSession()
+    if (context.userOnlineStatus) await context.userOnlineStatus.decrementActiveSession()
     context.busContext.cleanUp()
   }
 }
