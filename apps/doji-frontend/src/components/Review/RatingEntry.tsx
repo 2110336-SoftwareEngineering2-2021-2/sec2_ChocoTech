@@ -1,4 +1,4 @@
-import { Avatar, Stack, Typography, useTheme } from '@mui/material'
+import { Stack, Typography, useTheme } from '@mui/material'
 import { formatDistanceToNow } from 'date-fns'
 import toast from 'react-hot-toast'
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
@@ -7,6 +7,8 @@ import { useMutation } from 'react-query'
 import { httpClient } from '@frontend/services'
 
 import { IReview } from '@libs/api'
+
+import StatusAvatar from '../StatusAvatar'
 
 function ReviewEntry(props: { data: IReview }) {
   const theme = useTheme()
@@ -25,7 +27,11 @@ function ReviewEntry(props: { data: IReview }) {
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" spacing="0.5em" alignItems="center">
           {/*TODO Avatar*/}
-          <Avatar src="https://mui.com/static/images/avatar/2.jpg" sx={{ width: 24, height: 24 }} />
+          <StatusAvatar
+            username={props.data.user.username}
+            src="https://mui.com/static/images/avatar/2.jpg"
+            sx={{ width: 24, height: 24 }}
+          />
           <Typography variant="small" fontWeight={400}>
             {props.data.user.username}
           </Typography>

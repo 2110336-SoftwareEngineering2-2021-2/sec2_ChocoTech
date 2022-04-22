@@ -1,10 +1,11 @@
-import { Avatar, Badge, Stack } from '@mui/material'
+import { Avatar, AvatarProps, Badge } from '@mui/material'
 
 import { useOnlineStatus } from '@frontend/services/online-status'
 
-function StatusAvatar(props: { username: string }) {
-  const status = useOnlineStatus(props.username)
-  const color = status ? 'green.main' : 'sky.main'
+function StatusAvatar(props: { username: string; avatar?: React.ReactNode } & AvatarProps) {
+  const { username, avatar, ...additionalProps } = props
+  const isOnline = useOnlineStatus(username)
+  const color = isOnline ? 'green.main' : 'sky.main'
 
   return (
     <div>
@@ -19,7 +20,7 @@ function StatusAvatar(props: { username: string }) {
           },
         }}
       >
-        <Avatar src="https://mui.com/static/images/avatar/2.jpg" />
+        {avatar && <Avatar src="https://mui.com/static/images/avatar/2.jpg" {...additionalProps} />}
       </Badge>
     </div>
   )

@@ -4,6 +4,8 @@ import React from 'react'
 
 import { Tables } from '@libs/mui'
 
+import StatusAvatar from '../StatusAvatar'
+
 export interface SessionProb {
   title?: string
   price?: number
@@ -54,7 +56,10 @@ export const SessionCard: React.FC<SessionProb> = ({
               </Box>
             </Grid>
           </Grid>
-          <Tables content={'by ' + expertName} avatar={<Avatar></Avatar>}></Tables>
+          <Tables
+            content={'by ' + expertName}
+            avatar={<StatusAvatar username={expertUsername} />}
+          ></Tables>
           <Typography variant="regular" fontWeight={400}>
             {description}
           </Typography>

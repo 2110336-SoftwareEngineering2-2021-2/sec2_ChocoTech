@@ -1,4 +1,6 @@
-import { Avatar, Stack, Typography } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
+
+import StatusAvatar from '@frontend/components/StatusAvatar'
 
 import { ISession } from '@libs/api'
 
@@ -12,7 +14,11 @@ function SessionDetail(props: SessionDetailProps) {
             {props.topic}
           </Typography>
           <Stack direction="row" spacing="0.5em">
-            <Avatar src={props.owner.profilePictureURL} sx={{ width: 24, height: 24 }} />
+            <StatusAvatar
+              username={props.owner.username}
+              src={props.owner.profilePictureURL}
+              sx={{ width: 24, height: 24 }}
+            />
             <Typography variant="small" fontWeight={400}>
               by{' '}
               <Typography variant="small" fontWeight={500}>

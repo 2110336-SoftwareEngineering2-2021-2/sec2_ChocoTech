@@ -2,6 +2,8 @@ import { Avatar, ListItemIcon, Menu, MenuItem, Stack, Typography, styled } from 
 import { useRouter } from 'next/router'
 import { useMemo, useState } from 'react'
 
+import StatusAvatar from '@frontend/components/StatusAvatar'
+
 import { NavigationListItem, NavigationListItemItem } from '../NavBar/types'
 
 export interface UserBarProps {
@@ -59,9 +61,14 @@ export const UserBar: React.FC<UserBarProps> = ({
         alignItems="center"
         onClick={handleClick}
       >
-        <Avatar src={avartarSrc} sx={{ width: 32, height: 32 }}>
-          {username[0]}
-        </Avatar>
+        <StatusAvatar
+          username={username[0]}
+          avatar={
+            <Avatar src={avartarSrc} sx={{ width: 32, height: 32 }}>
+              {username[0]}
+            </Avatar>
+          }
+        />
         <Typography variant="regular" color="ink.dark" fontWeight={500}>
           {username}
         </Typography>

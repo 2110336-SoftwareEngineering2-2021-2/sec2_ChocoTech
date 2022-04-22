@@ -1,5 +1,7 @@
 import { Avatar, Stack, Typography, styled } from '@mui/material'
 
+import StatusAvatar from '@frontend/components/StatusAvatar'
+
 import { ISession } from '@libs/api'
 
 const StyleAvatar = styled(Avatar)`
@@ -33,7 +35,10 @@ export function SessionCard(props: SessionCardProps) {
             {props.topic}
           </Typography>
           <Stack direction="row" alignItems="center" mt={1}>
-            <StyleAvatar src={props.owner.profilePictureURL} />
+            <StatusAvatar
+              username={props.owner.username}
+              avatar={<StyleAvatar src={props.owner.profilePictureURL} />}
+            />
             <Typography color="ink.lighter" ml={1} mr={0.5} variant="small" fontWeight={400}>
               by
             </Typography>

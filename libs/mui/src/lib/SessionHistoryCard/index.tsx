@@ -1,5 +1,7 @@
 import { Avatar, Box, Button, Divider, Stack, Typography } from '@mui/material'
 
+import StatusAvatar from '@frontend/components/StatusAvatar'
+
 import { ISchedule, ScheduleStatus } from '@libs/api'
 
 import { SessionHistoryCardMenu } from './components/SessionHistoryCardMenu'
@@ -36,7 +38,10 @@ export function SessionHistoryCard(props: SessionHistoryCardProps) {
       <Box px={3} py={2.75}>
         <Box display="flex" flexDirection="row" justifyContent="space-between">
           <Stack direction="row" spacing={1} alignItems="flex-start" sx={{ width: '100%' }}>
-            <Avatar src={props.session.owner.profilePictureURL} />
+            <StatusAvatar
+              username={props.session.owner.username}
+              src={props.session.owner.profilePictureURL}
+            />
             <Stack direction="column" spacing={1.5} sx={{ width: '100%' }}>
               <Stack direction="column" spacing={0.5} sx={{ width: '100%' }}>
                 <Typography variant="regular" fontWeight={500} color="ink.darkest">
