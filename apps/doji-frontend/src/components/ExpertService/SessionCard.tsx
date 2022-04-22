@@ -1,10 +1,9 @@
 import { Avatar, Box, Card, CardContent, Grid, Typography } from '@mui/material'
+import StatusBadge from 'libs/mui/src/lib/StatusBadge'
 import Link from 'next/link'
 import React from 'react'
 
 import { Tables } from '@libs/mui'
-
-import StatusAvatar from '../StatusAvatar'
 
 export interface SessionProb {
   title?: string
@@ -58,7 +57,11 @@ export const SessionCard: React.FC<SessionProb> = ({
           </Grid>
           <Tables
             content={'by ' + expertName}
-            avatar={<StatusAvatar username={expertUsername} />}
+            avatar={
+              <StatusBadge username={expertUsername}>
+                <Avatar />
+              </StatusBadge>
+            }
           ></Tables>
           <Typography variant="regular" fontWeight={400}>
             {description}

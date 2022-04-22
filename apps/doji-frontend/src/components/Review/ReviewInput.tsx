@@ -1,18 +1,10 @@
-import { Stack, TextField } from '@mui/material'
-
-import StatusAvatar from '@frontend/components/StatusAvatar'
-import { useAuthStore } from '@frontend/stores'
+import { Avatar, Stack, TextField } from '@mui/material'
 
 function ReviewInput() {
-  //TODO Connect API, Review PopUP
-  const { user } = useAuthStore()
+  //TODO Connect API, Review PopUP\
   return (
     <Stack direction="row" spacing="1em" alignItems="center">
-      <StatusAvatar
-        username={user.username}
-        src="https://mui.com/static/images/avatar/3.jpg"
-        sx={{ width: 40, height: 40 }}
-      />
+      <Avatar src="https://mui.com/static/images/avatar/3.jpg" sx={{ width: 40, height: 40 }} />
       <TextField fullWidth label="Review the session..." />
     </Stack>
   )
