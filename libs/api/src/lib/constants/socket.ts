@@ -1,3 +1,5 @@
+import { IMessageDTO } from '../dtos/chat'
+
 // Server Section
 
 export enum SocketServerEvent {
@@ -72,34 +74,5 @@ export interface SocketClientPayload {
     username: string
   }
 
-  [SocketClientEvent.CHAT_MESSAGE]: {
-    /**
-     * The room id to join
-     */
-    roomId: string
-
-    /**
-     * timestamp of message as a ISO string
-     */
-    timestamp: string
-
-    /**
-     * author information
-     */
-    author: {
-      username: string
-      displayName: string
-      profilePictureURL?: string | null
-    }
-
-    /**
-     * message from author as a plain text
-     */
-    message?: string | null
-
-    /**
-     * image url from author
-     */
-    imageUrl?: string | null
-  }
+  [SocketClientEvent.CHAT_MESSAGE]: IMessageDTO
 }
