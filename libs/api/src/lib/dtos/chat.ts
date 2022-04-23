@@ -1,11 +1,13 @@
+export interface IMinimalUser {
+  username: string
+  displayName: string
+  profilePictureURL?: string | null
+}
+
 export interface IMessageDTO {
   id: string
   timestamp: string
-  author: {
-    username: string
-    displayName: string
-    profilePictureURL?: string | null
-  }
+  author: IMinimalUser
   message?: string | null
   imageUrl?: string | null
 }
@@ -14,14 +16,14 @@ export interface IGetAllChatRoomsResponseDTO {
   id: string
   name?: string | null
   lastMessage?: null | IMessageDTO
-  participants: string[]
+  participants: IMinimalUser[]
 }
 
 export interface IGetChatRoomResponseDTO {
   id: string
   name?: string | null
   messages: IMessageDTO[]
-  participants: string[]
+  participants: IMinimalUser[]
 }
 
 export interface ICreateChatRoomRequestDTO {

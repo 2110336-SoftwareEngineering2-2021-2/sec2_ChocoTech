@@ -36,6 +36,16 @@ export class ChatService {
     subscribeRedisPubSub(this.redisSub, RedisPubSubTopic.CHAT_MESSAGE_PUBSUB, this.logger)
   }
 
+  #getMiniProfile(user: User[], username: string) {
+    return user
+      .filter((p) => p.username !== username)
+      .map((p) => ({
+        username: p.username,
+        displayName: p.displayName,
+        profilePictureURL: p.profilePictureURL,
+      }))
+  }
+
   async getAllChatrooms(username: string): Promise<IGetAllChatRoomsResponseDTO[]> {
     try {
       const userInfo = await this.userRepo.findOne({ username }, ['chatRooms'])
@@ -48,10 +58,12 @@ export class ChatService {
             { orderBy: { timestamp: 'DESC' }, limit: 1 },
           )
           await chatRoom.participants.init()
+          const participants = this.#getMiniProfile(chatRoom.participants.getItems(), username)
+
           const data = {
             id: chatRoom.id,
             name: chatRoom.name,
-            participants: chatRoom.participants.getIdentifiers(),
+            participants,
           }
           if (!messages.length) {
             return {
@@ -83,7 +95,7 @@ export class ChatService {
     }
   }
 
-  async getChatroom(roomId: string): Promise<IGetChatRoomResponseDTO> {
+  async getChatroom(roomId: string, username: string): Promise<IGetChatRoomResponseDTO> {
     try {
       const chatRoom = await this.chatRoomRepo.findOne({ id: roomId }, [
         'messages',
@@ -97,18 +109,23 @@ export class ChatService {
       await chatRoom.participants.init()
       const wrappedChatRoom = wrap(chatRoom).toJSON()
 
+      const messages = wrappedChatRoom.messages.map((msg) => {
+        return {
+          ...msg,
+          author: {
+            username: msg.author.username,
+            displayName: msg.author.displayName,
+            profilePictureURL: msg.author.profilePictureURL,
+          },
+        }
+      })
+
+      const participants = this.#getMiniProfile(wrappedChatRoom.participants, username)
+
       return {
         ...wrappedChatRoom,
-        messages: wrappedChatRoom.messages.map((msg) => {
-          return {
-            ...msg,
-            author: {
-              username: msg.author.username,
-              displayName: msg.author.displayName,
-              profilePictureURL: msg.author.profilePictureURL,
-            },
-          }
-        }),
+        participants,
+        messages,
       } as IGetChatRoomResponseDTO
     } catch (err) {
       this.logger.error(err)
@@ -117,12 +134,15 @@ export class ChatService {
   }
 
   async createChatroom(username: string, data: ICreateChatRoomRequestDTO) {
-    data.participants = [username, ...data.participants]
-    const { participants, name } = data
-    const chatRoom = new ChatRoom()
-    chatRoom.name = name
-
     try {
+      const participant = await this.userRepo.findOne({ username: data.participants[0] })
+      const chatRoom = new ChatRoom()
+      chatRoom.name = data.name ? data.name : participant.displayName
+
+      data.participants = [username, ...data.participants]
+
+      const { participants } = data
+
       const users = await this.userRepo.find({
         $or: participants.map((participant) => ({ username: participant })),
       })

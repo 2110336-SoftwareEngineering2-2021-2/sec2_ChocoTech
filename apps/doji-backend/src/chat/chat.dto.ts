@@ -1,11 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsArray, IsString } from 'class-validator'
+import { IsArray, IsOptional, IsString } from 'class-validator'
 
 import {
   ICreateChatRoomRequestDTO,
   IGetAllChatRoomsResponseDTO,
   IGetChatRoomResponseDTO,
   IMessageDTO,
+  IMinimalUser,
 } from '@libs/api'
 
 export class GetAllChatRoomsResponseDTO implements IGetAllChatRoomsResponseDTO {
@@ -19,7 +20,7 @@ export class GetAllChatRoomsResponseDTO implements IGetAllChatRoomsResponseDTO {
   lastMessage?: null | IMessageDTO
 
   @ApiProperty()
-  participants: string[]
+  participants: IMinimalUser[]
 }
 
 export class GetChatRoomResponseDTO implements IGetChatRoomResponseDTO {
@@ -33,7 +34,7 @@ export class GetChatRoomResponseDTO implements IGetChatRoomResponseDTO {
   messages: IMessageDTO[]
 
   @ApiProperty()
-  participants: string[]
+  participants: IMinimalUser[]
 }
 
 export class CreateChatRoomRequestDTO implements ICreateChatRoomRequestDTO {
@@ -42,6 +43,7 @@ export class CreateChatRoomRequestDTO implements ICreateChatRoomRequestDTO {
   participants: string[]
 
   @IsString()
+  @IsOptional()
   @ApiProperty({ nullable: true, default: null })
   name?: string
 }

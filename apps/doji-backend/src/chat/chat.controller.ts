@@ -28,14 +28,17 @@ export class ChatController {
   @ApiResponse({ status: 401, description: 'The token is invalid' })
   @ApiResponse({ status: 200, description: 'The value associated with the given token' })
   @ApiCookieAuth()
-  getChatRoom(@Param('roomId') roomId: string): Promise<GetChatRoomResponseDTO> {
-    return this.chatService.getChatroom(roomId)
+  getChatRoom(
+    @CurrentUser() userRef: IUserReference,
+    @Param('roomId') roomId: string,
+  ): Promise<GetChatRoomResponseDTO> {
+    return this.chatService.getChatroom(roomId, userRef.username)
   }
 
   @Post()
   @ApiOperation({ description: 'Create a new chat room with given participants' })
   @ApiResponse({ status: 401, description: 'The token is invalid' })
-  @ApiResponse({ status: 200, description: 'Create room successfully' })
+  @ApiResponse({ status: 201, description: 'Create room successfully' })
   @ApiCookieAuth()
   createChatRoom(@CurrentUser() userRef: IUserReference, @Body() dto: CreateChatRoomRequestDTO) {
     return this.chatService.createChatroom(userRef.username, dto)
