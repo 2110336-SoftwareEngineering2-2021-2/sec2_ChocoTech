@@ -74,5 +74,7 @@ export interface SocketClientPayload {
     username: string
   }
 
-  [SocketClientEvent.CHAT_MESSAGE]: IMessageDTO
+  [SocketClientEvent.CHAT_MESSAGE]: IMessageDTO & {
+    roomId: string
+  }
 }

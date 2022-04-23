@@ -16,12 +16,13 @@ import { WsAuthGuard } from '@backend/chat/ws-auth.guard'
 import {
   SocketClientEvent,
   SocketClientPayload,
+  SocketNamespace,
   SocketServerEvent,
   SocketServerPayload,
 } from '@libs/api'
 
 @UseGuards(WsAuthGuard)
-@WebSocketGateway({ namespace: 'chat', middlewares: [AuthService] })
+@WebSocketGateway({ namespace: SocketNamespace.CHAT, middlewares: [AuthService] })
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger: Logger = new Logger(ChatGateway.name)
 
@@ -96,10 +97,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const { roomId, ...rest } = payload
     const message = await this.chatService.storeMessage(author, roomId, rest)
     const data: SocketClientPayload[SocketClientEvent.CHAT_MESSAGE] = {
+      roomId: roomId,
       ...payload,
       ...message,
     }
-    this.logger.log(`User: ${userRef.username} send message to room ${payload.roomId}`)
+    this.logger.log(`User: ${userRef.username} send message to room ${roomId}`)
     this.server.to(roomId).emit(SocketClientEvent.CHAT_MESSAGE, data)
   }
 }
