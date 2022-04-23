@@ -8,6 +8,8 @@ import {
   ListItemText,
   Link as MuiLink,
   Stack,
+  StackProps,
+  SxProps,
   Tooltip,
   useTheme,
 } from '@mui/material'
@@ -25,7 +27,7 @@ import { NavigationListItem, NavigationListItemItem } from './types'
 
 export type UserRole = 'admin' | 'user' | 'expert' | 'none'
 
-export interface NavBarProps {
+export interface NavBarProps extends StackProps {
   role?: UserRole
   username?: string
   avartarSrc?: string
@@ -98,7 +100,12 @@ const CustomDrawer: React.FC<NavBarListItemProps> = ({
   )
 }
 
-export const NavBar: React.FC<NavBarProps> = ({ role = 'none', username, avartarSrc }) => {
+export const NavBar: React.FC<NavBarProps> = ({
+  role = 'none',
+  username,
+  avartarSrc,
+  ...props
+}) => {
   const theme = useTheme()
   const [open, setOpen] = useState(false)
   const isMdUp = useResponsive('md', 'up')
@@ -141,8 +148,8 @@ export const NavBar: React.FC<NavBarProps> = ({ role = 'none', username, avartar
       px={[2, 4.5]}
       alignItems="center"
       justifyContent="space-between"
-      sx={{ boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.16)' }}
-      mb={7}
+      sx={{ boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.16)', ...props.sx }}
+      {...props}
     >
       <Logo />
       {isMdUp ? (
