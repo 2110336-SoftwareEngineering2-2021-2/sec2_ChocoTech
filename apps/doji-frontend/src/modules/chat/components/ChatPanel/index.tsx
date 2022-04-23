@@ -6,14 +6,15 @@ import { FiPlus, FiSend } from 'react-icons/fi'
 import { useMutation } from 'react-query'
 
 import { httpClient } from '@frontend/services'
+import { useAuthStore } from '@frontend/stores'
 
-import { SocketClientEvent, SocketClientPayload } from '@libs/api'
+import { IMessageDTO, SocketClientEvent, SocketClientPayload } from '@libs/api'
 
 import { ChatMessage } from '../ChatMessage'
 
 interface ChatPacelCardProps {
   roomId: string
-  initialMessages: string
+  initialMessages?: IMessageDTO[]
 }
 
 interface FormModel {
@@ -35,8 +36,12 @@ const uploadFile = async (file: File): Promise<string> => {
   return 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg'
 }
 
-export const ChatPanel = (props: ChatPacelCardProps) => {
-  const messages = useState<SocketClientPayload[SocketClientEvent.CHAT_MESSAGE][]>([])
+export const ChatPanel = ({ roomId, initialMessages }: ChatPacelCardProps) => {
+  const user = useAuthStore((store) => store.user)
+
+  const [messages, setMessages] = useState<SocketClientPayload[SocketClientEvent.CHAT_MESSAGE][]>(
+    initialMessages ?? [],
+  )
 
   const uploadButtonRef = useRef<HTMLInputElement>(null)
   const { register, handleSubmit, setValue, reset } = useForm<FormModel>()
@@ -78,7 +83,12 @@ export const ChatPanel = (props: ChatPacelCardProps) => {
         noValidate
       >
         {messages.map((message) => (
-          <ChatMessage key={message.id} {...message} />
+          <ChatMessage
+            key={message.id}
+            {...message}
+            // owner={user.username === message.author.username}
+            owner={true}
+          />
         ))}
         <IconButton color="primary" onClick={() => uploadButtonRef?.current?.click()}>
           <FiPlus />

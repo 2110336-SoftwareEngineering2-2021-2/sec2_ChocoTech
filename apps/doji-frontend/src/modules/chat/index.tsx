@@ -9,7 +9,7 @@ const ChatPage: ExtendedNextPage = () => {
   return (
     <Stack direction="row" flexGrow={1}>
       <ChatSidebar />
-      <ChatPanel />
+      <ChatPanel roomId="120" />
     </Stack>
   )
 }
