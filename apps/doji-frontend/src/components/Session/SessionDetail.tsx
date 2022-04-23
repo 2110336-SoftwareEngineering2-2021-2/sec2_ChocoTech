@@ -1,4 +1,5 @@
 import { Avatar, Stack, Typography } from '@mui/material'
+import StatusBadge from 'libs/mui/src/lib/StatusBadge'
 
 import { ISession } from '@libs/api'
 
@@ -12,7 +13,9 @@ function SessionDetail(props: SessionDetailProps) {
             {props.topic}
           </Typography>
           <Stack direction="row" spacing="0.5em">
-            <Avatar src={props.owner.profilePictureURL} sx={{ width: 24, height: 24 }} />
+            <StatusBadge username={props.owner.username}>
+              <Avatar src={props.owner.profilePictureURL} sx={{ width: 24, height: 24 }} />
+            </StatusBadge>
             <Typography variant="small" fontWeight={400}>
               by{' '}
               <Typography variant="small" fontWeight={500}>

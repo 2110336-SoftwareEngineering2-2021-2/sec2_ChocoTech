@@ -2,6 +2,8 @@ import { Avatar, Stack, Typography, styled } from '@mui/material'
 
 import { ISession } from '@libs/api'
 
+import StatusBadge from '../StatusBadge'
+
 const StyleAvatar = styled(Avatar)`
   width: ${({ theme }) => theme.spacing(3)};
   height: ${({ theme }) => theme.spacing(3)};
@@ -33,7 +35,9 @@ export function SessionCard(props: SessionCardProps) {
             {props.topic}
           </Typography>
           <Stack direction="row" alignItems="center" mt={1}>
-            <StyleAvatar src={props.owner.profilePictureURL} />
+            <StatusBadge username={props.owner.username}>
+              <StyleAvatar src={props.owner.profilePictureURL} />
+            </StatusBadge>
             <Typography color="ink.lighter" ml={1} mr={0.5} variant="small" fontWeight={400}>
               by
             </Typography>

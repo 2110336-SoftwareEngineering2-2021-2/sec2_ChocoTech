@@ -1,4 +1,5 @@
 import { Container, ThemeProvider, styled } from '@mui/material'
+import { OnlineStatusHookContext } from 'libs/mui/src/lib/StatusBadge'
 import { isEqual } from 'lodash'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
@@ -10,6 +11,7 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 
 import { queryClient } from '@frontend/services'
 import { fetchUserInformation } from '@frontend/services/fetcher'
+import { useOnlineStatus } from '@frontend/services/online-status'
 import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
 
@@ -79,24 +81,26 @@ function CustomApp(props: ExtendedAppProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <Head>
-          <title>Welcome to doji-frontend!</title>
-        </Head>
-        <MainNavBar show={showNavbar} />
-        <StyledContainer maxWidth="sm">
-          <Component {...pageProps} />
-        </StyledContainer>
-        <Toaster
-          position="bottom-center"
-          reverseOrder={false}
-          toastOptions={{
-            style: {
-              fontFamily: ['Inter', 'sans-serif'].join(','),
-            },
-          }}
-        />
-      </ThemeProvider>
+      <OnlineStatusHookContext.Provider value={useOnlineStatus}>
+        <ThemeProvider theme={theme}>
+          <Head>
+            <title>Welcome to doji-frontend!</title>
+          </Head>
+          <MainNavBar show={showNavbar} />
+          <StyledContainer maxWidth="sm">
+            <Component {...pageProps} />
+          </StyledContainer>
+          <Toaster
+            position="bottom-center"
+            reverseOrder={false}
+            toastOptions={{
+              style: {
+                fontFamily: ['Inter', 'sans-serif'].join(','),
+              },
+            }}
+          />
+        </ThemeProvider>
+      </OnlineStatusHookContext.Provider>
       <MagicComponent user={pageProps.user} />
       <Script src="https://cdn.omise.co/omise.js" />
       <ReactQueryDevtools initialIsOpen={false} />

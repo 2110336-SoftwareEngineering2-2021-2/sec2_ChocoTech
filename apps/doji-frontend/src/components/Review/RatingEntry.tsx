@@ -1,5 +1,6 @@
 import { Avatar, Stack, Typography, useTheme } from '@mui/material'
 import { formatDistanceToNow } from 'date-fns'
+import StatusBadge from 'libs/mui/src/lib/StatusBadge'
 import toast from 'react-hot-toast'
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
 import { useMutation } from 'react-query'
@@ -25,7 +26,12 @@ function ReviewEntry(props: { data: IReview }) {
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" spacing="0.5em" alignItems="center">
           {/*TODO Avatar*/}
-          <Avatar src="https://mui.com/static/images/avatar/2.jpg" sx={{ width: 24, height: 24 }} />
+          <StatusBadge username={props.data.user.username}>
+            <Avatar
+              src="https://mui.com/static/images/avatar/2.jpg"
+              sx={{ width: 24, height: 24 }}
+            />
+          </StatusBadge>
           <Typography variant="small" fontWeight={400}>
             {props.data.user.username}
           </Typography>
