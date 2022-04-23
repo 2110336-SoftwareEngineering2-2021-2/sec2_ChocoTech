@@ -17,7 +17,6 @@ const fetchRoom = async (roomId: string) => {
 }
 
 const ChatPage = () => {
-  const cleanup = useChatRoomStore((store) => store.cleanup)
   const currentRoomId = useChatRoomStore((store) => store.currentRoomId)
 
   const {
@@ -27,12 +26,6 @@ const ChatPage = () => {
   } = useQuery(['/chat', currentRoomId], ({ queryKey }) => fetchRoom(queryKey[1]), {
     enabled: !!currentRoomId,
   })
-
-  // useEffect(() => {
-  //   return () => {
-  //     cleanup()
-  //   }
-  // }, [cleanup])
 
   return (
     <Stack direction="row" flexGrow={1} maxHeight="calc(100vh - 72px)}">
