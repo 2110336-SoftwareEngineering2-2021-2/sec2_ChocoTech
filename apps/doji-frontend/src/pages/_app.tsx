@@ -90,8 +90,8 @@ function CustomApp(props: ExtendedAppProps) {
           <Head>
             <title>Welcome to doji-frontend!</title>
           </Head>
-          <MainNavBar show={showNavbar} />
-          <StyledContainer maxWidth="sm">
+          <MainNavBar show={showNavbar} {...Component.navBarProps} />
+          <StyledContainer maxWidth="sm" {...Component.containerProps}>
             <Component {...pageProps} />
           </StyledContainer>
           <Toaster

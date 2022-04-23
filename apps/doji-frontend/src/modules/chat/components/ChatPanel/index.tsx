@@ -73,6 +73,16 @@ export const ChatPanel = ({ roomId, initialMessages }: ChatPacelCardProps) => {
 
   return (
     <Stack p={4} width="100%">
+      <Stack flexGrow={1}>
+        {messages.map((message) => (
+          <ChatMessage
+            key={message.id}
+            {...message}
+            // owner={user.username === message.author.username}
+            owner={true}
+          />
+        ))}
+      </Stack>
       <Stack
         spacing={2}
         component="form"
@@ -82,14 +92,6 @@ export const ChatPanel = ({ roomId, initialMessages }: ChatPacelCardProps) => {
         alignItems="center"
         noValidate
       >
-        {messages.map((message) => (
-          <ChatMessage
-            key={message.id}
-            {...message}
-            // owner={user.username === message.author.username}
-            owner={true}
-          />
-        ))}
         <IconButton color="primary" onClick={() => uploadButtonRef?.current?.click()}>
           <FiPlus />
         </IconButton>
