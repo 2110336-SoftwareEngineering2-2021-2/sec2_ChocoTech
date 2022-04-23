@@ -1,1 +1,1 @@
-export { default } from '@frontend/modules/chat'
+export { default, getServerSideProps } from '@frontend/modules/chat'
