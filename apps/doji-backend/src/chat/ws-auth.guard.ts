@@ -15,7 +15,10 @@ export class WsAuthGuard implements CanActivate {
       const client: Socket = context.switchToWs().getClient<Socket>()
       const userRef = await this.authService.validateWebSocket(client)
       this.logger.log(`User ${userRef.username} validated`)
-      context.switchToHttp().getRequest().user = userRef
+      const req = context.switchToHttp().getRequest()
+
+      req.user = userRef
+      client.handshake.headers.cookie = req.headers.cookie
 
       return true
     } catch (err) {

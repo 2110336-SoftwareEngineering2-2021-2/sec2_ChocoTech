@@ -10,7 +10,7 @@ export class Message {
   id: string = randomUUID()
 
   @Property()
-  timestamp: string = new Date().toTimeString()
+  timestamp: string = new Date().toUTCString()
 
   @ManyToOne(() => User)
   author: User

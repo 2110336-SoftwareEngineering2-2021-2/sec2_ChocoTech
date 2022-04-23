@@ -120,7 +120,7 @@ export class ChatService {
         }
       })
 
-      const participants = this.#getMiniProfile(wrappedChatRoom.participants, username)
+      const participants = this.#getMiniProfile(chatRoom.participants.getItems(), username)
 
       return {
         ...wrappedChatRoom,

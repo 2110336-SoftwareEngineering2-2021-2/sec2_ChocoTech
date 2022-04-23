@@ -1,5 +1,7 @@
-import { Logger, UseGuards } from '@nestjs/common'
+import { Logger, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common'
 import {
+  ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
@@ -11,7 +13,7 @@ import { Server, Socket } from 'socket.io'
 
 import { AuthService } from '@backend/auth/auth.service'
 import { ChatService } from '@backend/chat/chat.service'
-import { WsAuthGuard } from '@backend/chat/ws-auth.guard'
+import { WsExceptionFilter } from '@backend/online-status/socket.filter'
 
 import {
   SocketClientEvent,
@@ -21,8 +23,12 @@ import {
   SocketServerPayload,
 } from '@libs/api'
 
-@UseGuards(WsAuthGuard)
-@WebSocketGateway({ namespace: SocketNamespace.CHAT, middlewares: [AuthService] })
+@UsePipes(ValidationPipe)
+@UseFilters(WsExceptionFilter)
+@WebSocketGateway({
+  namespace: SocketNamespace.CHAT,
+  cors: true,
+})
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger: Logger = new Logger(ChatGateway.name)
 
@@ -34,12 +40,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   ) {}
 
   afterInit(server: Server) {
-    this.logger.log(`Initialize ${ChatGateway.name} successfully`)
+    //
   }
 
   async handleConnection(client: Socket) {
     const userRef = await this.authService.validateWebSocket(client)
-    this.logger.log(`Client connected: ${client.id}, user: ${userRef.username}`)
+    this.logger.log(`Client connected: ${client.id}, user: ${userRef?.username}`)
   }
 
   async handleDisconnect(client: Socket) {
@@ -51,8 +57,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
    */
   @SubscribeMessage(SocketServerEvent.JOIN_CHAT_ROOM)
   async registerObserver(
-    client: Socket,
-    payload: SocketServerPayload[SocketServerEvent.JOIN_CHAT_ROOM],
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: SocketServerPayload[SocketServerEvent.JOIN_CHAT_ROOM],
   ) {
     const userRef = await this.authService.validateWebSocket(client)
     await this.chatService.registerObserver(client.id, userRef.username)
@@ -70,8 +76,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
    */
   @SubscribeMessage(SocketServerEvent.LEAVE_CHAT_ROOM)
   async unregisterObserver(
-    client: Socket,
-    payload: SocketServerPayload[SocketServerEvent.LEAVE_CHAT_ROOM],
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: SocketServerPayload[SocketServerEvent.LEAVE_CHAT_ROOM],
   ) {
     const userRef = await this.authService.validateWebSocket(client)
     await this.chatService.unregisterObserver(client.id)
@@ -89,8 +95,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
    */
   @SubscribeMessage(SocketServerEvent.CHAT_MESSAGE)
   async handleChatMessage(
-    client: Socket,
-    payload: SocketServerPayload[SocketServerEvent.CHAT_MESSAGE],
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: SocketServerPayload[SocketServerEvent.CHAT_MESSAGE],
   ) {
     const userRef = await this.authService.validateWebSocket(client)
     const author = await userRef.getUser()

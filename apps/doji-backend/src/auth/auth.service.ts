@@ -111,9 +111,18 @@ export class AuthService {
   }
 
   async validateWebSocket(socket: Socket): Promise<IUserReference> {
-    const accessToken = parse(socket.handshake.headers.cookie)[CookieKey.ACCESS_TOKEN]
-    const userRef = await this.validateAccessToken(accessToken)
-    return userRef
+    const cookies = parse(socket.handshake.headers.cookie || '')
+    const accessToken = cookies[CookieKey.ACCESS_TOKEN]
+    if (!accessToken) {
+      this.logger.warn('Token auth failed: No cookie')
+      return null
+    }
+    try {
+      return await this.validateAccessToken(accessToken)
+    } catch (e) {
+      this.logger.warn('Token auth failed', e)
+      return null
+    }
   }
 
   async generateGoogleLoginURL(accessToken: string, rediectUrl: string): Promise<string> {

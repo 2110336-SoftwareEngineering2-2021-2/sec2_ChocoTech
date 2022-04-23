@@ -3,7 +3,6 @@ import { Redis } from 'ioredis'
 
 import { OnlineStatus } from '@backend/online-status/online-status'
 import { SocketBusService } from '@backend/online-status/socket-bus.service'
-import { IUserReference } from '@backend/types'
 
 @Injectable()
 export class OnlineStatusService {
