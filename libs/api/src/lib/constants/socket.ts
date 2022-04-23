@@ -88,6 +88,7 @@ export interface SocketClientPayload {
      */
     author: {
       username: string
+      displayName: string
       profilePictureURL?: string | null
     }
 

@@ -3,6 +3,7 @@ export interface IMessageDTO {
   timestamp: string
   author: {
     username: string
+    displayName: string
     profilePictureURL?: string | null
   }
   message?: string | null

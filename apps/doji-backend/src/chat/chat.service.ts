@@ -68,6 +68,7 @@ export class ChatService {
               imageUrl: messages[0].imageUrl,
               author: {
                 username: messages[0].author.username,
+                displayName: messages[0].author.displayName,
                 profilePictureURL: messages[0].author.profilePictureURL,
               },
             },
@@ -103,6 +104,7 @@ export class ChatService {
             ...msg,
             author: {
               username: msg.author.username,
+              displayName: msg.author.displayName,
               profilePictureURL: msg.author.profilePictureURL,
             },
           }
@@ -164,6 +166,7 @@ export class ChatService {
         timestamp: message.timestamp,
         author: {
           username: message.author.username,
+          displayName: message.author.displayName,
           profilePictureURL: message.author.profilePictureURL,
         },
         message: message.message,
