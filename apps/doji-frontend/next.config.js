@@ -16,10 +16,6 @@ const nextConfig = {
         source: '/api/:path*',
         destination: process.env.NEXT_PUBLIC_API_URL + '/:path*',
       },
-      {
-        source: '/socket.io',
-        destination: process.env.NEXT_PUBLIC_SOCKET_API_URL + '/socket.io/',
-      },
     ]
   },
 }

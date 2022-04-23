@@ -10,6 +10,10 @@ import {
   SocketNamespace,
 } from '@libs/api'
 
+interface OnlineStatusStoreType {
+  usernameOnlineStatus: Map<string, boolean>
+}
+
 export class OnlineStatusTrackingEntry {
   username: string
   online: boolean
@@ -18,7 +22,7 @@ export class OnlineStatusTrackingEntry {
 
   constructor(
     username: string,
-    private readonly onlineStatusStore: UseBoundStore<Map<string, boolean>>,
+    private readonly onlineStatusStore: UseBoundStore<OnlineStatusStoreType>,
     private readonly socketControl: OnlineStatusSocketControl,
   ) {
     this.username = username
@@ -29,9 +33,12 @@ export class OnlineStatusTrackingEntry {
 
   updateStatus(newOnlineStatus: boolean) {
     this.online = newOnlineStatus
-    this.onlineStatusStore.setState(
-      (state) => new Map([...Array.from(state), [this.username, newOnlineStatus]]),
-    )
+    this.onlineStatusStore.setState((state) => ({
+      usernameOnlineStatus: new Map([
+        ...Array.from(state.usernameOnlineStatus),
+        [this.username, newOnlineStatus],
+      ]),
+    }))
   }
 
   incrementRefCount() {
@@ -56,10 +63,12 @@ export class OnlineStatusFactory {
   private trackingEntries: Map<string, OnlineStatusTrackingEntry>
   private socketControl: OnlineStatusSocketControl
 
-  onlineStatusStore = create(() => new Map<string, boolean>())
+  onlineStatusStore = create<OnlineStatusStoreType>(() => ({
+    usernameOnlineStatus: new Map<string, boolean>(),
+  }))
 
   constructor() {
-    this.client = io(SocketNamespace.ONLINE_STATUS)
+    this.client = io(process.env.NEXT_PUBLIC_SOCKET_API_URL + SocketNamespace.ONLINE_STATUS)
     this.trackingEntries = new Map()
     this.client.on(OnlineStatusEvent.STATUS_CHANGED, (e: IUserStatusResponse) => {
       const entry = this.trackingEntries.get(e.username)
@@ -103,5 +112,5 @@ export function useOnlineStatus(username: string) {
     }
   }, [username])
 
-  return onlineStatusFactory.onlineStatusStore((state) => state.get(username))
+  return onlineStatusFactory.onlineStatusStore((state) => state.usernameOnlineStatus.get(username))
 }
