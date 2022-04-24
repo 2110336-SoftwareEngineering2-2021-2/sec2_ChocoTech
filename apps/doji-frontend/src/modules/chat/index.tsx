@@ -1,5 +1,4 @@
 import { Stack } from '@mui/material'
-import { useCallback, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 
 import { getServerSideUser } from '@frontend/common/auth'
@@ -18,6 +17,7 @@ const fetchRoom = async (roomId: string) => {
 
 const ChatPage = () => {
   const currentRoomId = useChatRoomStore((store) => store.currentRoomId)
+  const setMessages = useChatRoomStore((store) => store.setMessages)
 
   const {
     data: chatRoom,
@@ -25,12 +25,15 @@ const ChatPage = () => {
     isError,
   } = useQuery(['/chat', currentRoomId], ({ queryKey }) => fetchRoom(queryKey[1]), {
     enabled: !!currentRoomId,
+    onSuccess: (chatRoom) => {
+      setMessages(currentRoomId, chatRoom.messages || [])
+    },
   })
 
   return (
     <Stack direction="row" flexGrow={1} maxHeight="calc(100vh - 72px)}">
       <ChatSidebar />
-      <ChatPanel {...chatRoom} isLoading={isLoading || isError} />
+      <ChatPanel {...chatRoom} isLoading={isLoading || isError} isEmpty={!chatRoom} />
     </Stack>
   )
 }

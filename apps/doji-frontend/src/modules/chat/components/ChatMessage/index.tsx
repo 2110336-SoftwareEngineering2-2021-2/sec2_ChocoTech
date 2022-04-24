@@ -1,5 +1,6 @@
 import { Avatar, Stack, Tooltip, Typography, styled } from '@mui/material'
 import Image from 'next/image'
+import { useMemo } from 'react'
 
 import { IMessageDTO } from '@libs/api'
 
@@ -10,6 +11,16 @@ const Chat = styled(Typography)`
   padding: ${({ theme }) => theme.spacing(1, 2)};
   line-height: 1.75;
   border-radius: 20px;
+`
+
+const ChatImage = styled('span')`
+  max-width: 300px;
+  width: fit-content;
+  margin: ${({ theme }) => theme.spacing(1, 2)};
+  border-radius: 20px;
+  img {
+    border-radius: 20px;
+  }
 `
 
 interface ChatMessageProps extends IMessageDTO {
@@ -28,6 +39,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
   const color = owner ? 'white' : 'ink.dark'
   const textAlign = owner ? 'right' : 'left'
   const placement = owner ? 'left-end' : 'right-end'
+  const alignItems = owner ? 'flex-end' : 'flex-start'
 
   return (
     <Stack direction={direction} width="100%" spacing={1.5} alignItems="flex-end">
@@ -35,7 +47,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
         {author.displayName && author.displayName[0].toUpperCase()}
       </Avatar>
       <Tooltip title={timestamp} placement={placement}>
-        <Stack justifyContent="center" spacing={1} alignItems="flex-end">
+        <Stack justifyContent="center" spacing={1} alignItems={alignItems}>
           <Typography variant="tiny" color="sky.main" textAlign={textAlign}>
             {author.displayName}
           </Typography>
@@ -45,9 +57,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
             </Chat>
           )}
           {imageUrl && (
-            <Chat variant="small" sx={{ bgcolor }} color={color}>
+            <ChatImage>
               <Image src={imageUrl} width="300" height="300" alt={imageUrl} />
-            </Chat>
+            </ChatImage>
           )}
         </Stack>
       </Tooltip>

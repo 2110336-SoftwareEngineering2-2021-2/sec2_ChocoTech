@@ -1,17 +1,22 @@
 import create from 'zustand'
 import createContext from 'zustand/context'
 
-import { SocketChatRoomController } from '@frontend/services/chat'
+import { ChatRoomSocketController, ChatRoomSocketFactory } from '@frontend/services/chat'
 
-import { IGetAllChatRoomsResponseDTO } from '@libs/api'
+import { IMessageDTO } from '@libs/api'
 
 interface ChatRoomStore {
-  availableChatRooms: IGetAllChatRoomsResponseDTO[]
-  currentRoomId: string
-  socketControllers: SocketChatRoomController[]
-  getSocketController: (roomId: string) => SocketChatRoomController | undefined
+  messages: Record<string, IMessageDTO[]> // Key is roomId
+  currentRoomId: string | null
+  chatRoomSocketFactory: ChatRoomSocketFactory
+  getSocketController: (roomId: string) => ChatRoomSocketController | undefined
+  removeSocketController: (roomId: string) => void
   setCurrentRoomId: (roomId: string) => void
-  cleanup: () => void
+  setMessages: (roomId: string, messages: IMessageDTO[]) => void
+  sendMessage: (
+    roomId: string,
+    { message, imageUrl }: { message?: string; imageUrl?: string },
+  ) => void
 }
 
 export const { Provider: ChatRoomProvider, useStore: useChatRoomStore } =
@@ -19,40 +24,52 @@ export const { Provider: ChatRoomProvider, useStore: useChatRoomStore } =
 
 export const createChatRoomStore = () =>
   create<ChatRoomStore>((set, get) => {
-    const getSocketController = (roomId) => {
-      const socketControllers = get().socketControllers
-      return socketControllers.find((s) => s.roomId === roomId)
+    const getSocketController: ChatRoomStore['getSocketController'] = (roomId) => {
+      return get().chatRoomSocketFactory.getConntroller(roomId)
     }
 
-    const removeSocket = (socket: SocketChatRoomController) => {
-      socket.leaveRoom()
-      const socketControllers = get().socketControllers
-      return socketControllers.filter((s) => s.roomId !== socket.roomId)
+    const removeSocketController: ChatRoomStore['removeSocketController'] = (roomId) => {
+      get().chatRoomSocketFactory.removeController(roomId)
     }
 
-    const setCurrentRoomId = (roomId) => {
-      const foundSocket = getSocketController(roomId)
-      const remainingSockets = foundSocket ? removeSocket(foundSocket) : get().socketControllers
-      const newSocket = new SocketChatRoomController(roomId)
-
+    const setCurrentRoomId: ChatRoomStore['setCurrentRoomId'] = (roomId) => {
+      const chatRoomSocketFactory = get().chatRoomSocketFactory
+      get().removeSocketController(roomId)
+      chatRoomSocketFactory.appendController(roomId, ({ roomId, ...rest }) => {
+        const messages = get().messages[roomId] || []
+        get().setMessages(roomId, [...messages, rest])
+      })
       set((state) => ({
         ...state,
-        socketControllers: [...remainingSockets, newSocket],
         currentRoomId: roomId,
+        chatRoomSocketFactory: get().chatRoomSocketFactory,
       }))
     }
 
-    const cleanup = () => {
-      const socketControllers = get().socketControllers
-      socketControllers.forEach((s) => s.disconnect())
+    const setMessages: ChatRoomStore['setMessages'] = (roomId, messages) => {
+      const oldMessages = get().messages
+      oldMessages[roomId] = messages
+      set((state) => ({
+        ...state,
+        messages: oldMessages,
+      }))
+    }
+
+    const sendMessage: ChatRoomStore['sendMessage'] = (roomId, { message, imageUrl }) => {
+      const controller = get().getSocketController(roomId)
+      if (controller) {
+        controller.sendMessage({ message, imageUrl })
+      }
     }
 
     return {
-      availableChatRooms: [],
+      messages: {},
       currentRoomId: null,
-      socketControllers: [],
+      chatRoomSocketFactory: new ChatRoomSocketFactory(),
       getSocketController,
+      removeSocketController,
       setCurrentRoomId,
-      cleanup,
+      setMessages,
+      sendMessage,
     }
   })

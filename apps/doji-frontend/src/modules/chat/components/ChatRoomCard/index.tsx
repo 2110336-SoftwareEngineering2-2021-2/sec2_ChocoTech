@@ -28,8 +28,8 @@ export const ChatRoomCard = ({
 
   const message = useMemo(() => {
     if (!lastMessage) return 'No message'
-    if (lastMessage.message) return lastMessage.message
-    return `${firstParticipant.displayName} send file`
+    if (lastMessage.message) return `${lastMessage.author.displayName}: ${lastMessage.message}`
+    return `${firstParticipant.displayName}: send file`
   }, [lastMessage, firstParticipant])
 
   return (
