@@ -9,8 +9,8 @@ export class ChatRoom {
   @PrimaryKey()
   id: string
 
-  @Property({ nullable: true })
-  name: string
+  @Property({ nullable: true, default: null })
+  name?: string | null
 
   @ManyToMany(() => User, 'chatRooms', { owner: true })
   participants = new Collection<User>(this)

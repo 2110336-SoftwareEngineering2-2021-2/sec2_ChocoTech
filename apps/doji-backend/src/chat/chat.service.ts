@@ -36,7 +36,7 @@ export class ChatService {
     subscribeRedisPubSub(this.redisSub, RedisPubSubTopic.CHAT_MESSAGE_PUBSUB, this.logger)
   }
 
-  #getMiniProfile(user: User[], username: string) {
+  #getMinimalProfile(user: User[], username: string) {
     return user
       .filter((p) => p.username !== username)
       .map((p) => ({
@@ -44,6 +44,11 @@ export class ChatService {
         displayName: p.displayName,
         profilePictureURL: p.profilePictureURL,
       }))
+  }
+
+  #getChatRoomNames(participants: string[], username: string) {
+    const otherUsernames = participants.filter((p) => p !== username)
+    return otherUsernames.join(' ')
   }
 
   async getAllChatrooms(username: string): Promise<IGetAllChatRoomsResponseDTO[]> {
@@ -58,11 +63,12 @@ export class ChatService {
             { orderBy: { timestamp: 'DESC' }, limit: 1 },
           )
           await chatRoom.participants.init()
-          const participants = this.#getMiniProfile(chatRoom.participants.getItems(), username)
+          const participants = this.#getMinimalProfile(chatRoom.participants.getItems(), username)
+          const pUsernames = participants.map((p) => p.username)
 
           const data = {
             id: chatRoom.id,
-            name: chatRoom.name,
+            name: chatRoom?.name || this.#getChatRoomNames(pUsernames, username),
             participants,
           }
           if (!messages.length) {
@@ -120,10 +126,13 @@ export class ChatService {
         }
       })
 
-      const participants = this.#getMiniProfile(chatRoom.participants.getItems(), username)
+      const participants = this.#getMinimalProfile(chatRoom.participants.getItems(), username)
+      const pUsernames = participants.map((p) => p.username)
+      const chatRoomName = wrappedChatRoom?.name || this.#getChatRoomNames(pUsernames, username)
 
       return {
         ...wrappedChatRoom,
+        name: chatRoomName,
         participants,
         messages,
       } as IGetChatRoomResponseDTO
@@ -135,9 +144,8 @@ export class ChatService {
 
   async createChatroom(username: string, data: ICreateChatRoomRequestDTO) {
     try {
-      const participant = await this.userRepo.findOne({ username: data.participants[0] })
       const chatRoom = new ChatRoom()
-      chatRoom.name = data.name ? data.name : participant.displayName
+      chatRoom.name = data.name ? data.name : null
 
       data.participants = [username, ...data.participants]
 
