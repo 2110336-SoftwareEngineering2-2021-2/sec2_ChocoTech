@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Socket, io } from 'socket.io-client'
+import { Socket } from 'socket.io-client'
 import create, { UseBoundStore } from 'zustand'
 
 import {
@@ -9,6 +9,8 @@ import {
   OnlineStatusEvent,
   SocketNamespace,
 } from '@libs/api'
+
+import { manager } from './socketManager'
 
 interface OnlineStatusStoreType {
   usernameOnlineStatus: Map<string, boolean>
@@ -68,7 +70,7 @@ export class OnlineStatusFactory {
   }))
 
   constructor() {
-    this.client = io(process.env.NEXT_PUBLIC_SOCKET_API_URL + SocketNamespace.ONLINE_STATUS)
+    this.client = manager.socket(SocketNamespace.ONLINE_STATUS)
     this.trackingEntries = new Map()
     this.client.on(OnlineStatusEvent.STATUS_CHANGED, (e: IUserStatusResponse) => {
       const entry = this.trackingEntries.get(e.username)

@@ -123,4 +123,13 @@ export class AuthController {
   async create(@Body() dto: UserRegistrationRequestDTO) {
     await this.authService.signup(dto)
   }
+
+  /**
+   * TODO: temporary endpoint, will delete after friend system is implemented
+   */
+  @UseGuards(UserAuthGuard)
+  @Get('users')
+  async getAllUsers() {
+    return await this.authService.getAllUsers()
+  }
 }

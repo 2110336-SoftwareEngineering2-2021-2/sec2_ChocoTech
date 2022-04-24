@@ -1,12 +1,12 @@
-import { Avatar, AvatarProps, Badge } from '@mui/material'
+import { Badge } from '@mui/material'
 import React from 'react'
 
 export const OnlineStatusHookContext = React.createContext<UseOnlineStatusHookType>(() => false)
 
-type StatusBadgeProp = { username: string; children: React.ReactChild }
+type StatusBadgeProps = { username: string; children: React.ReactChild }
 type UseOnlineStatusHookType = (username: string) => boolean
 
-function StatusAvatar(props: StatusBadgeProp & { useOnlineStatus: UseOnlineStatusHookType }) {
+function StatusAvatar(props: StatusBadgeProps & { useOnlineStatus: UseOnlineStatusHookType }) {
   const { username, ...additionalProps } = props
   const isOnline = props.useOnlineStatus(username)
   const color = isOnline ? 'green.main' : 'sky.main'
@@ -30,7 +30,7 @@ function StatusAvatar(props: StatusBadgeProp & { useOnlineStatus: UseOnlineStatu
   )
 }
 
-function WrappedStatusAvatar(props: StatusBadgeProp) {
+function WrappedStatusAvatar(props: StatusBadgeProps) {
   return (
     <OnlineStatusHookContext.Consumer>
       {(hook) => {
