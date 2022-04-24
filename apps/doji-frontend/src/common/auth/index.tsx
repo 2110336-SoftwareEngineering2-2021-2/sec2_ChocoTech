@@ -15,6 +15,7 @@ export const getServerSideUser =
   async (context) => {
     try {
       const cookieHeader = context?.req?.headers?.cookie
+
       const data = await fetchUserInformation({
         headers: cookieHeader ? { cookie: cookieHeader } : undefined,
       })

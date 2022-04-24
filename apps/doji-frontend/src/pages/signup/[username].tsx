@@ -1,4 +1,5 @@
-import { Button, Link, Stack, Typography } from '@mui/material'
+import { Button, Stack, Typography } from '@mui/material'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 function Complete() {
@@ -19,7 +20,7 @@ function Complete() {
           </Typography>
         </Typography>
         <Stack direction="column" spacing={2} m={5} alignItems="center">
-          <Link href="../login">
+          <Link href="/login" passHref>
             <Button>Login</Button>
           </Link>
         </Stack>

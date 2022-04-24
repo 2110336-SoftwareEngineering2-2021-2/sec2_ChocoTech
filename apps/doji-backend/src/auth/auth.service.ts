@@ -270,4 +270,12 @@ export class AuthService {
     const user = await userRef.getUser()
     return wrap(user).toJSON() as IUser
   }
+
+  /**
+   * TODO: just a temporary service, will delete after friend system is implemented
+   */
+  async getAllUsers(): Promise<IUser[]> {
+    const users = await this.userRepo.findAll()
+    return users.map((user) => wrap(user).toJSON()) as IUser[]
+  }
 }
