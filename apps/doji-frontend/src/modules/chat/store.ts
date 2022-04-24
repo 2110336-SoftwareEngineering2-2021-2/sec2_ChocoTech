@@ -42,7 +42,7 @@ export const createChatRoomStore = () =>
       set((state) => ({
         ...state,
         currentRoomId: roomId,
-        chatRoomSocketFactory: get().chatRoomSocketFactory,
+        chatRoomSocketFactory,
       }))
     }
 
