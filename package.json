@@ -26,6 +26,7 @@
     "@emotion/react": "^11.7.1",
     "@emotion/server": "11.4.0",
     "@emotion/styled": "^11.6.0",
+    "@google-cloud/storage": "^5.19.3",
     "@hookform/resolvers": "^2.8.8",
     "@mikro-orm/core": "^4.5.10",
     "@mikro-orm/nestjs": "^4.3.1",
