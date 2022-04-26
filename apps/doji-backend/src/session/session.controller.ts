@@ -50,6 +50,12 @@ export class SessionController {
     }
   }
 
+  @Get('/expert/:username')
+  @UseGuards(UserAuthGuard)
+  async getSessionsByExpert(@Param('username') username: string): Promise<ISession[]> {
+    return await this.sessionService.getSessionsByExpert(username)
+  }
+
   @Post()
   @UseGuards(ExpertAuthGuard)
   @ApiCookieAuth()
