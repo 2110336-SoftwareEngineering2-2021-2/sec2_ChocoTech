@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common'
 import { ApiCookieAuth } from '@nestjs/swagger'
 
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
-import { UserEditProfileRequest } from '@backend/profile/profile.dto'
+import { ProfileResponseDTO, UserEditProfileRequest } from '@backend/profile/profile.dto'
 import { IUserReference } from '@backend/types'
 
 import { ProfileService } from './profile.service'
@@ -14,7 +14,7 @@ export class ProfileController {
   @Get(':username')
   @UseGuards(UserAuthGuard)
   @ApiCookieAuth()
-  async getProfile(@Param('username') username: string) {
+  async getProfile(@Param('username') username: string): Promise<ProfileResponseDTO> {
     return await this.profileService.getProfile(username)
   }
 
