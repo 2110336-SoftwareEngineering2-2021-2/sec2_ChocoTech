@@ -53,8 +53,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
 
   if (isLoading) return <CircularProgress />
 
-  console.log('me = ', currentUser)
-  console.log('show = ', displayUser)
+  // console.log('me = ', currentUser)
+  // console.log('show = ', displayUser)
 
   return (
     <Stack spacing={1}>
@@ -133,7 +133,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
             {displayUser.sessions.map((session) => (
               <>
                 <SessionCard
-                  owner={{ username: 'ss' } as any}
+                  owner={{ username: displayUser.username } as any}
                   // {...session}
                   id={session.id}
                   fee={session.fee}
