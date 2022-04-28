@@ -1,15 +1,24 @@
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 
-import { fetchUserInformation } from '@frontend/services/fetcher'
+import { httpClient } from '@frontend/services'
 
-const MyProfilePage = ({ user }) => {
-  const { data: userData } = useQuery('user', fetchUserInformation, { initialData: user })
-  const currentUser = userData
+import { IMeResponseDTO } from '@libs/api'
 
-  const router = useRouter()
-  router.push(`/profile/${currentUser.username}`)
+const MyProfilePage = () => {
+  const {
+    data: user,
+    isLoading: isUserLoading,
+    isError: isUserError,
+  } = useQuery<IMeResponseDTO>('/auth/me', () => httpClient.get('/auth/me').then((res) => res.data))
 
+  if (!isUserLoading) {
+    console.log(user)
+    console.log(user.username)
+
+    const router = useRouter()
+    router.push(`/profile/${user.username}`)
+  }
   return null
 }
 
