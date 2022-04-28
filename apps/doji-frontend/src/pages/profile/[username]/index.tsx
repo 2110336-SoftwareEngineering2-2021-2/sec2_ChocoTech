@@ -10,16 +10,17 @@ import {
 } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import toast from 'react-hot-toast'
 import { BsThreeDotsVertical } from 'react-icons/bs'
+import { FiMessageSquare, FiUserPlus } from 'react-icons/fi'
 import { useQuery } from 'react-query'
 
 import { getServerSideUser } from '@frontend/common/auth'
 import RatingPanel from '@frontend/components/Review/RatingPanel'
-import SessionDetail from '@frontend/components/Session/SessionDetail'
 import { httpClient } from '@frontend/services'
 import { fetchUserInformation } from '@frontend/services/fetcher'
 
-import { IMeResponseDTO, IProfileResponseDTO } from '@libs/api'
+import { IMeResponseDTO, IProfileResponseDTO, IReportDTO } from '@libs/api'
 import { Achievement, CompactProfile, SessionCard } from '@libs/mui'
 
 interface ProfilePageProps {
@@ -35,6 +36,28 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
   }
   const handleMenuClose = () => {
     setAnchorEl(null)
+  }
+
+  const submitReport = async () => {
+    try {
+      await toast.promise(httpClient.post('report', { expertUsername: displayUser.username }), {
+        loading: 'Loading...',
+        success: 'Report this expert successful.',
+        error: 'You have already reported this expert',
+      })
+    } catch (error) {}
+  }
+
+  const addFriend = async () => {
+    // TODO wait for friend system api
+    //
+    // try {
+    //   await toast.promise(httpClient.post('report', { expertUsername: displayUser.username }), {
+    //     loading: 'Loading...',
+    //     success: 'Report this expert successful.',
+    //     error: 'You have already reported this expert',
+    //   })
+    // } catch (error) {}
   }
 
   const { data: userData } = useQuery('user', fetchUserInformation, { initialData: user })
@@ -53,9 +76,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
 
   if (isLoading) return <CircularProgress />
 
-  // console.log('me = ', currentUser)
-  // console.log('show = ', displayUser)
-
   return (
     <Stack spacing={1}>
       <CompactProfile
@@ -66,9 +86,17 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
 
       {currentUser.username !== displayUser.username && (
         <Stack spacing={4} direction={'row'}>
-          <Button fullWidth>Friend</Button>
-          <Button fullWidth variant="outlined">
-            Message
+          <Button fullWidth onClick={addFriend}>
+            <FiUserPlus style={{ marginRight: 8 }} /> Add Friend
+          </Button>
+          <Button
+            fullWidth
+            variant="outlined"
+            onClick={() => {
+              router.push('/chat')
+            }}
+          >
+            <FiMessageSquare style={{ marginRight: 8 }} /> Message
           </Button>
           {displayUser.role === 'expert' && (
             <>
@@ -89,7 +117,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
                 }}
               >
                 <MenuItem>
-                  <ListItemText>Report this expert</ListItemText>
+                  <ListItemText onClick={submitReport}>Report this expert</ListItemText>
                 </MenuItem>
               </Menu>
             </>
@@ -100,7 +128,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
       <Typography color="sky.main" fontWeight={500}>
         Working history and Acheivement
       </Typography>
-
       {displayUser.workHistory.length === 0 && (
         <Typography color="sky.main" fontWeight={400} align="center" py={4}>
           - This user has no history -
@@ -147,21 +174,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
           </Stack>
         </>
       )}
-
-      {/* <SessionDetail {...data} />
-      <Link href={`/session/schedule/${data.id}`} passHref>
-        <Button sx={{ margin: '1em' }}>Schedule</Button>
-      </Link>
-      <div>
-        <Typography color="sky.main" fontWeight={500}>
-          Rating and Review
-        </Typography>
-        <RatingPanel reviewStat={data.reviewStat} />
-      </div>
-      <ReviewInput />
-      {data.reviews.map((review) => (
-        <ReviewEntry key={review.id} data={review} />
-      ))} */}
     </Stack>
   )
 }
