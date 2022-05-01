@@ -80,6 +80,9 @@ function BalancePage() {
         {transactionsQuery.data.map((entry) => (
           <TransactionEntry key={entry.id} data={entry} />
         ))}
+        {transactionsQuery.data.length == 0 && (
+          <Typography color="ink.main">There is no transaction to be shown.</Typography>
+        )}
       </Stack>
 
       <DepositDialog
