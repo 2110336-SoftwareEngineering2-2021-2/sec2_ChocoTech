@@ -1,7 +1,5 @@
 import { Storage } from '@google-cloud/storage'
 import { Injectable } from '@nestjs/common'
-import { Express } from 'express'
-import { Multer } from 'multer'
 
 @Injectable()
 export class ImageService {
@@ -12,6 +10,6 @@ export class ImageService {
       destination: file.filename,
       contentType: file.mimetype,
     })
-    return { publicUrl: res[0].publicUrl() }
+    return { id: `${new Date().toUTCString()}${Math.random()}`, url: res[0].publicUrl() }
   }
 }

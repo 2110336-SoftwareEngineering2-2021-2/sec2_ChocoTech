@@ -19,11 +19,12 @@ export class WorkHistoryService {
     })
   }
 
-  async addWorkHistory(dto: WorkHistoryRequestDTO, userRef: IUserReference) {
+  async addWorkHistory(user: User, topic: string, description: string, imageURL: string) {
     const workHistory = new WorkHistory()
-    workHistory.expert = await userRef.getUser()
-    workHistory.topic = dto.topic
-    workHistory.description = dto.description
+    workHistory.expert = user
+    workHistory.topic = topic
+    workHistory.description = description
+    workHistory.imageUrl = imageURL
     await this.workHistoryRepo.persistAndFlush(workHistory)
   }
 

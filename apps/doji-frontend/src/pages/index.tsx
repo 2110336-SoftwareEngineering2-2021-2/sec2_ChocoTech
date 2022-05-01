@@ -1,6 +1,6 @@
 import { Button, Container, Link as MuiLink, Stack, Typography, styled } from '@mui/material'
-import Image from 'next/image'
 import Link from 'next/link'
+import { ImGithub } from 'react-icons/im'
 
 function Index() {
   return (
@@ -17,7 +17,7 @@ function Index() {
           ji
         </Typography>
       </Typography>
-      <Image src="/static/AL.png" alt="Picture of the author" width={327} height={327}></Image>
+      <img src="/static/AL.png" alt="Picture of the author" width={327} height={327}></img>
       <Stack direction="column">
         <Typography align="center" variant="title3" fontWeight={700} pt={[2, 4]} lineHeight="32px">
           Your{' '}

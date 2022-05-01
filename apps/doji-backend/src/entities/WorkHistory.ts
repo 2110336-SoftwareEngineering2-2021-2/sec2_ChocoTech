@@ -16,4 +16,7 @@ export class WorkHistory {
 
   @Property()
   description: string
+
+  @Property()
+  imageUrl: string
 }

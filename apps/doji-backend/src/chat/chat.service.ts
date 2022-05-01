@@ -1,7 +1,10 @@
+import { Storage } from '@google-cloud/storage'
 import { EntityRepository, NotFoundError, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common'
+import { Express } from 'express'
 import { Redis } from 'ioredis'
+import { Multer } from 'multer'
 
 import { ChatRoom } from '@backend/entities/ChatRoom'
 import { Message } from '@backend/entities/Message'
@@ -24,7 +27,7 @@ import {
 @Injectable()
 export class ChatService {
   private readonly logger = new Logger(ChatService.name)
-
+  storage = new Storage()
   constructor(
     @Inject('Redis') private readonly redis: Redis,
     @Inject('RedisSubscriber') private readonly redisSub: Redis,
@@ -204,13 +207,5 @@ export class ChatService {
       this.logger.error(err)
       throw new BadRequestException(err.message)
     }
-  }
-
-  async uploadImage() {
-    // TODO
-  }
-
-  async deleteImage() {
-    // TODO
   }
 }
