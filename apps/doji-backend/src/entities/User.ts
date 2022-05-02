@@ -9,6 +9,8 @@ import {
 } from '@mikro-orm/core'
 
 import { ChatRoom } from './ChatRoom'
+import { FriendRequest } from './FriendRequest'
+import { Friendship } from './Friendship'
 import { Message } from './Message'
 import { Review } from './Review'
 import { Schedule } from './Schedule'
@@ -77,6 +79,15 @@ export class User {
 
   @ManyToMany(() => ChatRoom, (chatRoom) => chatRoom.participants)
   chatRooms = new Collection<ChatRoom>(this)
+
+  @OneToMany(() => FriendRequest, (friendRequest) => friendRequest.sender)
+  requestSent = new Collection<FriendRequest>(this)
+
+  @OneToMany(() => FriendRequest, (friendRequest) => friendRequest.receiver)
+  requestReceived = new Collection<FriendRequest>(this)
+
+  @OneToMany(() => Friendship, (friendship) => friendship.user1)
+  friendship = new Collection<Friendship>(this)
 
   // @ManyToOne({ nullable: true })
   // verifiedByAdmin!: Admin
