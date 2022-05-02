@@ -59,7 +59,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
           )}
           {imageUrl && (
             <ChatImage>
-              <Image src={imageUrl} layout="fill" objectFit="contain" alt={imageUrl} />
+              <Image src={imageUrl} layout="fill" objectFit="cover" alt={imageUrl} />
             </ChatImage>
           )}
         </Stack>

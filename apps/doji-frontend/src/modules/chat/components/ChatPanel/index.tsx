@@ -189,7 +189,7 @@ export const ChatPanel = ({ name, id: roomId, isLoading, isEmpty }: ChatPacelCar
       {fileUrl && (
         <ImagePreview onClick={() => handleDeleteFile(fileId)}>
           <div className="cross" />
-          <Image objectFit="contain" layout="fill" src={fileUrl} alt={fileUrl} />
+          <Image objectFit="cover" layout="fill" src={fileUrl} alt={fileUrl} />
         </ImagePreview>
       )}
     </Stack>
