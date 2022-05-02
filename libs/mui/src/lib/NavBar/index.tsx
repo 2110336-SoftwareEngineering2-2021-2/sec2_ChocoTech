@@ -33,6 +33,7 @@ export interface NavBarProps extends StackProps {
   role?: UserRole
   username?: string
   avartarSrc?: string
+  displayName?: string
 }
 
 interface NavBarListItemProps extends DrawerProps {
@@ -107,6 +108,7 @@ export const NavBar: React.FC<NavBarProps> = ({
   role = 'none',
   username,
   avartarSrc,
+  displayName,
   ...props
 }) => {
   const theme = useTheme()
@@ -181,6 +183,7 @@ export const NavBar: React.FC<NavBarProps> = ({
             items={itemList}
             isLoggedIn={role !== 'none'}
             username={username}
+            displayName={displayName}
           />
         </Stack>
       ) : (

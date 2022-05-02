@@ -8,12 +8,14 @@ import RatingPanel from '@frontend/components/Review/RatingPanel'
 import ReviewInput from '@frontend/components/Review/ReviewInput'
 import SessionDetail from '@frontend/components/Session/SessionDetail'
 import { httpClient } from '@frontend/services'
+import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
 
 import { ISessionStatResponseDTO } from '@libs/api'
 
 const SessionPage: ExtendedNextPage = () => {
   const router = useRouter()
+  const user = useAuthStore((store) => store.user)
   const sessionId = router.query.id as string
   const { data, isError, isLoading, error } = useQuery<ISessionStatResponseDTO>(
     ['/session', sessionId],
@@ -36,8 +38,8 @@ const SessionPage: ExtendedNextPage = () => {
         </Typography>
         <RatingPanel reviewStat={data.reviewStat} />
       </div>
-      <ReviewInput />
-      {data.reviews.map((review) => (
+      <ReviewInput sessionId={sessionId} user={user} />
+      {data.reviews.reverse().map((review) => (
         <ReviewEntry key={review.id} data={review} />
       ))}
     </Stack>
