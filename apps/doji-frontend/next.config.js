@@ -19,7 +19,7 @@ const nextConfig = {
     ]
   },
   images: {
-    domains: ['cdn.pixabay.com'],
+    domains: ['cdn.pixabay.com', 'storage.googleapis.com'],
   },
 }
 
