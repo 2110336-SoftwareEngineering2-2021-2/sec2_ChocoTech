@@ -30,7 +30,11 @@ export default function TagsInput(props: TagInputProps) {
               key={option.value}
               variant="outlined"
               label={option.value}
-              avatar={<Avatar src={option.profileImageURL} alt={option.value}></Avatar>}
+              avatar={
+                <Avatar src={option.profileImageURL} alt={option.value}>
+                  {option.value.charAt(0)}
+                </Avatar>
+              }
               {...getTagProps({ index })}
             ></Chip>
           ))

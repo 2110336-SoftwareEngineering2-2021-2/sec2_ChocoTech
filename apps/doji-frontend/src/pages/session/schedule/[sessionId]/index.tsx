@@ -172,7 +172,7 @@ export default function ScheduleSessionPage() {
   }
 
   return (
-    <Stack flexDirection="column" position="relative" minHeight="sm" spacing={3} marginTop={3}>
+    <Stack flexDirection="column" position="relative" minHeight="sm" spacing={3}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack direction={'column'} spacing={3}>
           <Typography fontWeight={700} variant="title3">
