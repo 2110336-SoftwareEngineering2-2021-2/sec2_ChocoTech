@@ -54,7 +54,10 @@ const ForgotPasswordPage = () => {
       justifyContent="space-between"
       flexGrow={1}
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <Stack onSubmit={handleSubmit(onSubmit)} component="form" gap={2}>
+        <Typography variant="title3" align="center" color="ink.dark">
+          Send Password Reset Email
+        </Typography>
         <RegisteredTextfield
           label="Your email address"
           errors={errors.email}
@@ -63,7 +66,7 @@ const ForgotPasswordPage = () => {
         <Button fullWidth size="large" type="submit" color="primary" variant="contained">
           send reset link
         </Button>
-      </form>
+      </Stack>
     </Stack>
   )
 }

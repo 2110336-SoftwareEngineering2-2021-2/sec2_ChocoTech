@@ -1,4 +1,4 @@
-import { CircularProgress, IconButton, Stack, Typography } from '@mui/material'
+import { Button, CircularProgress, IconButton, Stack, Typography } from '@mui/material'
 import dynamic from 'next/dynamic'
 import { useState } from 'react'
 import { FiPlus } from 'react-icons/fi'
@@ -75,7 +75,7 @@ export const ChatSidebar: React.FC = () => {
             </IconButton>
           </div>
         </Stack>
-        <Stack spacing={1}>
+        <Stack spacing={1} alignItems="center" flexGrow={1}>
           {chatRooms.map((chatRoom) => (
             <ChatRoomCard
               key={chatRoom.id}
@@ -84,6 +84,14 @@ export const ChatSidebar: React.FC = () => {
               {...chatRoom}
             />
           ))}
+          {chatRooms.length === 0 && (
+            <Stack spacing={4} alignItems="center" justifyContent="center" flexGrow={1}>
+              <Typography variant="large" color="ink.dark">
+                No chat room
+              </Typography>
+              <Button onClick={handleOpenDialog}>Create chat room</Button>
+            </Stack>
+          )}
         </Stack>
       </Stack>
       <ChatRoomDialog

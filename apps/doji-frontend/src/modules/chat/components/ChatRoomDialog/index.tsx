@@ -104,7 +104,7 @@ export const ChatRoomDialog: React.FC<ChatRoomDialogProps> = (props) => {
           </Select>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" size="small">
+          <Button variant="outlined" size="small" onClick={props.close}>
             Close
           </Button>
           <Button size="small" type="submit">

@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Button, Stack } from '@mui/material'
+import { Button, Stack, Typography } from '@mui/material'
 import router, { useRouter } from 'next/router'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
@@ -63,23 +63,28 @@ const ResetPassword: ExtendedNextPage = () => {
       justifyContent="space-between"
       flexGrow={1}
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <RegisteredTextfield
-          type="password"
-          label="enter new password"
-          errors={errors.newPassword}
-          {...register('newPassword')}
-        />
-        <RegisteredTextfield
-          type="password"
-          label="confirm new password"
-          errors={errors.confirmPassword}
-          {...register('confirmPassword')}
-        />
+      <Stack onSubmit={handleSubmit(onSubmit)} component="form" gap={1}>
+        <Typography variant="title3" align="center" color="ink.dark">
+          Reset Password
+        </Typography>
+        <div>
+          <RegisteredTextfield
+            type="password"
+            label="enter new password"
+            errors={errors.newPassword}
+            {...register('newPassword')}
+          />
+          <RegisteredTextfield
+            type="password"
+            label="confirm new password"
+            errors={errors.confirmPassword}
+            {...register('confirmPassword')}
+          />
+        </div>
         <Button fullWidth size="large" type="submit" color="primary" variant="contained">
           reset password
         </Button>
-      </form>
+      </Stack>
     </Stack>
   )
 }
