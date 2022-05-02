@@ -37,6 +37,7 @@ export class SessionService {
     @InjectRepository(Schedule) private readonly scheduleRepo: EntityRepository<Schedule>,
     private readonly em: EntityManager,
     private readonly transaction: CoinTransactionService,
+    private readonly entityManager: EntityManager,
   ) {}
 
   async getSession(sessionId: string): Promise<ISessionStatResponseDTO> {
@@ -58,6 +59,24 @@ export class SessionService {
     } catch (err) {
       console.log(err)
       throw new NotFoundException('Session not found')
+    }
+  }
+
+  async getSessionsByExpert(username: string): Promise<ISession[]> {
+    const user = await this.userRepo.findOne({ username: username })
+    if (!user) {
+      throw new NotFoundException('Expert not found')
+    }
+
+    try {
+      const query = this.entityManager
+        .createQueryBuilder(Session, 'r')
+        .select(['*'])
+        .where({ owner: user })
+
+      return (await query.execute()) as ISession[]
+    } catch (err) {
+      return [] as ISession[]
     }
   }
 

@@ -8,6 +8,7 @@ import { FiPlus, FiSend } from 'react-icons/fi'
 import { useMutation } from 'react-query'
 
 import { useChatRoomStore } from '@frontend/modules/chat/store'
+import { httpClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
 
 import { IGetChatRoomResponseDTO } from '@libs/api'
@@ -28,13 +29,12 @@ interface FormModel {
 
 const uploadFile = async (file: File): Promise<{ id: string; url: string }> => {
   // TODO: Complete upload file API @poravee
-
-  // const form = new FormData()
-  // form.append('file', file)
-  // const { data } = httpClient.post<Type>('/chat/image', form, {
-  //   headers: { 'Content-Type': 'multipart/form-data' },
-  // })
-  // return data.url
+  const form = new FormData()
+  form.append('file', file)
+  const { data } = await httpClient.post<{ id: string; url: string }>('/chat/image', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+  return data
 
   // Mock Data
   return {
@@ -196,7 +196,7 @@ export const ChatPanel = ({ name, id: roomId, isLoading, isEmpty }: ChatPacelCar
       {fileUrl && (
         <ImagePreview onClick={() => handleDeleteFile(fileId)}>
           <div className="cross" />
-          <Image width="100" height="100" src={fileUrl} alt={fileUrl} />
+          <img width="100" height="100" src={fileUrl} alt={fileUrl} />
         </ImagePreview>
       )}
     </Stack>

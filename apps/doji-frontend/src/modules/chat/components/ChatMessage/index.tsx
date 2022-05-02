@@ -1,6 +1,5 @@
 import { Avatar, Stack, Tooltip, Typography, styled } from '@mui/material'
 import Image from 'next/image'
-import { useMemo } from 'react'
 
 import { IMessageDTO } from '@libs/api'
 

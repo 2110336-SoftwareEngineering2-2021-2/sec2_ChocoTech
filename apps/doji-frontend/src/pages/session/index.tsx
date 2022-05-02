@@ -2,6 +2,7 @@ import { Divider, Stack, Typography, styled } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 
+import { getServerSideUser } from '@frontend/common/auth'
 import { httpClient } from '@frontend/services'
 import { ExtendedNextPage } from '@frontend/type'
 
@@ -37,4 +38,5 @@ const Index: ExtendedNextPage = () => {
     </>
   )
 }
+export const getServerSideProps = getServerSideUser()
 export default Index

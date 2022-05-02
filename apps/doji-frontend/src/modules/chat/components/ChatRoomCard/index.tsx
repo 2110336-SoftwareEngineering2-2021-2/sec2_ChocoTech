@@ -1,4 +1,5 @@
 import { Avatar, Stack, Typography, styled } from '@mui/material'
+import StatusBadge from 'libs/mui/src/lib/StatusBadge'
 import { useMemo } from 'react'
 
 import { IGetAllChatRoomsResponseDTO } from '@libs/api'
@@ -43,9 +44,11 @@ export const ChatRoomCard = ({
         bgcolor: selected ? 'sky.lighter' : 'transparent',
       }}
     >
-      <Avatar src={firstParticipant.profilePictureURL} sx={{ bgcolor: 'primary.main' }}>
-        {firstParticipant.displayName.charAt(0).toUpperCase()}
-      </Avatar>
+      <StatusBadge username={firstParticipant.username}>
+        <Avatar src={firstParticipant.profilePictureURL} sx={{ bgcolor: 'primary.main' }}>
+          {firstParticipant.displayName.charAt(0).toUpperCase()}
+        </Avatar>
+      </StatusBadge>
       <Stack spacing={1}>
         <Typography variant="regular">{name}</Typography>
         <Typography variant="tiny" color="sky.dark">

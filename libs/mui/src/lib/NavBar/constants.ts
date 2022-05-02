@@ -24,7 +24,7 @@ export const nonUserListItems: NavigationListItem[] = [
 
 export const userListItems: NavigationListItem[] = [
   { type: 'item', href: '/session', Icon: FiSearch, text: 'Session' },
-  { type: 'item', href: '/profile', Icon: FiUserPlus, text: 'Profile', isInUserMenu: true },
+  { type: 'item', href: '/profile', Icon: FiUserPlus, text: 'My Profile', isInUserMenu: true },
   { type: 'item', href: '/session/history', Icon: FiClock, text: 'History' },
   { type: 'item', href: '/friend', Icon: FiUsers, text: 'Friend', isInUserMenu: true },
   { type: 'item', href: '/chat', Icon: FiMessageSquare, text: 'Chat' },
@@ -35,7 +35,7 @@ export const userListItems: NavigationListItem[] = [
 
 export const expertListItems: NavigationListItem[] = [
   { type: 'item', href: '/session', Icon: FiSearch, text: 'Session' },
-  { type: 'item', href: '/profile', Icon: FiUserPlus, text: 'Profile', isInUserMenu: true },
+  { type: 'item', href: '/profile', Icon: FiUserPlus, text: 'My Profile', isInUserMenu: true },
   { type: 'item', href: '/session/history', Icon: FiClock, text: 'History' },
   { type: 'item', href: '/friend', Icon: FiUsers, text: 'Friend', isInUserMenu: true },
   { type: 'item', href: '/chat', Icon: FiMessageSquare, text: 'Chat' },
