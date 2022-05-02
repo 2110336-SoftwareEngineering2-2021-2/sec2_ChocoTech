@@ -11,7 +11,7 @@ import { useQuery } from 'react-query'
 import * as yup from 'yup'
 
 import ConfirmDialog from '@frontend/components/ExpertService/ConfirmDialog'
-import TagsInput from '@frontend/components/ExpertService/TagInput'
+import TagsInput, { IFriendSuggestion } from '@frontend/components/ExpertService/TagInput'
 import TimePickerController from '@frontend/components/ExpertService/TimePickerController'
 import { httpClient } from '@frontend/services'
 
@@ -87,6 +87,7 @@ export default function ScheduleSessionPage() {
     participantsUsername: [],
     coinOnHold: 0,
   })
+  const [friendList, setFriendList] = useState<IFriendSuggestion[]>([])
   const {
     register,
     handleSubmit,
@@ -110,6 +111,15 @@ export default function ScheduleSessionPage() {
     ['createSchedule', sessionId],
     async () => {
       const { data } = await httpClient.get(`/session/${sessionId}`)
+      const fetchData = await httpClient.get('/friend')
+      const friendListData = fetchData.data.map((e) => {
+        const suggestion: IFriendSuggestion = {
+          value: e.username,
+          profileImageURL: e.profilePictureURL,
+        }
+        return suggestion
+      })
+      setFriendList(friendListData)
       return data
     },
     {
@@ -127,6 +137,7 @@ export default function ScheduleSessionPage() {
       if (value) {
         await httpClient.post('session/schedule/request', scheduleSessionData)
         toast.success('Your schedule is created')
+        router.push('/session/history')
       }
     } catch (e) {
       toast.error(e.response.data.message)
@@ -169,10 +180,10 @@ export default function ScheduleSessionPage() {
           </Typography>
           <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
             <Tables
-              content={'by ' + sessionData.owner.firstName + ' ' + sessionData.owner.lastName}
+              content={'by ' + sessionData.owner.displayName}
               avatar={{
                 alt: 'Robert William',
-                children: sessionData.owner.firstName?.charAt(0),
+                children: sessionData.owner.displayName.charAt(0),
                 src: sessionData.owner.profilePictureURL,
                 sx: {
                   bgcolor: 'primary.main',
@@ -240,7 +251,9 @@ export default function ScheduleSessionPage() {
           <Controller
             name="participants"
             control={control}
-            render={({ field: { onChange, value } }) => <TagsInput onChange={onChange} />}
+            render={({ field: { onChange, value } }) => (
+              <TagsInput friendList={friendList} onChange={onChange} />
+            )}
           />
           <Stack direction="column" spacing={5}>
             <TotalPrice control={control} fee={sessionData.fee} />
