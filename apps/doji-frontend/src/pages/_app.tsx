@@ -84,6 +84,8 @@ function CustomApp(props: ExtendedAppProps) {
   const { Component, pageProps } = props
   const showNavbar = !Component.dontShowNavBar
 
+  console.log(showNavbar)
+
   return (
     <QueryClientProvider client={queryClient}>
       <OnlineStatusHookContext.Provider value={useOnlineStatus}>

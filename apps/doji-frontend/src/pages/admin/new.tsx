@@ -8,7 +8,9 @@ import { useMutation } from 'react-query'
 import * as yup from 'yup'
 
 import RegisteredTextfield from '@frontend/components/Register/registerTextfield'
+import { useAdminAuthGuard } from '@frontend/hooks/admin'
 import { httpClient } from '@frontend/services'
+import { ExtendedNextPage } from '@frontend/type'
 
 import { IAdminCreationRequestDTO } from '@libs/api'
 
@@ -30,9 +32,9 @@ const newAdminRequest = async (formData: IAdminCreationRequestDTO) => {
   await httpClient.post<IAdminCreationRequestDTO>('/admin/newAdmin', formData)
 }
 
-//---------------------------------------------------------------------------------------------------
+const NewAdminPage: ExtendedNextPage = () => {
+  useAdminAuthGuard()
 
-function NewAdminPage() {
   const {
     register,
     handleSubmit,
@@ -62,7 +64,7 @@ function NewAdminPage() {
       direction="column"
       justifyContent="space-between"
       flexGrow={1}
-      mt={2}
+      mt={10}
       spacing={2}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -96,3 +98,5 @@ function NewAdminPage() {
   )
 }
 export default NewAdminPage
+
+NewAdminPage.dontShowNavBar = true
