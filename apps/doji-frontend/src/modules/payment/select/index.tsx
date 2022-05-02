@@ -124,7 +124,7 @@ const SelectPaymentPanel = () => {
 
       {data.length == 0 && (
         <Link href="/balance/new">
-          <Tables content="Add a new card" avatar={{ children: <FaPlus /> }} />
+          <Tables content="Add a new card" avatar={{ children: <FaPlus size="20px" /> }} />
         </Link>
       )}
     </Stack>

@@ -1,4 +1,13 @@
-import { Button, Card, CircularProgress, IconButton, Stack, Typography } from '@mui/material'
+import {
+  Button,
+  Card,
+  CircularProgress,
+  IconButton,
+  Stack,
+  Typography,
+  styled,
+} from '@mui/material'
+import { padding } from '@mui/system'
 import Link from 'next/link'
 import Omise from 'omise'
 import { useState } from 'react'
@@ -14,6 +23,13 @@ import { httpClient } from '@frontend/services'
 import { stangToBathString } from '@frontend/utils/stangBathToString'
 
 import { IMeResponseDTO, IUserTransactionLineResponseDTO } from '@libs/api'
+
+const GreyBox = styled('div')(({ theme }) => ({
+  textAlign: 'center',
+  border: '1px solid',
+  borderColor: theme.palette.sky.main,
+  padding: '2em',
+}))
 
 function BalancePage() {
   const meQuery = useQuery<IMeResponseDTO>('/auth/me', () =>
@@ -81,7 +97,9 @@ function BalancePage() {
           <TransactionEntry key={entry.id} data={entry} />
         ))}
         {transactionsQuery.data.length == 0 && (
-          <Typography color="ink.main">There is no transaction to be shown.</Typography>
+          <GreyBox>
+            <Typography color="ink.main">There is no transaction to be shown.</Typography>
+          </GreyBox>
         )}
       </Stack>
 
