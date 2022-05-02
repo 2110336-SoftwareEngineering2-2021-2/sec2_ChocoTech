@@ -27,7 +27,7 @@ const SessionPage: ExtendedNextPage = () => {
   if (isLoading) return <CircularProgress />
 
   return (
-    <Stack mt={5} spacing={4}>
+    <Stack mt={5} spacing={4} mb={5}>
       <SessionDetail {...data} />
       <Link href={`/session/schedule/${data.id}`} passHref>
         <Button sx={{ margin: '1em' }}>Schedule</Button>
