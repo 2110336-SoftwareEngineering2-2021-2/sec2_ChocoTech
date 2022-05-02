@@ -60,7 +60,7 @@ function BalancePage() {
   if (loading) return <CircularProgress />
 
   return (
-    <Stack spacing="2em" mt="1em" px="1em">
+    <Stack spacing="2em" mt="1em" px="1em" mb={6}>
       <Typography variant="title3">Wallet</Typography>
 
       <Card>
