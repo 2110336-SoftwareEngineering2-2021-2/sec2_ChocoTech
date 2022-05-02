@@ -53,7 +53,7 @@ export class SessionService {
   async getAllSessions(): Promise<ISession[]> {
     try {
       const sessions = await this.sessionRepo.findAll(['owner', 'reviews', 'reviews.user'])
-      const sessionsJSON = sessions.map((s) => wrap(s).toJSON())
+      const sessionsJSON = sessions.map((s) => wrap(s).toJSON()).reverse()
       return sessionsJSON as ISession[]
     } catch (err) {
       console.log(err)
