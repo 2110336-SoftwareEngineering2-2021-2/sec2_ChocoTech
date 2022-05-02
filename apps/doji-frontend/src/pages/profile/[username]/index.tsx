@@ -159,6 +159,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
             {displayUser.sessions.map((session) => (
               <>
                 <SessionCard
+                  key={session.id}
                   owner={{ username: displayUser.username } as any}
                   // {...session}
                   id={session.id}
