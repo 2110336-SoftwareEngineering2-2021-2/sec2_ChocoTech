@@ -74,6 +74,7 @@ const MainNavBar: React.FC<MainNavBarProps> = ({ show, ...props }) => {
       coin={user?.coinBalance}
       role={user?.role ? user.role : 'none'}
       username={user?.username ?? 'username'}
+      displayName={user?.displayName ?? 'displayName'}
       avartarSrc={user?.profilePictureURL}
       {...props}
     />

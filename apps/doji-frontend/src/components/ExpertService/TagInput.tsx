@@ -3,32 +3,14 @@ import { type } from 'os'
 
 import { Tables } from '@libs/mui'
 
-export type FriendSuggestion = {
+export interface IFriendSuggestion {
   value: string
-  text: string
+  profileImageURL: string
 }
 
-const friendList: FriendSuggestion[] = [
-  {
-    value: 'incredible',
-    text: 'Mr.Incredible',
-  },
-  {
-    value: 'yeltsa',
-    text: 'Yeltsa Kcir',
-  },
-  {
-    value: 'john',
-    text: 'John green',
-  },
-  {
-    value: 'jonathan',
-    text: 'Jonathan Dessner',
-  },
-]
-
 export type TagInputProps = {
-  onChange: (value: (string | FriendSuggestion)[]) => void
+  onChange: (value: (string | IFriendSuggestion)[]) => void
+  friendList: IFriendSuggestion[]
 }
 
 export default function TagsInput(props: TagInputProps) {
@@ -40,15 +22,19 @@ export default function TagsInput(props: TagInputProps) {
         }}
         filterSelectedOptions={true}
         multiple
-        options={friendList}
-        getOptionLabel={(option) => option.text}
+        options={props.friendList}
+        getOptionLabel={(option) => option.value}
         renderTags={(value, getTagProps) =>
           value.map((option, index) => (
             <Chip
               key={option.value}
               variant="outlined"
-              label={option.text}
-              avatar={<Avatar></Avatar>}
+              label={option.value}
+              avatar={
+                <Avatar src={option.profileImageURL} alt={option.value}>
+                  {option.value.charAt(0)}
+                </Avatar>
+              }
               {...getTagProps({ index })}
             ></Chip>
           ))
@@ -56,7 +42,17 @@ export default function TagsInput(props: TagInputProps) {
         renderInput={(params) => <TextField {...params}></TextField>}
         renderOption={(props, option, { selected }) => (
           <li {...props} id={option.value}>
-            <Tables content={option.text} avatar={<Avatar></Avatar>}></Tables>
+            <Tables
+              content={option.value}
+              avatar={{
+                alt: 'Robert William',
+                children: option.value.charAt(0),
+                src: option.profileImageURL,
+                sx: {
+                  bgcolor: 'primary.main',
+                },
+              }}
+            ></Tables>
           </li>
         )}
       ></Autocomplete>

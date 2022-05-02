@@ -56,7 +56,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ user }) => {
     await expertApplicationMutation.mutate()
   }
   return (
-    <Stack direction="column">
+    <Stack direction="column" mb={6}>
       <Typography variant="title3" py={2} px={3}>
         Settings
       </Typography>

@@ -1,5 +1,6 @@
 import { Button, CircularProgress, IconButton, Stack, Typography } from '@mui/material'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FiPlus } from 'react-icons/fi'
 import { useQuery } from 'react-query'
@@ -11,14 +12,18 @@ import { IGetAllChatRoomsResponseDTO } from '@libs/api'
 import { useChatRoomStore } from '../../store'
 import { ChatRoomCard } from '../ChatRoomCard'
 
+interface ChatSidebarProps {
+  roomId?: string
+}
+
 const ChatRoomDialog = dynamic(
   () => import('../ChatRoomDialog').then((mod) => mod.ChatRoomDialog),
   { ssr: false },
 )
 
-export const ChatSidebar: React.FC = () => {
-  const currentRoomId = useChatRoomStore((store) => store.currentRoomId)
-  const setCurrentRoomId = useChatRoomStore((store) => store.setCurrentRoomId)
+export const ChatSidebar: React.FC<ChatSidebarProps> = ({ roomId }) => {
+  const router = useRouter()
+  const joinChatRoom = useChatRoomStore((store) => store.joinChatRoom)
 
   const {
     data: chatRooms,
@@ -32,12 +37,17 @@ export const ChatSidebar: React.FC = () => {
     {
       onSuccess: (data) => {
         if (data.length === 0) return
-        if (!currentRoomId) setCurrentRoomId(data[0].id)
+        const allRoomIds = data.map((room) => room.id)
+        joinChatRoom(allRoomIds)
       },
     },
   )
 
   const [openDialog, setOpenDialog] = useState(false)
+
+  const handleChatRoomClick = (roomId: string) => {
+    router.push(`/chat?roomId=${roomId}`)
+  }
 
   const handleOpenDialog = () => {
     setOpenDialog(true)
@@ -79,8 +89,8 @@ export const ChatSidebar: React.FC = () => {
           {chatRooms.map((chatRoom) => (
             <ChatRoomCard
               key={chatRoom.id}
-              selected={chatRoom.id === currentRoomId}
-              onClick={() => setCurrentRoomId(chatRoom.id)}
+              selected={chatRoom.id === roomId}
+              onClick={() => handleChatRoomClick(chatRoom.id)}
               {...chatRoom}
             />
           ))}
@@ -98,7 +108,7 @@ export const ChatSidebar: React.FC = () => {
         open={openDialog}
         onClose={handleCloseDialog}
         close={handleCloseDialog}
-        roomId={currentRoomId}
+        roomId={roomId}
       />
     </>
   )

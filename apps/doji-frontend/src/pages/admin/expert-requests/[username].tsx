@@ -4,16 +4,20 @@ import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
 import { useMutation, useQuery } from 'react-query'
 
+import { useAdminAuthGuard } from '@frontend/hooks/admin'
 import { httpClient } from '@frontend/services'
+import { ExtendedNextPage } from '@frontend/type'
 
 import { IApproveExpertDetailDTO, IChangeUserRoleDTO } from '@libs/api'
 import { Achievement, CompactProfile } from '@libs/mui'
 
-function Index() {
+const ExpertRequestPage: ExtendedNextPage = () => {
+  useAdminAuthGuard()
+
   const router = useRouter()
   const username = router.query.username as string
   const changeRoleMutation = useMutation<void, AxiosError, IChangeUserRoleDTO>(async (data) => {
-    return await httpClient.put(`admin/role/${username}`, data)
+    return await httpClient.put(`/admin/role/${username}`, data)
   })
 
   const handleDecline = async () => {
@@ -56,7 +60,7 @@ function Index() {
   }
 
   return (
-    <Stack mt={5}>
+    <Stack mt={10}>
       <CompactProfile
         username={username}
         displayName={data.displayName}
@@ -80,4 +84,6 @@ function Index() {
   )
 }
 
-export default Index
+export default ExpertRequestPage
+
+ExpertRequestPage.dontShowNavBar = true

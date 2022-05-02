@@ -20,6 +20,7 @@ import { useMemo, useState } from 'react'
 import { BsCoin } from 'react-icons/bs'
 import { FiMenu } from 'react-icons/fi'
 
+import { stangToBathString } from '../../utils/stangToBathString'
 import { Logo } from '../Logo'
 import { UserBar } from '../UserBar'
 import { adminListItems, expertListItems, nonUserListItems, userListItems } from './constants'
@@ -29,10 +30,11 @@ import { NavigationListItem, NavigationListItemItem } from './types'
 export type UserRole = 'admin' | 'user' | 'expert' | 'none'
 
 export interface NavBarProps extends StackProps {
-  coin?: string | number
+  coin?: number
   role?: UserRole
   username?: string
   avartarSrc?: string
+  displayName?: string
 }
 
 interface NavBarListItemProps extends DrawerProps {
@@ -107,6 +109,7 @@ export const NavBar: React.FC<NavBarProps> = ({
   role = 'none',
   username,
   avartarSrc,
+  displayName,
   ...props
 }) => {
   const theme = useTheme()
@@ -164,7 +167,7 @@ export const NavBar: React.FC<NavBarProps> = ({
               <Coin>
                 <BsCoin />
                 <Typography variant="regular" color="ink.dark">
-                  coin {coin}
+                  coin {stangToBathString(coin ?? 0)}
                 </Typography>
               </Coin>
             </Link>
@@ -181,6 +184,7 @@ export const NavBar: React.FC<NavBarProps> = ({
             items={itemList}
             isLoggedIn={role !== 'none'}
             username={username}
+            displayName={displayName}
           />
         </Stack>
       ) : (

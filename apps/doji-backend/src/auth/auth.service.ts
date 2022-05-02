@@ -142,6 +142,7 @@ export class AuthService {
     const urlOption: Auth.GenerateAuthUrlOpts = {
       access_type: 'offline',
       scope: this.scopes,
+      prompt: 'consent',
       state: JSON.stringify({
         accessToken,
         rediectUrl,

@@ -7,7 +7,6 @@ import {
   Typography,
   styled,
 } from '@mui/material'
-import { padding } from '@mui/system'
 import Link from 'next/link'
 import Omise from 'omise'
 import { useState } from 'react'
@@ -20,6 +19,8 @@ import TransactionEntry from '@frontend/modules/payment/TransactionEntry'
 import WithdrawDojiDialog from '@frontend/modules/payment/WithdrawDojiDialog'
 import SelectPaymentPanel from '@frontend/modules/payment/select'
 import { httpClient } from '@frontend/services'
+import { fetchUserInformation } from '@frontend/services/fetcher'
+import { useAuthStore } from '@frontend/stores'
 import { stangToBathString } from '@frontend/utils/stangBathToString'
 
 import { IMeResponseDTO, IUserTransactionLineResponseDTO } from '@libs/api'
@@ -33,9 +34,13 @@ const GreyBox = styled('div')(({ theme }) => ({
 }))
 
 function BalancePage() {
-  const meQuery = useQuery<IMeResponseDTO>('/auth/me', () =>
-    httpClient.get('/auth/me').then((res) => res.data),
-  )
+  const user = useAuthStore((store) => store.user)
+  const setUser = useAuthStore((store) => store.setUser)
+  const meQuery = useQuery<IMeResponseDTO>('user', fetchUserInformation, {
+    onSuccess: (data) => {
+      setUser(data)
+    },
+  })
   const transactionsQuery = useQuery<IUserTransactionLineResponseDTO[]>(
     '/payment/transaction',
     () => httpClient.get('/payment/transaction').then((res) => res.data),
@@ -55,7 +60,7 @@ function BalancePage() {
   if (loading) return <CircularProgress />
 
   return (
-    <Stack spacing="2em" mt="1em" px="1em">
+    <Stack spacing="2em" mt="1em" px="1em" mb={6}>
       <Typography variant="title3">Wallet</Typography>
 
       <Card>
@@ -64,7 +69,7 @@ function BalancePage() {
             Doji Coin
           </Typography>
           <Typography variant="title3" color="primary.dark">
-            {stangToBathString(meQuery.data.coinBalance)} THB
+            {stangToBathString(user?.coinBalance ?? 0)} THB
           </Typography>
         </Stack>
       </Card>
@@ -80,7 +85,7 @@ function BalancePage() {
 
       <Typography variant="large" fontWeight={500}>
         Payment method
-        <Link href="/balance/new">
+        <Link href="/balance/new" passHref>
           <IconButton color="primary">
             <AiOutlinePlus size="1em" />
           </IconButton>

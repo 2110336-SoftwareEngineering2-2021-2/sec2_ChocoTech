@@ -9,6 +9,7 @@ export interface UserBarProps {
   username?: string
   isLoggedIn?: boolean
   avartarSrc?: string
+  displayName?: string
 }
 
 const Hightlight = styled(Stack)`
@@ -25,6 +26,7 @@ export const UserBar: React.FC<UserBarProps> = ({
   username,
   items,
   avartarSrc,
+  displayName,
 }) => {
   const router = useRouter()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -60,7 +62,7 @@ export const UserBar: React.FC<UserBarProps> = ({
         onClick={handleClick}
       >
         <Avatar src={avartarSrc} sx={{ width: 32, height: 32 }}>
-          {username[0]}
+          {displayName?.charAt(0).toUpperCase()}
         </Avatar>
         <Typography variant="regular" color="ink.dark" fontWeight={500}>
           {username}

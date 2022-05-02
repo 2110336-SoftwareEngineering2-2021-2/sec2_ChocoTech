@@ -7,11 +7,10 @@ import { IMessageDTO } from '@libs/api'
 
 interface ChatRoomStore {
   messages: Record<string, IMessageDTO[]> // Key is roomId
-  currentRoomId: string | null
   chatRoomSocketFactory: ChatRoomSocketFactory
   getSocketController: (roomId: string) => ChatRoomSocketController | undefined
   removeSocketController: (roomId: string) => void
-  setCurrentRoomId: (roomId: string) => void
+  joinChatRoom: (roomIds: string | string[]) => void
   setMessages: (roomId: string, messages: IMessageDTO[]) => void
   sendMessage: (
     roomId: string,
@@ -32,16 +31,17 @@ export const createChatRoomStore = () =>
       get().chatRoomSocketFactory.removeController(roomId)
     }
 
-    const setCurrentRoomId: ChatRoomStore['setCurrentRoomId'] = (roomId) => {
+    const joinChatRoom: ChatRoomStore['joinChatRoom'] = (roomIds) => {
       const chatRoomSocketFactory = get().chatRoomSocketFactory
-      get().removeSocketController(roomId)
-      chatRoomSocketFactory.appendController(roomId, ({ roomId, ...rest }) => {
-        const messages = get().messages[roomId] || []
-        get().setMessages(roomId, [...messages, rest])
+      roomIds = Array.isArray(roomIds) ? roomIds : [roomIds]
+      roomIds.forEach((id) => {
+        chatRoomSocketFactory.appendController(id, ({ roomId, ...rest }) => {
+          const messages = get().messages[roomId] || []
+          get().setMessages(roomId, [...messages, rest])
+        })
       })
       set((state) => ({
         ...state,
-        currentRoomId: roomId,
         chatRoomSocketFactory,
       }))
     }
@@ -64,11 +64,10 @@ export const createChatRoomStore = () =>
 
     return {
       messages: {},
-      currentRoomId: null,
       chatRoomSocketFactory: new ChatRoomSocketFactory(),
       getSocketController,
       removeSocketController,
-      setCurrentRoomId,
+      joinChatRoom,
       setMessages,
       sendMessage,
     }

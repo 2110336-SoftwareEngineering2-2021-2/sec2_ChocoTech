@@ -1,11 +1,21 @@
 import { Storage } from '@google-cloud/storage'
 import { Injectable } from '@nestjs/common'
 import { unlink } from 'fs'
+import { writeFile } from 'fs/promises'
+import { google } from 'googleapis'
 import { promisify } from 'util'
+
+import { environment } from '@backend/environments/environment'
 
 @Injectable()
 export class ImageService {
-  private readonly storage = new Storage()
+  private storage: Storage
+  constructor() {
+    writeFile('google.json', Buffer.from(environment.google.key, 'base64')).then(() => {
+      this.storage = new Storage({ keyFilename: 'google.json' })
+    })
+  }
+
   async uploadFile(file: Express.Multer.File) {
     const bucket = this.storage.bucket('doji-profile-pic')
     const res = await bucket.upload(file.path, {
