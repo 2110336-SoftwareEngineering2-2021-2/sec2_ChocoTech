@@ -40,7 +40,7 @@ const Index: ExtendedNextPage = () => {
         {Friends
           ? Friends.map((elem) => (
               <div key={elem.username} onClick={() => handleFriendClick(elem.username)}>
-                <Stack direction="row" spacing={2}>
+                <Stack direction="row" spacing={2} p={1}>
                   <StatusBadge username={elem.username}>
                     <Avatar
                       src={elem.profilePictureURL}

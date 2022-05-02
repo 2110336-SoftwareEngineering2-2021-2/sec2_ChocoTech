@@ -1,29 +1,45 @@
-import { Avatar, Stack, Typography } from '@mui/material'
+import { Avatar, Button, Stack, Typography } from '@mui/material'
+import { display } from '@mui/system'
+import { AxiosError } from 'axios'
 import StatusBadge from 'libs/mui/src/lib/StatusBadge'
 import { useRouter } from 'next/router'
-import { useQuery } from 'react-query'
+import toast from 'react-hot-toast'
+import { FiUserPlus } from 'react-icons/fi'
+import { useMutation, useQuery } from 'react-query'
 
 import { httpClient } from '@frontend/services'
+import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
 
-import { IMinimalFriend, IUser } from '@libs/api'
+import { IMinimalFriend, IUser, IUsernameDTO } from '@libs/api'
 import { SearchBar } from '@libs/mui'
 
 const Index: ExtendedNextPage = () => {
-  const getCurrentUsername = async () => {
-    return await httpClient.get<IUser>('/auth/me').then((res) => res.data.username)
-  }
-  const getRelationship = async (username: string) => {
-    return await httpClient.get<string>('friend/' + username).then((res) => res.data)
-  }
+  const currentUser = useAuthStore((state) => state.user)
 
-  const { data: users, isLoading } = useQuery('auth/users', async () => {
-    return await await httpClient.get<IUser[]>('auth/users').then((res) => res.data) //.filter(async (user) => user.username != (await getCurrentUsername()))
-    //.filter(async (user) => (await getRelationship(user.username)) !== 'friend')
+  const { data: users, refetch } = useQuery('/friend/notfriend', async () => {
+    return await httpClient.get<IMinimalFriend[]>('/friend/notfriend').then((res) => res.data)
   })
 
   const router = useRouter()
 
+  const addFriendMutation = useMutation<void, AxiosError, IUsernameDTO>(async (data) => {
+    return await httpClient.post(`friend/friendship`, { username: data.username })
+  })
+  const handleAddFriend = async (username: string) => {
+    // TODO wait for friend system api
+    //
+    try {
+      await toast.promise(addFriendMutation.mutateAsync({ username: username }), {
+        loading: 'Loading...',
+        success: 'Added friend successfully',
+        error: 'Error',
+      })
+      await refetch()
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const handleUserClick = (id: string) => {
     router.push(`/profile/${id}`)
   }
@@ -37,22 +53,28 @@ const Index: ExtendedNextPage = () => {
       <Stack p={2}>
         {users
           ? users.map((elem) => (
-              <div key={elem.username} onClick={() => handleUserClick(elem.username)}>
-                <Stack direction="row" spacing={2}>
-                  <StatusBadge username={elem.username}>
-                    <Avatar
-                      src={elem.profilePictureURL}
-                      sx={{ bgcolor: 'primary.main', width: 40, height: 40 }}
-                    >
-                      {elem.displayName.charAt(0).toUpperCase()}
-                    </Avatar>
-                  </StatusBadge>
-                  <Stack spacing={1} justifyContent="center">
-                    <Typography variant="regular">{elem.displayName}</Typography>
-                    <Typography variant="tiny" color="sky.dark">
-                      {elem.username}
-                    </Typography>
+              <div key={elem.username}>
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                  <Stack direction="row" spacing={2} p={1}>
+                    <StatusBadge username={elem.username}>
+                      <Avatar
+                        src={elem.profilePictureURL}
+                        sx={{ bgcolor: 'primary.main', width: 40, height: 40 }}
+                        onClick={() => handleUserClick(elem.username)}
+                      >
+                        {elem.displayName.charAt(0).toUpperCase()}
+                      </Avatar>
+                    </StatusBadge>
+                    <Stack spacing={1} justifyContent="center">
+                      <Typography variant="regular">{elem.displayName}</Typography>
+                      <Typography variant="tiny" color="sky.dark">
+                        {elem.username}
+                      </Typography>
+                    </Stack>
                   </Stack>
+                  <Button size="small" onClick={() => handleAddFriend(elem.username)}>
+                    <FiUserPlus style={{ marginRight: 8 }} /> Add
+                  </Button>
                 </Stack>
               </div>
             ))
