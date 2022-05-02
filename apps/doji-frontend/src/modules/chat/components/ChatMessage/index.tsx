@@ -14,7 +14,9 @@ const Chat = styled(Typography)`
 
 const ChatImage = styled('span')`
   max-width: 300px;
-  width: fit-content;
+  width: 300px;
+  height: 300px;
+  position: relative;
   margin: ${({ theme }) => theme.spacing(1, 2)};
   border-radius: 20px;
   img {
@@ -57,7 +59,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
           )}
           {imageUrl && (
             <ChatImage>
-              <Image src={imageUrl} width="300" height="300" alt={imageUrl} />
+              <Image src={imageUrl} layout="fill" objectFit="contain" alt={imageUrl} />
             </ChatImage>
           )}
         </Stack>
