@@ -1,12 +1,13 @@
 /* eslint-disable no-useless-catch */
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { EntityRepository } from '@mikro-orm/postgresql'
-import { Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { wrap } from 'module'
 
 import { FriendRequest, FriendRequestStatus } from '@backend/entities/FriendRequest'
 import { Friendship } from '@backend/entities/Friendship'
 import { User } from '@backend/entities/User'
+import { UsernameDTO } from '@backend/friend/friend.dto'
 import { IUserReference } from '@backend/types'
 
 import { RelationshipStatus } from '@libs/api'
@@ -162,7 +163,17 @@ export class FriendService {
       throw e
     }
   }
-
+  async addFriendWithoutConfirmation(userRef: IUserReference, dto: UsernameDTO) {
+    try {
+      const sender = await userRef.getUser()
+      const receiver = await this.userRepo.findOne({ username: dto.username })
+      const friendship_1 = new Friendship('0000', sender, receiver)
+      const friendship_2 = new Friendship('0000', receiver, sender)
+      await this.friendshipRepo.persistAndFlush([friendship_1, friendship_2])
+    } catch (e) {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST)
+    }
+  }
   async unfriend(userRef: IUserReference, username: string) {
     try {
       console.log('unfriend' + userRef.username + username)
