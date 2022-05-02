@@ -27,8 +27,9 @@ import { IMeResponseDTO, IUserTransactionLineResponseDTO } from '@libs/api'
 const GreyBox = styled('div')(({ theme }) => ({
   textAlign: 'center',
   border: '1px solid',
-  borderColor: theme.palette.sky.main,
+  borderColor: theme.palette.sky.light,
   padding: '2em',
+  borderRadius:  theme.shape.borderRadius
 }))
 
 function BalancePage() {
