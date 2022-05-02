@@ -8,6 +8,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -89,14 +90,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
           <Button fullWidth onClick={addFriend}>
             <FiUserPlus style={{ marginRight: 8 }} /> Add Friend
           </Button>
-  <Link href="/chat" passHref">
-          <Button
-            fullWidth
-            variant="outlined"
-          >
-            <FiMessageSquare style={{ marginRight: 8 }} /> Message
-          </Button>
-     </Link>
+          <Link href="/chat" passHref>
+            <Button fullWidth variant="outlined">
+              <FiMessageSquare style={{ marginRight: 8 }} /> Message
+            </Button>
+          </Link>
           {displayUser.role === 'expert' && (
             <>
               <IconButton onClick={handleMenuOpen}>
