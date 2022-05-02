@@ -46,6 +46,32 @@ export class FriendService {
     }
   }
 
+  async getAllNotFriends(userRef: IUserReference) {
+    let friends = await this.getAllFriends(userRef)
+    let friendsUsername = []
+    friends.map((user) => {
+      friendsUsername.push(user.username)
+    })
+    // console.log(friendsUsername)
+
+    let allUser = await this.userRepo.findAll()
+    // console.log('allUser', allUser)
+
+    let result = []
+    allUser.forEach((user) => {
+      if (!friendsUsername.includes(user.username) && user.username !== userRef.username) {
+        result.push({
+          username: user.username,
+          displayName: user.displayName,
+          profilePictureURL: user.profilePictureURL,
+        })
+      }
+    })
+    // console.log('result', result)
+
+    return result
+  }
+
   async getRelationship(userRef: IUserReference, username: string): Promise<RelationshipStatus> {
     try {
       const userInfo = await this.userRepo.findOne({ username: userRef.username }, ['friendship'])

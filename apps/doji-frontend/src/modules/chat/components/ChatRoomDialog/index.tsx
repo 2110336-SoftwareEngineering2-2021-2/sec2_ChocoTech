@@ -7,8 +7,6 @@ import {
   DialogContent,
   DialogProps,
   DialogTitle,
-  MenuItem,
-  Select,
   TextField,
   Typography,
 } from '@mui/material'
@@ -20,7 +18,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { httpClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
 
-import { ICreateChatRoomRequestDTO, IUser } from '@libs/api'
+import { ICreateChatRoomRequestDTO, IMinimalUser, IUser } from '@libs/api'
 
 export interface ChatRoomDialogProps extends DialogProps {
   close: () => void
@@ -36,9 +34,9 @@ export const ChatRoomDialog: React.FC<ChatRoomDialogProps> = (props) => {
    * TODO: should be replaced by GET friends
    */
   const { data: users, isLoading } = useQuery(
-    '/auth/users',
+    '/friend',
     async () => {
-      return (await httpClient.get<IUser[]>('/auth/users')).data
+      return (await httpClient.get<IMinimalUser[]>('/friend')).data
     },
     { enabled: props.open },
   )
@@ -61,8 +59,8 @@ export const ChatRoomDialog: React.FC<ChatRoomDialogProps> = (props) => {
   )
 
   const options = useMemo(() => {
-    return (users || [])
-      .filter((user) => user.username !== owner.username)
+    return users
+      ?.filter((user) => user.username !== owner.username)
       .map((user) => ({
         label: user.username,
         value: user.username,
@@ -95,16 +93,20 @@ export const ChatRoomDialog: React.FC<ChatRoomDialogProps> = (props) => {
           <Typography variant="subtitle2" color="ink.lighter" fontWeight={400} mb={2}>
             Select the user to chat with
           </Typography>
-          <Select fullWidth {...register('username', { value: null })}>
-            {options.map((name) => (
-              <MenuItem key={name.value} value={name.value}>
-                {name.label}
-              </MenuItem>
-            ))}
-          </Select>
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={options}
+            size="small"
+            loading={isLoading}
+            loadingText="Loading..."
+            renderInput={(params) => (
+              <TextField {...params} {...register('username')} label="username" fullWidth />
+            )}
+          />
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" size="small" onClick={props.close}>
+          <Button variant="outlined" size="small">
             Close
           </Button>
           <Button size="small" type="submit">

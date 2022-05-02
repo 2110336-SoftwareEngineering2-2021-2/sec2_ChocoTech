@@ -23,7 +23,7 @@ function SessionHistory() {
   const user = useAuthStore((store) => store.user)
   if (isLoading || isError) return null
   return (
-    <Stack>
+    <Stack mb={5}>
       <Typography variant="title3" py={2} color="ink.dark">
         History
       </Typography>
