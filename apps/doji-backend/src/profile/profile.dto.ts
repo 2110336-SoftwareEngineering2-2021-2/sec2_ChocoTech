@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString } from 'class-validator'
+import { IsOptional, IsString } from 'class-validator'
 
 import {
   IProfileResponseDTO,
@@ -9,22 +9,31 @@ import {
   IWorkHistory,
 } from '@libs/api'
 
-export class UserEditProfileRequest implements IUserEditProfileRequestDTO {
+export class UserEditProfileRequestDTO implements IUserEditProfileRequestDTO {
   @ApiProperty()
+  @IsOptional()
   @IsString()
-  displayName: string
+  displayName?: string
 
   @ApiProperty()
+  @IsOptional()
   @IsString()
-  firstName: string
+  firstName?: string
 
   @ApiProperty()
+  @IsOptional()
   @IsString()
-  lastName: string
+  lastName?: string
 
   @ApiProperty()
+  @IsOptional()
   @IsString()
-  location: string
+  location?: string
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  profilePictureURL?: string
 }
 export class ProfileResponseDTO implements IProfileResponseDTO {
   @ApiProperty()

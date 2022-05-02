@@ -21,12 +21,19 @@ export interface IUserChangePasswordRequestDTO {
 }
 
 export interface IUserEditProfileRequestDTO {
-  displayName: string
-  firstName: string
-  lastName: string
-  location: string
+  displayName?: string
+  firstName?: string
+  lastName?: string
+  location?: string
+  profilePictureURL?: string
 }
-
+export interface IUserEditProfileResponseDTO {
+  displayName?: string
+  firstName?: string
+  lastName?: string
+  location?: string
+  profilePictureURL?: string
+}
 export interface IUserRegistrationRequestDTO {
   username: string
   displayName: string

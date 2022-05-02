@@ -2,12 +2,10 @@ import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable, NotFoundException } from '@nestjs/common'
 
-import { ExpertApp } from '@backend/entities/ExpertApp'
-import { Session } from '@backend/entities/Session'
 import { User } from '@backend/entities/User'
 import { WorkHistory } from '@backend/entities/WorkHistory'
 import { ExpertAppService } from '@backend/expert/expert.service'
-import { ProfileResponseDTO, UserEditProfileRequest } from '@backend/profile/profile.dto'
+import { ProfileResponseDTO, UserEditProfileRequestDTO } from '@backend/profile/profile.dto'
 import { SessionService } from '@backend/session/session.service'
 import { IUserReference } from '@backend/types'
 
@@ -23,7 +21,7 @@ export class ProfileService {
   ) {}
 
   async getProfile(username: string): Promise<ProfileResponseDTO> {
-    let res = new ProfileResponseDTO()
+    const res = new ProfileResponseDTO()
 
     const user = await this.userRepo.findOne({ username: username })
     if (!user) {
@@ -48,12 +46,15 @@ export class ProfileService {
     return res
   }
 
-  async editProfile(dto: UserEditProfileRequest, userRef: IUserReference) {
+  async editProfile(dto: UserEditProfileRequestDTO, userRef: IUserReference) {
     const user = await userRef.getUser()
-    user.displayName = dto.displayName
-    user.firstName = dto.firstName
-    user.lastName = dto.lastName
-    user.location = dto.location
+
+    user.displayName = dto.displayName || user.displayName
+    user.firstName = dto.firstName || user.firstName
+    user.lastName = dto.lastName || user.lastName
+    user.location = dto.location || user.location
+    user.profilePictureURL = dto.profilePictureURL || user.profilePictureURL
     await this.userRepo.persistAndFlush(user)
+    return user
   }
 }

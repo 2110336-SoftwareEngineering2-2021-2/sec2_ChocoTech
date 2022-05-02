@@ -1,5 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
-import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { ApiBody, ApiConsumes, ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import {
@@ -8,12 +18,16 @@ import {
   GetChatRoomResponseDTO,
 } from '@backend/chat/chat.dto'
 import { ChatService } from '@backend/chat/chat.service'
+import { ImageService } from '@backend/image/image.service'
 import { IUserReference } from '@backend/types'
 
 @UseGuards(UserAuthGuard)
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(
+    private readonly chatService: ChatService,
+    private readonly imageService: ImageService,
+  ) {}
 
   @Get()
   @ApiOperation({ description: 'Get all chat room related with current user' })
@@ -49,18 +63,20 @@ export class ChatController {
   @ApiResponse({ status: 401, description: 'The token is invalid' })
   @ApiResponse({ status: 200, description: 'Upload successfully' })
   @ApiCookieAuth()
-  uploadImage(@CurrentUser() userRef: IUserReference) {
-    // TODO: Upload image
-    // return this.chatService.uploadImage()
-  }
-
-  @Delete('image')
-  @ApiOperation({ description: 'Delete uploaded image' })
-  @ApiResponse({ status: 401, description: 'The token is invalid' })
-  @ApiResponse({ status: 200, description: 'Delete successfully' })
-  @ApiCookieAuth()
-  deleteImage(@CurrentUser() userRef: IUserReference) {
-    // TODO: Delete image
-    // return this.chatService.deleteImage()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file', { dest: 'imgs' }))
+  uploadImage(@UploadedFile() file: Express.Multer.File) {
+    return this.imageService.uploadFile(file)
   }
 }

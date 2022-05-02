@@ -9,6 +9,7 @@ import { Session } from '@backend/entities/Session'
 import { User } from '@backend/entities/User'
 import { WorkHistory } from '@backend/entities/WorkHistory'
 import { ExpertAppService } from '@backend/expert/expert.service'
+import { ImageModule } from '@backend/image/image.module'
 import { CoinTransactionService } from '@backend/payment/coin-transaction.service'
 import { SessionService } from '@backend/session/session.service'
 
@@ -26,6 +27,7 @@ import { ProfileService } from './profile.service'
       CoinTransaction,
       CoinTransactionLine,
     ]),
+    ImageModule,
   ],
   controllers: [ProfileController],
   providers: [ProfileService, ExpertAppService, SessionService, CoinTransactionService],
