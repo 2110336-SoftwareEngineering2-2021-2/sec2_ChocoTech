@@ -12,9 +12,11 @@ import {
 } from '@mui/material'
 import { Controller, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 
 import { httpClient } from '@frontend/services'
+import { fetchUserInformation } from '@frontend/services/fetcher'
+import { useAuthStore } from '@frontend/stores'
 
 import { IWithdrawalRequest } from '@libs/api'
 
@@ -26,12 +28,20 @@ function WithdrawDojiDialog(props: { open: boolean; onClose: () => void }) {
     formState: { errors },
   } = useForm()
 
+  const setUser = useAuthStore((store) => store.setUser)
+
+  const meQuery = useQuery('user', fetchUserInformation, {
+    onSuccess: (data) => {
+      setUser(data)
+    },
+  })
+
   const withdrawMutation = useMutation<void, void, IWithdrawalRequest>(
     '/payment/withdraw',
     (req) => httpClient.post('/payment/withdraw', req),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('/auth/me')
+        meQuery.refetch()
         queryClient.invalidateQueries('/payment/transaction')
       },
     },

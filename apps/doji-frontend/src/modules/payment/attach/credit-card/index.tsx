@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Stack, Switch, TextField, Typography, useTheme } from '@mui/material'
 import { AxiosError } from 'axios'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
@@ -13,8 +12,6 @@ import { InferType, boolean, object, string } from 'yup'
 
 import { getServerSideUser } from '@frontend/common/auth'
 import { createOmiseClient, httpClient } from '@frontend/services'
-import { useAuthStore } from '@frontend/stores'
-import { ExtendedNextPage } from '@frontend/type'
 
 import { IAttachCardRequestDTO, IMeResponseDTO } from '@libs/api'
 import { CountrySelect } from '@libs/mui'
