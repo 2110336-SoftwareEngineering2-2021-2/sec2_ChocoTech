@@ -27,10 +27,7 @@ function ReviewEntry(props: { data: IReview }) {
         <Stack direction="row" spacing="0.5em" alignItems="center">
           {/*TODO Avatar*/}
           <StatusBadge username={props.data.user.username}>
-            <Avatar
-              src="https://mui.com/static/images/avatar/2.jpg"
-              sx={{ width: 24, height: 24 }}
-            />
+            <Avatar src={props.data.user.profilePictureURL} sx={{ width: 24, height: 24 }} />
           </StatusBadge>
           <Typography variant="small" fontWeight={400}>
             {props.data.user.username}

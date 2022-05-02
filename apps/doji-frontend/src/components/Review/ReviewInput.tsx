@@ -55,7 +55,7 @@ const ReviewInput = (props) => {
   return (
     <form>
       <Stack direction="row" spacing="1em" alignItems="center">
-        <Avatar src="https://mui.com/static/images/avatar/3.jpg" sx={{ width: 40, height: 40 }} />
+        <Avatar src={props.currentProfilePictureURL} sx={{ width: 40, height: 40 }} />
 
         <TextField
           {...register('content')}
