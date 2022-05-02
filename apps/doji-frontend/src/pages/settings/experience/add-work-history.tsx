@@ -1,9 +1,10 @@
-import { Box, Button, Input, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, Input, Stack, TextField, Typography, styled } from '@mui/material'
 import Image from 'next/image'
 import router from 'next/router'
 import React, { useEffect, useMemo, useState } from 'react'
 import { SubmitErrorHandler, SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import toast from 'react-hot-toast'
+import { AiOutlineCamera } from 'react-icons/ai'
 import { useMutation } from 'react-query'
 
 import { getServerSideUser } from '@frontend/common/auth'
@@ -21,6 +22,33 @@ type AddWorkHistoryModel = {
   expert: string
   fileList: FileList
 }
+
+const ContainerBox = styled('div')`
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+  background-color: aqua;
+`
+
+const Overlay = styled('label')<{ editable?: boolean }>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  transition: 0.5s ease;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  border-radius: 100px;
+  &:hover {
+    opacity: ${({ editable }) => (editable ? 1 : 0)};
+  }
+`
+
 const toBase64 = (file): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -28,6 +56,7 @@ const toBase64 = (file): Promise<string> =>
     reader.onload = () => resolve(reader.result as string)
     reader.onerror = (error) => reject(error)
   })
+
 const Index: React.FC<SettingsPageProps> = ({ user }) => {
   const { register, handleSubmit, control } = useForm<AddWorkHistoryModel>()
   const fileList = useWatch({ name: 'fileList', control })
@@ -80,7 +109,14 @@ const Index: React.FC<SettingsPageProps> = ({ user }) => {
         </Typography>
 
         <Box width="maxWidth" height={300} bgcolor="sky.light" borderRadius={1}>
+          <ContainerBox>
+            <Overlay htmlFor="profile" editable>
+              <AiOutlineCamera style={{ color: 'white' }} />
+            </Overlay>
+          </ContainerBox>
+
           {uploadedImage && <Image src={uploadedImage} alt="" width={500} height={400} />}
+
           <Input {...register('fileList', { required: 'File require' })} type="file" />
         </Box>
 
