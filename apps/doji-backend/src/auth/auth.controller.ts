@@ -43,8 +43,19 @@ export class AuthController {
     const { accessToken, maxAge } = await this.authService.loginWithPassword(username, password)
     res.cookie(CookieKey.ACCESS_TOKEN, accessToken, {
       httpOnly: true,
-      maxAge: maxAge,
+      maxAge: maxAge * 1000,
     })
+  }
+
+  @Post('logout')
+  @UseGuards(ThrottlerGuard)
+  @ApiOperation({ description: 'Logout' })
+  async logout(
+    @Res({ passthrough: true }) res: Response,
+    @Cookie(CookieKey.ACCESS_TOKEN) accessToken,
+  ) {
+    await this.authService.logout(accessToken)
+    res.clearCookie(CookieKey.ACCESS_TOKEN)
   }
 
   @Get('google')

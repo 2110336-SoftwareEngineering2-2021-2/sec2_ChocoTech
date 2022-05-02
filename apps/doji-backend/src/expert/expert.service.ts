@@ -62,13 +62,18 @@ export class ExpertAppService {
   }
 
   async computeExpertReviewStat(expert: User) {
-    const query = this.entityManager
-      .createQueryBuilder(Review, 'r')
-      .select(['r.rating', 'count(*)'])
-      .where({ session: { owner: expert } })
-      .groupBy('r.rating')
+    try {
+      const query = this.entityManager
+        .createQueryBuilder(Review, 'r')
+        .select(['r.rating', 'count(*)'])
+        .where({ session: { owner: expert } })
+        .groupBy('r.rating')
 
-    return parseReviewStatFromAggreationResult(await query.execute())
+      return parseReviewStatFromAggreationResult(await query.execute())
+    } catch (error) {
+      // in case no review
+      return parseReviewStatFromAggreationResult([])
+    }
   }
 
   async getExpertInfo(expertId: string): Promise<null | ExpertInfoResponseDTO> {
