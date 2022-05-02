@@ -16,7 +16,7 @@ import Omise from 'omise'
 import { useCallback, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { FaCcMastercard, FaCcVisa } from 'react-icons/fa'
+import { FaCartPlus, FaCcMastercard, FaCcVisa, FaPlus } from 'react-icons/fa'
 import { ImCross } from 'react-icons/im'
 import { IconBaseProps } from 'react-icons/lib'
 import { QueryClient, useMutation, useQuery, useQueryClient } from 'react-query'
@@ -106,7 +106,6 @@ const SelectPaymentPanel = () => {
           onClick={(event) => {
             event.stopPropagation()
           }}
-          onMouseOver={() => console.log('WWww')}
           action={{
             type: TablesActionType.Menu,
             children: (
@@ -122,6 +121,12 @@ const SelectPaymentPanel = () => {
           }}
         />
       ))}
+
+      {data.length == 0 && (
+        <Link href="/balance/new">
+          <Tables content="Add a new card" avatar={{ children: <FaPlus size="20px" /> }} />
+        </Link>
+      )}
     </Stack>
   )
 }

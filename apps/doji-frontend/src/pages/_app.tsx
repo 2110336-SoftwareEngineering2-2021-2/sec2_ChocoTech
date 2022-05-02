@@ -16,7 +16,7 @@ import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
 
 import { IMeResponseDTO } from '@libs/api'
-import { NavBar, theme } from '@libs/mui'
+import { NavBar, NavBarProps, theme } from '@libs/mui'
 
 import './style.css'
 
@@ -24,7 +24,6 @@ const StyledContainer = styled(Container)`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  min-height: 600px;
 `
 
 type ExtendedAppProps = AppProps & {
@@ -63,14 +62,20 @@ const MagicComponent: React.FC<{ user?: IMeResponseDTO }> = ({ user }) => {
   return null
 }
 
-const MainNavBar: React.FC<{ user?: IMeResponseDTO; show?: boolean }> = ({ show }) => {
+interface MainNavBarProps extends NavBarProps {
+  show?: boolean
+}
+
+const MainNavBar: React.FC<MainNavBarProps> = ({ show, ...props }) => {
   const user = useAuthStore((store) => store.user)
   if (!show) return null
   return (
     <NavBar
+      coin={user?.coinBalance}
       role={user?.role ? user.role : 'none'}
       username={user?.username ?? 'username'}
       avartarSrc={user?.profilePictureURL}
+      {...props}
     />
   )
 }
@@ -86,8 +91,8 @@ function CustomApp(props: ExtendedAppProps) {
           <Head>
             <title>Welcome to doji-frontend!</title>
           </Head>
-          <MainNavBar show={showNavbar} />
-          <StyledContainer maxWidth="sm">
+          <MainNavBar show={showNavbar} {...Component.navBarProps} />
+          <StyledContainer maxWidth="sm" {...Component.containerProps}>
             <Component {...pageProps} />
           </StyledContainer>
           <Toaster

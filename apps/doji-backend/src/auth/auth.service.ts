@@ -10,11 +10,13 @@ import {
 } from '@nestjs/common'
 import { MailgunService } from '@nextnm/nestjs-mailgun'
 import bcrypt from 'bcrypt'
+import { parse } from 'cookie'
 import fs from 'fs'
 import { Auth, google } from 'googleapis'
 import Handlebars from 'handlebars'
 import { Redis } from 'ioredis'
 import path from 'path'
+import { Socket } from 'socket.io'
 
 import { UserRegistrationRequestDTO } from '@backend/auth/auth.dto'
 import { InvalidToken } from '@backend/auth/auth.exception'
@@ -30,7 +32,7 @@ import {
   serializeUserReference,
 } from '@backend/utils/redis'
 
-import { IUser } from '@libs/api'
+import { CookieKey, IUser } from '@libs/api'
 
 const TOKEN_EXPIRE_DURATION_SECONDS = 60 * 60 * 24 * 30 // 30 days
 const RESET_TOKEN_EXPIRE_DURATION_SECONDS = 60 * 5 // 5 minutes
@@ -79,6 +81,11 @@ export class AuthService {
     }
   }
 
+  async removeUserFromRedis(key: RedisKeyType, token: string) {
+    const redisKey = generateRedisKey(key, token)
+    await this.redis.del(redisKey)
+  }
+
   async loginWithPassword(username: string, password: string): Promise<ILogin> {
     const user = await this.userRepo.findOne({ username: username })
     if (!user) {
@@ -94,6 +101,10 @@ export class AuthService {
     }
   }
 
+  async logout(token: string) {
+    await this.removeUserFromRedis(RedisKeyType.USER_ACCESS_TOKEN, token)
+  }
+
   async validateAccessToken(token: string): Promise<IUserReference> {
     try {
       const { redisKey, userRef } = await this.getKeyAndUserRefFromToken(
@@ -105,6 +116,21 @@ export class AuthService {
       return userRef
     } catch (e) {
       throw new InvalidToken()
+    }
+  }
+
+  async validateWebSocket(socket: Socket): Promise<IUserReference> {
+    const cookies = parse(socket.handshake.headers.cookie || '')
+    const accessToken = cookies[CookieKey.ACCESS_TOKEN]
+    if (!accessToken) {
+      this.logger.warn('Token auth failed: No cookie')
+      return null
+    }
+    try {
+      return await this.validateAccessToken(accessToken)
+    } catch (e) {
+      this.logger.warn('Token auth failed', e)
+      return null
     }
   }
 
@@ -223,8 +249,7 @@ export class AuthService {
 
   async signup(dto: UserRegistrationRequestDTO) {
     //create new user and hash password
-    const newUser = new User()
-    newUser.username = dto.username
+    const newUser = new User(dto.username)
     newUser.email = dto.email
     newUser.displayName = dto.displayName
     newUser.passwordHash = await bcrypt.hash(dto.password, 10)
@@ -253,5 +278,13 @@ export class AuthService {
   async getUserInformation(userRef: IUserReference): Promise<IUser> {
     const user = await userRef.getUser()
     return wrap(user).toJSON() as IUser
+  }
+
+  /**
+   * TODO: just a temporary service, will delete after friend system is implemented
+   */
+  async getAllUsers(): Promise<IUser[]> {
+    const users = await this.userRepo.findAll()
+    return users.map((user) => wrap(user).toJSON()) as IUser[]
   }
 }

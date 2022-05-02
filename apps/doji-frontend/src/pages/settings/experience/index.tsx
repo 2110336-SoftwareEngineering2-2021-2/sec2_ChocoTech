@@ -1,4 +1,5 @@
-import { Button, CircularProgress, Link, Stack, Typography } from '@mui/material'
+import { Button, CircularProgress, Stack, Typography } from '@mui/material'
+import Link from 'next/link'
 import { useQuery } from 'react-query'
 
 import { getServerSideUser } from '@frontend/common/auth'
@@ -26,10 +27,18 @@ const Index: React.FC<SettingsPageProps> = ({ user }) => {
       </Typography>
 
       {(data as any).map((data, index) => {
-        return <Achievement editable title={data.topic} desc={data.description} key={index} />
+        return (
+          <Achievement
+            editable
+            title={data.topic}
+            desc={data.description}
+            key={index}
+            src={data.imageUrl}
+          />
+        )
       })}
 
-      <Link href="./experience/add-work-history">
+      <Link passHref href="/settings/experience/add-work-history">
         <Button variant="outlined" fullWidth style={{ marginTop: '24px' }}>
           Add experience
         </Button>

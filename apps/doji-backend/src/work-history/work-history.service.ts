@@ -15,8 +15,8 @@ export class WorkHistoryService {
     return await this.workHistoryRepo.find({ expert: user })
   }
 
-  async addWorkHistory(user: User, topic: string, description: string) {
-    const workHistory = new WorkHistory(user, topic, description)
+  async addWorkHistory(user: User, topic: string, description: string, imageURL: string) {
+    const workHistory = new WorkHistory(user, topic, description, imageURL)
     await this.workHistoryRepo.persistAndFlush(workHistory)
   }
 

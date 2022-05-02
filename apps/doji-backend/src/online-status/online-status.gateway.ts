@@ -1,4 +1,4 @@
-import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common'
+import { Logger, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common'
 import '@nestjs/platform-socket.io'
 import {
   ConnectedSocket,
@@ -7,19 +7,17 @@ import {
   OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
-  WsException,
 } from '@nestjs/websockets'
 import { Socket } from 'socket.io'
 
+import { AuthService } from '@backend/auth/auth.service'
 import {
   OnlineStatusSocketContext,
   SubscriptionRequest,
   UnsubscriptionRequest,
 } from '@backend/online-status/online-status.dto'
 import { OnlineStatusService } from '@backend/online-status/online-status.service'
-import { SocketAuthService } from '@backend/online-status/socket-auth.service'
 import { SocketBusClientContext } from '@backend/online-status/socket-bus-client-context'
-import { SocketBusService } from '@backend/online-status/socket-bus.service'
 import { WsExceptionFilter } from '@backend/online-status/socket.filter'
 
 import { IUserStatusResponse, OnlineStatusEvent, SocketNamespace } from '@libs/api'
@@ -28,14 +26,16 @@ import { IUserStatusResponse, OnlineStatusEvent, SocketNamespace } from '@libs/a
 @UsePipes(ValidationPipe)
 @UseFilters(WsExceptionFilter)
 export class OnlineStatusGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  private readonly logger = new Logger(OnlineStatusGateway.name)
+
   constructor(
-    private readonly socketAuthService: SocketAuthService,
-    private readonly socketBusService: SocketBusService,
+    private readonly authService: AuthService,
     private readonly onlineStatusService: OnlineStatusService,
   ) {}
 
   async handleConnection(client: Socket) {
-    const userRef = await this.socketAuthService.authenticateSocket(client)
+    const userRef = await this.authService.validateWebSocket(client)
+    this.logger.log(`Client connected: ${client.id}, user: ${userRef?.username}`)
     const busContext = new SocketBusClientContext(client)
     const userOnlineStatus =
       userRef && (await this.onlineStatusService.getOnlineStatusForUser(userRef.username))

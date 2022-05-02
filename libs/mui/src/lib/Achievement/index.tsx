@@ -10,7 +10,6 @@ import {
   Typography,
   styled,
 } from '@mui/material'
-import Image from 'next/image'
 import React from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { FiDelete, FiEdit2 } from 'react-icons/fi'
@@ -21,10 +20,10 @@ export interface AchievementProps {
   src?: string
   editable?: boolean
 }
-const ImgFrame = styled(Image)`
+const ImgFrame = styled('img')`
   object-fit: contain;
 `
-const StyledImg = styled(Image)`
+const StyledImg = styled('img')`
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
 `
 export const Achievement: React.FC<AchievementProps> = ({ title, desc, src, editable = false }) => {
@@ -62,7 +61,7 @@ export const Achievement: React.FC<AchievementProps> = ({ title, desc, src, edit
         )}
 
         <Dialog onClose={handleClose} open={open} fullScreen>
-          <ImgFrame src={src} layout="fill" onClick={handleClose} />
+          <ImgFrame src={src} onClick={handleClose} />
         </Dialog>
 
         <Stack direction="column" spacing={1} justifyContent="flex-start">

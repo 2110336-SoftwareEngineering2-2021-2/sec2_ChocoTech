@@ -30,6 +30,11 @@ const mockExpert1: User = {
   role: UserRole.EXPERT,
   schedules: new Collection<Schedule>(this),
   reviews: new Collection<Review>(this),
+  messages: undefined,
+  chatRooms: undefined,
+  requestSent: undefined,
+  requestReceived: undefined,
+  friendship: undefined,
 }
 const mockExpert2: User = {
   username: 'test',
@@ -42,10 +47,15 @@ const mockExpert2: User = {
   role: UserRole.EXPERT,
   schedules: new Collection<Schedule>(this),
   reviews: new Collection<Review>(this),
+  messages: undefined,
+  chatRooms: undefined,
+  requestSent: undefined,
+  requestReceived: undefined,
+  friendship: undefined,
 }
-const mockWorkHistory1 = new WorkHistory(mockExpert1, mockTopic1, mockDescription1)
-const mockWorkHistory2 = new WorkHistory(mockExpert1, mockTopic2, mockDescription2)
-const mockWorkHistory3 = new WorkHistory(mockExpert2, mockTopic3, mockDescription3)
+const mockWorkHistory1 = new WorkHistory(mockExpert1, mockTopic1, mockDescription1, '')
+const mockWorkHistory2 = new WorkHistory(mockExpert1, mockTopic2, mockDescription2, '')
+const mockWorkHistory3 = new WorkHistory(mockExpert2, mockTopic3, mockDescription3, '')
 describe('WorkHistoryService', () => {
   let service: WorkHistoryService
   const findSpy = jest.fn()
@@ -95,7 +105,7 @@ describe('WorkHistoryService', () => {
     const expectedExpert = mockExpert1
     const expectedTopic = mockTopic1
     const expectedDesc = mockDescription1
-    await service.addWorkHistory(mockExpert1, mockTopic1, mockDescription1)
+    await service.addWorkHistory(mockExpert1, mockTopic1, mockDescription1, '')
     expect(mockWorkHistoryRepository.persistAndFlush).toBeCalledTimes(1)
     const len = mockWorkHistoryRepository.persistAndFlush.mock.calls.length
     expect(mockWorkHistoryRepository.persistAndFlush.mock.calls[len - 1][0].expert).toEqual(

@@ -5,8 +5,11 @@ import { APP_PIPE } from '@nestjs/core'
 
 import { AdminModule } from '@backend/admin/admin.module'
 import { AuthModule } from '@backend/auth/auth.module'
+import { ChatModule } from '@backend/chat/chat.module'
 import { environment } from '@backend/environments/environment'
 import { ExpertAppModule } from '@backend/expert/expert.module'
+import { FriendModule } from '@backend/friend/friend.module'
+import { ImageModule } from '@backend/image/image.module'
 import { OnlineStatusModule } from '@backend/online-status/online-status.module'
 import { PaymentModule } from '@backend/payment/payment.module'
 import { ProfileModule } from '@backend/profile/profile.module'
@@ -44,6 +47,9 @@ import { AppService } from './app.service'
     ReviewModule,
     ReportModule,
     OnlineStatusModule,
+    ChatModule,
+    ImageModule,
+    FriendModule,
   ],
   controllers: [AppController],
   providers: [

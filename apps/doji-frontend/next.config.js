@@ -18,6 +18,9 @@ const nextConfig = {
       },
     ]
   },
+  images: {
+    domains: ['cdn.pixabay.com', 'storage.googleapis.com'],
+  },
 }
 
 module.exports = withNx(nextConfig)

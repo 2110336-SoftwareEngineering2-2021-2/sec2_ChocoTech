@@ -47,6 +47,17 @@ export class AuthController {
     })
   }
 
+  @Post('logout')
+  @UseGuards(ThrottlerGuard)
+  @ApiOperation({ description: 'Logout' })
+  async logout(
+    @Res({ passthrough: true }) res: Response,
+    @Cookie(CookieKey.ACCESS_TOKEN) accessToken,
+  ) {
+    await this.authService.logout(accessToken)
+    res.clearCookie(CookieKey.ACCESS_TOKEN)
+  }
+
   @Get('google')
   @Redirect()
   @ApiOperation({ description: 'Log user in with Google oauth' })
@@ -122,5 +133,14 @@ export class AuthController {
   @Post('signup')
   async create(@Body() dto: UserRegistrationRequestDTO) {
     await this.authService.signup(dto)
+  }
+
+  /**
+   * TODO: temporary endpoint, will delete after friend system is implemented
+   */
+  @UseGuards(UserAuthGuard)
+  @Get('users')
+  async getAllUsers() {
+    return await this.authService.getAllUsers()
   }
 }

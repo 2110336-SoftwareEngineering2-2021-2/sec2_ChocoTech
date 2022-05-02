@@ -1,7 +1,22 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common'
-import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { ApiBody, ApiConsumes, ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { Express } from 'express'
+import { Multer } from 'multer'
 
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
+import { ImageService } from '@backend/image/image.service'
 import { IUserReference } from '@backend/types'
 import { WorkHistoryRequestDTO } from '@backend/work-history/work-history.dto'
 
@@ -9,7 +24,10 @@ import { WorkHistoryService } from './work-history.service'
 
 @Controller('expert/work/histories')
 export class WorkHistoryController {
-  constructor(private readonly workHistoryService: WorkHistoryService) {}
+  constructor(
+    private readonly workHistoryService: WorkHistoryService,
+    private readonly imageService: ImageService,
+  ) {}
 
   @Get()
   @UseGuards(UserAuthGuard)
@@ -22,14 +40,32 @@ export class WorkHistoryController {
   }
 
   @Post()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file', { dest: 'imgs' }))
   @UseGuards(UserAuthGuard)
   @ApiCookieAuth()
   @ApiOperation({ description: 'Create my work history' })
   @ApiResponse({ status: 201, description: 'Create successful' })
-  async addWorkHistory(@Body() dto: WorkHistoryRequestDTO, @CurrentUser() userRef: IUserReference) {
+  async addWorkHistory(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() dto: WorkHistoryRequestDTO,
+    @CurrentUser() userRef: IUserReference,
+  ) {
     const user = await userRef.getUser()
+    const { url } = await this.imageService.uploadFile(file)
     const { topic, description } = dto
-    await this.workHistoryService.addWorkHistory(user, topic, description)
+    await this.workHistoryService.addWorkHistory(user, topic, description, url)
     return
   }
 
