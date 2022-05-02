@@ -1,24 +1,18 @@
 import { useRouter } from 'next/router'
-import { useQuery } from 'react-query'
+import { useEffect } from 'react'
 
-import { httpClient } from '@frontend/services'
-
-import { IMeResponseDTO } from '@libs/api'
+import { useAuthStore } from '@frontend/stores'
 
 const MyProfilePage = () => {
-  const {
-    data: user,
-    isLoading: isUserLoading,
-    isError: isUserError,
-  } = useQuery<IMeResponseDTO>('/auth/me', () => httpClient.get('/auth/me').then((res) => res.data))
+  const user = useAuthStore((store) => store.user)
+  const router = useRouter()
 
-  if (!isUserLoading) {
-    console.log(user)
-    console.log(user.username)
+  useEffect(() => {
+    if (user) {
+      router.push(`/profile/${user.username}`)
+    }
+  }, [user])
 
-    const router = useRouter()
-    router.push(`/profile/${user.username}`)
-  }
   return null
 }
 
