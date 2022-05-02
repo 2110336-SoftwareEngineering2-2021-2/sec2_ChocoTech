@@ -3,7 +3,7 @@ import { useQuery } from 'react-query'
 
 import { httpClient } from '@frontend/services'
 
-import { ISchedule, ISession } from '@libs/api'
+import { ISchedule } from '@libs/api'
 import { SessionHistoryCard } from '@libs/mui'
 
 function SessionHistory() {
