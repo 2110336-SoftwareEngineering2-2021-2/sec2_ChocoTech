@@ -115,7 +115,7 @@ const Index: React.FC<SettingsPageProps> = ({ user }) => {
             </Overlay>
           </ContainerBox>
 
-          {uploadedImage && <Image src={uploadedImage} alt="" width={500} height={400} />}
+          {uploadedImage && <Image src={uploadedImage} alt="" width={550} height={300} />}
 
           <Input {...register('fileList', { required: 'File require' })} type="file" />
         </Box>
