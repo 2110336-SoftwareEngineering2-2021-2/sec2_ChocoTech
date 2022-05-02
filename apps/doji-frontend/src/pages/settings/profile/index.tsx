@@ -41,11 +41,13 @@ const Index: React.FC<SettingsPageProps> = ({ user }) => {
     delete data.email
     delete data.username
 
-    await toast.promise(httpClient.put('profile/edit', data), {
-      loading: 'Loading...',
-      success: 'Update your profile successful.',
-      error: 'An error occur',
-    })
+    try {
+      await toast.promise(httpClient.put('profile/edit', data), {
+        loading: 'Loading...',
+        success: 'Update your profile successful.',
+        error: 'Please fill all information',
+      })
+    } catch (error) {}
   }
 
   return (

@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Link as MuiLink, Stack, TextField, Typography } from '@mui/material'
 import Link from 'next/link'
+import router from 'next/router'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { useMutation, useQuery } from 'react-query'
@@ -42,6 +43,7 @@ const LoginPage: ExtendedNextPage = () => {
     onSuccess: async () => {
       const { data } = await userRefetch()
       setUser(data)
+      router.push('/session')
     },
   })
 
