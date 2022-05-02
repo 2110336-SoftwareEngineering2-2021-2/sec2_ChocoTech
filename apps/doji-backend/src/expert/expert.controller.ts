@@ -31,12 +31,12 @@ export class ExpertAppController {
     return await this.expertAppService.getExpertApplicationListByKeyword(query)
   }
 
-  @Get('info/:id')
+  @Get('info/:username')
   @ApiOperation({ description: "Retrieve an expert's information" })
   @ApiOkResponse({ type: ExpertInfoResponseDTO })
-  async getExpertInfo(@Param('id') expertId: string): Promise<ExpertInfoResponseDTO> {
-    const info = await this.expertAppService.getExpertInfo(expertId)
-    if (!info) throw new NotFoundException('No expert with such id')
+  async getExpertInfo(@Param('username') expertUsername: string): Promise<ExpertInfoResponseDTO> {
+    const info = await this.expertAppService.getExpertInfo(expertUsername)
+    if (!info) throw new NotFoundException('No expert with such username')
     return info
   }
 }

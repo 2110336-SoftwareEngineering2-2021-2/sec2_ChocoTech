@@ -1,7 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsOptional, IsString } from 'class-validator'
 
-import { IUserEditProfileRequestDTO } from '@libs/api'
+import {
+  IProfileResponseDTO,
+  IReviewStatResponseDTO,
+  ISession,
+  IUserEditProfileRequestDTO,
+  IWorkHistory,
+} from '@libs/api'
 
 export class UserEditProfileRequestDTO implements IUserEditProfileRequestDTO {
   @ApiProperty()
@@ -28,4 +34,26 @@ export class UserEditProfileRequestDTO implements IUserEditProfileRequestDTO {
   @IsOptional()
   @IsString()
   profilePictureURL?: string
+}
+export class ProfileResponseDTO implements IProfileResponseDTO {
+  @ApiProperty()
+  username: string
+
+  @ApiProperty()
+  displayName: string
+
+  @ApiProperty()
+  role: string
+
+  @ApiProperty()
+  profilePictureURL: string
+
+  @ApiProperty()
+  workHistory: IWorkHistory[]
+
+  @ApiProperty()
+  rating: IReviewStatResponseDTO
+
+  @ApiProperty()
+  sessions: ISession[]
 }

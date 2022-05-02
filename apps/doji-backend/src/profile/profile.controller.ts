@@ -1,8 +1,9 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
   Patch,
-  Put,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -13,6 +14,7 @@ import { ApiBody, ApiConsumes, ApiCookieAuth } from '@nestjs/swagger'
 import { CurrentUser, UserAuthGuard } from '@backend/auth/user.guard'
 import { ImageService } from '@backend/image/image.service'
 import { UserEditProfileRequestDTO } from '@backend/profile/profile.dto'
+import { ProfileResponseDTO } from '@backend/profile/profile.dto'
 import { IUserReference } from '@backend/types'
 
 import { IUserEditProfileResponseDTO } from '@libs/api'
@@ -25,6 +27,13 @@ export class ProfileController {
     private readonly profileService: ProfileService,
     private readonly imageService: ImageService,
   ) {}
+
+  @Get(':username')
+  @UseGuards(UserAuthGuard)
+  @ApiCookieAuth()
+  async getProfile(@Param('username') username: string): Promise<ProfileResponseDTO> {
+    return await this.profileService.getProfile(username)
+  }
 
   @Patch('edit')
   @UseGuards(UserAuthGuard)
