@@ -9,25 +9,27 @@ import {
   Link as MuiLink,
   Stack,
   StackProps,
-  SxProps,
   Tooltip,
+  Typography,
   useTheme,
 } from '@mui/material'
 import { useResponsive } from 'libs/mui/src/hooks'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo, useState } from 'react'
+import { BsCoin } from 'react-icons/bs'
 import { FiMenu } from 'react-icons/fi'
 
 import { Logo } from '../Logo'
 import { UserBar } from '../UserBar'
 import { adminListItems, expertListItems, nonUserListItems, userListItems } from './constants'
-import { FlexList, Spacer } from './styled'
+import { Coin, FlexList, Spacer } from './styled'
 import { NavigationListItem, NavigationListItemItem } from './types'
 
 export type UserRole = 'admin' | 'user' | 'expert' | 'none'
 
 export interface NavBarProps extends StackProps {
+  coin?: string | number
   role?: UserRole
   username?: string
   avartarSrc?: string
@@ -101,6 +103,7 @@ const CustomDrawer: React.FC<NavBarListItemProps> = ({
 }
 
 export const NavBar: React.FC<NavBarProps> = ({
+  coin,
   role = 'none',
   username,
   avartarSrc,
@@ -148,12 +151,24 @@ export const NavBar: React.FC<NavBarProps> = ({
       px={[2, 4.5]}
       alignItems="center"
       justifyContent="space-between"
-      sx={{ boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.16)', ...props.sx }}
+      height={[68, 68, 72]}
+      mb={7}
+      sx={{ boxShadow: 1, ...props.sx }}
       {...props}
     >
       <Logo />
       {isMdUp ? (
         <Stack spacing={5} direction="row" alignItems="center" justifyContent="center">
+          {role === 'user' && (
+            <Link href="/balance" passHref>
+              <Coin>
+                <BsCoin />
+                <Typography variant="regular" color="ink.dark">
+                  coin {coin}
+                </Typography>
+              </Coin>
+            </Link>
+          )}
           {itemNavList.map((item) => (
             <Link href={`/${item.href}`} key={item.text} passHref>
               <MuiLink variant="regular" color="ink.dark">

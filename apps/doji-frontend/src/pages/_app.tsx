@@ -71,6 +71,7 @@ const MainNavBar: React.FC<MainNavBarProps> = ({ show, ...props }) => {
   if (!show) return null
   return (
     <NavBar
+      coin={user?.coinBalance}
       role={user?.role ? user.role : 'none'}
       username={user?.username ?? 'username'}
       avartarSrc={user?.profilePictureURL}
