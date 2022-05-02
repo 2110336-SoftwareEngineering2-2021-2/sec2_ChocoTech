@@ -35,6 +35,9 @@ export const environment = {
   jwt: {
     secret: process.env.JWT_SECRET ?? '',
   },
+  google: {
+    key: process.env.GOOGLE_APPLICATION_DECODE ?? '',
+  },
 }
 
 console.log(process.env.NODE_ENV)
