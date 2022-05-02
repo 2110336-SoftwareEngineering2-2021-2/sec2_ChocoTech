@@ -29,7 +29,7 @@ function SessionHistory() {
           })}
         </>
       )}
-      {data.length === 0 && (
+      {data?.length === 0 && (
         <NoHistory p={6} alignItems="center" mt={2} gap={2}>
           <Typography variant="large" fontWeight={500} py={2} color="sky.dark">
             No history found
