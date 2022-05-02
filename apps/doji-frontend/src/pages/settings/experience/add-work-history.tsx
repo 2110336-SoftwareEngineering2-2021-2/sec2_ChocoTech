@@ -25,9 +25,8 @@ type AddWorkHistoryModel = {
 
 const ContainerBox = styled('div')`
   position: relative;
-  width: fit-content;
-  height: fit-content;
-  background-color: aqua;
+  width: 100%;
+  height: 100%;
 `
 
 const Overlay = styled('label')<{ editable?: boolean }>`
@@ -36,14 +35,15 @@ const Overlay = styled('label')<{ editable?: boolean }>`
   left: 0;
   right: 0;
   bottom: 0;
+  margin: auto;
   background: rgba(0, 0, 0, 0.5);
   transition: 0.5s ease;
   opacity: 0;
   display: flex;
+  border-radius: 8px;
   justify-content: center;
   align-items: center;
   overflow: visible;
-  border-radius: 100px;
   &:hover {
     opacity: ${({ editable }) => (editable ? 1 : 0)};
   }
@@ -108,16 +108,22 @@ const Index: React.FC<SettingsPageProps> = ({ user }) => {
           Add Experience
         </Typography>
 
-        <Box width="maxWidth" height={300} bgcolor="sky.light" borderRadius={1}>
+        <Box width="100%" height={300} bgcolor="sky.light" borderRadius={1} position="relative">
           <ContainerBox>
-            <Overlay htmlFor="profile" editable>
-              <AiOutlineCamera style={{ color: 'white' }} />
+            {uploadedImage && (
+              <Image src={uploadedImage} alt="" layout="fill" objectFit="contain" />
+            )}
+            {!uploadedImage && <Box width={550} height={300} />}
+            <Overlay htmlFor="fileList" editable>
+              <AiOutlineCamera style={{ color: 'white' }} size={70} />
             </Overlay>
           </ContainerBox>
-
-          {uploadedImage && <Image src={uploadedImage} alt="" width={550} height={300} />}
-
-          <Input {...register('fileList', { required: 'File require' })} type="file" />
+          <Input
+            {...register('fileList', { required: 'File require' })}
+            id="fileList"
+            type="file"
+            style={{ display: 'none' }}
+          />
         </Box>
 
         <Typography variant="regular" fontWeight={500} pt={1}>
