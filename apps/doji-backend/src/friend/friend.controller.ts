@@ -19,6 +19,12 @@ export class FriendController {
     return (await this.friendService.getAllFriends(userRef)) as IMinimalFriend[]
   }
 
+  @Get('notFriend')
+  @ApiOperation({ description: "Get current user's list of not friends" })
+  async getAllNotFriends(@CurrentUser() userRef: IUserReference): Promise<IMinimalFriend[]> {
+    return (await this.friendService.getAllNotFriends(userRef)) as IMinimalFriend[]
+  }
+
   @Get('requests')
   @ApiOperation({ description: "Get current user's pending friend request" })
   async getAllFriendRequest(@CurrentUser() userRef: IUserReference): Promise<IfriendRequestDTO[]> {
