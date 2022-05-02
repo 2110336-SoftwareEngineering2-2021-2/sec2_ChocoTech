@@ -56,12 +56,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
    * Register Observer - join a chat room
    */
   @SubscribeMessage(SocketServerEvent.JOIN_CHAT_ROOM)
-  async registerObserver(
+  async joinChatRoom(
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: SocketServerPayload[SocketServerEvent.JOIN_CHAT_ROOM],
   ) {
     const userRef = await this.authService.validateWebSocket(client)
-    await this.chatService.registerObserver(client.id, userRef.username)
+    await this.chatService.joinChatRoom(client.id, userRef.username)
     const data: SocketClientPayload[SocketClientEvent.JOIN_CHAT_ROOM] = {
       roomId: payload.roomId,
       username: userRef.username,
@@ -75,12 +75,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
    * Unregister Observer - leave a chat room
    */
   @SubscribeMessage(SocketServerEvent.LEAVE_CHAT_ROOM)
-  async unregisterObserver(
+  async leaveChatRoom(
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: SocketServerPayload[SocketServerEvent.LEAVE_CHAT_ROOM],
   ) {
     const userRef = await this.authService.validateWebSocket(client)
-    await this.chatService.unregisterObserver(client.id)
+    await this.chatService.leaveChatRoom(client.id)
     const data: SocketClientPayload[SocketClientEvent.LEAVE_CHAT_ROOM] = {
       roomId: payload.roomId,
       username: userRef.username,
