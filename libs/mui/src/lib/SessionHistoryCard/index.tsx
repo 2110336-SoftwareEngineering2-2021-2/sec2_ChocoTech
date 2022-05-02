@@ -1,4 +1,5 @@
 import { Avatar, Box, Button, Divider, Stack, Typography } from '@mui/material'
+import React, { useEffect } from 'react'
 
 import { ISchedule, ScheduleStatus } from '@libs/api'
 
@@ -8,6 +9,11 @@ import { SessionStatusCard } from './components/SessionStatusCard'
 export interface SessionHistoryCardProps extends ISchedule {}
 
 export function SessionHistoryCard(props: SessionHistoryCardProps) {
+  const [currentSession, setSession] = React.useState<SessionHistoryCardProps>(props)
+  useEffect(() => {
+    setSession(props)
+    console.log(props)
+  }, [props])
   function refundAmount() {
     if (hasPenalty()) {
       return props.session.fee - deductAmount()
@@ -30,7 +36,7 @@ export function SessionHistoryCard(props: SessionHistoryCardProps) {
     }
     return true
   }
-  //
+
   return (
     <>
       <Box px={3} py={2.75}>
@@ -57,9 +63,9 @@ export function SessionHistoryCard(props: SessionHistoryCardProps) {
             </Stack>
           </Stack>
           <SessionHistoryCardMenu
-            sessionId={props.session.id}
-            expertName={props.creator.username}
-            title={props.session.topic}
+            sessionId={currentSession.session.id}
+            expertName={currentSession.session.owner.displayName}
+            title={currentSession.session.topic}
             hasPenalty={hasPenalty()}
             deductAmount={deductAmount()}
             refundAmount={refundAmount()}

@@ -67,7 +67,7 @@ export class SessionController {
     return await this.sessionService.create(dto, user)
   }
 
-  @Get('schedule/me')
+  @Get('/schedule/me')
   @UseGuards(UserAuthGuard)
   @ApiOperation({ description: 'Get all schedules of current user' })
   @ApiCookieAuth()
@@ -77,7 +77,7 @@ export class SessionController {
     return schedules
   }
 
-  @Get('schedule/request')
+  @Get('/schedule/request')
   @UseGuards(ExpertAuthGuard)
   @ApiOperation({ description: 'Get all requested schedule of expert user' })
   @ApiCookieAuth()

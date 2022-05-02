@@ -253,9 +253,12 @@ export class SessionService {
   }
 
   async getMySchedules(user: User): Promise<IScheduleResponseDTO[]> {
-    await user.schedules.init()
-    const schedules = user.schedules.getItems()
-    const schedulesJSON = schedules.map((s) => wrap(s).toJSON())
+    const mySchedules = await this.scheduleRepo.find({ session: { owner: user } }, [
+      'session',
+      'participants',
+      'session.owner',
+    ])
+    const schedulesJSON = mySchedules.map((s) => wrap(s).toJSON())
     return schedulesJSON as IScheduleResponseDTO[]
   }
 
