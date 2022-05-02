@@ -89,15 +89,14 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
           <Button fullWidth onClick={addFriend}>
             <FiUserPlus style={{ marginRight: 8 }} /> Add Friend
           </Button>
+  <Link href="/chat" passHref">
           <Button
             fullWidth
             variant="outlined"
-            onClick={() => {
-              router.push('/chat')
-            }}
           >
             <FiMessageSquare style={{ marginRight: 8 }} /> Message
           </Button>
+     </Link>
           {displayUser.role === 'expert' && (
             <>
               <IconButton onClick={handleMenuOpen}>
