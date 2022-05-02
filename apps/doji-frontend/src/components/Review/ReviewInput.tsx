@@ -55,7 +55,9 @@ const ReviewInput = (props) => {
   return (
     <form>
       <Stack direction="row" spacing="1em" alignItems="center">
-        <Avatar src={props.currentProfilePictureURL} sx={{ width: 40, height: 40 }} />
+        <Avatar src={props.user.profilePictureURL} sx={{ width: 40, height: 40 }}>
+          {props.user.displayName.charAt(0).toUpperCase()}
+        </Avatar>
 
         <TextField
           {...register('content')}

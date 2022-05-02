@@ -38,7 +38,7 @@ const SessionPage: ExtendedNextPage = () => {
         </Typography>
         <RatingPanel reviewStat={data.reviewStat} />
       </div>
-      <ReviewInput sessionId={sessionId} currentProfilePictureURL={user.profilePictureURL} />
+      <ReviewInput sessionId={sessionId} user={user} />
       {data.reviews.reverse().map((review) => (
         <ReviewEntry key={review.id} data={review} />
       ))}
