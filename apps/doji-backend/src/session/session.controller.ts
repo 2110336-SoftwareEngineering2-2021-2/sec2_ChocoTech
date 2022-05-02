@@ -116,7 +116,7 @@ export class SessionController {
     @CurrentUser() userRef: IUserReference,
   ) {
     const user = await userRef.getUser()
-    await this.sessionService.removeParticipant(scheduleId, user)
+    await this.sessionService.deleteSchedule(scheduleId, user)
   }
 
   // @Get(':id')
