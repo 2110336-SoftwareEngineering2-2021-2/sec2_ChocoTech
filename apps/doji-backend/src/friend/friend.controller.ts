@@ -51,6 +51,12 @@ export class FriendController {
     //this.friendService.unfriend(userRef, dto.username)
     this.friendService.testFunction()
   }
+  @Post('friendship')
+  @ApiOperation({ description: 'add friend to current user without acceptance' })
+  addFriend(@CurrentUser() userRef: IUserReference, @Body() dto: UsernameDTO) {
+    //this.friendService.unfriend(userRef, dto.username)
+    return this.friendService.addFriendWithoutConfirmation(userRef, dto)
+  }
 
   @Delete('cancel')
   @ApiOperation({ description: 'cancel friend request' })
