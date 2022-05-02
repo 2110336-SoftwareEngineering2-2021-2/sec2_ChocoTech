@@ -40,6 +40,7 @@ export const ChatRoomCard = ({
       spacing={2}
       alignItems="center"
       onClick={onClick}
+      width="100%"
       sx={{
         bgcolor: selected ? 'sky.lighter' : 'transparent',
       }}

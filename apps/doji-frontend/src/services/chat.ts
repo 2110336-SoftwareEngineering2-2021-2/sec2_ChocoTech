@@ -77,8 +77,10 @@ export class ChatRoomSocketFactory implements SocketFactory {
   }
 
   appendController(roomId: string, updateMessageCallback: UpdateMessageCallback) {
-    const controller = new ChatRoomSocketController(this.#socket, roomId, updateMessageCallback)
-    this.#controllers.push(controller)
+    const controller = this.getConntroller(roomId)
+    if (controller) return
+    const newController = new ChatRoomSocketController(this.#socket, roomId, updateMessageCallback)
+    this.#controllers.push(newController)
   }
 
   removeController(roomId: string) {
