@@ -11,19 +11,19 @@ export type FriendSuggestion = {
 const friendList: FriendSuggestion[] = [
   {
     value: 'incredible',
-    text: 'Mr.Incredible',
+    text: 'incredible',
   },
   {
-    value: 'yeltsa',
-    text: 'Yeltsa Kcir',
+    value: 'rick',
+    text: 'rick',
   },
   {
     value: 'john',
-    text: 'John green',
+    text: 'john',
   },
   {
     value: 'jonathan',
-    text: 'Jonathan Dessner',
+    text: 'jonathan',
   },
 ]
 

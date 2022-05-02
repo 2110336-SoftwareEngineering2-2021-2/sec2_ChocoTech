@@ -127,6 +127,7 @@ export default function ScheduleSessionPage() {
       if (value) {
         await httpClient.post('session/schedule/request', scheduleSessionData)
         toast.success('Your schedule is created')
+        router.push('/session/history')
       }
     } catch (e) {
       toast.error(e.response.data.message)
@@ -161,7 +162,7 @@ export default function ScheduleSessionPage() {
   }
 
   return (
-    <Stack flexDirection="column" position="relative" minHeight="sm" spacing={3}>
+    <Stack flexDirection="column" position="relative" minHeight="sm" spacing={3} marginTop={3}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack direction={'column'} spacing={3}>
           <Typography fontWeight={700} variant="title3">
@@ -169,7 +170,7 @@ export default function ScheduleSessionPage() {
           </Typography>
           <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
             <Tables
-              content={'by ' + sessionData.owner.firstName + ' ' + sessionData.owner.lastName}
+              content={'by ' + sessionData.owner.displayName}
               avatar={{
                 alt: 'Robert William',
                 children: sessionData.owner.firstName?.charAt(0),
