@@ -7,6 +7,8 @@ import {
   DialogContent,
   DialogProps,
   DialogTitle,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from '@mui/material'
@@ -59,8 +61,8 @@ export const ChatRoomDialog: React.FC<ChatRoomDialogProps> = (props) => {
   )
 
   const options = useMemo(() => {
-    return users
-      ?.filter((user) => user.username !== owner.username)
+    return (users || [])
+      .filter((user) => user.username !== owner.username)
       .map((user) => ({
         label: user.username,
         value: user.username,
@@ -93,17 +95,13 @@ export const ChatRoomDialog: React.FC<ChatRoomDialogProps> = (props) => {
           <Typography variant="subtitle2" color="ink.lighter" fontWeight={400} mb={2}>
             Select the user to chat with
           </Typography>
-          <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={options}
-            size="small"
-            loading={isLoading}
-            loadingText="Loading..."
-            renderInput={(params) => (
-              <TextField {...params} {...register('username')} label="username" fullWidth />
-            )}
-          />
+          <Select fullWidth {...register('username', { value: null })}>
+            {options.map((name) => (
+              <MenuItem key={name.value} value={name.value}>
+                {name.label}
+              </MenuItem>
+            ))}
+          </Select>
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" size="small">
