@@ -167,12 +167,12 @@ export class ChatService {
     }
   }
 
-  async registerObserver(clientId: string, username: string) {
+  async joinChatRoom(clientId: string, username: string) {
     const redisKey = generateRedisKey(RedisKeyType.CHAT_ROOM, clientId)
     await this.redis.set(redisKey, serializeUserReference({ username }))
   }
 
-  async unregisterObserver(clientId: string) {
+  async leaveChatRoom(clientId: string) {
     const redisKey = generateRedisKey(RedisKeyType.CHAT_ROOM, clientId)
     await this.redis.del(redisKey)
   }
