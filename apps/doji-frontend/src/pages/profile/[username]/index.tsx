@@ -7,6 +7,7 @@ import {
   MenuItem,
   Stack,
   Typography,
+  styled,
 } from '@mui/material'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -21,8 +22,13 @@ import RatingPanel from '@frontend/components/Review/RatingPanel'
 import { httpClient } from '@frontend/services'
 import { fetchUserInformation } from '@frontend/services/fetcher'
 
-import { IMeResponseDTO, IProfileResponseDTO, IReportDTO } from '@libs/api'
+import { IMeResponseDTO, IProfileResponseDTO } from '@libs/api'
 import { Achievement, CompactProfile, SessionCard } from '@libs/mui'
+
+const NoWorkHistory = styled(Stack)`
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  border: 1px solid ${({ theme }) => theme.palette.sky.light};
+`
 
 interface ProfilePageProps {
   user: IMeResponseDTO
@@ -46,7 +52,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
         success: 'Report this expert successful.',
         error: 'You have already reported this expert',
       })
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const addFriend = async () => {
@@ -84,9 +92,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
         displayName={displayUser.displayName}
         profileUrl={displayUser.profilePictureURL}
       />
-
       {currentUser.username !== displayUser.username && (
-        <Stack spacing={4} direction={'row'}>
+        <Stack spacing={3} direction={'row'}>
           <Button fullWidth onClick={addFriend}>
             <FiUserPlus style={{ marginRight: 8 }} /> Add Friend
           </Button>
@@ -121,19 +128,21 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
           )}
         </Stack>
       )}
-
-      <Typography color="sky.main" fontWeight={500}>
-        Working history and Acheivement
-      </Typography>
-      {displayUser.workHistory.length === 0 && (
-        <Typography color="sky.main" fontWeight={400} align="center" py={4}>
-          - This user has no history -
+      <Stack spacing={2} pt={4}>
+        <Typography color="sky.main" fontWeight={500}>
+          Working history and Acheivement
         </Typography>
-      )}
-      {displayUser.workHistory.map((wh) => (
-        <Achievement key={wh.id} title={wh.topic} desc={wh.description} />
-      ))}
-
+        {displayUser.workHistory.length === 0 && (
+          <NoWorkHistory>
+            <Typography color="sky.main" fontWeight={400} align="center" py={4}>
+              - This user has no history -
+            </Typography>
+          </NoWorkHistory>
+        )}
+        {displayUser.workHistory.map((wh) => (
+          <Achievement key={wh.id} title={wh.topic} desc={wh.description} />
+        ))}
+      </Stack>
       {displayUser.role === 'expert' && (
         <>
           <Typography color="sky.main" fontWeight={500}>
@@ -142,7 +151,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
           <RatingPanel reviewStat={displayUser.rating} />
         </>
       )}
-
       {displayUser.role === 'expert' && (
         <>
           <Typography color="sky.main" fontWeight={500}>

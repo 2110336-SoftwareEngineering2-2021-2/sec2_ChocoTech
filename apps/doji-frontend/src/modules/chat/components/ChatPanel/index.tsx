@@ -28,19 +28,12 @@ interface FormModel {
 }
 
 const uploadFile = async (file: File): Promise<{ id: string; url: string }> => {
-  // TODO: Complete upload file API @poravee
   const form = new FormData()
   form.append('file', file)
   const { data } = await httpClient.post<{ id: string; url: string }>('/chat/image', form, {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
   return data
-
-  // Mock Data
-  return {
-    id: 'abcd',
-    url: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
-  }
 }
 
 const deleteFile = async (fileId: string): Promise<void> => {
@@ -196,7 +189,7 @@ export const ChatPanel = ({ name, id: roomId, isLoading, isEmpty }: ChatPacelCar
       {fileUrl && (
         <ImagePreview onClick={() => handleDeleteFile(fileId)}>
           <div className="cross" />
-          <img width="100" height="100" src={fileUrl} alt={fileUrl} />
+          <Image width="100" height="100" src={fileUrl} alt={fileUrl} />
         </ImagePreview>
       )}
     </Stack>

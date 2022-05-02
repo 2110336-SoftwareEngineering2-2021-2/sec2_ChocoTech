@@ -14,9 +14,11 @@ import {
 import Omise from 'omise'
 import { Controller, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 
 import { httpClient } from '@frontend/services'
+import { fetchUserInformation } from '@frontend/services/fetcher'
+import { useAuthStore } from '@frontend/stores'
 
 import { IDepositRequest } from '@libs/api'
 
@@ -29,12 +31,20 @@ function DepositDialog(props: { open: boolean; onClose: () => void; cards: Omise
   } = useForm()
   const queryClient = useQueryClient()
 
+  const setUser = useAuthStore((store) => store.setUser)
+
+  const meQuery = useQuery('user', fetchUserInformation, {
+    onSuccess: (data) => {
+      setUser(data)
+    },
+  })
+
   const depositMutation = useMutation<void, void, IDepositRequest>(
     '/payment/deposit',
     (data) => httpClient.post('/payment/deposit', data),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('/auth/me')
+        meQuery.refetch()
         queryClient.invalidateQueries('/payment/transaction')
       },
     },
