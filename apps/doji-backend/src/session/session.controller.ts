@@ -21,12 +21,7 @@ import {
 import { SessionService } from '@backend/session/session.service'
 import { IUserReference } from '@backend/types'
 
-import {
-  IChangeScheduleStatusRequestDTO,
-  IScheduleResponseDTO,
-  ISession,
-  ISessionStatResponseDTO,
-} from '@libs/api'
+import { IScheduleResponseDTO, ISession, ISessionStatResponseDTO } from '@libs/api'
 
 @Controller('session')
 export class SessionController {
@@ -67,7 +62,7 @@ export class SessionController {
     return await this.sessionService.create(dto, user)
   }
 
-  @Get('schedule/me')
+  @Get('/schedule/me')
   @UseGuards(UserAuthGuard)
   @ApiOperation({ description: 'Get all schedules of current user' })
   @ApiCookieAuth()
@@ -77,7 +72,7 @@ export class SessionController {
     return schedules
   }
 
-  @Get('schedule/request')
+  @Get('/schedule/request')
   @UseGuards(ExpertAuthGuard)
   @ApiOperation({ description: 'Get all requested schedule of expert user' })
   @ApiCookieAuth()
@@ -109,19 +104,19 @@ export class SessionController {
     return await this.sessionService.changeScheduleStatus(scheduleId, status)
   }
 
-  @Delete(':sessionId/participant')
+  @Delete('/schedule/:scheduleId/')
   @UseGuards(UserAuthGuard)
   @HttpCode(200)
   @ApiCookieAuth()
-  @ApiOperation({ description: 'Cancel session of current user by SessionId' })
-  @ApiResponse({ status: 200, description: 'Session is cancled' })
-  @ApiResponse({ status: 404, description: 'Session not found or you are not in the shcedule' })
+  @ApiOperation({ description: 'Cancel schedule of owner user by SecheduleId' })
+  @ApiResponse({ status: 200, description: 'Schedule is cancled' })
+  @ApiResponse({ status: 404, description: 'Schedule not found or you are not in the schedule' })
   async deleteSession(
-    @Param('sessionId') sessionId: string,
+    @Param('scheduleId') scheduleId: string,
     @CurrentUser() userRef: IUserReference,
   ) {
     const user = await userRef.getUser()
-    await this.sessionService.removeParticipant(sessionId, user)
+    await this.sessionService.deleteSchedule(scheduleId, user)
   }
 
   // @Get(':id')

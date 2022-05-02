@@ -19,4 +19,11 @@ export class WorkHistory {
 
   @Property()
   imageUrl: string
+
+  constructor(expert: User, topic: string, description: string, imageUrl: string) {
+    this.expert = expert
+    this.topic = topic
+    this.description = description
+    this.imageUrl = imageUrl
+  }
 }

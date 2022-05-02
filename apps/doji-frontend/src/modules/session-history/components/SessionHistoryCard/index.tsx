@@ -1,13 +1,21 @@
 import { Avatar, Box, Button, Divider, Stack, Typography } from '@mui/material'
+import { userInfo } from 'os'
+import React, { useEffect } from 'react'
 
-import { ISchedule, ScheduleStatus } from '@libs/api'
+import { IMyScheduleResponseDTO, ISchedule, ScheduleStatus } from '@libs/api'
 
 import { SessionHistoryCardMenu } from './components/SessionHistoryCardMenu'
 import { SessionStatusCard } from './components/SessionStatusCard'
 
-export interface SessionHistoryCardProps extends ISchedule {}
+export interface SessionHistoryCardProps extends IMyScheduleResponseDTO {
+  username: string
+}
 
 export function SessionHistoryCard(props: SessionHistoryCardProps) {
+  const [currentSession, setSession] = React.useState<SessionHistoryCardProps>(props)
+  useEffect(() => {
+    setSession(props)
+  }, [props])
   function refundAmount() {
     if (hasPenalty()) {
       return props.session.fee - deductAmount()
@@ -30,7 +38,7 @@ export function SessionHistoryCard(props: SessionHistoryCardProps) {
     }
     return true
   }
-  //
+
   return (
     <>
       <Box px={3} py={2.75}>
@@ -56,14 +64,17 @@ export function SessionHistoryCard(props: SessionHistoryCardProps) {
               )}
             </Stack>
           </Stack>
-          <SessionHistoryCardMenu
-            sessionId={props.session.id}
-            expertName={props.creator.username}
-            title={props.session.topic}
-            hasPenalty={hasPenalty()}
-            deductAmount={deductAmount()}
-            refundAmount={refundAmount()}
-          />
+          {currentSession.creator === props.username && (
+            <SessionHistoryCardMenu
+              scheduleId={currentSession.id}
+              sessionId={currentSession.session.id}
+              expertName={currentSession.session.owner.displayName}
+              title={currentSession.session.topic}
+              hasPenalty={hasPenalty()}
+              deductAmount={deductAmount()}
+              refundAmount={refundAmount()}
+            />
+          )}
         </Box>
       </Box>
       <Divider />

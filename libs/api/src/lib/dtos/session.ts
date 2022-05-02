@@ -71,3 +71,19 @@ export interface IScheduleResponseDTO {
   meetUrl?: string
   participants?: IUser[]
 }
+
+export interface IMyScheduleResponseDTO {
+  id: string
+  session: ISession
+  creator: string
+  coinOnHold: number
+  status: ScheduleStatus
+  /**
+   * Duration in hours
+   */
+  duration: number
+  startTime: Date
+  meetId?: string
+  meetUrl?: string
+  participants: IUser[]
+}

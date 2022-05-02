@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
+import { useQueryClient } from 'react-query'
 
 import { httpClient } from '@frontend/services'
 
@@ -31,7 +32,7 @@ const ReviewInput = (props) => {
   }
   const [rate, setRate] = useState(0)
   const [content, setContent] = useState('')
-
+  const queryClient = useQueryClient()
   const { register, handleSubmit } = useForm<IReviewCreationRequestDTO>()
 
   const submitReview: SubmitHandler<IReviewCreationRequestDTO> = async (data) => {
@@ -46,7 +47,10 @@ const ReviewInput = (props) => {
         success: 'Review success',
         error: 'An error occur',
       })
-    } catch {}
+      queryClient.invalidateQueries(['/session', props.sessionId])
+    } catch (e) {
+      console.log(e)
+    }
 
     setContent('')
     setRate(0)

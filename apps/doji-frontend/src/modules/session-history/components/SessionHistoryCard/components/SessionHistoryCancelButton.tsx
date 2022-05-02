@@ -2,7 +2,6 @@ import { Stack, styled } from '@mui/material'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
 import Typography from '@mui/material/Typography'
-import axios from 'axios'
 import * as React from 'react'
 import toast from 'react-hot-toast'
 
@@ -18,23 +17,14 @@ const BoxStyled = styled('div')`
   padding: ${({ theme }) => theme.spacing(3)};
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
 `
-
-export function SessionHistoryCancelButton(props: SessionInfo) {
-  async function cancelSession() {
-    await axios
-      .delete('http://localhost:3333/api/session/participant', {
-        data: { sessionId: props.sessionId },
-        withCredentials: true,
-      })
-      .then(function (response) {
-        console.log('success')
-        console.log(response)
-      })
-      .catch(function (response) {
-        console.log('fail')
-        console.log(response)
-      })
-  }
+export interface SessionHistoryCancelButtonProps {
+  sessionInfo: SessionInfo
+  cancelSession: () => void
+}
+export function SessionHistoryCancelButton({
+  sessionInfo,
+  cancelSession,
+}: SessionHistoryCancelButtonProps) {
   const [open, setOpen] = React.useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -63,15 +53,15 @@ export function SessionHistoryCancelButton(props: SessionInfo) {
               >
                 Are you sure you want to cancel{' '}
                 <Typography display="inline" variant="regular" fontWeight={700} color="ink.lighter">
-                  {props.title}{' '}
+                  {sessionInfo.title}{' '}
                 </Typography>
                 by
                 <Typography display="inline" variant="regular" fontWeight={700} color="ink.lighter">
                   {' '}
-                  {props.expertName}
+                  {sessionInfo.expertName}
                 </Typography>
                 ?{' '}
-                {props.hasPenalty && (
+                {sessionInfo.hasPenalty && (
                   <>
                     You will be deducted{' '}
                     <Typography
@@ -81,7 +71,7 @@ export function SessionHistoryCancelButton(props: SessionInfo) {
                       color="primary.main"
                     >
                       {' '}
-                      {props.deductAmount}{' '}
+                      {sessionInfo.deductAmount}{' '}
                     </Typography>{' '}
                     coins for cancelling within 3 days of the session date.
                   </>
@@ -101,7 +91,7 @@ export function SessionHistoryCancelButton(props: SessionInfo) {
                   color="primary.main"
                 >
                   {' '}
-                  {props.refundAmount}{' '}
+                  {sessionInfo.refundAmount}{' '}
                 </Typography>{' '}
                 Doji coins.
               </Typography>

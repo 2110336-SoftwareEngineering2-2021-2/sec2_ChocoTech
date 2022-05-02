@@ -154,7 +154,7 @@ export const ChatPanel = ({ name, id: roomId, isLoading, isEmpty }: ChatPacelCar
       <Stack flexGrow={1} sx={{ overflowY: 'auto' }} p={4}>
         <Stack spacing={2} alignItems="">
           {messages?.map((msg) => (
-            <ChatMessage key={msg.id} {...msg} owner={user.username === msg.author.username} />
+            <ChatMessage key={msg.id} {...msg} owner={user?.username === msg.author.username} />
           ))}
           <div ref={messagesEndRef} />
         </Stack>
@@ -189,7 +189,7 @@ export const ChatPanel = ({ name, id: roomId, isLoading, isEmpty }: ChatPacelCar
       {fileUrl && (
         <ImagePreview onClick={() => handleDeleteFile(fileId)}>
           <div className="cross" />
-          <Image width="100" height="100" src={fileUrl} alt={fileUrl} />
+          <Image objectFit="cover" layout="fill" src={fileUrl} alt={fileUrl} />
         </ImagePreview>
       )}
     </Stack>

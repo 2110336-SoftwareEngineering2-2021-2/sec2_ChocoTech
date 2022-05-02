@@ -2323,10 +2323,10 @@
     lodash "4.17.21"
     path-to-regexp "3.2.0"
 
-"@nestjs/testing@^8.0.0":
-  version "8.2.6"
-  resolved "https://registry.npmjs.org/@nestjs/testing/-/testing-8.2.6.tgz"
-  integrity sha512-Cg8tM7yxlLDBO+CTNjk6X/UkxGRsprFc8gDHGEGesiE9wLErxNnslFugfUnYWJaSzmLZSqcFFig7mThc8VSxrw==
+"@nestjs/testing@^8.4.4":
+  version "8.4.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-8.4.4.tgz#ac58e1f4be2344823b14243072179ce13a1ebd40"
+  integrity sha512-eGj0Lbi0ONMkjDKbKQHoGX+ecGdrGRZ81I8i6fH4dx9jIR0p4MsBlW964f6Swn1MGkPm/xxomJmBWLPqZEjF7g==
   dependencies:
     optional "0.1.4"
     tslib "2.3.1"
@@ -12056,6 +12056,11 @@ jest-watcher@^27.4.6:
     chalk "^4.0.0"
     jest-util "^27.4.2"
     string-length "^4.0.1"
+
+jest-when@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/jest-when/-/jest-when-3.5.1.tgz#33ab6f923661cf878cd08fe9df64b507934603db"
+  integrity sha512-o+HiaIVCg1IC95sMDKHU9G5v5N5l3UHqXvJpf0PgAMThZeQo4Hf5Sgoj+wpCBRGg4/KtzSAZZZEKNiLqE0i4eQ==
 
 jest-worker@^26.5.0, jest-worker@^26.6.2:
   version "26.6.2"

@@ -1,7 +1,8 @@
 import { Stack, styled } from '@mui/material'
 
 export const ImagePreview = styled(Stack)`
-  width: fit-content;
+  width: 100px;
+  height: 100px;
   position: relative;
   margin: ${({ theme }) => theme.spacing(0, 4, 4, 4)};
   cursor: pointer;
