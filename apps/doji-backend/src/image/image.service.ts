@@ -1,5 +1,7 @@
 import { Storage } from '@google-cloud/storage'
 import { Injectable } from '@nestjs/common'
+import { unlink } from 'fs'
+import { promisify } from 'util'
 
 @Injectable()
 export class ImageService {
@@ -10,6 +12,7 @@ export class ImageService {
       destination: file.filename,
       contentType: file.mimetype,
     })
+    await promisify(unlink)(file.path)
     return { id: `${new Date().toUTCString()}${Math.random()}`, url: res[0].publicUrl() }
   }
 }
