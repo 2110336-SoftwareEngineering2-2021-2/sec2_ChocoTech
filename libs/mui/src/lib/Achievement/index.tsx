@@ -61,7 +61,7 @@ export const Achievement: React.FC<AchievementProps> = ({ title, desc, src, edit
         )}
 
         <Dialog onClose={handleClose} open={open} fullScreen>
-          <ImgFrame src={src} layout="fill" onClick={handleClose} />
+          <ImgFrame src={src} onClick={handleClose} />
         </Dialog>
 
         <Stack direction="column" spacing={1} justifyContent="flex-start">
