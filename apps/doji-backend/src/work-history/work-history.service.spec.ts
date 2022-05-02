@@ -19,6 +19,7 @@ const mockTopic2 = 'topic2'
 const mockDescription2 = 'topic2-desc'
 const mockTopic3 = 'topic3'
 const mockDescription3 = 'topic3-desc'
+
 const mockExpert1: User = {
   username: 'test',
   email: 'test@gmail.com',
@@ -72,9 +73,9 @@ describe('WorkHistoryService', () => {
   const findOneOrFailSpy = jest.fn()
   const removeAndFlushSpy = jest.fn()
   when(findSpy)
-    .calledWith(mockExpert1)
-    .mockReturnValue([mockWorkHistory1, mockWorkHistory2])
-    .calledWith(mockExpert2)
+    .calledWith({ expert: mockExpert1 })
+    .mockReturnValue([mockWorkHistory1])
+    .calledWith({ expert: mockExpert2 })
     .mockReturnValue([mockWorkHistory3])
   when(findOneOrFailSpy)
     .calledWith({ id: mockWorkHistory1.id })
@@ -226,5 +227,6 @@ describe('WorkHistoryService', () => {
   })
 })
 /*
+yarn test:backend
 yarn jest --coverage --config=./jest.config.js
 */
