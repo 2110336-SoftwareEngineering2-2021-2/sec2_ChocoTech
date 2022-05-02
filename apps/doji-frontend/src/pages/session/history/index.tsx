@@ -3,8 +3,9 @@ import Link from 'next/link'
 import { useQuery } from 'react-query'
 
 import { httpClient } from '@frontend/services'
+import { useAuthStore } from '@frontend/stores'
 
-import { ISchedule } from '@libs/api'
+import { IMyScheduleResponseDTO, ISchedule } from '@libs/api'
 import { SessionHistoryCard } from '@libs/mui'
 
 const NoHistory = styled(Stack)`
@@ -13,10 +14,12 @@ const NoHistory = styled(Stack)`
 `
 
 function SessionHistory() {
-  const { data, isLoading } = useQuery<ISchedule[]>('/session/schedule/me', () =>
-    httpClient.get('/session/schedule/me').then((res) => res.data),
+  const { data, isLoading, isError } = useQuery<IMyScheduleResponseDTO[]>(
+    '/session/schedule/me',
+    () => httpClient.get('/session/schedule/me').then((res) => res.data),
   )
-
+  const user = useAuthStore((store) => store.user)
+  if (isLoading || isError) return null
   return (
     <Stack>
       <Typography variant="title3" py={2} color="ink.dark">
@@ -25,7 +28,7 @@ function SessionHistory() {
       {!isLoading && (
         <>
           {data.map((element) => {
-            return <SessionHistoryCard {...element} key={element.id} />
+            return <SessionHistoryCard username={user?.username} key={element.id} {...element} />
           })}
         </>
       )}

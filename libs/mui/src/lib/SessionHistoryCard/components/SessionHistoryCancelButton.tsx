@@ -25,7 +25,6 @@ export function SessionHistoryCancelButton({
   sessionInfo,
   cancelSession,
 }: SessionHistoryCancelButtonProps) {
-  console.log(sessionInfo)
   const [open, setOpen] = React.useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)

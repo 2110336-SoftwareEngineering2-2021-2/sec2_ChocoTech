@@ -1,18 +1,20 @@
 import { Avatar, Box, Button, Divider, Stack, Typography } from '@mui/material'
+import { userInfo } from 'os'
 import React, { useEffect } from 'react'
 
-import { ISchedule, ScheduleStatus } from '@libs/api'
+import { IMyScheduleResponseDTO, ISchedule, ScheduleStatus } from '@libs/api'
 
 import { SessionHistoryCardMenu } from './components/SessionHistoryCardMenu'
 import { SessionStatusCard } from './components/SessionStatusCard'
 
-export interface SessionHistoryCardProps extends ISchedule {}
+export interface SessionHistoryCardProps extends IMyScheduleResponseDTO {
+  username: string
+}
 
 export function SessionHistoryCard(props: SessionHistoryCardProps) {
   const [currentSession, setSession] = React.useState<SessionHistoryCardProps>(props)
   useEffect(() => {
     setSession(props)
-    console.log(props)
   }, [props])
   function refundAmount() {
     if (hasPenalty()) {
@@ -62,14 +64,17 @@ export function SessionHistoryCard(props: SessionHistoryCardProps) {
               )}
             </Stack>
           </Stack>
-          <SessionHistoryCardMenu
-            sessionId={currentSession.session.id}
-            expertName={currentSession.session.owner.displayName}
-            title={currentSession.session.topic}
-            hasPenalty={hasPenalty()}
-            deductAmount={deductAmount()}
-            refundAmount={refundAmount()}
-          />
+          {currentSession.creator === props.username && (
+            <SessionHistoryCardMenu
+              scheduleId={currentSession.id}
+              sessionId={currentSession.session.id}
+              expertName={currentSession.session.owner.displayName}
+              title={currentSession.session.topic}
+              hasPenalty={hasPenalty()}
+              deductAmount={deductAmount()}
+              refundAmount={refundAmount()}
+            />
+          )}
         </Box>
       </Box>
       <Divider />

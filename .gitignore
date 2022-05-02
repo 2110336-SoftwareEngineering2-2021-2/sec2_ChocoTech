@@ -38,3 +38,6 @@ testem.log
 .DS_Store
 Thumbs.db
 .env.local
+
+imgs
+google.json

@@ -16,6 +16,7 @@ import Omise from 'omise'
 import { useCallback, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
+import { AiOutlinePlus } from 'react-icons/ai'
 import { FaCartPlus, FaCcMastercard, FaCcVisa, FaPlus } from 'react-icons/fa'
 import { ImCross } from 'react-icons/im'
 import { IconBaseProps } from 'react-icons/lib'
@@ -30,6 +31,8 @@ import { stangToBathString } from '@frontend/utils/stangBathToString'
 
 import { IDepositRequest, IErrorMessage, IMeResponseDTO, IUser } from '@libs/api'
 import { Tables, TablesActionType } from '@libs/mui'
+
+import { PaymentMethodPlaceholder } from './styled'
 
 const SelectPaymentPanel = () => {
   const theme = useTheme()
@@ -123,9 +126,19 @@ const SelectPaymentPanel = () => {
       ))}
 
       {data.length == 0 && (
-        <Link href="/balance/new">
-          <Tables content="Add a new card" avatar={{ children: <FaPlus size="20px" /> }} />
-        </Link>
+        <PaymentMethodPlaceholder gap={4} alignItems="center" p={4}>
+          <Typography variant="regular" color="ink.dark">
+            There is no any payment method.
+          </Typography>
+          <Link href="/balance/new" passHref>
+            <Button>
+              <Typography variant="regular" color="white">
+                Add a new card
+              </Typography>
+            </Button>
+          </Link>
+          {/* <AiOutlinePlus size="20px" color={theme.palette.primary.main} /> */}
+        </PaymentMethodPlaceholder>
       )}
     </Stack>
   )

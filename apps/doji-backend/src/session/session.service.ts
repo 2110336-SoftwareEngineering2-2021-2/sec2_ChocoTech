@@ -253,7 +253,7 @@ export class SessionService {
   }
 
   async getMySchedules(user: User): Promise<IScheduleResponseDTO[]> {
-    const mySchedules = await this.scheduleRepo.find({ session: { owner: user } }, [
+    const mySchedules = await this.scheduleRepo.find({ participants: [user] }, [
       'session',
       'participants',
       'session.owner',
@@ -262,22 +262,17 @@ export class SessionService {
     return schedulesJSON as IScheduleResponseDTO[]
   }
 
-  async removeParticipant(scheduleId: string, targetUser: User) {
+  async deleteSchedule(scheduleId: string, targetUser: User) {
     try {
-      const schedule = await this.scheduleRepo.findOneOrFail({ id: scheduleId }, ['participants'])
-      await targetUser.schedules.init()
-
-      if (!targetUser.schedules.contains(schedule)) {
-        throw new NotFoundException('Session not found or you are not in the shcedule')
+      const schedule = await this.scheduleRepo.findOneOrFail({ id: scheduleId }, [
+        'creator',
+        'participants',
+      ])
+      if (schedule.creator.username === targetUser.username) {
+        await this.scheduleRepo.removeAndFlush(schedule)
       }
-
-      targetUser.schedules.remove(schedule)
-      schedule.participants.remove(targetUser)
-
-      await this.scheduleRepo.persistAndFlush(schedule)
-      await this.userRepo.persistAndFlush(targetUser)
     } catch (err) {
-      throw new NotFoundException('Session not found or you are not in the shcedule')
+      throw new NotFoundException('Schedule not found')
     }
   }
 
