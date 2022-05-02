@@ -43,7 +43,7 @@ export class AuthController {
     const { accessToken, maxAge } = await this.authService.loginWithPassword(username, password)
     res.cookie(CookieKey.ACCESS_TOKEN, accessToken, {
       httpOnly: true,
-      maxAge: maxAge,
+      maxAge: maxAge * 1000,
     })
   }
 
