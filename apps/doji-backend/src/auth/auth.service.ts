@@ -81,6 +81,11 @@ export class AuthService {
     }
   }
 
+  async removeUserFromRedis(key: RedisKeyType, token: string) {
+    const redisKey = generateRedisKey(key, token)
+    await this.redis.del(redisKey)
+  }
+
   async loginWithPassword(username: string, password: string): Promise<ILogin> {
     const user = await this.userRepo.findOne({ username: username })
     if (!user) {
@@ -94,6 +99,10 @@ export class AuthService {
       accessToken: accessToken,
       maxAge: TOKEN_EXPIRE_DURATION_SECONDS,
     }
+  }
+
+  async logout(token: string) {
+    await this.removeUserFromRedis(RedisKeyType.USER_ACCESS_TOKEN, token)
   }
 
   async validateAccessToken(token: string): Promise<IUserReference> {

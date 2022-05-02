@@ -170,7 +170,7 @@ export const NavBar: React.FC<NavBarProps> = ({
             </Link>
           )}
           {itemNavList.map((item) => (
-            <Link href={`/${item.href}`} key={item.text} passHref>
+            <Link href={`${item.href}`} key={item.text} passHref>
               <MuiLink variant="regular" color="ink.dark">
                 {item.text}
               </MuiLink>
