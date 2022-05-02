@@ -1,7 +1,7 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
+import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
 import { randomUUID } from 'crypto'
 
-import { User } from '@backend/entities/User'
+import { User } from './User'
 
 export enum FriendRequestStatus {
   PENDING = 'pending',
@@ -17,10 +17,10 @@ export class FriendRequest {
   @Property()
   dateSent: Date
 
-  @ManyToOne()
+  @ManyToOne(() => User)
   sender: User
 
-  @ManyToOne()
+  @ManyToOne(() => User)
   receiver: User
 
   @Property({ nullable: true })
@@ -29,6 +29,7 @@ export class FriendRequest {
   @Property({ nullable: true })
   dateEnded?: Date
 
+  @Enum(() => FriendRequestStatus)
   @Property()
   status: FriendRequestStatus
 

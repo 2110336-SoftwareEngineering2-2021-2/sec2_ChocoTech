@@ -2,6 +2,7 @@
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { EntityRepository } from '@mikro-orm/postgresql'
 import { Injectable } from '@nestjs/common'
+import { wrap } from 'module'
 
 import { FriendRequest, FriendRequestStatus } from '@backend/entities/FriendRequest'
 import { Friendship } from '@backend/entities/Friendship'
@@ -22,15 +23,23 @@ export class FriendService {
   async getAllFriends(userRef: IUserReference) {
     // eslint-disable-next-line no-useless-catch
     try {
-      const friendship = (await userRef.getUser()).friendship
-      return friendship.getItems().map((f) => {
-        const friend = f.user2
-        return {
-          username: friend.username,
-          displayName: friend.displayName,
-          profilePictureURL: friend.profilePictureURL,
-        }
-      })
+      const userInfo = await this.userRepo.findOne({ username: userRef.username }, ['friendship'])
+
+      await userInfo.friendship.init()
+      const friendships = userInfo.friendship.getItems()
+
+      const result = await Promise.all(
+        friendships.map(async (f) => {
+          const friend = await this.userRepo.findOne({ username: f.user2.username })
+          return {
+            username: friend.username,
+            displayName: friend.displayName,
+            profilePictureURL: friend.profilePictureURL,
+          }
+        }),
+      )
+
+      return result
     } catch (e) {
       throw e
     }
@@ -38,10 +47,16 @@ export class FriendService {
 
   async getRelationship(userRef: IUserReference, username: string): Promise<RelationshipStatus> {
     try {
-      const user = await userRef.getUser()
-      const requestSent = user.requestSent.getItems().map((fr) => fr.receiver.username)
-      const requestReceived = user.requestReceived.getItems().map((fr) => fr.sender.username)
-      const friendships = user.friendship.getItems().map((f) => f.user2.username)
+      const userInfo = await this.userRepo.findOne({ username: userRef.username }, ['friendship'])
+      await userInfo.requestSent.init()
+      await userInfo.requestReceived.init()
+      await userInfo.friendship.init()
+      const requestSent = userInfo.requestSent.getItems().map((fr) => fr.receiver.username)
+      const requestReceived = userInfo.requestReceived.getItems().map((fr) => fr.sender.username)
+      const friendships = userInfo.friendship.getItems().map((f) => f.user2.username)
+      if (username == userRef.username) {
+        throw console.error('self-referent relationship action undefined')
+      }
       if (friendships.includes(username)) {
         return RelationshipStatus.FRIEND
       }
@@ -63,18 +78,26 @@ export class FriendService {
   */
   async getAllRequestReceived(userRef: IUserReference) {
     try {
-      const user = await userRef.getUser()
-      const requestReceived = user.requestReceived.getItems().map((fr) => {
-        const sender = fr.sender
-        return {
-          id: fr.id,
-          dateSent: fr.dateSent,
-          username: sender.username,
-          displayname: sender.displayName,
-          profilePictureURL: sender.profilePictureURL,
-        }
-      })
-      return requestReceived
+      const userInfo = await this.userRepo.findOne({ username: userRef.username }, [
+        'requestReceived',
+      ])
+      await userInfo.requestReceived.init()
+      const requests = userInfo.requestReceived
+        .getItems()
+        .filter((req) => req.status == FriendRequestStatus.PENDING)
+      const result = await Promise.all(
+        requests.map(async (fr) => {
+          const sender = await this.userRepo.findOne({ username: fr.sender.username })
+          return {
+            id: fr.id,
+            dateSent: fr.dateSent,
+            username: sender.username,
+            displayname: sender.displayName,
+            profilePictureURL: sender.profilePictureURL,
+          }
+        }),
+      )
+      return result
     } catch (e) {
       throw e
     }
@@ -88,20 +111,23 @@ export class FriendService {
         const receiver = await this.userRepo.findOne({ username: username })
         const friendRequest = new FriendRequest(sender, receiver)
         this.friendRequestRepo.persistAndFlush(friendRequest)
+        return 'successfully sent'
       }
+      return 'cannot send friend request'
     } catch (e) {
       throw e
     }
   }
 
-  async cancelFriendRequest(userRef: IUserReference, id: string) {
+  async cancelFriendRequest(userRef: IUserReference, username: string) {
     try {
-      const friendRequest = await this.friendRequestRepo.findOne({ id: id })
-      const user = await userRef.getUser()
+      const friendRequest = await this.friendRequestRepo.findOne({
+        sender: { username: userRef.username },
+        receiver: { username: username },
+        status: FriendRequestStatus.PENDING,
+      })
       if (friendRequest) {
-        if (friendRequest.sender == user) {
-          this.friendRequestRepo.removeAndFlush(friendRequest)
-        }
+        this.friendRequestRepo.removeAndFlush(friendRequest)
       }
     } catch (e) {
       throw e
@@ -110,7 +136,10 @@ export class FriendService {
 
   async respondFriendRequest(userRef: IUserReference, requestID: string, accept: boolean) {
     try {
-      const friendRequest = await this.friendRequestRepo.findOne({ id: requestID })
+      const friendRequest = await this.friendRequestRepo.findOne({ id: requestID }, [
+        'sender',
+        'receiver',
+      ])
       const user = await userRef.getUser()
       if (friendRequest) {
         if (friendRequest.receiver == user) {
@@ -122,10 +151,11 @@ export class FriendService {
             const receiver = friendRequest.receiver
             const friendship_1 = new Friendship(friendRequest.id, sender, receiver)
             const friendship_2 = new Friendship(friendRequest.id, receiver, sender)
-            this.friendshipRepo.persistAndFlush([friendship_1, friendship_2])
+            await this.friendshipRepo.persistAndFlush([friendship_1, friendship_2])
           } else {
             friendRequest.status = FriendRequestStatus.REJECTED
           }
+          await this.friendRequestRepo.persistAndFlush(friendRequest)
         }
       }
     } catch (e) {
@@ -135,6 +165,7 @@ export class FriendService {
 
   async unfriend(userRef: IUserReference, username: string) {
     try {
+      console.log('unfriend' + userRef.username + username)
       const user1 = await userRef.getUser()
       const user2 = await this.userRepo.findOne({ username: username })
       const relationship = await this.getRelationship(userRef, username)
@@ -143,19 +174,28 @@ export class FriendService {
           user1: { username: user1.username },
           user2: { username: user2.username },
         })
+        console.log(friendship_1)
         const friendship_2 = await this.friendshipRepo.findOne({
           user1: { username: user2.username },
           user2: { username: user1.username },
         })
+        console.log(friendship_2)
         const friendRequest = await this.friendRequestRepo.findOne({ id: friendship_1.id })
+        console.log(friendRequest)
         friendRequest.status = FriendRequestStatus.UNFRIENDED
         friendRequest.dateEnded = new Date()
 
-        this.friendRequestRepo.persistAndFlush(friendRequest)
-        this.friendshipRepo.removeAndFlush([friendship_1, friendship_2])
+        await this.friendRequestRepo.persistAndFlush(friendRequest)
+        this.friendshipRepo.remove(friendship_1)
+        this.friendshipRepo.remove(friendship_2)
+        return await this.friendshipRepo.flush()
       }
     } catch (e) {
       throw e
     }
+  }
+
+  async testFunction() {
+    return 'unfriend not supported yet'
   }
 }

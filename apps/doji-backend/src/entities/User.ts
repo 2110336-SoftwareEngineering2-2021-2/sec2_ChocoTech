@@ -8,10 +8,9 @@ import {
   Property,
 } from '@mikro-orm/core'
 
-import { FriendRequest } from '@backend/entities/FriendRequest'
-import { Friendship } from '@backend/entities/Friendship'
-
 import { ChatRoom } from './ChatRoom'
+import { FriendRequest } from './FriendRequest'
+import { Friendship } from './Friendship'
 import { Message } from './Message'
 import { Review } from './Review'
 import { Schedule } from './Schedule'

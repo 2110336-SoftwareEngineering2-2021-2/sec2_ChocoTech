@@ -1,16 +1,16 @@
-import { Entity, PrimaryKey } from '@mikro-orm/core'
+import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core'
 
-import { User } from '@backend/entities/User'
+import { User } from './User'
 
 @Entity()
 export class Friendship {
   @PrimaryKey()
   id: string
 
-  @PrimaryKey()
+  @ManyToOne(() => User, { primary: true })
   user1: User
 
-  @PrimaryKey()
+  @ManyToOne(() => User, { primary: true })
   user2: User
 
   constructor(id: string, user1: User, user2: User) {
