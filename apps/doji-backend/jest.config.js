@@ -12,4 +12,6 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/doji-backend',
+  collectCoverage: true,
+  coverageReporters: ['text'],
 }

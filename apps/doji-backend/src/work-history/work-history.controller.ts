@@ -16,7 +16,8 @@ export class WorkHistoryController {
   @ApiCookieAuth()
   @ApiOperation({ description: 'Get all my work history' })
   @ApiResponse({ status: 200, description: 'Given all my work history' })
-  async getAllWorkHistory(@CurrentUser() user: IUserReference) {
+  async getAllWorkHistory(@CurrentUser() userRef: IUserReference) {
+    const user = await userRef.getUser()
     return await this.workHistoryService.getAllWorkHistory(user)
   }
 
@@ -25,8 +26,10 @@ export class WorkHistoryController {
   @ApiCookieAuth()
   @ApiOperation({ description: 'Create my work history' })
   @ApiResponse({ status: 201, description: 'Create successful' })
-  async addWorkHistory(@Body() dto: WorkHistoryRequestDTO, @CurrentUser() user: IUserReference) {
-    await this.workHistoryService.addWorkHistory(dto, user)
+  async addWorkHistory(@Body() dto: WorkHistoryRequestDTO, @CurrentUser() userRef: IUserReference) {
+    const user = await userRef.getUser()
+    const { topic, description } = dto
+    await this.workHistoryService.addWorkHistory(user, topic, description)
     return
   }
 
@@ -39,10 +42,12 @@ export class WorkHistoryController {
   @ApiResponse({ status: 404, description: 'Work history ID is not founded' })
   async editWorkHistory(
     @Body() dto: WorkHistoryRequestDTO,
-    @CurrentUser() user: IUserReference,
+    @CurrentUser() userRef: IUserReference,
     @Param('workId') workId: string,
   ) {
-    await this.workHistoryService.editWorkHistory(dto, user, workId)
+    const user = await userRef.getUser()
+    const { topic, description } = dto
+    await this.workHistoryService.editWorkHistory(user, topic, description, workId)
     return
   }
 
@@ -53,7 +58,8 @@ export class WorkHistoryController {
   @ApiResponse({ status: 200, description: 'Delete successful' })
   @ApiResponse({ status: 403, description: 'This is not your work history' })
   @ApiResponse({ status: 404, description: 'Work history ID is not founded' })
-  async deleteWorkHistory(@CurrentUser() user: IUserReference, @Param('workId') workId: string) {
+  async deleteWorkHistory(@CurrentUser() userRef: IUserReference, @Param('workId') workId: string) {
+    const user = await userRef.getUser()
     await this.workHistoryService.deleteWorkHistory(user, workId)
     return
   }

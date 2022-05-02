@@ -16,4 +16,11 @@ export class WorkHistory {
 
   @Property()
   description: string
+  constructor(expert: User, topic: string, description: string) {
+    // console.log(this)
+    // console.log(typeof this)
+    this.expert = expert
+    this.topic = topic
+    this.description = description
+  }
 }
