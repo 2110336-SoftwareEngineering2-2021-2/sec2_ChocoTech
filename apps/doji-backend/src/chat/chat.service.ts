@@ -1,4 +1,3 @@
-import { Storage } from '@google-cloud/storage'
 import { EntityRepository, NotFoundError, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common'
@@ -27,7 +26,6 @@ import {
 @Injectable()
 export class ChatService {
   private readonly logger = new Logger(ChatService.name)
-  storage = new Storage()
   constructor(
     @Inject('Redis') private readonly redis: Redis,
     @Inject('RedisSubscriber') private readonly redisSub: Redis,

@@ -5,7 +5,7 @@ import { promisify } from 'util'
 
 @Injectable()
 export class ImageService {
-  storage = new Storage()
+  private readonly storage = new Storage()
   async uploadFile(file: Express.Multer.File) {
     const bucket = this.storage.bucket('doji-profile-pic')
     const res = await bucket.upload(file.path, {

@@ -1,5 +1,5 @@
 import { Avatar, Stack, Tooltip, Typography, styled } from '@mui/material'
-import { useMemo } from 'react'
+import Image from 'next/image'
 
 import { IMessageDTO } from '@libs/api'
 
@@ -57,7 +57,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
           )}
           {imageUrl && (
             <ChatImage>
-              <img src={imageUrl} width="300" height="300" alt={imageUrl} />
+              <Image src={imageUrl} width="300" height="300" alt={imageUrl} />
             </ChatImage>
           )}
         </Stack>
