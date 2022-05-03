@@ -10,7 +10,7 @@ import { ExtendedNextPage } from '@frontend/type'
 import { IMinimalFriend } from '@libs/api'
 import { SearchBar } from '@libs/mui'
 
-const Index: ExtendedNextPage = () => {
+const FriendPage: ExtendedNextPage = () => {
   const { data: Friends, isLoading } = useQuery('/friend', async () => {
     return await httpClient.get<IMinimalFriend[]>('/friend').then((res) => res.data)
   })
@@ -64,4 +64,6 @@ const Index: ExtendedNextPage = () => {
   )
 }
 
-export default Index
+export default FriendPage
+
+export getServerSideProps = getServerSideUser()
