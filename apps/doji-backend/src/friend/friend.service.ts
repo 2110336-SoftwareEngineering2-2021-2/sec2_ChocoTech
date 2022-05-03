@@ -47,12 +47,8 @@ export class FriendService {
   }
 
   async getAllNotFriends(userRef: IUserReference) {
-    let friends = await this.getAllFriends(userRef)
-    let friendsUsername = []
-    friends.map((user) => {
-      friendsUsername.push(user.username)
-    })
-    // console.log(friendsUsername)
+    const friends = await this.getAllFriends(userRef)
+    const friendsUsername = friends.map((user) => user.username) 
 
     let allUser = await this.userRepo.findAll()
     // console.log('allUser', allUser)
