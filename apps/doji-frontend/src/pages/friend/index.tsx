@@ -1,5 +1,6 @@
 import { Avatar, Button, Stack, Typography } from '@mui/material'
 import StatusBadge from 'libs/mui/src/lib/StatusBadge'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { FiUserPlus } from 'react-icons/fi'
 import { useQuery } from 'react-query'
@@ -22,19 +23,17 @@ const FriendPage: ExtendedNextPage = () => {
     router.push(`/profile/${id}`)
   }
 
-  const handleAddClick = () => {
-    router.push(`/friend/find`)
-  }
-
   return (
     <Stack mb={5}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Typography variant="title3" py={2} color="ink.dark">
           My Friends
         </Typography>
-        <Button size="small" onClick={() => handleAddClick()}>
-          <FiUserPlus style={{ marginRight: 8 }} /> Add
-        </Button>
+        <Link href="/friend/find" passHref>
+          <Button size="small">
+            <FiUserPlus style={{ marginRight: 8 }} /> Add
+          </Button>
+        </Link>
       </Stack>
       <SearchBar />
       <Stack p={2}>
