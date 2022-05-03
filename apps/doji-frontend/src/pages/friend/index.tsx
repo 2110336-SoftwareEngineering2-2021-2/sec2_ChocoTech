@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { FiUserPlus } from 'react-icons/fi'
 import { useQuery } from 'react-query'
 
+import { getServerSideUser } from '@frontend/common/auth'
 import { httpClient } from '@frontend/services'
 import { ExtendedNextPage } from '@frontend/type'
 
@@ -66,4 +67,4 @@ const FriendPage: ExtendedNextPage = () => {
 
 export default FriendPage
 
-export getServerSideProps = getServerSideUser()
+export const getServerSideProps = getServerSideUser()

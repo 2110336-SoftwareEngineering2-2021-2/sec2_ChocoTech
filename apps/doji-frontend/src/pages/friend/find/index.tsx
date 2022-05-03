@@ -7,6 +7,7 @@ import toast from 'react-hot-toast'
 import { FiUserPlus } from 'react-icons/fi'
 import { useMutation, useQuery } from 'react-query'
 
+import { getServerSideUser } from '@frontend/common/auth'
 import { httpClient } from '@frontend/services'
 import { useAuthStore } from '@frontend/stores'
 import { ExtendedNextPage } from '@frontend/type'
@@ -86,4 +87,4 @@ const FindFriendPage: ExtendedNextPage = () => {
 
 export default FindFriendPage
 
-export getServerSideProps = getServerSideUser()
+export const getServerSideProps = getServerSideUser()
