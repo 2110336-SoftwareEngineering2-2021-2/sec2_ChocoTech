@@ -66,8 +66,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
     return await httpClient.post(`friend/friendship`, { username: data.username })
   })
   const addFriend = async (username: string) => {
-    // TODO wait for friend system api
-    //
     try {
       await toast.promise(addFriendMutation.mutateAsync({ username: username }), {
         loading: 'Loading...',
