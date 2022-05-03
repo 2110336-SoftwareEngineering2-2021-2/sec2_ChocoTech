@@ -14,7 +14,7 @@ import { ExtendedNextPage } from '@frontend/type'
 import { IMinimalFriend, IUser, IUsernameDTO } from '@libs/api'
 import { SearchBar } from '@libs/mui'
 
-const Index: ExtendedNextPage = () => {
+const FindFriendPage: ExtendedNextPage = () => {
   const currentUser = useAuthStore((state) => state.user)
 
   const { data: users, refetch } = useQuery('/friend/notfriend', async () => {
@@ -84,4 +84,6 @@ const Index: ExtendedNextPage = () => {
   )
 }
 
-export default Index
+export default FindFriendPage
+
+export getServerSideProps = getServerSideUser()
