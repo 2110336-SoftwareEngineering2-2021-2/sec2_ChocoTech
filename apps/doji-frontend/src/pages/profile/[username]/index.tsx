@@ -10,7 +10,6 @@ import {
   Typography,
   styled,
 } from '@mui/material'
-import { color } from '@mui/system'
 import { AxiosError } from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
