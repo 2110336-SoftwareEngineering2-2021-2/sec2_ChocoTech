@@ -18,12 +18,12 @@ export function SessionHistoryCard(props: SessionHistoryCardProps) {
   }, [props])
   function refundAmount() {
     if (hasPenalty()) {
-      return props.session.fee - deductAmount()
+      return props.coinOnHold - deductAmount()
     }
-    return props.session.fee
+    return props.coinOnHold
   }
   function deductAmount() {
-    return props.session.fee * 0.3
+    return props.coinOnHold * 0.3
   }
   function hasPenalty() {
     const dateStart = new Date(props.startTime)
