@@ -26,7 +26,7 @@ const FriendPage: ExtendedNextPage = () => {
   }
 
   return (
-    <Stack>
+    <Stack mb={5}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Typography variant="title3" py={2} color="ink.dark">
           My Friends
