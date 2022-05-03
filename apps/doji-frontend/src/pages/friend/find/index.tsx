@@ -46,7 +46,7 @@ const FindFriendPage: ExtendedNextPage = () => {
   }
 
   return (
-    <Stack>
+    <Stack mb={5}>
       <Typography variant="title3" py={2} color="ink.dark">
         Add Friends
       </Typography>
