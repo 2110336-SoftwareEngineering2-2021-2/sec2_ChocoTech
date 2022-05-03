@@ -48,12 +48,12 @@ export class FriendService {
 
   async getAllNotFriends(userRef: IUserReference) {
     const friends = await this.getAllFriends(userRef)
-    const friendsUsername = friends.map((user) => user.username) 
+    const friendsUsername = friends.map((user) => user.username)
 
-    let allUser = await this.userRepo.findAll()
+    const allUser = await this.userRepo.findAll()
     // console.log('allUser', allUser)
 
-    let result = []
+    const result = []
     allUser.forEach((user) => {
       if (!friendsUsername.includes(user.username) && user.username !== userRef.username) {
         result.push({
