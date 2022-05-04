@@ -13,8 +13,11 @@ export class WorkHistoryRequestDTO implements IWorkHistory {
   description: string
 
   @ApiProperty()
-  id!: string
+  id: string
 
   @ApiProperty()
-  expert!: IUser
+  expert: IUser
+
+  @ApiProperty()
+  imageUrl: string
 }

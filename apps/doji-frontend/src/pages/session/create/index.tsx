@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, TextField, Typography } from '@mui/material'
-import { type } from 'os'
+import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import * as yup from 'yup'
@@ -18,24 +18,24 @@ const CreateSessionResolver = yup.object({
 type CreateSessionModel = yup.InferType<typeof CreateSessionResolver>
 
 export function Index() {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
     formState: { errors },
-    control,
   } = useForm<CreateSessionModel>({
     resolver: yupResolver(CreateSessionResolver),
   })
 
   async function onSubmit(data) {
     const parsedData = data as ICreateSessionRequestDTO
-    console.log(parsedData)
     try {
       await toast.promise(httpClient.post('/session', parsedData), {
         loading: 'Loading',
         success: 'Successfully add session',
         error: 'Fail to add session',
       })
+      router.push('/session')
     } catch (e) {
       console.log('fail to add session')
     }

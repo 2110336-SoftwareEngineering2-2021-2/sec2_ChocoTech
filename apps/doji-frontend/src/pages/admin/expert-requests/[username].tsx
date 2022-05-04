@@ -60,7 +60,7 @@ const ExpertRequestPage: ExtendedNextPage = () => {
   }
 
   return (
-    <Stack mt={10}>
+    <Stack mt={10} mb={5}>
       <CompactProfile
         username={username}
         displayName={data.displayName}
@@ -70,7 +70,9 @@ const ExpertRequestPage: ExtendedNextPage = () => {
         Working history and Acheivement
       </Typography>
       {data.workHistory.map((data, key) => {
-        return <Achievement title={data.topic} desc={data.description} key={key} />
+        return (
+          <Achievement title={data.topic} desc={data.description} src={data.imageUrl} key={key} />
+        )
       })}
       <Stack m={3} direction="row" justifyContent="space-between" spacing={3.5}>
         <Button fullWidth onClick={handleDecline} variant="outlined" size="large">

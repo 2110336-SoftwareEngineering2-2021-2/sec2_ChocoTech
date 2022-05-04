@@ -21,7 +21,7 @@ const Index: ExtendedNextPage = () => {
   const router = useRouter()
   if (isLoading) return null
   return (
-    <>
+    <Stack mb={5}>
       <SearchBar />
       <Stack divider={<Divider flexItem />} spacing={3} mt={4}>
         {data.map((elem, index) => (
@@ -35,7 +35,7 @@ const Index: ExtendedNextPage = () => {
           </NoSession>
         )}
       </Stack>
-    </>
+    </Stack>
   )
 }
 export const getServerSideProps = getServerSideUser()

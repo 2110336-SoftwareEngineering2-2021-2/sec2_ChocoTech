@@ -1,13 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Button, Stack, TextField, Typography } from '@mui/material'
+import { Button, Stack, Typography } from '@mui/material'
+import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { useMutation } from 'react-query'
 import * as yup from 'yup'
 
 import RegisteredTextfield from '@frontend/components/Register/registerTextfield'
 import { httpClient } from '@frontend/services'
-import { ExtendedNextPage } from '@frontend/type'
 
 import { IUserSendResetPasswordEmailRequest } from '@libs/api'
 
@@ -27,6 +26,7 @@ const forgotPasswordRequest = async (
 }
 
 const ForgotPasswordPage = () => {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -37,11 +37,12 @@ const ForgotPasswordPage = () => {
 
   const onSubmit = async (formData: ForgotPasswordModel) => {
     try {
-      toast.promise(forgotPasswordRequest(formData), {
+      await toast.promise(forgotPasswordRequest(formData), {
         loading: 'loading',
         success: 'password reset email has been sent to the address provided',
         error: '',
       })
+      router.push('/login')
     } catch (err) {
       console.error(err)
     }

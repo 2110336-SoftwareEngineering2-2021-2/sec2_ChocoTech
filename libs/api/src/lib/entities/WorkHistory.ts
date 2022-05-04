@@ -5,4 +5,5 @@ export interface IWorkHistory {
   expert: IUser
   topic: string
   description: string
+  imageUrl: string
 }

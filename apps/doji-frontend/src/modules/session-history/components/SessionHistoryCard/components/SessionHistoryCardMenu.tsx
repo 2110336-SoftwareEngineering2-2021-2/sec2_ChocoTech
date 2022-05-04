@@ -3,9 +3,11 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import * as React from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
-import { useQueryClient } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 
 import { httpClient } from '@frontend/services'
+import { fetchUserInformation } from '@frontend/services/fetcher'
+import { useAuthStore } from '@frontend/stores'
 
 import { SessionHistoryCancelButton } from './SessionHistoryCancelButton'
 
@@ -19,6 +21,11 @@ export interface SessionInfo {
   refundAmount: number
 }
 export function SessionHistoryCardMenu(props: SessionInfo) {
+  const setUser = useAuthStore((store) => store.setUser)
+  const { refetch: refetchUser } = useQuery('user', fetchUserInformation, {
+    onSuccess: (data) => setUser(data),
+  })
+
   const [currentSession, setSession] = React.useState<SessionInfo>()
   const queryClient = useQueryClient()
   React.useEffect(() => {
@@ -33,10 +40,12 @@ export function SessionHistoryCardMenu(props: SessionInfo) {
     setAnchorEl(null)
   }
 
-  async function cancelSession() {
+  const cancelSession = async () => {
     await httpClient.delete(`/session/schedule/${props.scheduleId}`)
     queryClient.invalidateQueries('/session/schedule/me')
+    refetchUser()
   }
+
   return (
     <div>
       <IconButton

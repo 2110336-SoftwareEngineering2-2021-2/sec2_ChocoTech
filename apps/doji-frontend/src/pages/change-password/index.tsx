@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Stack, TextField, Typography } from '@mui/material'
 import { AxiosError } from 'axios'
+import { useRouter } from 'next/router'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { useMutation } from 'react-query'
@@ -32,6 +33,7 @@ const changePasswordRequest = async (formData: IUserChangePasswordRequestDTO) =>
 }
 
 const ChangePasswordPage: ExtendedNextPage = () => {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -50,10 +52,11 @@ const ChangePasswordPage: ExtendedNextPage = () => {
   })
 
   const onSubmit: SubmitHandler<ChangePasswordModel> = async (data) => {
-    await changePasswordMutation.mutate({
+    await changePasswordMutation.mutateAsync({
       currentPassword: data.oldPassword,
       newPassword: data.newPassword,
     })
+    router.push('/settings')
   }
 
   return (
