@@ -33,7 +33,7 @@ const FriendPage: ExtendedNextPage = () => {
       <Stack p={2}>
         {Friends
           ? Friends.map((elem) => (
-              <Link key={elem.username} href={'/profile' + elem.username} passHref>
+              <Link key={elem.username} href={'/profile/' + elem.username} passHref>
                 <Stack direction="row" spacing={2} p={1}>
                   <StatusBadge username={elem.username}>
                     <Avatar
