@@ -5,3 +5,6 @@ cd dist/apps/doji-frontend/
 ../../../node_modules/.bin/next start -p 3000 &
 echo "Started Doji Backend and Frontend"
 cd ../../../
+
+wait -n
+pkill -P $$
