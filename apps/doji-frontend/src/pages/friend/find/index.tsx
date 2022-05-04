@@ -2,6 +2,7 @@ import { Avatar, Button, Stack, Typography } from '@mui/material'
 import { display } from '@mui/system'
 import { AxiosError } from 'axios'
 import StatusBadge from 'libs/mui/src/lib/StatusBadge'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
 import { FiUserPlus } from 'react-icons/fi'
@@ -22,11 +23,10 @@ const FindFriendPage: ExtendedNextPage = () => {
     return await httpClient.get<IMinimalFriend[]>('/friend/notfriend').then((res) => res.data)
   })
 
-  const router = useRouter()
-
   const addFriendMutation = useMutation<void, AxiosError, IUsernameDTO>(async (data) => {
     return await httpClient.post(`friend/friendship`, { username: data.username })
   })
+
   const handleAddFriend = async (username: string) => {
     // TODO wait for friend system api
     //
@@ -41,9 +41,6 @@ const FindFriendPage: ExtendedNextPage = () => {
       console.log(error)
     }
   }
-  const handleUserClick = (id: string) => {
-    router.push(`/profile/${id}`)
-  }
 
   return (
     <Stack mb={5}>
@@ -54,14 +51,13 @@ const FindFriendPage: ExtendedNextPage = () => {
       <Stack p={2}>
         {users
           ? users.map((elem) => (
-              <div key={elem.username}>
+              <Link key={elem.username} href={'/profile/' + elem.username} passHref>
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
                   <Stack direction="row" spacing={2} p={1}>
                     <StatusBadge username={elem.username}>
                       <Avatar
                         src={elem.profilePictureURL}
                         sx={{ bgcolor: 'primary.main', width: 40, height: 40 }}
-                        onClick={() => handleUserClick(elem.username)}
                       >
                         {elem.displayName.charAt(0).toUpperCase()}
                       </Avatar>
@@ -73,11 +69,17 @@ const FindFriendPage: ExtendedNextPage = () => {
                       </Typography>
                     </Stack>
                   </Stack>
-                  <Button size="small" onClick={() => handleAddFriend(elem.username)}>
+                  <Button
+                    size="small"
+                    onClick={(event) => {
+                      event.preventDefault()
+                      handleAddFriend(elem.username)
+                    }}
+                  >
                     <FiUserPlus style={{ marginRight: 8 }} /> Add
                   </Button>
                 </Stack>
-              </div>
+              </Link>
             ))
           : null}
       </Stack>
