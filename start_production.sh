@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 NODE_ENV=production node dist/apps/doji-backend/main.js &
 cd dist/apps/doji-frontend/
