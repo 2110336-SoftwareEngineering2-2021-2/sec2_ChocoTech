@@ -9,4 +9,7 @@ cd ../../../
 nginx
 
 wait -n
-pkill -P $$
+
+echo "Doji crash detected, exiting"
+
+exit 1
