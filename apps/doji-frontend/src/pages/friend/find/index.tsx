@@ -19,7 +19,7 @@ import { SearchBar } from '@libs/mui'
 const FindFriendPage: ExtendedNextPage = () => {
   const currentUser = useAuthStore((state) => state.user)
 
-  const { data: users, refetch } = useQuery('/friend/notfriend', async () => {
+  const { data: users, refetch: refetchNotFriendList } = useQuery('/friend/notfriend', async () => {
     return await httpClient.get<IMinimalFriend[]>('/friend/notfriend').then((res) => res.data)
   })
 
@@ -36,7 +36,7 @@ const FindFriendPage: ExtendedNextPage = () => {
         success: 'Added friend successfully',
         error: 'Error',
       })
-      await refetch()
+      await refetchNotFriendList()
     } catch (error) {
       console.log(error)
     }
