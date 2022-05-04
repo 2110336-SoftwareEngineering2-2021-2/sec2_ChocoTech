@@ -112,12 +112,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
       {currentUser.username !== displayUser.username && (
         <Stack spacing={3} direction={'row'}>
           {relation == 'friend' ? (
-            <Button fullWidth disabled variant="outlined">
-              <FiCheck style={{ marginRight: 8 }} /> Friend
+            <Button fullWidth disabled variant="outlined" startIcon={<FiCheck />}>
+              Friend
             </Button>
           ) : (
-            <Button fullWidth onClick={() => addFriend(username)}>
-              <FiUserPlus style={{ marginRight: 8 }} /> Add Friend
+            <Button fullWidth onClick={() => addFriend(username)} startIcon={<FiUserPlus />}>
+              Add Friend
             </Button>
           )}
 

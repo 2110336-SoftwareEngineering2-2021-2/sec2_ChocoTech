@@ -75,8 +75,9 @@ const FindFriendPage: ExtendedNextPage = () => {
                       event.preventDefault()
                       handleAddFriend(elem.username)
                     }}
+                    endIcon={<FiUserPlus />}
                   >
-                    <FiUserPlus style={{ marginRight: 8 }} /> Add
+                    Add
                   </Button>
                 </Stack>
               </Link>
