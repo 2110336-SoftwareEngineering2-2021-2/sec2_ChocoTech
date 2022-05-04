@@ -13,15 +13,9 @@ import { IMinimalFriend } from '@libs/api'
 import { SearchBar } from '@libs/mui'
 
 const FriendPage: ExtendedNextPage = () => {
-  const { data: Friends, isLoading } = useQuery('/friend', async () => {
+  const { data: Friends } = useQuery('/friend', async () => {
     return await httpClient.get<IMinimalFriend[]>('/friend').then((res) => res.data)
   })
-
-  const router = useRouter()
-
-  const handleFriendClick = (id: string) => {
-    router.push(`/profile/${id}`)
-  }
 
   return (
     <Stack mb={5}>
@@ -39,7 +33,7 @@ const FriendPage: ExtendedNextPage = () => {
       <Stack p={2}>
         {Friends
           ? Friends.map((elem) => (
-              <div key={elem.username} onClick={() => handleFriendClick(elem.username)}>
+              <Link key={elem.username} href={'/profile' + elem.username} passHref>
                 <Stack direction="row" spacing={2} p={1}>
                   <StatusBadge username={elem.username}>
                     <Avatar
@@ -56,7 +50,7 @@ const FriendPage: ExtendedNextPage = () => {
                     </Typography>
                   </Stack>
                 </Stack>
-              </div>
+              </Link>
             ))
           : null}
       </Stack>
