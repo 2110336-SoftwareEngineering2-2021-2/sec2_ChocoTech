@@ -47,6 +47,7 @@ export class SessionService {
       'reviews.user',
     ])
     const sessionJSON = wrap(session).toJSON()
+    sessionJSON.reviews = sessionJSON.reviews.reverse()
     const reviewStat = await this.calculateReviewStatForSession(sessionId)
     return { ...sessionJSON, reviewStat } as ISessionStatResponseDTO
   }
