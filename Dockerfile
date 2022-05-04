@@ -47,16 +47,14 @@ COPY --from=base /build/libs ./libs
 COPY --from=base /build/tools ./tools
 COPY --from=base /build/node_modules ./node_modules
 
-COPY start_production.sh .
-RUN chmod +x start_production.sh
-RUN echo '\nnginx -g "daemon off;\n"' >> start_production.sh
+COPY start_production_docker.sh .
 
 # Expose nginx port
 EXPOSE 80
 
 # # Run Start command
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["./start_production.sh"]
+CMD ["./start_production_docker.sh"]
 
 
 
