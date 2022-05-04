@@ -1,45 +1,39 @@
 import { Avatar, Button, Stack, Typography } from '@mui/material'
 import StatusBadge from 'libs/mui/src/lib/StatusBadge'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { FiUserPlus } from 'react-icons/fi'
 import { useQuery } from 'react-query'
 
+import { getServerSideUser } from '@frontend/common/auth'
 import { httpClient } from '@frontend/services'
 import { ExtendedNextPage } from '@frontend/type'
 
 import { IMinimalFriend } from '@libs/api'
 import { SearchBar } from '@libs/mui'
 
-const Index: ExtendedNextPage = () => {
-  const { data: Friends, isLoading } = useQuery('/friend', async () => {
+const FriendPage: ExtendedNextPage = () => {
+  const { data: Friends } = useQuery('/friend', async () => {
     return await httpClient.get<IMinimalFriend[]>('/friend').then((res) => res.data)
   })
 
-  const router = useRouter()
-
-  const handleFriendClick = (id: string) => {
-    router.push(`/profile/${id}`)
-  }
-
-  const handleAddClick = () => {
-    router.push(`/friend/find`)
-  }
-
   return (
-    <Stack>
+    <Stack mb={5}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Typography variant="title3" py={2} color="ink.dark">
           My Friends
         </Typography>
-        <Button size="small" onClick={() => handleAddClick()}>
-          <FiUserPlus style={{ marginRight: 8 }} /> Add
-        </Button>
+        <Link href="/friend/find" passHref>
+          <Button size="small">
+            <FiUserPlus style={{ marginRight: 8 }} /> Add
+          </Button>
+        </Link>
       </Stack>
       <SearchBar />
       <Stack p={2}>
         {Friends
           ? Friends.map((elem) => (
-              <div key={elem.username} onClick={() => handleFriendClick(elem.username)}>
+              <Link key={elem.username} href={'/profile/' + elem.username} passHref>
                 <Stack direction="row" spacing={2} p={1}>
                   <StatusBadge username={elem.username}>
                     <Avatar
@@ -56,7 +50,7 @@ const Index: ExtendedNextPage = () => {
                     </Typography>
                   </Stack>
                 </Stack>
-              </div>
+              </Link>
             ))
           : null}
       </Stack>
@@ -64,4 +58,6 @@ const Index: ExtendedNextPage = () => {
   )
 }
 
-export default Index
+export default FriendPage
+
+export const getServerSideProps = getServerSideUser()

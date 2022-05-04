@@ -269,6 +269,14 @@ export class SessionService {
         'creator',
         'participants',
       ])
+      const penalty = this.hasPenalty(schedule.startTime)
+      let refundAmount = 0
+      if (penalty) {
+        refundAmount = schedule.coinOnHold - schedule.coinOnHold * 0.3
+      } else {
+        refundAmount = schedule.coinOnHold
+      }
+      await this.transaction.refundForService(schedule.creator, refundAmount)
       if (schedule.creator.username === targetUser.username) {
         await this.scheduleRepo.removeAndFlush(schedule)
       }
@@ -287,5 +295,19 @@ export class SessionService {
       .execute()
 
     return parseReviewStatFromAggreationResult(counts)
+  }
+
+  async hasPenalty(startTime: Date) {
+    const dateStart = new Date(startTime)
+    const dateCurrent = new Date()
+
+    const DifferenceInTime = dateCurrent.getTime() - dateStart.getTime()
+
+    const DifferenceInDays = DifferenceInTime / (1000 * 3600 * 24)
+
+    if (DifferenceInDays > 3) {
+      return false
+    }
+    return true
   }
 }

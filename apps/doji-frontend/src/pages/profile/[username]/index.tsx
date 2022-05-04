@@ -10,7 +10,6 @@ import {
   Typography,
   styled,
 } from '@mui/material'
-import { color } from '@mui/system'
 import { AxiosError } from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -62,20 +61,28 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
 
   const router = useRouter()
   const username = router.query.username as string
+  const { data: relation, refetch: refetchRelation } = useQuery(
+    ['/friend/rel/', username],
+    async () => {
+      return await httpClient.get<string>(`/friend/rel/${username}`).then((res) => res.data)
+    },
+    {
+      enabled: !!username,
+    },
+  )
 
   const addFriendMutation = useMutation<void, AxiosError, IUsernameDTO>(async (data) => {
     return await httpClient.post(`friend/friendship`, { username: data.username })
   })
+
   const addFriend = async (username: string) => {
-    // TODO wait for friend system api
-    //
     try {
       await toast.promise(addFriendMutation.mutateAsync({ username: username }), {
         loading: 'Loading...',
         success: 'Added friend successfully',
         error: 'Error',
       })
-      await refetch()
+      await refetchRelation()
     } catch (error) {
       console.log(error)
     }
@@ -83,11 +90,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
 
   const { data: userData } = useQuery('user', fetchUserInformation, { initialData: user })
   const currentUser = userData
-
-  const { data: relation, refetch } = useQuery('/friend/rel/', async () => {
-    const username = router.query.username as string
-    return await httpClient.get<string>('/friend/rel/' + username).then((res) => res.data)
-  })
 
   const { data, isError, isLoading, error } = useQuery<IProfileResponseDTO>(
     ['/profile', username],
@@ -110,12 +112,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
       {currentUser.username !== displayUser.username && (
         <Stack spacing={3} direction={'row'}>
           {relation == 'friend' ? (
-            <Button fullWidth disabled variant="outlined">
-              <FiCheck style={{ marginRight: 8 }} /> Friend
+            <Button fullWidth disabled variant="outlined" startIcon={<FiCheck />}>
+              Friend
             </Button>
           ) : (
-            <Button fullWidth onClick={() => addFriend(username)}>
-              <FiUserPlus style={{ marginRight: 8 }} /> Add Friend
+            <Button fullWidth onClick={() => addFriend(username)} startIcon={<FiUserPlus />}>
+              Add Friend
             </Button>
           )}
 
