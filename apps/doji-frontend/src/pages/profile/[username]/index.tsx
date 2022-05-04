@@ -61,27 +61,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
 
   const router = useRouter()
   const username = router.query.username as string
-
-  const addFriendMutation = useMutation<void, AxiosError, IUsernameDTO>(async (data) => {
-    return await httpClient.post(`friend/friendship`, { username: data.username })
-  })
-  const addFriend = async (username: string) => {
-    try {
-      await toast.promise(addFriendMutation.mutateAsync({ username: username }), {
-        loading: 'Loading...',
-        success: 'Added friend successfully',
-        error: 'Error',
-      })
-      await refetch()
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const { data: userData } = useQuery('user', fetchUserInformation, { initialData: user })
-  const currentUser = userData
-
-  const { data: relation, refetch } = useQuery(
+  const { data: relation, refetch: refetchRelation } = useQuery(
     ['/friend/rel/', username],
     async () => {
       return await httpClient.get<string>(`/friend/rel/${username}`).then((res) => res.data)
@@ -90,6 +70,26 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
       enabled: !!username,
     },
   )
+
+  const addFriendMutation = useMutation<void, AxiosError, IUsernameDTO>(async (data) => {
+    return await httpClient.post(`friend/friendship`, { username: data.username })
+  })
+
+  const addFriend = async (username: string) => {
+    try {
+      await toast.promise(addFriendMutation.mutateAsync({ username: username }), {
+        loading: 'Loading...',
+        success: 'Added friend successfully',
+        error: 'Error',
+      })
+      await refetchRelation()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const { data: userData } = useQuery('user', fetchUserInformation, { initialData: user })
+  const currentUser = userData
 
   const { data, isError, isLoading, error } = useQuery<IProfileResponseDTO>(
     ['/profile', username],
