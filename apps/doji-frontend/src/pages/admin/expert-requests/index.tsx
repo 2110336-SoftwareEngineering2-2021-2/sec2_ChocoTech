@@ -86,7 +86,7 @@ const ExpertRequestPage: ExtendedNextPage = () => {
   }
 
   return (
-    <Stack spacing={3} mt={10}>
+    <Stack spacing={3} mt={10} mb={5}>
       <Typography fontWeight={700} variant="title3">
         Expert Requests
       </Typography>
