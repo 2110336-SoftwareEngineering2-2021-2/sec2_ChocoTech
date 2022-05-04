@@ -81,10 +81,15 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
   const { data: userData } = useQuery('user', fetchUserInformation, { initialData: user })
   const currentUser = userData
 
-  const { data: relation, refetch } = useQuery('/friend/rel/', async () => {
-    const username = router.query.username as string
-    return await httpClient.get<string>('/friend/rel/' + username).then((res) => res.data)
-  })
+  const { data: relation, refetch } = useQuery(
+    ['/friend/rel/', username],
+    async () => {
+      return await httpClient.get<string>(`/friend/rel/${username}`).then((res) => res.data)
+    },
+    {
+      enabled: !!username,
+    },
+  )
 
   const { data, isError, isLoading, error } = useQuery<IProfileResponseDTO>(
     ['/profile', username],
