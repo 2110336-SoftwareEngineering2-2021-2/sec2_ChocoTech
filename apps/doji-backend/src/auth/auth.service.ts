@@ -162,17 +162,6 @@ export class AuthService {
       this.oauth2Client.setCredentials(tokens)
       google.options({ auth: this.oauth2Client })
 
-      this.oauth2Client.on('tokens', async (tokens) => {
-        if (tokens.refresh_token) {
-          this.logger.log(
-            `Refreshed Google OAuth2 token for user ${username}, refresh token: ${tokens.refresh_token}`,
-          )
-          user.googleRefreshToken = tokens.refresh_token
-          await this.userRepo.persistAndFlush(user)
-        }
-        this.logger.log(`Google OAuth2 token for user ${username} refreshed`)
-      })
-
       const { data } = await this.oauth2.userinfo.get()
 
       user.firstName = user.firstName ?? data.given_name
@@ -180,6 +169,7 @@ export class AuthService {
       user.profilePictureURL = user.profilePictureURL ?? data.picture
       user.googleRefreshToken = tokens.refresh_token
       user.googleEmail = data.email
+
       await this.userRepo.persistAndFlush(user)
 
       return tokens
